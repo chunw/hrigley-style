@@ -27,9 +27,6 @@ const HeroSection = () => {
               >
                 SHOP NOW
               </Button>
-              <p className="handwritten text-sm text-muted-foreground">
-                WELCOME TO SHRIG SHOP
-              </p>
             </div>
           </div>
 
