@@ -9,26 +9,26 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* David Shrigley inspired color palette */
-    --background: 0 0% 100%;
+    --background: 51 87% 71%;
     --foreground: 0 0% 0%;
 
-    --card: 0 0% 100%;
+    --card: 51 87% 71%;
     --card-foreground: 0 0% 0%;
 
-    --popover: 0 0% 100%;
+    --popover: 51 87% 71%;
     --popover-foreground: 0 0% 0%;
 
-    /* Bright neon green as primary - signature Shrigley color */
-    --primary: 120 100% 50%;
+    /* Bright pink as primary */
+    --primary: 328 85% 72%;
     --primary-foreground: 0 0% 0%;
 
-    --secondary: 0 0% 95%;
+    --secondary: 51 50% 85%;
     --secondary-foreground: 0 0% 0%;
 
-    --muted: 0 0% 95%;
+    --muted: 51 50% 85%;
     --muted-foreground: 0 0% 40%;
 
-    --accent: 120 100% 50%;
+    --accent: 328 85% 72%;
     --accent-foreground: 0 0% 0%;
 
     --destructive: 0 84.2% 60.2%;
@@ -36,7 +36,7 @@ All colors MUST be HSL.
 
     --border: 0 0% 90%;
     --input: 0 0% 95%;
-    --ring: 120 100% 50%;
+    --ring: 328 85% 72%;
 
     --radius: 0rem;
 
@@ -58,25 +58,25 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 0 0% 0%;
+    --background: 51 60% 15%;
     --foreground: 0 0% 100%;
 
-    --card: 0 0% 0%;
+    --card: 51 60% 15%;
     --card-foreground: 0 0% 100%;
 
-    --popover: 0 0% 0%;
+    --popover: 51 60% 15%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 120 100% 50%;
+    --primary: 328 85% 72%;
     --primary-foreground: 0 0% 0%;
 
-    --secondary: 0 0% 10%;
+    --secondary: 51 30% 25%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 51 30% 25%;
+    --muted-foreground: 0 0% 70%;
 
-    --accent: 120 100% 50%;
+    --accent: 328 85% 72%;
     --accent-foreground: 0 0% 0%;
 
     --destructive: 0 62.8% 30.6%;
@@ -84,7 +84,7 @@ All colors MUST be HSL.
 
     --border: 0 0% 20%;
     --input: 0 0% 10%;
-    --ring: 120 100% 50%;
+    --ring: 328 85% 72%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
