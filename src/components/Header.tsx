@@ -9,7 +9,7 @@ const Header = () => {
           {/* Left - Logo */}
           <div className="flex-shrink-0">
             <h1 className="shrigley-title text-2xl">
-              SHRIG<br />SHOP
+              CHUN WANG<br />SHOP
             </h1>
           </div>
 
@@ -22,7 +22,7 @@ const Header = () => {
               ABOUT
             </a>
             <a href="#" className="handwritten text-sm hover:text-primary transition-colors">
-              MSG FROM D.S.
+              MSG FROM C.W.
             </a>
           </nav>
 

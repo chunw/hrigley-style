@@ -5,12 +5,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Left - About */}
           <div className="space-y-4">
-            <h3 className="shrigley-title text-xl">ABOUT SHRIG SHOP</h3>
+            <h3 className="shrigley-title text-xl">ABOUT CHUN WANG SHOP</h3>
             <p className="handwritten text-sm">
               WE MAKE LIMITED EDITIONS, POSTERS, PRINTED MATTER, MERCHANDISE AND OTHER REALLY GOOD STUFF.
             </p>
             <p className="handwritten text-sm">
-              CREATED EXCLUSIVELY BY DAVID SHRIGLEY.
+              CREATED EXCLUSIVELY BY CHUN WANG.
             </p>
           </div>
 
@@ -30,11 +30,10 @@ const Footer = () => {
           <div className="space-y-4">
             <h3 className="shrigley-title text-xl">CONTACT</h3>
             <div className="space-y-2">
-              <p className="handwritten text-sm">HELLO@SHRIGSHOP.COM</p>
-              <p className="handwritten text-sm">+45 12 34 56 78</p>
+              <p className="handwritten text-sm">chunwang.me@gmail.com</p>
               <p className="handwritten text-sm">
-                COPENHAGEN<br />
-                DENMARK
+                NEW YORK<br />
+                USA
               </p>
             </div>
           </div>
@@ -42,7 +41,7 @@ const Footer = () => {
 
         <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center">
           <p className="handwritten text-sm">
-            © 2024 SHRIG SHOP. ALL RIGHTS RESERVED. OR NOT. WHO KNOWS.
+            © 2025 chun wang SHOP
           </p>
         </div>
       </div>
