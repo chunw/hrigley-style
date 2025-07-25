@@ -14,7 +14,7 @@ const HeroSection = () => {
                 <span className="text-primary">SHOP</span>
               </h1>
               <p className="handwritten text-lg text-muted-foreground max-w-md">
-                A Tiny Archive of Mild Confusion & Beautiful Vibes. UNIQUE WORKS, LIMITED EDITIONS, AND OTHER READY GOOD STUFF BY CHUN WANG
+                UNIQUE WORKS, LIMITED EDITIONS, AND OTHER READY GOOD STUFF CREATED BY CHUN WANG
               </p>
             </div>
             
