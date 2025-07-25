@@ -18,8 +18,8 @@ All colors MUST be HSL.
     --popover: 0 0% 0%;
     --popover-foreground: 0 0% 100%;
 
-    /* Bright pink as primary */
-    --primary: 328 85% 72%;
+    /* Bright yellow as primary */
+    --primary: 54 91% 71%;
     --primary-foreground: 0 0% 0%;
 
     --secondary: 0 0% 10%;
@@ -67,7 +67,7 @@ All colors MUST be HSL.
     --popover: 51 60% 15%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 328 85% 72%;
+    --primary: 54 91% 71%;
     --primary-foreground: 0 0% 0%;
 
     --secondary: 51 30% 25%;
