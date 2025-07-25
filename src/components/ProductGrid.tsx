@@ -1,56 +1,35 @@
 import ProductCard from "./ProductCard";
-import poster1 from "@/assets/poster-1.jpg";
-import mugProduct from "@/assets/mug-product.jpg";
-import tshirtProduct from "@/assets/tshirt-product.jpg";
-
-const products = [
-  {
-    id: "1",
-    name: "I THOUGHT THIS WAS A GOOD IDEA",
-    price: "£25",
-    image: poster1,
-    category: "POSTERS"
-  },
-  {
-    id: "2",
-    name: "PROBABLY NOT COFFEE",
-    price: "£18",
-    image: mugProduct,
-    category: "HOMEWARES"
-  },
-  {
-    id: "3",
-    name: "I AM VERY IMPORTANT",
-    price: "£35",
-    image: tshirtProduct,
-    category: "CLOTHING"
-  },
-  {
-    id: "4",
-    name: "WHAT EVEN IS THIS",
-    price: "£15",
-    image: poster1,
-    category: "CARDS"
-  },
-  {
-    id: "5",
-    name: "SUSPICIOUS ACTIVITIES",
-    price: "£28",
-    image: mugProduct,
-    category: "LIMITED EDITIONS"
-  },
-  {
-    id: "6",
-    name: "CLEARLY A MISTAKE",
-    price: "£40",
-    image: tshirtProduct,
-    category: "BOOKS"
-  }
-];
+import { useProducts } from "@/hooks/useProducts";
 
 const categories = ["ALL", "PRINTED MATTER", "LIMITED EDITIONS", "ACCESSORIES"];
 
 const ProductGrid = () => {
+  const { data: products, isLoading, error } = useProducts();
+
+  if (isLoading) {
+    return (
+      <section className="py-16 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <p className="handwritten text-lg">LOADING REALLY GOOD STUFF...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-16 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <p className="handwritten text-lg text-destructive">SOMETHING WENT WRONG</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-16 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -70,7 +49,7 @@ const ProductGrid = () => {
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product) => (
+          {products?.map((product) => (
             <ProductCard key={product.id} {...product} />
           ))}
         </div>
