@@ -16,7 +16,7 @@ const HeroSection = () => {
                 <span className="text-primary">SHOP</span>
               </h1>
               <p className="handwritten text-lg text-muted-foreground max-w-md">
-                LIMITED EDITIONS, POSTERS, PRINTED MATTER, MERCHANDISE AND OTHER REALLY GOOD STUFF
+                LIMITED EDITIONS, POSTERS, PRINTED MATTER, MERCHANDISE AND OTHER READY GOOD STUFF BY CHUN WANG
               </p>
             </div>
             

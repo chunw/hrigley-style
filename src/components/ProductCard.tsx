@@ -4,13 +4,15 @@ import { Card, CardContent } from "@/components/ui/card";
 interface ProductCardProps {
   id: string;
   name: string;
+  title: string | null;
+  description: string | null;
   price: number;
   currency: string;
   image_url: string | null;
   category: string | null;
 }
 
-const ProductCard = ({ name, price, currency, image_url, category }: ProductCardProps) => {
+const ProductCard = ({ name, title, description, price, currency, image_url, category }: ProductCardProps) => {
   return (
     <Card className="group hover:shadow-lg transition-shadow duration-200 border-2 border-border">
       <CardContent className="p-4">
@@ -24,7 +26,10 @@ const ProductCard = ({ name, price, currency, image_url, category }: ProductCard
         
         <div className="space-y-2">
           <p className="text-xs handwritten text-muted-foreground">{category}</p>
-          <h3 className="handwritten text-lg leading-tight">{name}</h3>
+          <h3 className="handwritten text-lg leading-tight">{title || name}</h3>
+          {description && (
+            <p className="text-sm handwritten text-muted-foreground line-clamp-2">{description}</p>
+          )}
           <p className="handwritten text-xl font-bold">
             {currency === 'gbp' ? '£' : '$'}{price.toFixed(2)}
           </p>
