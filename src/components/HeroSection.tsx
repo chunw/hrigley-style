@@ -11,7 +11,6 @@ const HeroSection = () => {
             <div className="space-y-4">
               <h1 className="shrigley-title text-4xl md:text-6xl lg:text-7xl leading-none">
                Sincerely, What?<br />
-                What?<br />
                 <span className="text-primary">SHOP</span>
               </h1>
               <p className="handwritten text-lg text-muted-foreground max-w-md">
