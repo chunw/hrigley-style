@@ -1,10 +1,16 @@
+import { useState } from "react";
 import ProductCard from "./ProductCard";
 import { useProducts } from "@/hooks/useProducts";
 
 const categories = ["ALL", "PRINTED MATTER", "LIMITED EDITIONS", "ACCESSORIES"];
 
 const ProductGrid = () => {
+  const [selectedCategory, setSelectedCategory] = useState("ALL");
   const { data: products, isLoading, error } = useProducts();
+
+  const filteredProducts = products?.filter(product => 
+    selectedCategory === "ALL" || product.category === selectedCategory
+  );
 
   if (isLoading) {
     return (
@@ -39,7 +45,12 @@ const ProductGrid = () => {
             {categories.map((category) => (
               <button
                 key={category}
-                className="handwritten text-sm px-4 py-2 border-2 border-border hover:border-primary hover:text-primary transition-colors"
+                onClick={() => setSelectedCategory(category)}
+                className={`handwritten text-sm px-4 py-2 border-2 transition-colors ${
+                  selectedCategory === category
+                    ? "border-primary text-primary bg-primary/10"
+                    : "border-border hover:border-primary hover:text-primary"
+                }`}
               >
                 {category}
               </button>
@@ -49,7 +60,7 @@ const ProductGrid = () => {
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products?.map((product) => (
+          {filteredProducts?.map((product) => (
             <ProductCard key={product.id} {...product} />
           ))}
         </div>
