@@ -18,8 +18,8 @@ All colors MUST be HSL.
     --popover: 0 0% 0%;
     --popover-foreground: 0 0% 100%;
 
-    /* Bright yellow as primary */
-    --primary: 54 91% 71%;
+    /* Bright pink as primary */
+    --primary: 328 85% 72%;
     --primary-foreground: 0 0% 0%;
 
     --secondary: 0 0% 10%;
@@ -39,6 +39,9 @@ All colors MUST be HSL.
     --ring: 328 85% 72%;
 
     --radius: 0rem;
+
+    /* Custom footer color */
+    --footer-background: 54 91% 71%;
 
     --sidebar-background: 0 0% 98%;
 
@@ -67,8 +70,11 @@ All colors MUST be HSL.
     --popover: 51 60% 15%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 54 91% 71%;
+    --primary: 328 85% 72%;
     --primary-foreground: 0 0% 0%;
+
+    /* Custom footer color */
+    --footer-background: 54 91% 71%;
 
     --secondary: 51 30% 25%;
     --secondary-foreground: 0 0% 100%;
