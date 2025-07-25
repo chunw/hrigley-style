@@ -16,18 +16,18 @@ const HeroSection = () => {
                 <span className="text-primary">SHOP</span>
               </h1>
               <p className="handwritten text-lg text-muted-foreground max-w-md">
-                LIMITED EDITIONS, POSTERS, PRINTED MATTER, MERCHANDISE AND OTHER READY GOOD STUFF BY CHUN WANG
+                UNIQUE WORKS, LIMITED EDITIONS, AND OTHER READY GOOD STUFF BY CHUN WANG
               </p>
             </div>
             
-            <div className="space-y-4">
+            {/* <div className="space-y-4">
               <Button 
                 size="lg" 
                 className="handwritten text-lg px-8 py-6 bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 SHOP NOW
               </Button>
-            </div>
+            </div> */}
           </div>
 
           {/* Right - Image */}
