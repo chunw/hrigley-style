@@ -60,7 +60,7 @@ const ProductGrid = () => {
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProducts?.map((product) => (
+          {filteredProducts.sort((a, b) => (a.display_order - b.display_order))?.map((product) => (
             <ProductCard key={product.id} {...product} />
           ))}
         </div>
