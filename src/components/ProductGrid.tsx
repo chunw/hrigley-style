@@ -48,7 +48,7 @@ const products = [
   }
 ];
 
-const categories = ["ALL", "POSTERS", "CARDS", "LIMITED EDITIONS", "BOOKS", "CLOTHING", "ACCESSORIES", "HOMEWARES"];
+const categories = ["ALL", "PRINTED MATTER", "LIMITED EDITIONS", "ACCESSORIES"];
 
 const ProductGrid = () => {
   return (
