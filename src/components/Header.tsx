@@ -38,10 +38,10 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
             <a href="#" className="handwritten text-sm hover:text-primary transition-colors">
               SHOP
             </a>
-            <a href="#" className="handwritten text-sm hover:text-primary transition-colors">
+            <a href="/about" className="handwritten text-sm hover:text-primary transition-colors">
               ABOUT
             </a>
-            <a href="#" className="handwritten text-sm hover:text-primary transition-colors">
+            <a href="/about" className="handwritten text-sm hover:text-primary transition-colors">
               MSG FROM C.W.
             </a>
           </nav>
