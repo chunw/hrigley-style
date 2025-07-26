@@ -19,7 +19,7 @@ const Footer = () => {
             <h3 className="shrigley-title text-xl">LINKS</h3>
             <div className="space-y-2">
               <a href="#" className="handwritten text-sm block hover:underline">SHOP</a>
-              <a href="#" className="handwritten text-sm block hover:underline">ABOUT</a>
+              <a href="/about" className="handwritten text-sm block hover:underline">ABOUT</a>
               {/* <a href="#" className="handwritten text-sm block hover:underline">CONTACT</a>
               <a href="#" className="handwritten text-sm block hover:underline">SHIPPING</a>
               <a href="#" className="handwritten text-sm block hover:underline">RETURNS</a> */}
