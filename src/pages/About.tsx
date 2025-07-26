@@ -24,7 +24,7 @@ const About = () => {
 
             <div className="space-y-4">
               Welcome to <i>Sincerely, What?</i> Shop — 
-              What started as observations and a bit of overthinking turn into physical things you can use, gift, or just stare at in existential curiosity.
+              What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity.
             </div>
              
             <div className="space-y-4">
