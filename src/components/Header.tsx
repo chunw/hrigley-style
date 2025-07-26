@@ -1,7 +1,13 @@
 import { ShoppingBag, Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-const Header = () => {
+interface HeaderProps {
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+}
+
+const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
   return (
     <header className="border-b border-border bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -13,8 +19,22 @@ const Header = () => {
             </h1>
           </div>
 
-          {/* Center - Navigation */}
-          <nav className="hidden md:flex space-x-8">
+          {/* Center - Search and Navigation */}
+          <div className="flex-1 max-w-xl mx-8">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="SEARCH REALLY GOOD STUFF..."
+                value={searchQuery}
+                onChange={(e) => onSearchChange(e.target.value)}
+                className="pl-10 handwritten text-sm bg-muted/50 border-border"
+              />
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <nav className="hidden lg:flex space-x-8">
             <a href="#" className="handwritten text-sm hover:text-primary transition-colors">
               SHOP
             </a>
@@ -28,9 +48,6 @@ const Header = () => {
 
           {/* Right - Actions */}
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="icon">
-              <Search className="h-5 w-5" />
-            </Button>
             <Button variant="ghost" size="icon">
               <User className="h-5 w-5" />
             </Button>

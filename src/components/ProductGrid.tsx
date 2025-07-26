@@ -4,13 +4,15 @@ import { useProducts } from "@/hooks/useProducts";
 
 const categories = ["ALL", "UNIQUE WORKS", "PRINTED MATTER", "LIMITED EDITIONS", "ACCESSORIES"];
 
-const ProductGrid = () => {
+const ProductGrid = ({ searchQuery }: { searchQuery?: string }) => {
   const [selectedCategory, setSelectedCategory] = useState("ALL");
   const { data: products, isLoading, error } = useProducts();
 
-  const filteredProducts = products?.filter(product => 
-    selectedCategory === "ALL" || product.category === selectedCategory
-  );
+  const filteredProducts = products?.filter(product => {
+    const categoryMatch = selectedCategory === "ALL" || product.category === selectedCategory;
+    const searchMatch = !searchQuery || product.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return categoryMatch && searchMatch;
+  });
 
   if (isLoading) {
     return (
