@@ -1,6 +1,7 @@
 import { ShoppingBag, Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
   searchQuery: string;
@@ -8,13 +9,15 @@ interface HeaderProps {
 }
 
 const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
+  const navigate = useNavigate();
+
   return (
     <header className="border-b border-border bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-48">
           {/* Left - Logo */}
           <div className="flex-shrink-0">
-            <h1 className="shrigley-title text-2xl">
+            <h1 onClick={() => navigate('/')} className="shrigley-title text-2xl">
               CHUN WANG<br />SHOP
             </h1>
           </div>
