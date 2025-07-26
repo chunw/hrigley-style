@@ -38,7 +38,7 @@ const ProductCard = ({ name, title, description, price, currency, image_url, cat
             className="w-full handwritten bg-primary hover:bg-primary/90 text-primary-foreground"
             size="sm"
           >
-            ADD TO BAG
+            <b>ADD TO BAG</b>
           </Button>
         </div>
       </CardContent>
