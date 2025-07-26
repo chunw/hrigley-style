@@ -7,7 +7,7 @@ const Footer = () => {
           <div className="space-y-4">
             <h3 className="shrigley-title text-xl">ABOUT CHUN WANG SHOP</h3>
             <p className="handwritten text-sm">
-              WE MAKE LIMITED EDITIONS, UNIQUE WORKS, AND OTHER REALLY GOOD STUFF.
+              WE MAKE UNIQUE WORKS, LIMITED EDITIONS, AND OTHER REALLY GOOD STUFF.
             </p>
             <p className="handwritten text-sm">
               CREATED EXCLUSIVELY BY CHUN WANG.
