@@ -19,14 +19,17 @@ const About = () => {
               </p>
             </div>
 
-            
-              Welcome to Sincerely, What? — a small, slightly bewildered corner of the internet where odd ideas turn into physical things you can hold, gift, or just stare at in existential curiosity.
-
-              What started as doodles, phrases, and passing regrets became prints, objects, and gentle chaos — 
-              now available in limited edition for other humans who enjoy questionable decisions beautifully packaged.
+            <div className="space-y-4">
+              Welcome to <i>Sincerely, What?</i> Shop — 
+              
+              What started as odd ideas and gentle chaos turn into physical things you can hold, gift, or just stare at in existential curiosity.
 
               Everything here is made with care, a bit of overthinking, and an honest love for sincere expression.
             
+            </div>
+
+            
+             
             <div className="space-y-4">
               <Button 
                 size="lg" 
