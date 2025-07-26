@@ -14,9 +14,17 @@ const About = () => {
                 <span className="text-primary">SHOP</span>
               </h1>
               <p className="handwritten text-lg text-muted-foreground max-w-md">
-                UNIQUE WORKS, LIMITED EDITIONS, AND OTHER READY GOOD STUFF CREATED BY CHUN WANG
+                A Tiny Archive of Mild Confusion & Beautiful Vibes
               </p>
             </div>
+
+            
+              Welcome to Sincerely, What? — a small, slightly bewildered corner of the internet where odd ideas turn into physical things you can hold, gift, or just stare at in existential curiosity.
+
+              What started as doodles, phrases, and passing regrets became prints, objects, and gentle chaos — 
+              now available in limited edition for other humans who enjoy questionable decisions beautifully packaged.
+
+              Everything here is made with care, a bit of overthinking, and an honest love for sincere expression.
             
             {/* <div className="space-y-4">
               <Button 
@@ -33,7 +41,7 @@ const About = () => {
             <div className="aspect-square lg:aspect-[4/3] rounded-lg overflow-hidden scale-80">
               <img 
                 // src={heroBag} 
-                src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/e33005e1-8b75-44dd-a3f5-f3a66d272cde_rw_1200.gif?h=c2210abb1e0b90157a4200242fef9f00"
+                src="https://www.notion.so/todo-Chun-Wang-Shop-21789a107c4680aba6abf84553a341b2?source=copy_link#23c89a107c4680bf92dffadb0f5fe2df"
                 alt="Shopping bag with really good stuff"
                 className="w-full h-full object-cover"
               />
