@@ -134,14 +134,14 @@ const ProductDetails = () => {
             {product.description && (
               <div className="space-y-2">
                 <h3 className="font-semibold">Description</h3>
-                <p className="text-muted-foreground">{product.description}</p>
+                <p className="text-muted-foreground font-helvetica">{product.description}</p>
               </div>
             )}
 
             {product.detailed_description && (
               <div className="space-y-2">
                 <h3 className="font-semibold">Details</h3>
-                <div className="text-muted-foreground whitespace-pre-wrap">
+                <div className="text-muted-foreground font-helvetica whitespace-pre-wrap">
                   {product.detailed_description}
                 </div>
               </div>
@@ -150,21 +150,21 @@ const ProductDetails = () => {
             {product.dimensions && (
               <div className="space-y-2">
                 <h3 className="font-semibold">Dimensions</h3>
-                <p className="text-muted-foreground">{product.dimensions}</p>
+                <p className="text-muted-foreground font-helvetica">{product.dimensions}</p>
               </div>
             )}
 
             {product.edition_info && (
               <div className="space-y-2">
                 <h3 className="font-semibold">Edition Info</h3>
-                <p className="text-muted-foreground">{product.edition_info}</p>
+                <p className="text-muted-foreground font-helvetica">{product.edition_info}</p>
               </div>
             )}
 
             {product.edition_size && (
               <div className="space-y-2">
                 <h3 className="font-semibold">Edition Size</h3>
-                <p className="text-muted-foreground">Limited edition of {product.edition_size}</p>
+                <p className="text-muted-foreground font-helvetica">Limited edition of {product.edition_size}</p>
               </div>
             )}
 
@@ -178,7 +178,7 @@ const ProductDetails = () => {
               </Button>
             </div>
 
-            <div className="text-sm text-muted-foreground space-y-1">
+            <div className="text-sm text-muted-foreground font-helvetica space-y-1">
               <p>This print is sold unframed.</p>
               <p>It is possible to pay for this work in instalments.</p>
               <p>** If you order from outside the EU: VAT equivalent of 5% of the price will be removed in the checkout **</p>

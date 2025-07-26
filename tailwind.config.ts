@@ -20,6 +20,7 @@ export default {
 		extend: {
 			fontFamily: {
 				'handwritten': ['Comic Sans MS', 'cursive'],
+				'helvetica': ['Helvetica', 'Arial', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
