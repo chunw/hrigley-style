@@ -94,11 +94,11 @@ const ProductDetails = () => {
           {/* Image Gallery */}
           <div className="space-y-4">
             {/* Main Image */}
-            <div className="aspect-square rounded-lg overflow-hidden bg-gray-50 border-2 border-primary/20">
+            <div className="aspect-square rounded-lg overflow-hidden bg-black border-2 border-primary/20">
               <img
                 src={currentImage?.image_url || "/placeholder.svg"}
                 alt={currentImage?.alt_text || product.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             </div>
             
@@ -111,7 +111,7 @@ const ProductDetails = () => {
                       <CarouselItem key={index} className="pl-2 md:pl-4 basis-1/4">
                         <button
                           onClick={() => setSelectedImageIndex(index)}
-                          className={`w-full aspect-square rounded-lg overflow-hidden border-2 transition-colors ${
+                          className={`w-full aspect-square rounded-lg overflow-hidden border-2 transition-colors bg-black ${
                             selectedImageIndex === index 
                               ? 'border-primary' 
                               : 'border-gray-200 hover:border-gray-300'
@@ -120,7 +120,7 @@ const ProductDetails = () => {
                           <img
                             src={image.image_url || "/placeholder.svg"}
                             alt={image.alt_text || `${product.name} view ${index + 1}`}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-contain"
                           />
                         </button>
                       </CarouselItem>

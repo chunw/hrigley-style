@@ -23,11 +23,11 @@ const ProductCard = ({ id, name, title, description, price, currency, image_url,
   return (
     <Card className="group hover:shadow-lg transition-shadow duration-200 border-2 border-border cursor-pointer" onClick={handleCardClick}>
       <CardContent className="p-4">
-        <div className="aspect-square bg-muted mb-4 overflow-hidden">
+        <div className="aspect-square bg-black mb-4 overflow-hidden">
           <img 
             src={image_url || "/placeholder.svg"} 
             alt={name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"
             onError={(e) => {
               console.log('Image failed to load:', image_url);
               e.currentTarget.src = "/placeholder.svg";
