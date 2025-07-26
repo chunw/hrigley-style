@@ -41,7 +41,7 @@ All colors MUST be HSL.
     --radius: 0rem;
 
     /* Custom footer color */
-    --footer-background: white; /*54 91% 71%;*/
+    --footer-background: 0 0% 100%;
 
     --sidebar-background: 0 0% 98%;
 
