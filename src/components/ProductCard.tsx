@@ -21,6 +21,11 @@ const ProductCard = ({ name, title, description, price, currency, image_url, cat
             src={image_url || "/placeholder.svg"} 
             alt={name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+            onError={(e) => {
+              console.log('Image failed to load:', image_url);
+              e.currentTarget.src = "/placeholder.svg";
+            }}
+            loading="lazy"
           />
         </div>
         
