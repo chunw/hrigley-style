@@ -30,14 +30,14 @@ const HeroSection = () => {
 
           {/* Right - Image */}
           <div className="relative">
-            {/* <div className="aspect-square lg:aspect-[4/3] rounded-lg overflow-hidden scale-90">
+            <div className="aspect-square lg:aspect-[4/3] rounded-lg overflow-hidden scale-90">
               <img 
                 // src={heroBag} 
                 src="https://file.notion.so/f/f/4629ec40-293c-4ec0-be5b-b4265df638ce/73f43e21-5b71-422c-906a-e809de59c139/chun-removebg-preview.png?table=block&id=23c89a10-7c46-80bf-92df-fadb0f5fe2df&spaceId=4629ec40-293c-4ec0-be5b-b4265df638ce&expirationTimestamp=1753516800000&signature=iETALCbnqmkv3xaHkInFhaWiwS_vfVH0QZehqnTOwDY&downloadName=chun-removebg-preview.png"
                 alt="Shopping bag with really good stuff"
                 className="w-full h-full object-cover"
               />
-            </div> */}
+            </div>
             {/* Decorative border */}
             <div className="absolute inset-0 border-4 border-primary translate-x-4 translate-y-4 rounded-lg -z-10"></div>
           </div>
