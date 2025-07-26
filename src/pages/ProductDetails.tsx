@@ -189,12 +189,15 @@ const ProductDetails = () => {
 
             <div className="pt-4">
               <Button 
-                size="lg" 
+               variant="outline-pink"
+            className="w-full handwritten"
                 onClick={handleAddToCart}
-                className="w-full handwritten text-lg font-bold px-8 py-6 bg-primary hover:bg-primary/90 text-primary-foreground"
+                //className="w-full handwritten text-lg font-bold px-8 py-6 bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 ADD TO CART
               </Button>
+
+            
             </div>
 
             <div className="text-sm text-muted-foreground font-helvetica space-y-1">
