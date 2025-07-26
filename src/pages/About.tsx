@@ -26,12 +26,10 @@ const About = () => {
               Welcome to <i>Sincerely, What?</i> Shop — 
               What started as observations and a bit of overthinking turn into physical things you can use, gift, or just stare at in existential curiosity.
             </div>
-
-            
              
             <div className="space-y-4">
               <Button 
-                size="lg" 
+                size="lg"
                 className="handwritten text-lg px-8 py-6 bg-primary hover:bg-primary/90 text-primary-foreground"
                 onClick={() => navigate('/')}
               >
