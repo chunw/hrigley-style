@@ -1,4 +1,5 @@
 import HeroSection from "@/components/HeroSection";
+import { Button } from "@/components/ui/button";
 
 const About = () => {
   return (
@@ -26,14 +27,14 @@ const About = () => {
 
               Everything here is made with care, a bit of overthinking, and an honest love for sincere expression.
             
-            {/* <div className="space-y-4">
+            <div className="space-y-4">
               <Button 
                 size="lg" 
                 className="handwritten text-lg px-8 py-6 bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 SHOP NOW
               </Button>
-            </div> */}
+            </div>
           </div>
 
           {/* Right - Image */}
@@ -41,7 +42,7 @@ const About = () => {
             <div className="aspect-square lg:aspect-[4/3] rounded-lg overflow-hidden scale-80">
               <img 
                 // src={heroBag} 
-                src="https://www.notion.so/todo-Chun-Wang-Shop-21789a107c4680aba6abf84553a341b2?source=copy_link#23c89a107c4680bf92dffadb0f5fe2df"
+                src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/bcfb5ed3-e3df-489e-ba87-518d4adccdd0_rw_1200.png?h=3e84d177c91ced5bbf3cede876150ae5"
                 alt="Shopping bag with really good stuff"
                 className="w-full h-full object-cover"
               />
