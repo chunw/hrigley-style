@@ -47,7 +47,8 @@ const ProductCard = ({ id, name, title, description, price, currency, image_url,
           </p>
           
           <Button 
-            className="w-full handwritten bg-primary hover:bg-primary/90 text-primary-foreground"
+            variant="outline-pink"
+            className="w-full handwritten"
             size="sm"
           >
             <b>ADD TO BAG</b>
