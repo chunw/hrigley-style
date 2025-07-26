@@ -18,13 +18,14 @@ const About = () => {
                 <span className="text-primary">SHOP</span>
               </h1>
               <p className="handwritten text-lg text-muted-foreground max-w-md">
-                A Tiny Archive of Mild Confusion & Beautiful Vibes
+                What started as bespoke observations and a bit of overthinking turn into whimsical objects 
               </p>
             </div>
 
             <div className="space-y-4">
-              Welcome to <i>Sincerely, What?</i> Shop — 
-              What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity.
+              {/* Welcome to <i>Sincerely, What?</i> Shop —  */}
+              
+              you can use, gift, or just stare at in existential curiosity.
             </div>
              
             <div className="space-y-4">

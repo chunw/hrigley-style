@@ -8,7 +8,6 @@ const Footer = () => {
             <h3 className="shrigley-title text-xl">ABOUT CHUN WANG SHOP</h3>
             <p className="handwritten text-sm">
              What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity.
-                        
             </p>
             <p className="handwritten text-sm">
               CREATED EXCLUSIVELY BY CHUN WANG.
