@@ -30,7 +30,7 @@ const HeroSection = () => {
 
           {/* Right - Image */}
           <div className="relative">
-            <div className="aspect-square lg:aspect-[4/3] rounded-lg overflow-hidden scale-80">
+            <div className="aspect-square lg:aspect-[4/3] rounded-lg overflow-hidden scale-50 sm:scale-60 md:scale-70 lg:scale-80">
               <img 
                 // src={heroBag} 
                 src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/af3f4d90-9ec9-4349-93f9-b47c33833106_rwc_0x98x1200x938x1200.gif?h=4a7cdfb5fee81de134dd238b6c03c921"
