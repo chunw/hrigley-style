@@ -168,21 +168,21 @@ const ProductDetails = () => {
 
             {product.dimensions && (
               <div className="space-y-2">
-                <h3 className="font-semibold">Dimensions</h3>
+                {/* <h3 className="font-semibold">Dimensions</h3> */}
                 <p className="text-muted-foreground font-helvetica">{product.dimensions}</p>
               </div>
             )}
 
             {product.edition_info && (
               <div className="space-y-2">
-                <h3 className="font-semibold">Edition Info</h3>
+                {/* <h3 className="font-semibold">Edition Info</h3> */}
                 <p className="text-muted-foreground font-helvetica">{product.edition_info}</p>
               </div>
             )}
 
             {product.edition_size && (
               <div className="space-y-2">
-                <h3 className="font-semibold">Edition Size</h3>
+                {/* <h3 className="font-semibold">Edition Size</h3> */}
                 <p className="text-muted-foreground font-helvetica">Limited edition of {product.edition_size}</p>
               </div>
             )}
