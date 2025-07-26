@@ -2,7 +2,7 @@ import { useState } from "react";
 import ProductCard from "./ProductCard";
 import { useProducts } from "@/hooks/useProducts";
 
-const categories = ["ALL", "PRINTED MATTER", "LIMITED EDITIONS", "ACCESSORIES"];
+const categories = ["ALL", "UNIQUE WORKS", "PRINTED MATTER", "LIMITED EDITIONS", "ACCESSORIES"];
 
 const ProductGrid = () => {
   const [selectedCategory, setSelectedCategory] = useState("ALL");
