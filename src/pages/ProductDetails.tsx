@@ -8,6 +8,13 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft } from "lucide-react";
 import { useProductDetails, useProductImages, useRelatedProducts } from "@/hooks/useProductDetails";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -48,8 +55,13 @@ const ProductDetails = () => {
     );
   }
 
-  const displayImages = images && images.length > 0 ? images : [{ image_url: product.image_url, alt_text: product.name }];
-  const currentImage = displayImages[selectedImageIndex];
+  // Combine main product image with additional images from product_images table
+  const allImages = [
+    { image_url: product.image_url, alt_text: product.name || product.title },
+    ...(images || [])
+  ].filter(img => img.image_url); // Filter out any null/undefined image URLs
+  
+  const currentImage = allImages[selectedImageIndex];
 
   const handleAddToCart = () => {
     toast({
@@ -90,26 +102,33 @@ const ProductDetails = () => {
               />
             </div>
             
-            {/* Thumbnail Images */}
-            {displayImages.length > 1 && (
-              <div className="flex gap-3">
-                {displayImages.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImageIndex(index)}
-                    className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
-                      selectedImageIndex === index 
-                        ? 'border-primary' 
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <img
-                      src={image.image_url || "/placeholder.svg"}
-                      alt={image.alt_text || `${product.name} view ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
-                ))}
+            {/* Image Carousel */}
+            {allImages.length > 1 && (
+              <div className="w-full">
+                <Carousel className="w-full">
+                  <CarouselContent className="-ml-2 md:-ml-4">
+                    {allImages.map((image, index) => (
+                      <CarouselItem key={index} className="pl-2 md:pl-4 basis-1/4">
+                        <button
+                          onClick={() => setSelectedImageIndex(index)}
+                          className={`w-full aspect-square rounded-lg overflow-hidden border-2 transition-colors ${
+                            selectedImageIndex === index 
+                              ? 'border-primary' 
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          <img
+                            src={image.image_url || "/placeholder.svg"}
+                            alt={image.alt_text || `${product.name} view ${index + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                        </button>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="left-2" />
+                  <CarouselNext className="right-2" />
+                </Carousel>
               </div>
             )}
           </div>
