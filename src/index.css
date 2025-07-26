@@ -111,7 +111,8 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Comic Sans MS', cursive, system-ui;
+    /* font-family: 'Comic Sans MS', cursive, system-ui; */
+    font-family: 'Gloria Hallelujah', cursive;
   }
 
   /* Hand-drawn style typography */
