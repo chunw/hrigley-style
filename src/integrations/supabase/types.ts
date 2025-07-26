@@ -14,12 +14,52 @@ export type Database = {
   }
   public: {
     Tables: {
+      product_images: {
+        Row: {
+          alt_text: string | null
+          created_at: string
+          display_order: number | null
+          id: string
+          image_url: string
+          product_id: string
+        }
+        Insert: {
+          alt_text?: string | null
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          image_url: string
+          product_id: string
+        }
+        Update: {
+          alt_text?: string | null
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          image_url?: string
+          product_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_images_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           category: string | null
           created_at: string
           currency: string
           description: string | null
+          detailed_description: string | null
+          dimensions: string | null
+          display_order: number | null
+          edition_info: string | null
+          edition_size: number | null
           id: string
           image_url: string | null
           is_active: boolean
@@ -33,6 +73,11 @@ export type Database = {
           created_at?: string
           currency?: string
           description?: string | null
+          detailed_description?: string | null
+          dimensions?: string | null
+          display_order?: number | null
+          edition_info?: string | null
+          edition_size?: number | null
           id?: string
           image_url?: string | null
           is_active?: boolean
@@ -46,6 +91,11 @@ export type Database = {
           created_at?: string
           currency?: string
           description?: string | null
+          detailed_description?: string | null
+          dimensions?: string | null
+          display_order?: number | null
+          edition_info?: string | null
+          edition_size?: number | null
           id?: string
           image_url?: string | null
           is_active?: boolean
