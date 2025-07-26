@@ -20,9 +20,9 @@ const Footer = () => {
             <div className="space-y-2">
               <a href="#" className="handwritten text-sm block hover:underline">SHOP</a>
               <a href="#" className="handwritten text-sm block hover:underline">ABOUT</a>
-              <a href="#" className="handwritten text-sm block hover:underline">CONTACT</a>
+              {/* <a href="#" className="handwritten text-sm block hover:underline">CONTACT</a>
               <a href="#" className="handwritten text-sm block hover:underline">SHIPPING</a>
-              <a href="#" className="handwritten text-sm block hover:underline">RETURNS</a>
+              <a href="#" className="handwritten text-sm block hover:underline">RETURNS</a> */}
             </div>
           </div>
 
