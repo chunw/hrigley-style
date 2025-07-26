@@ -33,7 +33,7 @@ const HeroSection = () => {
             <div className="aspect-square lg:aspect-[4/3] rounded-lg overflow-hidden scale-80">
               <img 
                 // src={heroBag} 
-                src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/e33005e1-8b75-44dd-a3f5-f3a66d272cde_rw_1200.gif?h=c2210abb1e0b90157a4200242fef9f00"
+                src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/af3f4d90-9ec9-4349-93f9-b47c33833106_rwc_0x98x1200x938x1200.gif?h=4a7cdfb5fee81de134dd238b6c03c921"
                 alt="Shopping bag with really good stuff"
                 className="w-full h-full object-cover"
               />
