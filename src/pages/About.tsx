@@ -1,7 +1,10 @@
 import HeroSection from "@/components/HeroSection";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const About = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-background">
       <section className="relative bg-background py-16 lg:py-24">
@@ -30,6 +33,7 @@ const About = () => {
               <Button 
                 size="lg" 
                 className="handwritten text-lg px-8 py-6 bg-primary hover:bg-primary/90 text-primary-foreground"
+                onClick={() => navigate('/')}
               >
                 SHOP NOW
               </Button>
