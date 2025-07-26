@@ -22,7 +22,7 @@ const About = () => {
             <div className="space-y-4">
               Welcome to <i>Sincerely, What?</i> Shop — 
               
-              What started as odd ideas and gentle chaos turn into physical things you can hold, gift, or just stare at in existential curiosity.
+              What started as odd ideas and gentle chaos turn into physical things you can use, gift, or just stare at in existential curiosity.
 
               Everything here is made with care, a bit of overthinking, and an honest love for sincere expression.
             
