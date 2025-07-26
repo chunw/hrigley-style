@@ -42,7 +42,7 @@ const ProductCard = ({ id, name, title, description, price, currency, image_url,
           {description && (
             <p className="text-sm handwritten text-muted-foreground line-clamp-2">{description}</p>
           )}
-          <p className="handwritten text-m font-bold">
+          <p className="handwritten text-lg font-bold">
             {currency === 'gbp' ? '£' : '$'}{price.toFixed(2)}
           </p>
           
