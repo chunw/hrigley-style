@@ -124,7 +124,7 @@ const PaymentSuccess = () => {
 
           <div className="pt-6">
             <Button 
-              onClick={() => navigate("/")}
+              onClick={() => window.location.href = "https://chunwangshop.com"}
               variant="outline-pink"
               size="lg"
               className="handwritten"
