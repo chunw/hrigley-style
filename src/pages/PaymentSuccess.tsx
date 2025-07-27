@@ -5,18 +5,60 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { clearCart } = useCart();
+  const { clearCart, state } = useCart();
+  const { toast } = useToast();
   const sessionId = searchParams.get("session_id");
 
   useEffect(() => {
+    const sendOrderConfirmation = async () => {
+      if (!sessionId) return;
+
+      // Get customer email from URL params (you might want to get this from user auth instead)
+      const customerEmail = searchParams.get("customer_email") || "customer@example.com";
+      
+      try {
+        // Send order confirmation email
+        const { error } = await supabase.functions.invoke('send-order-confirmation', {
+          body: {
+            customerEmail,
+            orderReference: sessionId.slice(-8),
+            cartItems: state.items.map(item => ({
+              name: item.name,
+              quantity: item.quantity,
+              price: item.price
+            })),
+            totalAmount: state.total
+          }
+        });
+
+        if (error) {
+          console.error("Error sending order confirmation:", error);
+          toast({
+            title: "Email Error",
+            description: "Order confirmation email could not be sent, but your payment was successful.",
+            variant: "destructive",
+          });
+        } else {
+          console.log("Order confirmation email sent successfully");
+        }
+      } catch (error) {
+        console.error("Error sending order confirmation:", error);
+      }
+    };
+
+    // Send email before clearing cart
+    sendOrderConfirmation();
+    
     // Clear the cart on successful payment
     clearCart();
     console.log("Payment completed with session:", sessionId);
-  }, [sessionId, clearCart]);
+  }, [sessionId, clearCart, searchParams, state.items, state.total, toast]);
 
   return (
     <div className="min-h-screen bg-background">
