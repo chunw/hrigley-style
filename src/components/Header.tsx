@@ -1,7 +1,9 @@
 import { ShoppingBag, Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "@/contexts/CartContext";
 
 interface HeaderProps {
   searchQuery: string;
@@ -10,6 +12,7 @@ interface HeaderProps {
 
 const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
   const navigate = useNavigate();
+  const { state } = useCart();
 
   return (
     <header className="border-b border-border bg-background">
@@ -54,8 +57,21 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
             {/* <Button variant="ghost" size="icon">
               <User className="h-5 w-5" />
             </Button>  */}
-            <Button variant="ghost" size="icon">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => navigate('/cart')}
+              className="relative"
+            >
               <ShoppingBag className="h-5 w-5" />
+              {state.itemCount > 0 && (
+                <Badge 
+                  variant="destructive" 
+                  className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
+                >
+                  {state.itemCount}
+                </Badge>
+              )}
             </Button>
           </div>
         </div>
