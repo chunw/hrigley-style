@@ -4,16 +4,19 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { clearCart } = useCart();
   const sessionId = searchParams.get("session_id");
 
   useEffect(() => {
-    // Optional: You could verify the payment with Stripe here
+    // Clear the cart on successful payment
+    clearCart();
     console.log("Payment completed with session:", sessionId);
-  }, [sessionId]);
+  }, [sessionId, clearCart]);
 
   return (
     <div className="min-h-screen bg-background">
