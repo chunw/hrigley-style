@@ -76,6 +76,7 @@ serve(async (req) => {
         success_url: `${req.headers.get("origin")}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${req.headers.get("origin")}/product/${productId}`,
         allow_promotion_codes: true,
+        customer_email: body.customerEmail, // Include customer email if provided
       });
 
       console.log("Stripe session created:", session.id);
@@ -145,6 +146,7 @@ serve(async (req) => {
         success_url: `${req.headers.get("origin")}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${req.headers.get("origin")}/cart`,
         allow_promotion_codes: true,
+        customer_email: body.customerEmail, // Include customer email if provided
       });
 
       console.log("Stripe session created:", session.id);

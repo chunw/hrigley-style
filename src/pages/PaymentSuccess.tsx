@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -13,10 +13,11 @@ const PaymentSuccess = () => {
   const navigate = useNavigate();
   const { clearCart, state } = useCart();
   const { toast } = useToast();
+  const [customerEmail, setCustomerEmail] = useState<string>("");
   const sessionId = searchParams.get("session_id");
 
   useEffect(() => {
-    const sendOrderConfirmation = async () => {
+    const handlePaymentSuccess = async () => {
       if (!sessionId) return;
 
       // Prevent multiple calls by checking if email was already sent for this session
@@ -26,14 +27,28 @@ const PaymentSuccess = () => {
         return;
       }
 
-      // For testing, use your actual email. In production, this should come from Stripe customer data
-      const customerEmail = searchParams.get("customer_email") || "your-email@example.com"; // Replace with your actual email
-      
       try {
-        // Send order confirmation email
+        // Get session details from Stripe to retrieve customer email
+        const { data: sessionData, error: sessionError } = await supabase.functions.invoke('get-session-details', {
+          body: { sessionId }
+        });
+
+        if (sessionError || !sessionData) {
+          console.error("Error getting session details:", sessionError);
+          throw new Error("Could not retrieve payment details");
+        }
+
+        const email = sessionData.customerEmail;
+        setCustomerEmail(email);
+
+        if (!email) {
+          throw new Error("No customer email found in payment session");
+        }
+
+        // Send order confirmation email to the actual customer
         const { data, error } = await supabase.functions.invoke('send-order-confirmation', {
           body: {
-            customerEmail,
+            customerEmail: email,
             orderReference: sessionId.slice(-8),
             cartItems: state.items.map(item => ({
               name: item.name,
@@ -52,16 +67,16 @@ const PaymentSuccess = () => {
             variant: "destructive",
           });
         } else {
-          console.log("Order confirmation email sent successfully");
+          console.log("Order confirmation email sent successfully to:", email);
           // Mark email as sent for this session
           localStorage.setItem(emailSentKey, 'true');
           toast({
             title: "Email Sent",
-            description: "Order confirmation email has been sent!",
+            description: `Order confirmation email sent to ${email}!`,
           });
         }
       } catch (error) {
-        console.error("Error sending order confirmation:", error);
+        console.error("Error processing payment success:", error);
         toast({
           title: "Email Error", 
           description: "Order confirmation email could not be sent, but your payment was successful.",
@@ -70,15 +85,15 @@ const PaymentSuccess = () => {
       }
     };
 
-    // Only send email if we have cart items to send
+    // Only process if we have cart items to send
     if (state.items.length > 0) {
-      sendOrderConfirmation();
+      handlePaymentSuccess();
     }
     
     // Clear the cart on successful payment (do this after email attempt)
     clearCart();
     console.log("Payment completed with session:", sessionId);
-  }, [sessionId, clearCart, searchParams, state.items, state.total, toast]);
+  }, [sessionId, clearCart, state.items, state.total, toast]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -94,7 +109,10 @@ const PaymentSuccess = () => {
             </h1>
             
             <p className="text-muted-foreground font-helvetica">
-              Thank you for your purchase! You should receive a confirmation email shortly.
+              Thank you for your purchase! 
+              {customerEmail && (
+                <> You should receive a confirmation email at <strong>{customerEmail}</strong> shortly.</>
+              )}
             </p>
             
             {sessionId && (
