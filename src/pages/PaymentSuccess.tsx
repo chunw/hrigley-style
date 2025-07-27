@@ -26,8 +26,8 @@ const PaymentSuccess = () => {
         return;
       }
 
-      // Get customer email from URL params (you might want to get this from user auth instead)
-      const customerEmail = searchParams.get("customer_email") || "customer@example.com";
+      // For testing, use your actual email. In production, this should come from Stripe customer data
+      const customerEmail = searchParams.get("customer_email") || "your-email@example.com"; // Replace with your actual email
       
       try {
         // Send order confirmation email
