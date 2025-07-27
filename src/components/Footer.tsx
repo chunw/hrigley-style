@@ -41,7 +41,7 @@ const Footer = () => {
 
         <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center">
           <p className="handwritten text-sm">
-            © 2025 chun wang SHOP
+            © 2025- chun wang SHOP
           </p>
         </div>
       </div>
