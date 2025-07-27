@@ -19,12 +19,19 @@ const PaymentSuccess = () => {
     const sendOrderConfirmation = async () => {
       if (!sessionId) return;
 
+      // Prevent multiple calls by checking if email was already sent for this session
+      const emailSentKey = `email_sent_${sessionId}`;
+      if (localStorage.getItem(emailSentKey)) {
+        console.log("Email already sent for this session");
+        return;
+      }
+
       // Get customer email from URL params (you might want to get this from user auth instead)
       const customerEmail = searchParams.get("customer_email") || "customer@example.com";
       
       try {
         // Send order confirmation email
-        const { error } = await supabase.functions.invoke('send-order-confirmation', {
+        const { data, error } = await supabase.functions.invoke('send-order-confirmation', {
           body: {
             customerEmail,
             orderReference: sessionId.slice(-8),
@@ -46,16 +53,29 @@ const PaymentSuccess = () => {
           });
         } else {
           console.log("Order confirmation email sent successfully");
+          // Mark email as sent for this session
+          localStorage.setItem(emailSentKey, 'true');
+          toast({
+            title: "Email Sent",
+            description: "Order confirmation email has been sent!",
+          });
         }
       } catch (error) {
         console.error("Error sending order confirmation:", error);
+        toast({
+          title: "Email Error", 
+          description: "Order confirmation email could not be sent, but your payment was successful.",
+          variant: "destructive",
+        });
       }
     };
 
-    // Send email before clearing cart
-    sendOrderConfirmation();
+    // Only send email if we have cart items to send
+    if (state.items.length > 0) {
+      sendOrderConfirmation();
+    }
     
-    // Clear the cart on successful payment
+    // Clear the cart on successful payment (do this after email attempt)
     clearCart();
     console.log("Payment completed with session:", sessionId);
   }, [sessionId, clearCart, searchParams, state.items, state.total, toast]);
