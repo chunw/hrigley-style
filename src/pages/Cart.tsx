@@ -32,6 +32,16 @@ const Cart = () => {
   const handleCheckout = async () => {
     if (state.items.length === 0) return;
 
+    // Check minimum amount requirement
+    if (state.total < 0.50) {
+      toast({
+        title: "Minimum Order Amount",
+        description: "Your order must be at least $0.50 to proceed with checkout.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsProcessing(true);
     try {
       const { data, error } = await supabase.functions.invoke('create-payment', {
@@ -43,17 +53,42 @@ const Cart = () => {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw new Error(error.message || 'Failed to create checkout session');
+      }
+
+      if (!data || !data.url) {
+        throw new Error('No checkout URL received');
+      }
 
       // Open Stripe checkout in a new tab
       window.open(data.url, '_blank');
-    } catch (error) {
+      
+      toast({
+        title: "Checkout Started",
+        description: "Redirecting to payment page...",
+      });
+
+    } catch (error: any) {
+      console.error('Checkout error:', error);
+      
+      let errorMessage = "Failed to create checkout session. Please try again.";
+      
+      // Handle specific Stripe errors
+      if (error.message?.includes("total amount due must add up to at least")) {
+        errorMessage = "Your order must be at least $0.50 to proceed with checkout.";
+      } else if (error.message?.includes("No checkout URL")) {
+        errorMessage = "Payment system error. Please try again or contact support.";
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
       toast({
         title: "Checkout Error",
-        description: "Failed to create checkout session. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
-      console.error('Checkout error:', error);
     } finally {
       setIsProcessing(false);
     }
