@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft } from "lucide-react";
 import { useProductDetails, useProductImages, useRelatedProducts } from "@/hooks/useProductDetails";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Carousel,
   CarouselContent,
@@ -63,11 +64,24 @@ const ProductDetails = () => {
   
   const currentImage = allImages[selectedImageIndex];
 
-  const handleAddToCart = () => {
-    toast({
-      title: "Added to Cart",
-      description: `${product.name} has been added to your cart.`,
-    });
+  const handleBuyNow = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('create-payment', {
+        body: { productId: id }
+      });
+
+      if (error) throw error;
+
+      // Open Stripe checkout in a new tab
+      window.open(data.url, '_blank');
+    } catch (error) {
+      toast({
+        title: "Payment Error",
+        description: "Failed to create payment session. Please try again.",
+        variant: "destructive",
+      });
+      console.error('Payment error:', error);
+    }
   };
 
   const formatPrice = (price: number, currency: string) => {
@@ -191,10 +205,10 @@ const ProductDetails = () => {
               <Button 
                 variant="outline-pink"
                 size="lg" 
-                onClick={handleAddToCart}
+                onClick={handleBuyNow}
                 className="w-full handwritten text-lg font-bold px-8 py-6"
               >
-                ADD TO CART
+                BUY NOW - {formatPrice(product.price, product.currency)}
               </Button>
             </div>
 

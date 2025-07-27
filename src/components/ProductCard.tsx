@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductCardProps {
   id: string;
@@ -15,9 +17,32 @@ interface ProductCardProps {
 
 const ProductCard = ({ id, name, title, description, price, currency, image_url, category }: ProductCardProps) => {
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleCardClick = () => {
     navigate(`/product/${id}`);
+  };
+
+  const handleBuyNow = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card navigation when clicking buy button
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('create-payment', {
+        body: { productId: id }
+      });
+
+      if (error) throw error;
+
+      // Open Stripe checkout in a new tab
+      window.open(data.url, '_blank');
+    } catch (error) {
+      toast({
+        title: "Payment Error",
+        description: "Failed to create payment session. Please try again.",
+        variant: "destructive",
+      });
+      console.error('Payment error:', error);
+    }
   };
 
   return (
@@ -50,8 +75,9 @@ const ProductCard = ({ id, name, title, description, price, currency, image_url,
             variant="outline-pink"
             className="w-full handwritten"
             size="sm"
+            onClick={handleBuyNow}
           >
-            <b>ADD TO BAG</b>
+            <b>BUY NOW</b>
           </Button>
         </div>
       </CardContent>
