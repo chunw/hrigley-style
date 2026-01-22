@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "@/contexts/CartContext";
-import { useToast } from "@/hooks/use-toast";
 
 interface ProductCardProps {
   id: string;
@@ -17,29 +15,15 @@ interface ProductCardProps {
 
 const ProductCard = ({ id, name, title, description, price, currency, image_url, category }: ProductCardProps) => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const { addItem } = useCart();
 
   const handleCardClick = () => {
     navigate(`/product/${id}`);
   };
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleOrderNow = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card navigation when clicking button
-    
-    addItem({
-      id,
-      name,
-      title,
-      price,
-      currency,
-      image_url
-    });
-
-    toast({
-      title: "Added to Cart",
-      description: `${title || name} has been added to your cart.`,
-    });
+    // Replace with your PayPal link
+    window.open('https://www.paypal.com', '_blank');
   };
 
   return (
@@ -72,9 +56,9 @@ const ProductCard = ({ id, name, title, description, price, currency, image_url,
             variant="outline-pink"
             className="w-full handwritten"
             size="sm"
-            onClick={handleAddToCart}
+            onClick={handleOrderNow}
           >
-            <b>ADD TO CART</b>
+            <b>ORDER NOW</b>
           </Button>
         </div>
       </CardContent>

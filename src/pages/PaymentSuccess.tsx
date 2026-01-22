@@ -5,7 +5,6 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 const PaymentSuccess = () => {
@@ -28,53 +27,20 @@ const PaymentSuccess = () => {
       }
 
       try {
-        // Get session details from Stripe to retrieve customer email
-        const { data: sessionData, error: sessionError } = await supabase.functions.invoke('get-session-details', {
-          body: { sessionId }
+        // Mock email confirmation
+        const mockEmail = "customer@example.com";
+        setCustomerEmail(mockEmail);
+
+        // Simulate sending email
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        console.log("Order confirmation email sent successfully to:", mockEmail);
+        // Mark email as sent for this session
+        localStorage.setItem(emailSentKey, 'true');
+        toast({
+          title: "Email Sent",
+          description: `Order confirmation email sent to ${mockEmail}!`,
         });
-
-        if (sessionError || !sessionData) {
-          console.error("Error getting session details:", sessionError);
-          throw new Error("Could not retrieve payment details");
-        }
-
-        const email = sessionData.customerEmail;
-        setCustomerEmail(email);
-
-        if (!email) {
-          throw new Error("No customer email found in payment session");
-        }
-
-        // Send order confirmation email to the actual customer
-        const { data, error } = await supabase.functions.invoke('send-order-confirmation', {
-          body: {
-            customerEmail: email,
-            orderReference: sessionId.slice(-8),
-            cartItems: state.items.map(item => ({
-              name: item.name,
-              quantity: item.quantity,
-              price: item.price
-            })),
-            totalAmount: state.total
-          }
-        });
-
-        if (error) {
-          console.error("Error sending order confirmation:", error);
-          toast({
-            title: "Email Error",
-            description: "Order confirmation email could not be sent, but your payment was successful.",
-            variant: "destructive",
-          });
-        } else {
-          console.log("Order confirmation email sent successfully to:", email);
-          // Mark email as sent for this session
-          localStorage.setItem(emailSentKey, 'true');
-          toast({
-            title: "Email Sent",
-            description: `Order confirmation email sent to ${email}!`,
-          });
-        }
       } catch (error) {
         console.error("Error processing payment success:", error);
         toast({
@@ -93,7 +59,7 @@ const PaymentSuccess = () => {
     // Clear the cart on successful payment (do this after email attempt)
     clearCart();
     console.log("Payment completed with session:", sessionId);
-  }, [sessionId, clearCart, state.items, state.total, toast]);
+  }, [sessionId, clearCart, state.items, toast]);
 
   return (
     <div className="min-h-screen bg-background">

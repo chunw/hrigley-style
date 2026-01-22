@@ -7,8 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft } from "lucide-react";
 import { useProductDetails, useProductImages, useRelatedProducts } from "@/hooks/useProductDetails";
-import { useToast } from "@/hooks/use-toast";
-import { useCart } from "@/contexts/CartContext";
 import {
   Carousel,
   CarouselContent,
@@ -20,8 +18,6 @@ import {
 const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const { addItem } = useCart();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
@@ -65,22 +61,10 @@ const ProductDetails = () => {
   
   const currentImage = allImages[selectedImageIndex];
 
-  const handleAddToCart = () => {
+  const handleOrderNow = () => {
     if (!product) return;
-    
-    addItem({
-      id: product.id,
-      name: product.name,
-      title: product.title,
-      price: product.price,
-      currency: product.currency,
-      image_url: product.image_url
-    });
-
-    toast({
-      title: "Added to Cart",
-      description: `${product.title || product.name} has been added to your cart.`,
-    });
+    // Replace with your PayPal link
+    window.open('https://www.paypal.com', '_blank');
   };
 
   const formatPrice = (price: number, currency: string) => {
@@ -204,10 +188,10 @@ const ProductDetails = () => {
               <Button 
                 variant="outline-pink"
                 size="lg" 
-                onClick={handleAddToCart}
+                onClick={handleOrderNow}
                 className="w-full handwritten text-lg font-bold px-8 py-6"
               >
-                ADD TO CART - {formatPrice(product.price, product.currency)}
+                ORDER NOW - {formatPrice(product.price, product.currency)}
               </Button>
             </div>
 

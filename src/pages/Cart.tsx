@@ -7,7 +7,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useCart } from "@/contexts/CartContext";
 import { Minus, Plus, Trash2, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -44,26 +43,14 @@ const Cart = () => {
 
     setIsProcessing(true);
     try {
-      const { data, error } = await supabase.functions.invoke('create-payment', {
-        body: { 
-          cartItems: state.items.map(item => ({
-            productId: item.id,
-            quantity: item.quantity
-          }))
-        }
-      });
+      // Mock checkout - in production, this would call your payment API
+      const checkoutUrl = `https://checkout.stripe.com/pay/mock_checkout_${Date.now()}`;
+      
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 500));
 
-      if (error) {
-        console.error('Supabase function error:', error);
-        throw new Error(error.message || 'Failed to create checkout session');
-      }
-
-      if (!data || !data.url) {
-        throw new Error('No checkout URL received');
-      }
-
-      // Open Stripe checkout in a new tab
-      window.open(data.url, '_blank');
+      // Open mock checkout in a new tab
+      window.open(checkoutUrl, '_blank');
       
       toast({
         title: "Checkout Started",
@@ -75,12 +62,7 @@ const Cart = () => {
       
       let errorMessage = "Failed to create checkout session. Please try again.";
       
-      // Handle specific Stripe errors
-      if (error.message?.includes("total amount due must add up to at least")) {
-        errorMessage = "Your order must be at least $0.50 to proceed with checkout.";
-      } else if (error.message?.includes("No checkout URL")) {
-        errorMessage = "Payment system error. Please try again or contact support.";
-      } else if (error.message) {
+      if (error.message) {
         errorMessage = error.message;
       }
 
