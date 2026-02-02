@@ -5,7 +5,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Left - About */}
           <div className="space-y-4">
-            <h3 className="shrigley-title text-xl">ABOUT CHUN WANG SHOP</h3>
+            <h3 className="shrigley-title text-xl">ABOUT CHUN WANG STUDIO SHOP</h3>
             <p className="handwritten text-sm">
              What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity.
             </p>
@@ -30,6 +30,9 @@ const Footer = () => {
           <div className="space-y-4">
             <h3 className="shrigley-title text-xl">CONTACT</h3>
             <div className="space-y-2">
+              <a href="https://www.instagram.com/chunwang.art/" className="handwritten text-sm block hover:underline">
+                INSTAGRAM
+              </a>
               <p className="handwritten text-sm">chunwang.me@gmail.com</p>
               <p className="handwritten text-sm">
                 NEW YORK<br />
