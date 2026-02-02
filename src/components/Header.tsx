@@ -1,9 +1,7 @@
-import { ShoppingBag, Search, User } from "lucide-react";
+import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "@/contexts/CartContext";
 
 interface HeaderProps {
   searchQuery: string;
@@ -12,7 +10,6 @@ interface HeaderProps {
 
 const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
   const navigate = useNavigate();
-  const { state } = useCart();
 
   return (
     <header className="border-b border-border bg-background">
@@ -31,7 +28,7 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder="SEARCH REALLY GOOD STUFF..."
+                placeholder="SEARCH CHUN WANG'S CREATIONS..."
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
                 className="pl-10 handwritten text-sm bg-muted/50 border-border"
@@ -44,35 +41,23 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
             <a href="#" className="handwritten text-sm hover:text-primary transition-colors">
               SHOP
             </a>
-            <a href="/about" className="handwritten text-sm hover:text-primary transition-colors">
-              ABOUT
-            </a>
-            <a href="/about" className="handwritten text-sm hover:text-primary transition-colors">
-              MSG FROM C.W.
-            </a>
           </nav>
 
           {/* Right - Actions */}
           <div className="flex items-center space-x-4">
-            {/* <Button variant="ghost" size="icon">
-              <User className="h-5 w-5" />
-            </Button>  */}
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => navigate('/cart')}
-              className="relative"
+            <a
+              href="https://www.instagram.com/chunwang.art/"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <ShoppingBag className="h-5 w-5" />
-              {state.itemCount > 0 && (
-                <Badge 
-                  variant="destructive" 
-                  className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
-                >
-                  {state.itemCount}
-                </Badge>
-              )}
-            </Button>
+              <Button 
+                variant="outline"
+                size="sm"
+                className="handwritten text-sm"
+              >
+                CONTACT
+              </Button>
+            </a>
           </div>
         </div>
       </div>
