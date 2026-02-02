@@ -204,12 +204,6 @@ const ProductDetails = () => {
               </a>
             </div>
 
-            {/* <div className="text-sm text-muted-foreground font-helvetica space-y-1">
-              <p>This print is sold unframed.</p>
-              <p>It is possible to pay for this work in instalments.</p>
-              <p>** If you order from outside the EU: VAT equivalent of 5% of the price will be removed in the checkout **</p>
-              <p>Important info: as stated in our cancellation policy, if you order this print and then decide to cancel, we charge a 5% cancellation charge to cover the refund fees we incur.</p>
-            </div> */}
           </div>
         </div>
 

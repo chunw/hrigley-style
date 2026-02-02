@@ -14,7 +14,7 @@ const About = () => {
           <div className="space-y-8">
             <div className="space-y-4">
               <h1 className="shrigley-title text-4xl md:text-6xl lg:text-7xl leading-none">
-               Sincerely, <br />What?<br />
+               Chun Wang <br />Studio<br />
                 <span className="text-primary">SHOP</span>
               </h1>
               <p className="handwritten text-lg text-muted-foreground max-w-md">
@@ -51,6 +51,33 @@ const About = () => {
             {/* Decorative border */}
             <div className="absolute inset-0 border-4 border-primary translate-x-4 translate-y-4 rounded-lg -z-10"></div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Instagram Section */}
+    <section className="relative bg-background py-16 lg:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center space-y-8">
+          <div className="space-y-4">
+            <h2 className="shrigley-title text-3xl md:text-4xl">Follow on Instagram</h2>
+            <p className="handwritten text-lg text-muted-foreground">
+              See more of my work and studio updates
+            </p>
+          </div>
+          <a
+            href="https://www.instagram.com/chunwang.art/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block"
+          >
+            <Button 
+              size="lg"
+              className="handwritten text-lg px-8 py-6 bg-primary hover:bg-primary/90 text-primary-foreground"
+            >
+              @chunwang.art
+            </Button>
+          </a>
         </div>
       </div>
     </section>

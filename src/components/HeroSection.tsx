@@ -10,12 +10,11 @@ const HeroSection = () => {
           <div className="space-y-8">
             <div className="space-y-4">
               <h1 className="shrigley-title text-4xl md:text-6xl lg:text-7xl leading-none">
-               Sincerely, <br />What?<br />
+               Chun Wang <br />Studio<br />
                 <span className="text-primary">SHOP</span>
               </h1>
               <p className="handwritten text-lg text-muted-foreground max-w-md">
-                UNIQUE WORKS, LIMITED EDITIONS, AND OTHER READY GOOD STUFF CREATED BY CHUN WANG
-              </p>
+                UNIQUE WORKS, LIMITED EDITIONS, AND OTHER FANTASTIC STUFF FOR THE IMAGINATIVE COLLECTOR </p>
             </div>
           </div>
 
