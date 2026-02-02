@@ -22,8 +22,7 @@ const ProductCard = ({ id, name, title, description, price, currency, image_url,
 
   const handleOrderNow = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card navigation when clicking button
-    // Replace with your PayPal link
-    window.open('https://www.paypal.com', '_blank');
+    window.open('https://www.paypal.com/ncp/payment/WFPH39Q2FQJHU', '_blank');
   };
 
   return (

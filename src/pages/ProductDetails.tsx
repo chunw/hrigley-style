@@ -185,14 +185,23 @@ const ProductDetails = () => {
             )}
 
             <div className="pt-4">
-              <Button 
-                variant="outline-pink"
-                size="lg" 
-                onClick={handleOrderNow}
-                className="w-full handwritten text-lg font-bold px-8 py-6"
+              <a 
+                href="https://www.paypal.com/ncp/payment/WFPH39Q2FQJHU"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block w-full"
               >
-                ORDER NOW - {formatPrice(product.price, product.currency)}
-              </Button>
+                <Button 
+                  variant="outline-pink"
+                  size="lg" 
+                  className="w-full handwritten text-lg font-bold px-8 py-6"
+                  asChild
+                >
+                  <span>
+                    ORDER NOW - {formatPrice(product.price, product.currency)}
+                  </span>
+                </Button>
+              </a>
             </div>
 
             {/* <div className="text-sm text-muted-foreground font-helvetica space-y-1">
