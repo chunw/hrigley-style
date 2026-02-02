@@ -33,6 +33,10 @@ const Index = () => {
               <div className="space-y-4">
                 {/* Welcome to <i>Sincerely, What?</i> Shop —  */}
                 whimsical objects you can use, gift, or just stare at in existential curiosity.
+                <br>
+                </br><br>
+                </br>
+                CREATED EXCLUSIVELY BY CHUN WANG.
               </div>
             </div>
 
