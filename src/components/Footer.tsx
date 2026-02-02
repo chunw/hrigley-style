@@ -1,3 +1,5 @@
+import { SITE_NAME } from "@/lib/constants";
+
 const Footer = () => {
   return (
     <footer className="bg-[hsl(var(--footer-background))] text-primary-foreground py-12">
@@ -44,7 +46,7 @@ const Footer = () => {
 
         <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center">
           <p className="handwritten text-sm">
-            © 2026 chun wang SHOP
+            © 2026 {SITE_NAME}
           </p>
         </div>
       </div>
