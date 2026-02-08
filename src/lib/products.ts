@@ -23,9 +23,12 @@ export const products = [
     name: "Remains Tote Bag",
     price: 39,
     currency: "USD",
-    description: "Premium quality product",
-    detailed_description: "Original designs printed on both sides. Remains was a mixed media series. For commuters and high-fashion people like. Crafted from durable 100% cotton twill. The sturdy cotton handles ensure comfort and resilience for frequent use. ",
-    dimensions: `14''h x 14'' w x 3'' d`,
+    description: "Corporate Surrealism for commuters and high-fashion people alike.",
+    detailed_description:`The Remains series began with a sense of quiet amusement, inspired by ancient ceramic figures that felt familiar, awkward, and caught mid-nothing. By placing durable historical forms next to disposable, banal systems of daily life, the work leans into absurdity, where ancient permanence meets modern triviality. 
+    
+This tote is crafted from durable 100% cotton twill. The sturdy cotton handles ensure comfort and resilience for frequent use. 
+Dimension: 14 x 14 x 3 inches`,
+    dimensions: ``,
     edition_info: null,
     edition_size: null,
     alt_text: "Remains Tote Bag",
