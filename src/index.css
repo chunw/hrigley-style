@@ -133,4 +133,16 @@ All colors MUST be HSL.
     letter-spacing: 0.1em;
     line-height: 0.9;
   }
+
+  /* Make common interactive elements show pointer cursor */
+  a,
+  button,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  [role="button"],
+  label[for],
+  .clickable {
+    cursor: pointer;
+  }
 }
