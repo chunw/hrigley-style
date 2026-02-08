@@ -54,12 +54,17 @@ const ProductDetails = () => {
   }
 
   // Combine main product image with additional images from product_images table
-  const allImages = [
+  const rawImages = [
     { image_url: product.image_url, alt_text: product.name || product.title },
     ...(images || [])
-  ].filter(img => img.image_url); // Filter out any null/undefined image URLs
-  
-  const currentImage = allImages[selectedImageIndex];
+  ].filter(img => img && img.image_url);
+
+  // Deduplicate by image_url while preserving order (main image first)
+  const allImages = Array.from(
+    new Map(rawImages.map((img) => [img.image_url, img])).values()
+  );
+
+  const currentImage = allImages[selectedImageIndex] || allImages[0];
 
   const handleOrderNow = () => {
     if (!product) return;
