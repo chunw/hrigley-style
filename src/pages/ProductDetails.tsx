@@ -73,7 +73,7 @@ const ProductDetails = () => {
   };
 
   const formatPrice = (price: number, currency: string) => {
-    const symbol = currency === 'gbp' ? '£' : currency === 'eur' ? '€' : '$';
+    const symbol = '$'; // Default to USD
     return `${symbol}${price.toLocaleString()}`;
   };
 
@@ -81,7 +81,7 @@ const ProductDetails = () => {
     <div className="min-h-screen bg-background">
       <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-2">
         {/* Back Button */}
         <Button 
           variant="ghost" 

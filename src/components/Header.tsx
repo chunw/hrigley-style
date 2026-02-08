@@ -15,7 +15,7 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
   return (
     <header className="border-b border-border bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-48">
+        <div className="flex items-center justify-between h-28">
           {/* Left - Logo */}
           <div className="flex-shrink-0">
             <h1 onClick={() => navigate('/')} className="shrigley-title text-2xl cursor-pointer hover:text-primary transition-colors">
