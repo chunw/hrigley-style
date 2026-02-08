@@ -2,8 +2,8 @@
 export const products = [
   {
     id: "1",
-    title: "Year of the Horse Special Edition Postcard",
-    name: "Year of the Horse Special Edition Postcard",
+    title: "Year of the Horse Special Edition Card",
+    name: "Year of the Horse Special Edition Card",
     price: 3.5,
     currency: "USD",
     description: "Featuring two original designs as exhibited at the United Nation Headquarters, New York. ",
@@ -12,7 +12,7 @@ export const products = [
     edition_info: null,
     edition_size: null,
     alt_text: "Year of the Horse Special Edition Postcard",
-    image_url: "src/assets/products/horseyearpostcard/Horse Year Postcard 1.png",
+    image_url: new URL("../assets/products/horseyearpostcard/Horse Year Postcard 1.png", import.meta.url).href,
     is_active: true,
     category: "Stationery",
     created_at: new Date().toISOString(),
@@ -29,7 +29,7 @@ export const products = [
     edition_info: null,
     edition_size: null,
     alt_text: "Remains Tote Bag",
-    image_url: "src/assets/products/remainstote/Remains Tote 12.jpg",
+    image_url: new URL("../assets/products/remainstote/Remains Tote 12.jpg", import.meta.url).href,
     is_active: true,
     category: "Apparel",
     created_at: new Date().toISOString(),
@@ -412,6 +412,6 @@ export const products = [
 ];
 
 export const productImages = [
-  { id: "1", product_id: "1", image_url: "src/assets/products/horseyearpostcard/Horse Year Postcard 1.png", display_order: 0 },
-  { id: "2", product_id: "2", image_url: "src/assets/products/remainstote/Remains Tote 12.jpg", display_order: 0 },
+  { id: "1", product_id: "1", image_url: new URL("../assets/products/horseyearpostcard/Horse Year Postcard 1.png", import.meta.url).href, display_order: 0 },
+  { id: "2", product_id: "2", image_url: new URL("../assets/products/remainstote/Remains Tote 12.jpg", import.meta.url).href, display_order: 0 },
 ];
