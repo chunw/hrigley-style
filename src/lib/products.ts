@@ -1,14 +1,14 @@
 // Centralized product data (real products)
 export const products = [
   {
-    id: "1",
+    id: "horse-year-card",
     title: "Year of the Horse Special Edition Card",
     name: "Year of the Horse Special Edition Card",
     price: 3.5,
     currency: "USD",
     description: "Featuring two original designs as exhibited at the United Nation Headquarters, New York. ",
-    detailed_description: "Please provide a shipping address when you order.",
-    dimensions: "Printed on archival paper. 5 x 7 inches.",
+    detailed_description: "Printed on 100 lbs. paper. 5 x 7 inches. ",
+    dimensions: "Please provide a shipping address when you order.",
     edition_info: null,
     edition_size: null,
     alt_text: "Year of the Horse Special Edition Card",
@@ -18,7 +18,7 @@ export const products = [
     created_at: new Date().toISOString(),
   },
   {
-    id: "2",
+    id: "tote",
     title: "Remains Tote Bag",
     name: "Remains Tote Bag",
     price: 39,
@@ -412,15 +412,18 @@ export const products = [
 ];
 
 export const productImages = [
-   { id: "7", product_id: "1", image_url: new URL("../assets/products/horseyearpostcard/2.jpg", import.meta.url).href, display_order: 1 },
-   { id: "8", product_id: "1", image_url: new URL("../assets/products/horseyearpostcard/3.jpg", import.meta.url).href, display_order: 2 },
-   { id: "9", product_id: "1", image_url: new URL("../assets/products/horseyearpostcard/4.jpg", import.meta.url).href, display_order: 0 },
+   { id: "8", product_id: "horse-year-card", image_url: new URL("../assets/products/horseyearpostcard/3.jpg", import.meta.url).href, display_order: 0 },
+   { id: "horse-year-card-2", product_id: "horse-year-card", image_url: new URL("../assets/products/horseyearpostcard/2.jpg", import.meta.url).href, display_order: 0 },
+   { id: "9", product_id: "horse-year-card", image_url: new URL("../assets/products/horseyearpostcard/4.jpg", import.meta.url).href, display_order: 0 },
   
   
-  { id: "2", product_id: "2", image_url: new URL("../assets/products/remainstote/Remains Tote 12.jpg", import.meta.url).href, display_order: 0 },
-  { id: "3", product_id: "2", image_url: new URL("../assets/products/remainstote/Remains Tote 13.jpg", import.meta.url).href, display_order: 1 },
-{ id: "4", product_id: "2", image_url: new URL("../assets/products/remainstote/Remains Tote 9.jpg", import.meta.url).href, display_order: 2 },
-{ id: "5", product_id: "2", image_url: new URL("../assets/products/remainstote/Remains Tote 10.jpg", import.meta.url).href, display_order: 3 },
-{ id: "6", product_id: "2", image_url: new URL("../assets/products/remainstote/Remains Tote 11.jpg", import.meta.url).href, display_order: 4 },
- 
+  { id: "2", product_id: "tote", image_url: new URL("../assets/products/remainstote/Remains Tote 12.jpg", import.meta.url).href, display_order: 0 },
+  { id: "6", product_id: "tote", image_url: new URL("../assets/products/remainstote/Remains Tote 11.jpg", import.meta.url).href, display_order: 0 },
+{ id: "3", product_id: "tote", image_url: new URL("../assets/products/remainstote/Remains Tote 13.jpg", import.meta.url).href, display_order: 0 },
+ { id: "10", product_id: "tote", image_url: new URL("../assets/products/remainstote/1.jpg", import.meta.url).href, display_order: 0 },
+{ id: "11", product_id: "tote", image_url: new URL("../assets/products/remainstote/2.jpg", import.meta.url).href, display_order: 0 },
+
+  { id: "4", product_id: "tote", image_url: new URL("../assets/products/remainstote/Remains Tote 9.jpg", import.meta.url).href, display_order: 0 },
+{ id: "5", product_id: "tote", image_url: new URL("../assets/products/remainstote/Remains Tote 10.jpg", import.meta.url).href, display_order: 0 },
+
 ];
