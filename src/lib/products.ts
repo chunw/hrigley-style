@@ -8,11 +8,11 @@ export const products = [
     currency: "USD",
     description: "Featuring two original designs as exhibited at the United Nation Headquarters, New York. ",
     detailed_description: "Please provide a shipping address when you order.",
-    dimensions: "Printed on archival paper. 30 x 40 cm",
+    dimensions: "Printed on archival paper. 5 x 7 inches.",
     edition_info: null,
     edition_size: null,
-    alt_text: "Year of the Horse Special Edition Postcard",
-    image_url: new URL("../assets/products/horseyearpostcard/Horse Year Postcard 1.png", import.meta.url).href,
+    alt_text: "Year of the Horse Special Edition Card",
+    image_url: new URL("../assets/products/horseyearpostcard/4.jpg", import.meta.url).href,
     is_active: true,
     category: "Stationery",
     created_at: new Date().toISOString(),
@@ -412,6 +412,15 @@ export const products = [
 ];
 
 export const productImages = [
-  { id: "1", product_id: "1", image_url: new URL("../assets/products/horseyearpostcard/Horse Year Postcard 1.png", import.meta.url).href, display_order: 0 },
+   { id: "7", product_id: "1", image_url: new URL("../assets/products/horseyearpostcard/2.jpg", import.meta.url).href, display_order: 1 },
+   { id: "8", product_id: "1", image_url: new URL("../assets/products/horseyearpostcard/3.jpg", import.meta.url).href, display_order: 2 },
+   { id: "9", product_id: "1", image_url: new URL("../assets/products/horseyearpostcard/4.jpg", import.meta.url).href, display_order: 0 },
+  
+  
   { id: "2", product_id: "2", image_url: new URL("../assets/products/remainstote/Remains Tote 12.jpg", import.meta.url).href, display_order: 0 },
+  { id: "3", product_id: "2", image_url: new URL("../assets/products/remainstote/Remains Tote 13.jpg", import.meta.url).href, display_order: 1 },
+{ id: "4", product_id: "2", image_url: new URL("../assets/products/remainstote/Remains Tote 9.jpg", import.meta.url).href, display_order: 2 },
+{ id: "5", product_id: "2", image_url: new URL("../assets/products/remainstote/Remains Tote 10.jpg", import.meta.url).href, display_order: 3 },
+{ id: "6", product_id: "2", image_url: new URL("../assets/products/remainstote/Remains Tote 11.jpg", import.meta.url).href, display_order: 4 },
+ 
 ];
