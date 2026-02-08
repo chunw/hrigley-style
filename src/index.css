@@ -143,6 +143,6 @@ All colors MUST be HSL.
   [role="button"],
   label[for],
   .clickable {
-    cursor: pointer;
+    cursor: pointer !important;
   }
 }
