@@ -38,14 +38,14 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
           </div>
 
           {/* Navigation */}
-          <nav className="hidden lg:flex space-x-8">
+          {/* <nav className="hidden lg:flex space-x-8">
             <a href="#" className="handwritten text-sm hover:text-primary transition-colors">
               SHOP
             </a>
-          </nav>
+          </nav> */}
 
           {/* Right - Actions */}
-          <div className="flex items-center space-x-4">
+          {/* <div className="flex items-center space-x-4">
             <a
               href={INSTAGRAM_URL}
               target="_blank"
@@ -56,10 +56,11 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
                 size="sm"
                 className="handwritten text-sm"
               >
-                CONTACT
+                CONNECT
               </Button>
             </a>
-          </div>
+          </div> */}
+
         </div>
       </div>
     </header>

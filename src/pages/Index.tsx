@@ -21,22 +21,23 @@ const Index = () => {
             {/* Left - Text Content */}
             <div className="space-y-8">
               <div className="space-y-4">
+
+             <div className="space-x-12"> Welcome to </div>
+               
+                {/* <i>Sincerely, What?</i> Shop —  */}
+              
                 <h1 className="shrigley-title text-4xl md:text-6xl lg:text-7xl leading-none">
                  Chun Wang <br />Studio<br />
                   <span className="text-primary">SHOP</span>
                 </h1>
                 <p className="handwritten text-lg text-muted-foreground max-w-md">
-                  What started as bespoke observations and a bit of overthinking turn into 
+                  What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity,
+              
                 </p>
               </div>
 
               <div className="space-y-4">
-                {/* Welcome to <i>Sincerely, What?</i> Shop —  */}
-                whimsical objects you can use, gift, or just stare at in existential curiosity.
-                <br>
-                </br><br>
-                </br>
-                CREATED EXCLUSIVELY BY CHUN WANG.
+                created exclusively by Chun Wang. 
               </div>
             </div>
 
@@ -45,7 +46,7 @@ const Index = () => {
               <div className="aspect-square lg:aspect-[4/3] rounded-lg overflow-hidden scale-80">
                 <img 
                   src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/bcfb5ed3-e3df-489e-ba87-518d4adccdd0_rw_1200.png?h=3e84d177c91ced5bbf3cede876150ae5"
-                  alt="Shopping bag with really good stuff"
+                  alt="chun wang shop cover image"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -57,15 +58,12 @@ const Index = () => {
       </section>
 
       {/* Instagram Section */}
-      <section className="relative bg-background py-16 lg:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative bg-background py-8 ">
+        {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> */}
           <div className="text-center space-y-8">
-            <div className="space-y-4">
-              <h2 className="shrigley-title text-3xl md:text-4xl">Follow on Instagram</h2>
-              <p className="handwritten text-lg text-muted-foreground">
-                See more of my work and studio updates
+             <p className="handwritten text-lg text-muted-foreground">
+                Follow on Instagram
               </p>
-            </div>
             <a
               href="https://www.instagram.com/chunwang.art/"
               target="_blank"
@@ -80,7 +78,8 @@ const Index = () => {
               </Button>
             </a>
           </div>
-        </div>
+
+        {/* </div> */}
       </section>
 
       <Footer />

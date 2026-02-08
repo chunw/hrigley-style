@@ -44,7 +44,7 @@ const About = () => {
               <img 
                 // src={heroBag} 
                 src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/bcfb5ed3-e3df-489e-ba87-518d4adccdd0_rw_1200.png?h=3e84d177c91ced5bbf3cede876150ae5"
-                alt="Shopping bag with really good stuff"
+                alt="chun wang shop cover image"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -60,9 +60,8 @@ const About = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center space-y-8">
           <div className="space-y-4">
-            <h2 className="shrigley-title text-3xl md:text-4xl">Follow on Instagram</h2>
             <p className="handwritten text-lg text-muted-foreground">
-              See more of my work and studio updates
+             Follow on Instagram
             </p>
           </div>
           <a

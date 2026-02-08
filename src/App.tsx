@@ -22,10 +22,10 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/msg-from-cw" element={<About />} />
+            {/* <Route path="/msg-from-cw" element={<About />} /> */}
             <Route path="/product/:id" element={<ProductDetails />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/payment-success" element={<PaymentSuccess />} />
+            {/* <Route path="/cart" element={<Cart />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} /> */}
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
