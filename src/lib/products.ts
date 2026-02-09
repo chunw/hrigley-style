@@ -1,4 +1,19 @@
 // Centralized product data (real products)
+
+// const categories = ["ALL", 
+//   // "Original Art", 
+//   // "Prints/Series", 
+// //  "Stationery", 
+//   "Apparel", 
+//   // "Books", 
+//   // "Ceramics", 
+//   // "Decor", 
+//   // "Accessories", 
+//   // "Digital", 
+//   // "Service", 
+//   // "Misc"
+// ];
+
 export const products = [
 //   {
 //     id: "horse-year-card",

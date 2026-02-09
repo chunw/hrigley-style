@@ -2,20 +2,6 @@ import { useState } from "react";
 import ProductCard from "./ProductCard";
 import { useProducts } from "@/hooks/useProducts";
 
-// const categories = ["ALL", 
-//   // "Original Art", 
-//   // "Prints/Series", 
-// //  "Stationery", 
-
-//   "Apparel", 
-//   // "Books", 
-//   // "Ceramics", 
-//   // "Decor", 
-//   // "Accessories", 
-//   // "Digital", 
-//   // "Service", 
-//   // "Misc"
-// ];
 
 const ProductGrid = ({ searchQuery }: { searchQuery?: string }) => {
   const [selectedCategory, setSelectedCategory] = useState("ALL");

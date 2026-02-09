@@ -23,8 +23,6 @@ const Index = () => {
               <div className="space-y-4">
 
              <div className="space-x-12"> Welcome to </div>
-               
-                {/* <i>Sincerely, What?</i> Shop —  */}
               
                 <h1 className="shrigley-title text-4xl md:text-6xl lg:text-7xl leading-none">
                  Chun Wang <br />Studio<br />
@@ -57,9 +55,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Instagram Section */}
-      <section className="relative bg-background py-8 ">
-        {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> */}
+      <section className="relative bg-background py-8">
           <div className="text-center space-y-8">
              <p className="handwritten text-lg text-muted-foreground">
                 Follow on Instagram
@@ -79,7 +75,6 @@ const Index = () => {
             </a>
           </div>
 
-        {/* </div> */}
       </section>
 
       <Footer />
