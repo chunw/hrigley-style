@@ -2,25 +2,25 @@ import { useState } from "react";
 import ProductCard from "./ProductCard";
 import { useProducts } from "@/hooks/useProducts";
 
-const categories = ["ALL", 
-  // "Original Art", 
-  // "Prints/Series", 
-//  "Stationery", 
+// const categories = ["ALL", 
+//   // "Original Art", 
+//   // "Prints/Series", 
+// //  "Stationery", 
 
-  "Apparel", 
-  // "Books", 
-  // "Ceramics", 
-  // "Decor", 
-  // "Accessories", 
-  // "Digital", 
-  // "Service", 
-  // "Misc"
-];
+//   "Apparel", 
+//   // "Books", 
+//   // "Ceramics", 
+//   // "Decor", 
+//   // "Accessories", 
+//   // "Digital", 
+//   // "Service", 
+//   // "Misc"
+// ];
 
 const ProductGrid = ({ searchQuery }: { searchQuery?: string }) => {
   const [selectedCategory, setSelectedCategory] = useState("ALL");
   const { data: products, isLoading, error } = useProducts();
-
+  const categories = ["ALL", ...(products?.map(p => p.category) || [])];
   const filteredProducts = products?.filter(product => {
     const categoryMatch = selectedCategory === "ALL" || product.category === selectedCategory;
     const searchMatch = !searchQuery || product.name.toLowerCase().includes(searchQuery.toLowerCase());
