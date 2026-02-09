@@ -138,7 +138,7 @@ const ProductDetails = () => {
           {/* Product Information */}
           <div className="space-y-6">
             <div>
-              <h1 className="shrigley-title text-3xl md:text-4xl leading-tight mb-2">
+              <h1 className="shrigley-title text-3xl md:text-4xl leading-tight mb-2 mt-4">
                 {product.title || product.name}
               </h1>
               {product.category && (
