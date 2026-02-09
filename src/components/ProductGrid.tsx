@@ -5,7 +5,7 @@ import { useProducts } from "@/hooks/useProducts";
 const categories = ["ALL", 
   // "Original Art", 
   // "Prints/Series", 
-  "Stationery", 
+//  "Stationery", 
 
   "Apparel", 
   // "Books", 
