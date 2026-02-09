@@ -40,7 +40,7 @@ const ProductDetails = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
-        <div className="container mx-auto px-4 py-8">
+        {/* <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
             <Button onClick={() => navigate("/")} variant="outline">
@@ -48,7 +48,7 @@ const ProductDetails = () => {
               Back to Shop
             </Button>
           </div>
-        </div>
+        </div> */}
       </div>
     );
   }
@@ -83,14 +83,14 @@ const ProductDetails = () => {
       
       <main className="container mx-auto px-4 py-2">
         {/* Back Button */}
-        <Button 
+        {/* <Button 
           variant="ghost" 
           onClick={() => navigate("/")}
           className="mb-6 handwritten"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Shop
-        </Button>
+        </Button> */}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           {/* Image Gallery */}
