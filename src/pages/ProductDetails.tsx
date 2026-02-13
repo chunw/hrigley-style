@@ -40,15 +40,6 @@ const ProductDetails = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
-        {/* <div className="container mx-auto px-4 py-8">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
-            <Button onClick={() => navigate("/")} variant="outline">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Shop
-            </Button>
-          </div>
-        </div> */}
       </div>
     );
   }
@@ -66,15 +57,22 @@ const ProductDetails = () => {
 
   const currentImage = allImages[selectedImageIndex] || allImages[0];
 
-  const handleOrderNow = () => {
-    if (!product) return;
-    // Replace with your PayPal link
-    window.open('https://www.paypal.com', '_blank');
-  };
-
   const formatPrice = (price: number, currency: string) => {
     const symbol = '$'; // Default to USD
     return `${symbol}${price.toLocaleString()}`;
+  };
+
+  const handleOrderNow = (e: React.MouseEvent) => {
+    // 检查 gtag 是否存在（防止脚本还没加载完就点击报错）
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'click_paypal_link', {
+        'event_category': 'ecommerce',
+        'event_label': 'Chun Wang Shop Item - ' + (product.title || product.name),
+        'value': 1 // 你可以标记这个动作的权重
+      });
+    }
+    e.stopPropagation(); // Prevent card navigation when clicking button
+    window.open(product.paylink, '_blank');
   };
 
   return (
@@ -190,15 +188,11 @@ const ProductDetails = () => {
             )}
 
             <div className="pt-4">
-              <a 
-                href="https://www.paypal.com/ncp/payment/WFPH39Q2FQJHU"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block w-full"
-              >
+            
                 <Button 
                   variant="outline-pink"
                   size="lg" 
+                  onClick={handleOrderNow}
                   className="w-full handwritten text-lg font-bold px-8 py-6"
                   asChild
                 >
@@ -210,7 +204,6 @@ const ProductDetails = () => {
                 
                 <p className="pt-4 w-full text-xs text-muted-foreground">Shipping included</p>
        
-              </a>
             </div>
 
           </div>

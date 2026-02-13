@@ -13,7 +13,7 @@ interface ProductCardProps {
   category: string | null;
 }
 
-const ProductCard = ({ id, name, title, description, price, currency, image_url, category }: ProductCardProps) => {
+const ProductCard = ({ id, name, title, description, price, currency, image_url, category, paylink }: ProductCardProps) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
@@ -21,8 +21,16 @@ const ProductCard = ({ id, name, title, description, price, currency, image_url,
   };
 
   const handleOrderNow = (e: React.MouseEvent) => {
+    // 检查 gtag 是否存在（防止脚本还没加载完就点击报错）
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'click_paypal_link', {
+        'event_category': 'ecommerce',
+        'event_label': 'Chun Wang Shop Item - ' + (title || name),
+        'value': 1 // 你可以标记这个动作的权重
+      });
+    }
     e.stopPropagation(); // Prevent card navigation when clicking button
-    window.open('https://www.paypal.com/ncp/payment/WFPH39Q2FQJHU', '_blank');
+    window.open(paylink, '_blank');
   };
 
   return (

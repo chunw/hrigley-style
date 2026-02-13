@@ -51,6 +51,7 @@ Dimension: 14 x 14 inches`,
     is_active: true,
     category: "Apparel",
     created_at: new Date().toISOString(),
+    paylink: 'https://www.paypal.com/ncp/payment/WFPH39Q2FQJHU'
   },
 ];
 
