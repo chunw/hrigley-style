@@ -203,9 +203,13 @@ const ProductDetails = () => {
                   asChild
                 >
                   <span>
-                    ORDER NOW - {formatPrice(product.price, product.currency)}
+                    ORDER NOW - {formatPrice(product.price, product.currency) } 
                   </span>
-                </Button>
+                 
+                </Button> 
+                
+                <p className="pt-4 w-full text-xs text-muted-foreground">Shipping included</p>
+       
               </a>
             </div>
 

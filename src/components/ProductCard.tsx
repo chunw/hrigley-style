@@ -47,10 +47,11 @@ const ProductCard = ({ id, name, title, description, price, currency, image_url,
           {description && (
             <p className="text-sm font-semibold text-muted-foreground line-clamp-2">{description}</p>
           )}
-          <p className="handwritten text-lg font-bold">
+          <p className=" text-lg font-bold">
             {currency === 'gbp' ? '£' : '$'}{price.toFixed(2)}
           </p>
-          
+          <p className="text-xs text-muted-foreground">Shipping included</p>
+       
           <Button 
             variant="outline-pink"
             className="w-full handwritten"
@@ -60,8 +61,7 @@ const ProductCard = ({ id, name, title, description, price, currency, image_url,
             <b>ORDER NOW</b>
           </Button>
 
-            <p className="text-xs text-muted-foreground">Shipping included</p>
-        </div>
+             </div>
       </CardContent>
     </Card>
   );
