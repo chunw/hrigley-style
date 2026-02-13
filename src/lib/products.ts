@@ -42,7 +42,7 @@ export const products = [
     detailed_description:`The Remains series began with a sense of quiet amusement, inspired by ancient ceramic figures that felt familiar, awkward, and caught mid-nothing. By placing durable historical forms next to disposable, banal systems of daily life, the work leans into absurdity, where ancient permanence meets modern triviality. 
     
 This tote is crafted from durable 100% cotton twill. The sturdy cotton handles ensure comfort and resilience for frequent use. 
-Dimension: 14 x 14 x 3 inches`,
+Dimension: 14 x 14 inches`,
     dimensions: ``,
     edition_info: null,
     edition_size: null,
