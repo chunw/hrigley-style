@@ -13,8 +13,9 @@ const HeroSection = () => {
                Chun Wang <br />Studio<br />
                 <span className="text-primary">SHOP</span>
               </h1>
-              <p className="handwritten text-lg text-muted-foreground max-w-md">
-                UNIQUE WORKS, LIMITED EDITIONS, AND OTHER FANTASTIC STUFF FOR THE IMAGINATIVE COLLECTOR </p>
+              <p className=" text-lg text-muted-foreground max-w-md">
+              Unique works, limited editions, and other fantastic stuff for the imaginative collectors. 
+              </p>
             </div>
           </div>
 
