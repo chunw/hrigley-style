@@ -4,17 +4,18 @@ import HeroSection from "@/components/HeroSection";
 import ProductGrid from "@/components/ProductGrid";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { Analytics } from "@vercel/analytics/next";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <div className="min-h-screen bg-background">
+      
       <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
       <HeroSection />
       <ProductGrid searchQuery={searchQuery} />
-
-      {/* About Section from Msg from C.W. */}
+ 
       <section className="relative bg-background py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
