@@ -24,7 +24,7 @@ const Index = () => {
 
              <div className="space-x-12"> Welcome to </div>
               
-                <h1 className="shrigley-title text-4xl md:text-6xl lg:text-7xl leading-none">
+                <h1 className="shop-title text-4xl md:text-6xl lg:text-7xl leading-none">
                  Chun Wang <br />Studio<br />
                   <span className="text-primary">SHOP</span>
                 </h1>

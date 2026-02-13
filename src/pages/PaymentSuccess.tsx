@@ -70,7 +70,7 @@ const PaymentSuccess = () => {
           <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
           
           <div className="space-y-4">
-            <h1 className="shrigley-title text-3xl md:text-4xl">
+            <h1 className="shop-title text-3xl md:text-4xl">
               PAYMENT SUCCESSFUL!
             </h1>
             

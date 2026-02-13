@@ -7,13 +7,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 gap-8">
           {/* Contact */}
           <div className="space-y-4">
-            <h3 className="shrigley-title text-xl">CONTACT</h3>
+            <h3 className="shop-title text-xl">CONTACT</h3>
             <div className="space-y-2">
-              <a href="https://www.instagram.com/chunwang.art/" className="handwritten text-sm block hover:underline">
+              <a href="https://www.instagram.com/chunwang.art/" className=" text-sm block hover:underline">
                 INSTAGRAM
               </a>
-              <p className="handwritten text-sm">chunwang.me@gmail.com</p>
-              <p className="handwritten text-sm">
+              <p className="  text-sm">chunwang.me@gmail.com</p>
+              <p className=" text-sm">
                 NEW YORK CITY, USA<br />
               </p>
             </div>
@@ -21,7 +21,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center">
-          <p className="handwritten text-sm">
+          <p className=" text-sm">
             © 2026 {SITE_NAME}
           </p>
         </div>

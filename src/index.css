@@ -11,7 +11,6 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* David Shrigley inspired color palette */
     --background: 0 0% 0%;
     --foreground: 0 0% 100%;
 
@@ -112,8 +111,8 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
-    /* font-family: 'Comic Sans MS', cursive, system-ui; */
-    font-family: 'Gloria Hallelujah', 'Comic Sans MS';
+    font-family: 'Comic Sans MS', cursive, system-ui; 
+    /*font-family: 'Gloria Hallelujah', 'Comic Sans MS';*/
   }
 
   /* Hand-drawn style typography */
@@ -125,7 +124,7 @@ All colors MUST be HSL.
     letter-spacing: 0.05em;
   }
 
-  .shrigley-title {
+  .shop-title {
     /* font-family: 'Comic Sans MS', cursive; */
     font-family: 'Gloria Hallelujah', 'Comic Sans MS';
     font-weight: bold;

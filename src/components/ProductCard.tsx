@@ -59,6 +59,8 @@ const ProductCard = ({ id, name, title, description, price, currency, image_url,
           >
             <b>ORDER NOW</b>
           </Button>
+
+            <p className="text-xs text-muted-foreground">Shipping included</p>
         </div>
       </CardContent>
     </Card>

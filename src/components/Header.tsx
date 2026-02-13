@@ -18,7 +18,7 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
         <div className="flex items-center justify-between h-28">
           {/* Left - Logo */}
           <div className="flex-shrink-0">
-            <h1 onClick={() => navigate('/')} className="shrigley-title text-2xl cursor-pointer hover:text-primary transition-colors">
+            <h1 onClick={() => navigate('/')} className="shop-title text-2xl cursor-pointer hover:text-primary transition-colors">
               {SITE_NAME.split(' ').slice(0, 2).join(' ')}<br />{SITE_NAME.split(' ').slice(2).join(' ')}
             </h1>
           </div>

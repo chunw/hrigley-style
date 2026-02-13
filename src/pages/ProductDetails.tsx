@@ -99,7 +99,7 @@ const ProductDetails = () => {
             <div className="aspect-square rounded-lg overflow-hidden bg-black border-2 border-primary/20">
               <img
                 src={currentImage?.image_url || "/placeholder.svg"}
-                alt={currentImage?.alt_text || product.name}
+                alt={ product.name}
                 className="w-full h-full object-contain"
               />
             </div>
@@ -121,7 +121,7 @@ const ProductDetails = () => {
                         >
                           <img
                             src={image.image_url || "/placeholder.svg"}
-                            alt={image.alt_text || `${product.name} view ${index + 1}`}
+                            alt={`${product.name} view ${index + 1}`}
                             className="w-full h-full object-contain"
                           />
                         </button>
@@ -138,7 +138,7 @@ const ProductDetails = () => {
           {/* Product Information */}
           <div className="space-y-6">
             <div>
-              <h1 className="shrigley-title text-3xl md:text-4xl leading-tight mb-2 mt-4">
+              <h1 className="shop-title text-3xl md:text-4xl leading-tight mb-2 mt-4">
                 {product.title || product.name}
               </h1>
               {product.category && (
@@ -215,7 +215,7 @@ const ProductDetails = () => {
         {/* Related Products */}
         {relatedProducts && relatedProducts.length > 0 && (
           <section className="mt-16">
-            <h2 className="shrigley-title text-2xl md:text-3xl mb-8 text-center">
+            <h2 className="shop-title text-2xl md:text-3xl mb-8 text-center">
               YOU MAY ALSO LIKE
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

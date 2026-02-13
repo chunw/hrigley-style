@@ -9,7 +9,7 @@ const HeroSection = () => {
           {/* Left - Text Content */}
           <div className="space-y-8">
             <div className="space-y-4">
-              <h1 className="shrigley-title text-4xl md:text-6xl lg:text-7xl leading-none">
+              <h1 className="shop-title text-4xl md:text-6xl lg:text-7xl leading-none">
                Chun Wang <br />Studio<br />
                 <span className="text-primary">SHOP</span>
               </h1>
