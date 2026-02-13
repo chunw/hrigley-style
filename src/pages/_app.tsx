@@ -7,9 +7,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       {/* 全局 Google 标签 */}
       <Script
         src="https://www.googletagmanager.com/gtag/js?id=G-5NZX9FBVBS"
-        strategy="afterInteractive"
+        strategy="beforeInteractive"
       />
-      <Script id="google-analytics" strategy="afterInteractive">
+      <Script id="google-analytics" strategy="beforeInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
