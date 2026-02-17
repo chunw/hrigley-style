@@ -38,8 +38,8 @@ export const products = [
     name: "Remains Tote Bag",
     price: 39,
     currency: "USD",
-    description: "Corporate Surrealism for commuters and high-fashion people alike.",
-    detailed_description:`The Remains series began with a sense of quiet amusement, inspired by ancient ceramic figures that felt familiar, awkward, and caught mid-nothing. By placing durable historical forms next to disposable, banal systems of daily life, the work leans into absurdity, where ancient permanence meets modern triviality. 
+    description: "Corporate Surrealism for the daily commuter and the fashion-forward alike.",
+    detailed_description:`The Remains series was born from a subtle sense of the absurd, inspired by ancient ceramic figures that felt familiar, awkward, and caught mid-nothing. Fits perfectly within the mundane setting of a modern office.
     
 This tote is crafted from durable 100% cotton twill. The sturdy cotton handles ensure comfort and resilience for frequent use. 
 Dimension: 14 x 14 inches`,
