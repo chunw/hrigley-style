@@ -28,7 +28,7 @@ const Index = () => {
                  Chun Wang <br />Studio<br />
                   <span className="text-primary">SHOP</span>
                 </h1>
-                <p className="text-lg text-muted-foreground max-w-md handwritten">
+                <p className="text-muted-foreground max-w-md handwritten">
                   {/* What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity.
                    */}
                   Unique works for the imaginative collectors
