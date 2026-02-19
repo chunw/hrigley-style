@@ -15,16 +15,17 @@ const Index = () => {
       <HeroSection />
       <ProductGrid searchQuery={searchQuery} />
  
-      <section className="relative bg-background py-16 lg:py-24">
+      <section className="border-t relative bg-background py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left - Text Content */}
             <div className="space-y-8">
               <div className="space-y-4">
-
-             <div className="handwritten text-sm text-muted-foreground">Welcome to</div>
+{/* 
+           
+             <div className="handwritten text-sm text-muted-foreground">Welcome to</div> */}
               
-                <h1 className="shop-title text-4xl md:text-6xl lg:text-7xl leading-none">
+                <h1 className=" shop-title text-4xl md:text-6xl lg:text-7xl leading-none">
                  Chun Wang <br />Studio<br />
                   <span className="text-primary">SHOP</span>
                 </h1>
