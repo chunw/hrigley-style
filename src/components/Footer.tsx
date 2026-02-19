@@ -9,9 +9,9 @@ const Footer = () => {
           <div className="space-y-4">
             <h3 className="shop-title text-xl">CONTACT</h3>
             <div className="space-y-2">
-              <a href="https://www.instagram.com/chunwang.art/" className=" text-sm block hover:underline">
+              {/* <a href="https://www.instagram.com/chunwang.art/" className=" text-sm block hover:underline">
                 INSTAGRAM
-              </a>
+              </a> */}
               <p className="  text-sm">chunwang.me@gmail.com</p>
               <p className=" text-sm">
                 NEW YORK CITY, USA<br />

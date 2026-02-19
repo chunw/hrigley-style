@@ -15,23 +15,6 @@
 // ];
 
 export const products = [
-//   {
-//     id: "horse-year-card",
-//     title: "Year of the Horse Special Edition Card",
-//     name: "Year of the Horse Special Edition Card",
-//     price: 3.5,
-//     currency: "USD",
-//     description: "Featuring two original designs as exhibited at the United Nation Headquarters, New York. ",
-//     detailed_description: "Printed on 100 lbs. paper. 5 x 7 inches. ",
-//     dimensions: "Please provide a shipping address when you order.",
-//     edition_info: null,
-//     edition_size: null,
-//     alt_text: "Year of the Horse Special Edition Card",
-//     image_url: new URL("../assets/products/horseyearpostcard/4.jpg", import.meta.url).href,
-//     is_active: true,
-//     category: "Stationery",
-//     created_at: new Date().toISOString(),
-//   },
   {
     id: "tote",
     title: "Remains Tote Bag",
@@ -39,14 +22,10 @@ export const products = [
     price: 39,
     currency: "USD",
     description: "Corporate Surrealism for the daily commuter and the trendsetters alike.",
-    detailed_description:`An Official Selection for the 2024 London International Creative Competition (LICC) in CREATE/Art category, the Remains series was born from a subtle sense of the absurd: while studying ancient terracotta figurines, I found myself captivated by their familiar, awkward, and caught mid-nothing looks. They didn't feel like monuments, but rather, their expressions leave a fascinating space for the imagination, making them the perfect companions for the mundane settings of contemporary offices and modern life.
-This tote is crafted from durable 100% cotton twill. The sturdy cotton handles ensure comfort and resilience for frequent use. 
-Dimension: 35 x 35 cm`,
     detailed_description_html: `
-  <p><strong>Official Selection</strong> for the 2024 London International Creative Competition (LICC) in CREATE/Art. The Remains series was born from a subtle sense of the absurd: while studying ancient terracotta figurines, I found myself captivated by their familiar, awkward, and caught mid-nothing looks. They did not feel like monuments; their expressions leave a fascinating space for the imagination, making them perfect companions for the mundane settings of contemporary offices and modern life.</p>
-  <p><strong>Materials:</strong> 100% cotton twill with sturdy cotton handles.</p>
-  <p><strong>Dimensions:</strong> 35 x 35 cm.</p>
-  <p><a href="https://www.licc.uk/" target="_blank" rel="noreferrer">Learn more about LICC</a></p>
+  <p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank" rel="noreferrer">Official Selection for the 2024 London International Creative Competition (LICC) in Create/Art</a> category, the <i>Remains</i> series was born from a subtle sense of the absurd.  While studying ancient terracotta figurines, I found myself captivated by their familiar, awkward, and caught mid-nothing looks. They did not feel like monuments, but rather, their expressions leave a fascinating space for the imagination, making them perfect companions for the mundane settings of contemporary offices and modern life. <br>
+This tote is crafted from durable 100% cotton twill. The sturdy cotton handles ensure comfort and resilience for frequent use. <br>
+Dimensions: 35 x 35 cm</p>
     `.trim(),
     dimensions: ``,
     edition_info: null,
@@ -72,7 +51,7 @@ export const productImages = [
  { id: "10", product_id: "tote", image_url: new URL("../assets/products/remainstote/1.jpg", import.meta.url).href, display_order: 0 },
 { id: "11", product_id: "tote", image_url: new URL("../assets/products/remainstote/2.jpg", import.meta.url).href, display_order: 0 },
 
-  { id: "4", product_id: "tote", image_url: new URL("../assets/products/remainstote/Remains Tote 9.jpg", import.meta.url).href, display_order: 0 },
-{ id: "5", product_id: "tote", image_url: new URL("../assets/products/remainstote/Remains Tote 10.jpg", import.meta.url).href, display_order: 0 },
+//   { id: "4", product_id: "tote", image_url: new URL("../assets/products/remainstote/Remains Tote 9.jpg", import.meta.url).href, display_order: 0 },
+// { id: "5", product_id: "tote", image_url: new URL("../assets/products/remainstote/Remains Tote 10.jpg", import.meta.url).href, display_order: 0 },
 
 ];
