@@ -1,14 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Search } from "lucide-react";
 import ProductCard from "./ProductCard";
 import { useProducts } from "@/hooks/useProducts";
+import { Input } from "@/components/ui/input";
 
 
 interface ProductGridProps {
   searchQuery?: string;
+  onSearchChange?: (query: string) => void;
   onMatchCountChange?: (count: number) => void;
+  matchedCount?: number;
 }
 
-const ProductGrid = ({ searchQuery, onMatchCountChange }: ProductGridProps) => {
+const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedCount = 0 }: ProductGridProps) => {
   const [selectedCategory, setSelectedCategory] = useState("ALL");
   const { data: products, isLoading, error } = useProducts();
   const firstMatchedCardRef = useRef<HTMLDivElement | null>(null);
@@ -78,6 +82,24 @@ const ProductGrid = ({ searchQuery, onMatchCountChange }: ProductGridProps) => {
   return (
     <section className="py-16 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-xl mx-auto mb-8">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="SEARCH"
+              value={searchQuery || ""}
+              onChange={(e) => onSearchChange?.(e.target.value)}
+              className="pl-10 handwritten text-sm bg-muted/50 border-border"
+            />
+          </div>
+          {hasActiveSearch && (
+            <p className="mt-2 font-helvetica text-xs text-muted-foreground text-left">
+              {matchedCount} {matchedCount === 1 ? "matched product" : "matched products"}
+            </p>
+          )}
+        </div>
+
         {/* Category Filter */}
         <div className="mb-12">
           <div className="flex flex-wrap gap-4 justify-center">
@@ -96,13 +118,6 @@ const ProductGrid = ({ searchQuery, onMatchCountChange }: ProductGridProps) => {
             ))}
           </div>
 
-          {hasActiveSearch && (
-            <div className="mt-6 text-center">
-              <p className="handwritten text-sm text-muted-foreground">
-                {sortedFilteredProducts.length} {sortedFilteredProducts.length === 1 ? "MATCHED PRODUCT" : "MATCHED PRODUCTS"} FOR "{normalizedSearchQuery}"
-              </p>
-            </div>
-          )}
         </div>
 
         {/* Products Grid */}

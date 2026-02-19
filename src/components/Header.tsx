@@ -1,19 +1,8 @@
-import { Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
-import { SITE_NAME, INSTAGRAM_URL } from "@/lib/constants";
+import { SITE_NAME } from "@/lib/constants";
 
-interface HeaderProps {
-  searchQuery: string;
-  onSearchChange: (query: string) => void;
-  matchedCount?: number;
-}
-
-const Header = ({ searchQuery, onSearchChange, matchedCount = 0 }: HeaderProps) => {
+const Header = () => {
   const navigate = useNavigate();
-  const normalizedSearchQuery = searchQuery.trim();
-  const hasActiveSearch = normalizedSearchQuery.length > 0;
 
   return (
     <header className="border-b border-border bg-background">
@@ -26,24 +15,7 @@ const Header = ({ searchQuery, onSearchChange, matchedCount = 0 }: HeaderProps) 
             </h1>
           </div>
 
-          {/* Center - Search and Navigation */}
-          <div className="flex-1 max-w-xl mx-8">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="SEARCH"
-                value={searchQuery}
-                onChange={(e) => onSearchChange(e.target.value)}
-                className="pl-10 handwritten text-sm bg-muted/50 border-border"
-              />
-            </div>
-            {hasActiveSearch && (
-              <p className="mt-2 handwritten text-xs text-muted-foreground text-center">
-                {matchedCount} {matchedCount === 1 ? "MATCHED PRODUCT" : "MATCHED PRODUCTS"}
-              </p>
-            )}
-          </div>
+          <div className="flex-1" />
 
           {/* Navigation */}
           {/* <nav className="hidden lg:flex space-x-8">
