@@ -1,13 +1,56 @@
 import { useNavigate } from "react-router-dom";
-import { SITE_NAME } from "@/lib/constants";
+import { Instagram } from "lucide-react";
+import { INSTAGRAM_URL, SITE_NAME } from "@/lib/constants";
+import { useToast } from "@/hooks/use-toast";
 
 const Header = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleContactClick = async () => {
+    const email = "chunwang.me@gmail.com";
+
+    try {
+      await navigator.clipboard.writeText(email);
+      toast({
+        title: "Email copied to your clipboard",
+        description: `${email}`,
+      });
+    } catch {
+      toast({
+        title: "Copy failed",
+        description: `Please copy manually: ${email}`,
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <header className="border-b border-border bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-28">
+        <div className="relative flex items-center justify-between h-28">
+          <div className="absolute inset-y-0 right-0 inline-flex items-center gap-4 text-sm font-helvetica">
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow on Instagram"
+              className="inline-flex items-center gap-1 text-foreground hover:text-primary transition-colors"
+            >
+              <Instagram className="h-4 w-4" />
+              <span>follow us</span>
+            </a>
+            <span aria-hidden="true" className="text-muted-foreground">|</span>
+            <button
+              type="button"
+              onClick={handleContactClick}
+              aria-label="Copy contact email"
+              className="text-foreground hover:text-primary transition-colors"
+            >
+              contact us
+            </button>
+          </div>
+
           {/* Left - Logo */}
           <div className="flex-shrink-0">
             <h1 onClick={() => navigate('/')} className="shop-title text-2xl cursor-pointer hover:text-primary transition-colors">
