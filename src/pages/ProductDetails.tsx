@@ -31,7 +31,7 @@ const ProductDetails = () => {
       <div className="min-h-screen bg-background">
         <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
         <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-lg text-muted-foreground">Loading...</div>
+          <div className="text-lg text-muted-foreground handwritten">Loading...</div>
         </div>
       </div>
     );
