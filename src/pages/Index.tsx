@@ -44,7 +44,7 @@ const Index = () => {
             {/* Right - Image */}
             <div className="relative">
               <a
-                href="https://chun.myportfolio.com/copy-of-climate-collapse-the-war-against-powered-interests"
+                href="https://ls.chunwang.me/"
                 target="_blank"
                 rel="noreferrer"
                 className="block aspect-square lg:aspect-[4/3] rounded-lg overflow-hidden scale-80"
