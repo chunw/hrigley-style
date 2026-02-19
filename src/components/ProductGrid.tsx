@@ -1,17 +1,55 @@
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ProductCard from "./ProductCard";
 import { useProducts } from "@/hooks/useProducts";
 
 
-const ProductGrid = ({ searchQuery }: { searchQuery?: string }) => {
+interface ProductGridProps {
+  searchQuery?: string;
+  onMatchCountChange?: (count: number) => void;
+}
+
+const ProductGrid = ({ searchQuery, onMatchCountChange }: ProductGridProps) => {
   const [selectedCategory, setSelectedCategory] = useState("ALL");
   const { data: products, isLoading, error } = useProducts();
+  const firstMatchedCardRef = useRef<HTMLDivElement | null>(null);
+  const normalizedSearchQuery = searchQuery?.trim() || "";
+  const hasActiveSearch = normalizedSearchQuery.length > 0;
+
   const categories = ["ALL", ...(products?.map(p => p.category) || [])];
+
+  const buildProductSearchText = (product: Record<string, unknown>) => {
+    return Object.values(product)
+      .filter((value) => typeof value === "string" || typeof value === "number")
+      .map((value) => String(value).toLowerCase())
+      .join(" ");
+  };
+
   const filteredProducts = products?.filter(product => {
     const categoryMatch = selectedCategory === "ALL" || product.category === selectedCategory;
-    const searchMatch = !searchQuery || product.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const searchText = buildProductSearchText(product as Record<string, unknown>);
+    const searchMatch = !normalizedSearchQuery || searchText.includes(normalizedSearchQuery.toLowerCase());
     return categoryMatch && searchMatch;
   });
+
+  const sortedFilteredProducts = useMemo(
+    () => [...(filteredProducts || [])].sort((a, b) => ((a as any).display_order || 0) - ((b as any).display_order || 0)),
+    [filteredProducts]
+  );
+
+  useEffect(() => {
+    onMatchCountChange?.(hasActiveSearch ? sortedFilteredProducts.length : 0);
+  }, [hasActiveSearch, sortedFilteredProducts.length, onMatchCountChange]);
+
+  useEffect(() => {
+    if (!hasActiveSearch || sortedFilteredProducts.length === 0) {
+      return;
+    }
+
+    firstMatchedCardRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  }, [hasActiveSearch, sortedFilteredProducts.length, normalizedSearchQuery]);
 
   if (isLoading) {
     return (
@@ -57,14 +95,37 @@ const ProductGrid = ({ searchQuery }: { searchQuery?: string }) => {
               </button>
             ))}
           </div>
+
+          {hasActiveSearch && (
+            <div className="mt-6 text-center">
+              <p className="handwritten text-sm text-muted-foreground">
+                {sortedFilteredProducts.length} {sortedFilteredProducts.length === 1 ? "MATCHED PRODUCT" : "MATCHED PRODUCTS"} FOR "{normalizedSearchQuery}"
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProducts?.sort((a, b) => ((a as any).display_order || 0) - ((b as any).display_order || 0))?.map((product) => (
-            <ProductCard key={product.id} {...product} />
-          ))}
-        </div>
+        {hasActiveSearch && sortedFilteredProducts.length === 0 ? (
+          <div className="rounded-lg border-2 border-destructive/40 bg-destructive/5 px-6 py-10 text-center">
+            <p className="handwritten text-lg text-destructive">NO RESULTS FOUND</p>
+            <p className="font-helvetica text-sm text-muted-foreground mt-2">
+              We couldn't find anything for "{normalizedSearchQuery}".
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {sortedFilteredProducts.map((product, index) => (
+              <div key={product.id} ref={index === 0 && hasActiveSearch ? firstMatchedCardRef : null}>
+                <ProductCard
+                  {...product}
+                  highlightQuery={normalizedSearchQuery}
+                  isSearchHighlighted={hasActiveSearch}
+                />
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Load More */}
         {/* <div className="text-center mt-12">

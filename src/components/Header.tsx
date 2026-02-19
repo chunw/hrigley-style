@@ -7,10 +7,13 @@ import { SITE_NAME, INSTAGRAM_URL } from "@/lib/constants";
 interface HeaderProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  matchedCount?: number;
 }
 
-const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
+const Header = ({ searchQuery, onSearchChange, matchedCount = 0 }: HeaderProps) => {
   const navigate = useNavigate();
+  const normalizedSearchQuery = searchQuery.trim();
+  const hasActiveSearch = normalizedSearchQuery.length > 0;
 
   return (
     <header className="border-b border-border bg-background">
@@ -35,6 +38,11 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
                 className="pl-10 handwritten text-sm bg-muted/50 border-border"
               />
             </div>
+            {hasActiveSearch && (
+              <p className="mt-2 handwritten text-xs text-muted-foreground text-center">
+                {matchedCount} {matchedCount === 1 ? "MATCHED PRODUCT" : "MATCHED PRODUCTS"}
+              </p>
+            )}
           </div>
 
           {/* Navigation */}

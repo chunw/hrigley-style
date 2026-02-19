@@ -7,13 +7,19 @@ import { Analytics } from "@vercel/analytics/next";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [matchedCount, setMatchedCount] = useState(0);
 
   return (
     <div className="min-h-screen bg-background">
       
-      <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+      <Header />
       <HeroSection />
-      <ProductGrid searchQuery={searchQuery} />
+      <ProductGrid
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onMatchCountChange={setMatchedCount}
+        matchedCount={matchedCount}
+      />
  
       <section className=" relative bg-background py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -11,10 +11,32 @@ interface ProductCardProps {
   currency: string;
   image_url: string | null;
   category: string | null;
+  paylink: string;
+  highlightQuery?: string;
+  isSearchHighlighted?: boolean;
 }
 
-const ProductCard = ({ id, name, title, description, price, currency, image_url, category, paylink }: ProductCardProps) => {
+const ProductCard = ({ id, name, title, description, price, currency, image_url, category, paylink, highlightQuery, isSearchHighlighted }: ProductCardProps) => {
   const navigate = useNavigate();
+
+  const renderHighlightedText = (text: string) => {
+    if (!highlightQuery?.trim()) {
+      return text;
+    }
+
+    const escapedQuery = highlightQuery.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const segments = text.split(new RegExp(`(${escapedQuery})`, "gi"));
+
+    return segments.map((segment, index) =>
+      segment.toLowerCase() === highlightQuery.toLowerCase() ? (
+        <mark key={`${segment}-${index}`} className="bg-primary/20 text-foreground rounded-sm px-0.5">
+          {segment}
+        </mark>
+      ) : (
+        <span key={`${segment}-${index}`}>{segment}</span>
+      )
+    );
+  };
 
   const handleCardClick = () => {
     navigate(`/product/${id}`);
@@ -34,7 +56,12 @@ const ProductCard = ({ id, name, title, description, price, currency, image_url,
   };
 
   return (
-    <Card className="group hover:shadow-lg transition-shadow duration-200 border-2 border-border cursor-pointer" onClick={handleCardClick}>
+    <Card
+      className={`group hover:shadow-lg transition-shadow duration-200 border-2 cursor-pointer ${
+        isSearchHighlighted ? "border-primary ring-2 ring-primary/30" : "border-border"
+      }`}
+      onClick={handleCardClick}
+    >
       <CardContent className="p-4">
         <div className="aspect-square bg-black mb-4 overflow-hidden">
           <img 
@@ -50,13 +77,13 @@ const ProductCard = ({ id, name, title, description, price, currency, image_url,
         </div>
         
         <div className="space-y-2">
-          <p className="text-xs handwritten text-muted-foreground">{category}</p>
-          <h3 className="text-lg leading-tight handwritten">{title || name}</h3>
+          <p className="text-xs handwritten text-muted-foreground">{category ? renderHighlightedText(category) : null}</p>
+          <h3 className="text-lg leading-tight handwritten">{renderHighlightedText(title || name)}</h3>
           {description && (
-            <p className="text-sm font-helvetica text-muted-foreground line-clamp-2">{description}</p>
+            <p className="text-sm font-helvetica text-muted-foreground line-clamp-2">{renderHighlightedText(description)}</p>
           )}
           <p className="text-lg font-bold handwritten">
-            {currency === 'gbp' ? '£' : '$'}{price.toFixed(2)}
+            {renderHighlightedText(`${currency === 'gbp' ? '£' : '$'}${price.toFixed(2)}`)}
           </p>
           <p className="text-xs text-muted-foreground font-helvetica">Shipping included</p>
        
