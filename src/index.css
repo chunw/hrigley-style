@@ -130,6 +130,14 @@ All colors MUST be HSL.
     line-height: 0.9;
   }
 
+  .product-details-html a {
+    font-weight: 600;
+  }
+
+  .product-details-html a:hover {
+    color: hsl(var(--primary));
+  }
+
   /* Make common interactive elements show pointer cursor */
   a,
   button,

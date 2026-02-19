@@ -162,7 +162,7 @@ const ProductDetails = () => {
               <div className="space-y-2">
                 <h3 className="handwritten text-base">Details</h3>
                 <div
-                  className="text-muted-foreground font-helvetica whitespace-pre-wrap"
+                  className="text-muted-foreground font-helvetica whitespace-pre-wrap product-details-html"
                   dangerouslySetInnerHTML={{ __html: product.detailed_description_html }}
                 />
               </div>
