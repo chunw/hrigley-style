@@ -10,8 +10,8 @@ const Footer = () => {
           <div className="space-y-4">
             <h3 className="shop-title text-xl">CONTACT</h3>
             <div className="space-y-2">
-              <p className="text-sm handwritten">chunwang.me@gmail.com</p>
-              <p className="text-sm handwritten">
+              <p className="text-sm font-helvetica">chunwang.me@gmail.com</p>
+              <p className="text-sm font-helvetica">
                 NEW YORK CITY, USA<br />
               </p>
             </div>
@@ -35,7 +35,7 @@ const Footer = () => {
               </Button>
             </a>
           </div>
-          <p className="text-sm handwritten">
+          <p className="text-sm font-helvetica">
             © {new Date().getFullYear()} {SITE_NAME}
           </p>
         </div>
