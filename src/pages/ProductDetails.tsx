@@ -147,7 +147,7 @@ const ProductDetails = () => {
               )}
             </div>
 
-            <div className="text-2xl font-bold text-primary">
+            <div className="text-2xl font-bold text-primary handwritten">
               {formatPrice(product.price, product.currency)}
             </div>
 
