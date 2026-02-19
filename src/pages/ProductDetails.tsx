@@ -204,7 +204,7 @@ const ProductDetails = () => {
                  
                 </Button> 
                 
-                <p className="pt-4 w-full text-xs text-muted-foreground handwritten">Shipping included</p>
+                <p className="pt-4 w-full text-xs text-muted-foreground font-helvetica">Shipping included</p>
        
             </div>
 
