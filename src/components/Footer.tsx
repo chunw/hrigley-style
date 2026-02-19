@@ -29,7 +29,7 @@ const Footer = () => {
             >
               <Button
                 size="lg"
-                className="handwritten px-8 py-6 bg-primary hover:bg-primary/90 text-primary-foreground"
+                className="handwritten text-lg px-8 py-6 bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 @chunwang.art
               </Button>
