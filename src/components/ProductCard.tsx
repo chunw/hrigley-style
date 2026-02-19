@@ -62,7 +62,7 @@ const ProductCard = ({ id, name, title, description, price, currency, image_url,
        
           <Button 
             variant="outline-pink"
-            className="w-full font-helvetica"
+            className="w-full handwritten"
             size="sm"
             onClick={handleOrderNow}
           >
