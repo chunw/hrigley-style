@@ -43,13 +43,29 @@ const Index = () => {
 
             {/* Right - Image */}
             <div className="relative">
-              <div className="aspect-square lg:aspect-[4/3] rounded-lg overflow-hidden scale-80">
+              <a
+                href="https://chun.myportfolio.com/copy-of-climate-collapse-the-war-against-powered-interests"
+                target="_blank"
+                rel="noreferrer"
+                className="block aspect-square lg:aspect-[4/3] rounded-lg overflow-hidden scale-80"
+              >
                 <img 
                   src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/bcfb5ed3-e3df-489e-ba87-518d4adccdd0_rw_1200.png?h=3e84d177c91ced5bbf3cede876150ae5"
                   alt="chun wang shop cover image"
                   className="w-full h-full object-cover"
                 />
-              </div>
+              </a>
+              {/* <p className="mt-3 text-xs text-muted-foreground/70">
+               
+                <a
+                  href="https://ls.chunwang.me/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline-offset-2 hover:underline"
+                >
+                  chunwang.art
+                </a>
+              </p> */}
               {/* Decorative border */}
               <div className="absolute inset-0 border-4 border-primary translate-x-4 translate-y-4 rounded-lg -z-10"></div>
             </div>

@@ -31,6 +31,17 @@ const HeroSection = () => {
                 className="w-full h-full object-cover"
               />
             </div>
+            <p className="mt-3 text-xs text-muted-foreground/70">
+              Image by {" "}
+              <a
+                href="https://chun.myportfolio.com/copy-of-climate-collapse-the-war-against-powered-interests"
+                target="_blank"
+                rel="noreferrer"
+                className="underline-offset-2 hover:underline"
+              >
+                Chun Wang
+              </a>
+            </p>
             {/* Decorative border */}
             <div className="absolute inset-0 border-4 border-primary translate-x-4 translate-y-4 rounded-lg -z-10"></div>
           </div>
