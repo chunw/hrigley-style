@@ -17,14 +17,16 @@ const About = () => {
                Chun Wang <br />Studio<br />
                 <span className="text-primary">SHOP</span>
               </h1>
-              <p className="handwritten text-lg text-muted-foreground max-w-md">
+              <p className="text-lg text-muted-foreground max-w-md handwritten">
                 What started as bespoke observations and a bit of overthinking turn into 
               </p>
             </div>
 
             <div className="space-y-4">
               {/* Welcome to <i>Sincerely, What?</i> Shop —  */}
-              whimsical objects you can use, gift, or just stare at in existential curiosity.
+              <p className="text-lg text-muted-foreground font-helvetica">
+                whimsical objects you can use, gift, or just stare at in existential curiosity.
+              </p>
             </div>
              
             <div className="space-y-4">
@@ -60,7 +62,7 @@ const About = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center space-y-8">
           <div className="space-y-4">
-            <p className="handwrittentext-muted-foreground">
+            <p className="handwritten text-muted-foreground">
              Follow us on Instagram
             </p>
           </div>

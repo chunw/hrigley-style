@@ -22,13 +22,13 @@ const Index = () => {
             <div className="space-y-8">
               <div className="space-y-4">
 
-             <div className="space-x-12"> Welcome to </div>
+             <div className="handwritten text-sm text-muted-foreground">Welcome to</div>
               
                 <h1 className="shop-title text-4xl md:text-6xl lg:text-7xl leading-none">
                  Chun Wang <br />Studio<br />
                   <span className="text-primary">SHOP</span>
                 </h1>
-                <p className=" text-lg text-muted-foreground max-w-md">
+                <p className="text-lg text-muted-foreground max-w-md handwritten">
                   {/* What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity.
                    */}
                   Unique works for the imaginative collectors
