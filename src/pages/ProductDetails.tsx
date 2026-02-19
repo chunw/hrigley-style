@@ -153,14 +153,14 @@ const ProductDetails = () => {
 
             {product.description && (
               <div className="space-y-2">
-                <h3 className="font-semibold">Description</h3>
+                {/* <h3 className="handwritten text-base">Description</h3> */}
                 <p className="text-muted-foreground font-helvetica">{product.description}</p>
               </div>
             )}
 
             {product.detailed_description_html && (
               <div className="space-y-2">
-                <h3 className="font-semibold">Details</h3>
+                <h3 className="handwritten text-base">Details</h3>
                 <div
                   className="text-muted-foreground font-helvetica whitespace-pre-wrap"
                   dangerouslySetInnerHTML={{ __html: product.detailed_description_html }}
@@ -204,7 +204,7 @@ const ProductDetails = () => {
                  
                 </Button> 
                 
-                <p className="pt-4 w-full text-xs text-muted-foreground">Shipping included</p>
+                <p className="pt-4 w-full text-xs text-muted-foreground handwritten">Shipping included</p>
        
             </div>
 
