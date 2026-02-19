@@ -37,7 +37,7 @@ const Footer = () => {
             </a>
           </div>
           <p className="text-sm font-helvetica">
-            © {new Date().getFullYear()} {SITE_NAME}, NEW YORK CITY, USA. All rights reserved.
+            © {new Date().getFullYear()} Chun Wang Studio. All rights reserved.
           </p>
         </div>
       </div>
