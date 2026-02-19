@@ -19,7 +19,7 @@ export const products = [
     id: "tote",
     title: "Remains Tote Bag",
     name: "Remains Tote Bag",
-    price: 39,
+    price: 35,
     currency: "USD",
     description: "Corporate Surrealism for the daily commuter and the trendsetter alike.",
     detailed_description_html: `
