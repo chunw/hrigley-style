@@ -36,7 +36,7 @@ const Footer = () => {
             </a>
           </div>
           <p className=" text-sm">
-            © 2026 {SITE_NAME}
+            ©2026 {SITE_NAME}
           </p>
         </div>
       </div>
