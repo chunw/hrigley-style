@@ -21,7 +21,7 @@ export const products = [
     name: "Remains Tote Bag",
     price: 39,
     currency: "USD",
-    description: "Corporate Surrealism for the daily commuter and the trendsetters alike.",
+    description: "Corporate Surrealism for the daily commuter and the trendsetter alike.",
     detailed_description_html: `
   <p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank" rel="noreferrer">Official Selection for the 2024 London International Creative Competition (LICC) in Create/Art</a> category, the <i>Remains</i> series was born from a subtle sense of the absurd.  While studying ancient terracotta figurines, I found myself captivated by their familiar, awkward, and caught mid-nothing looks. They did not feel like monuments, but rather, their expressions leave a fascinating space for the imagination, making them perfect companions for the mundane settings of contemporary offices and modern life. <br>
 This tote is crafted from durable 100% cotton twill. The sturdy cotton handles ensure comfort and resilience for frequent use. <br>
