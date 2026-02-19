@@ -3,7 +3,6 @@ import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ProductGrid from "@/components/ProductGrid";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
 import { Analytics } from "@vercel/analytics/next";
 
 const Index = () => {
@@ -55,28 +54,6 @@ const Index = () => {
             </div>
           </div>
         </div>
-      </section>
-
-      <section className="relative bg-background py-8">
-          <div className="text-center space-y-8">
-             <p className="handwritten text-lg text-muted-foreground">
-                Follow on Instagram
-              </p>
-            <a
-              href="https://www.instagram.com/chunwang.art/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block"
-            >
-              <Button 
-                size="lg"
-                className="handwritten text-lg px-8 py-6 bg-primary hover:bg-primary/90 text-primary-foreground"
-              >
-                @chunwang.art
-              </Button>
-            </a>
-          </div>
-
       </section>
 
       <Footer />
