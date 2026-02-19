@@ -38,11 +38,16 @@ export const products = [
     name: "Remains Tote Bag",
     price: 39,
     currency: "USD",
-    description: "Corporate Surrealism for the daily commuter and the fashion-forward alike.",
-    detailed_description:`The Remains series was born from a subtle sense of the absurd, inspired by ancient ceramic figures that felt familiar, awkward, and caught mid-nothing. Fits perfectly within the mundane setting of a modern office.
-    
+    description: "Corporate Surrealism for the daily commuter and the trendsetters alike.",
+    detailed_description:`An Official Selection for the 2024 London International Creative Competition (LICC) in CREATE/Art category, the Remains series was born from a subtle sense of the absurd: while studying ancient terracotta figurines, I found myself captivated by their familiar, awkward, and caught mid-nothing looks. They didn't feel like monuments, but rather, their expressions leave a fascinating space for the imagination, making them the perfect companions for the mundane settings of contemporary offices and modern life.
 This tote is crafted from durable 100% cotton twill. The sturdy cotton handles ensure comfort and resilience for frequent use. 
-Dimension: 14 x 14 inches`,
+Dimension: 35 x 35 cm`,
+    detailed_description_html: `
+  <p><strong>Official Selection</strong> for the 2024 London International Creative Competition (LICC) in CREATE/Art. The Remains series was born from a subtle sense of the absurd: while studying ancient terracotta figurines, I found myself captivated by their familiar, awkward, and caught mid-nothing looks. They did not feel like monuments; their expressions leave a fascinating space for the imagination, making them perfect companions for the mundane settings of contemporary offices and modern life.</p>
+  <p><strong>Materials:</strong> 100% cotton twill with sturdy cotton handles.</p>
+  <p><strong>Dimensions:</strong> 35 x 35 cm.</p>
+  <p><a href="https://www.licc.uk/" target="_blank" rel="noreferrer">Learn more about LICC</a></p>
+    `.trim(),
     dimensions: ``,
     edition_info: null,
     edition_size: null,

@@ -158,12 +158,19 @@ const ProductDetails = () => {
               </div>
             )}
 
-            {product.detailed_description && (
+            {(product.detailed_description_html || product.detailed_description) && (
               <div className="space-y-2">
                 <h3 className="font-semibold">Details</h3>
-                <div className="text-muted-foreground font-helvetica whitespace-pre-wrap">
-                  {product.detailed_description}
-                </div>
+                {product.detailed_description_html ? (
+                  <div
+                    className="text-muted-foreground font-helvetica whitespace-pre-wrap"
+                    dangerouslySetInnerHTML={{ __html: product.detailed_description_html }}
+                  />
+                ) : (
+                  <div className="text-muted-foreground font-helvetica whitespace-pre-wrap">
+                    {product.detailed_description}
+                  </div>
+                )}
               </div>
             )}
 
