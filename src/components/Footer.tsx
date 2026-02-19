@@ -5,23 +5,23 @@ const Footer = () => {
   return (
     <footer className="bg-[hsl(var(--footer-background))] text-primary-foreground py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8">
-          {/* Contact */}
+        {/* <div className="grid grid-cols-1 gap-8">
+         
           <div className="space-y-4">
             
             <div className="space-y-2">
-              <p className="text-sm font-helvetica"><b>CONTACT</b></p>
+              <p className="text-sm font-helvetica">CONTACT</p>
               <p className="text-sm font-helvetica">chunwang.me@gmail.com</p>
               <p className="text-sm font-helvetica">
                 NEW YORK CITY, USA<br />
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
 
-        <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center">
+        <div className="border-primary-foreground/20 text-center">
           <div className="space-y-6 pb-6">
-            <p className="handwritten text-primary-foreground">Follow us on Instagram</p>
+            <p className="font-helvetica text-primary-foreground">Follow us on Instagram</p>
             <a
               href={INSTAGRAM_URL}
               target="_blank"
@@ -37,7 +37,7 @@ const Footer = () => {
             </a>
           </div>
           <p className="text-sm font-helvetica">
-            © {new Date().getFullYear()} {SITE_NAME}
+            © {new Date().getFullYear()} {SITE_NAME}, NEW YORK CITY, USA. All rights reserved.
           </p>
         </div>
       </div>
