@@ -8,8 +8,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 gap-8">
           {/* Contact */}
           <div className="space-y-4">
-            <h3 className="shop-title text-xl">CONTACT</h3>
+            
             <div className="space-y-2">
+              <p className="text-sm font-helvetica"><b>CONTACT</b></p>
               <p className="text-sm font-helvetica">chunwang.me@gmail.com</p>
               <p className="text-sm font-helvetica">
                 NEW YORK CITY, USA<br />
