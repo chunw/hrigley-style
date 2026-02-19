@@ -50,19 +50,19 @@ const ProductCard = ({ id, name, title, description, price, currency, image_url,
         </div>
         
         <div className="space-y-2">
-          <p className="text-xs handwritten text-muted-foreground">{category}</p>
-          <h3 className="handwritten text-lg leading-tight">{title || name}</h3>
+          <p className="text-xs font-helvetica text-muted-foreground">{category}</p>
+          <h3 className="text-lg leading-tight font-helvetica">{title || name}</h3>
           {description && (
-            <p className="text-sm handwritten text-muted-foreground line-clamp-2">{description}</p>
+            <p className="text-sm font-helvetica text-muted-foreground line-clamp-2">{description}</p>
           )}
-          <p className="text-lg font-bold handwritten">
+          <p className="text-lg font-bold font-helvetica">
             {currency === 'gbp' ? '£' : '$'}{price.toFixed(2)}
           </p>
-          <p className="text-xs text-muted-foreground handwritten">Shipping included</p>
+          <p className="text-xs text-muted-foreground font-helvetica">Shipping included</p>
        
           <Button 
             variant="outline-pink"
-            className="w-full handwritten"
+            className="w-full font-helvetica"
             size="sm"
             onClick={handleOrderNow}
           >
