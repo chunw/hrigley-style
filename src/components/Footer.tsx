@@ -20,7 +20,7 @@ const Footer = () => {
 
         <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center">
           <div className="space-y-6 pb-6">
-            <p className="handwritten text-lg text-primary-foreground">Follow on Instagram</p>
+            <p className="handwritten text-primary-foreground">Follow us on Instagram</p>
             <a
               href={INSTAGRAM_URL}
               target="_blank"
@@ -29,14 +29,14 @@ const Footer = () => {
             >
               <Button
                 size="lg"
-                className="handwritten text-lg px-8 py-6 bg-primary hover:bg-primary/90 text-primary-foreground"
+                className="handwritten px-8 py-6 bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 @chunwang.art
               </Button>
             </a>
           </div>
           <p className=" text-sm">
-            ©{new Date().getFullYear()} {SITE_NAME}
+            © {new Date().getFullYear()} {SITE_NAME}
           </p>
         </div>
       </div>

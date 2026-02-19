@@ -60,8 +60,8 @@ const About = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center space-y-8">
           <div className="space-y-4">
-            <p className="handwritten text-lg text-muted-foreground">
-             Follow on Instagram
+            <p className="handwrittentext-muted-foreground">
+             Follow us on Instagram
             </p>
           </div>
           <a
@@ -72,7 +72,7 @@ const About = () => {
           >
             <Button 
               size="lg"
-              className="handwritten text-lg px-8 py-6 bg-primary hover:bg-primary/90 text-primary-foreground"
+              className="handwritten px-8 py-6 bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               @chunwang.art
             </Button>
