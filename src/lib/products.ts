@@ -23,7 +23,7 @@ export const products = [
     currency: "USD",
     description: "Corporate Surrealism for the daily commuter and the trendsetter alike.",
     detailed_description_html: `
-  <p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank" rel="noreferrer">Official Selection</a> for 2024 London International Creative Competition (LICC) in Create/Art category, <i>Remains</i> was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions. Rather than monuments, they are snapshots of idleness that leave space for the imagination - perfect companions for the mundane modern office. <br>
+  <p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank" rel="noreferrer">Official Selection</a> for 2024 London International Creative Competition (LICC) in Create/Art category, <i>Remains</i> was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions, making them perfect companions for the mundane modern office. <br>
 This tote is crafted from durable 100% cotton twill. The sturdy cotton handles ensure comfort and resilience for frequent use. <br>
 Dimensions: 35 x 35 cm</p>
     `.trim(),
