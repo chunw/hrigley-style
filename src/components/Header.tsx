@@ -1,11 +1,13 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Instagram } from "lucide-react";
 import { INSTAGRAM_URL } from "@/lib/constants";
 import { useToast } from "@/hooks/use-toast";
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
+  const isHomePage = location.pathname === "/";
 
   const handleContactClick = async () => {
     const email = "chunwang.me@gmail.com";
@@ -37,17 +39,21 @@ const Header = () => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Follow on Instagram"
-              className="inline-flex items-center gap-1 text-foreground hover:text-primary transition-colors"
+              className={`inline-flex items-center gap-1 transition-colors ${
+                isHomePage ? "text-white hover:text-white" : "text-foreground hover:text-primary"
+              }`}
             >
               <Instagram className="h-4 w-4" />
               <span>follow us</span>
             </a>
-            <span aria-hidden="true" className="text-muted-foreground">|</span>
+            <span aria-hidden="true" className={isHomePage ? "text-white" : "text-muted-foreground"}>|</span>
             <button
               type="button"
               onClick={handleContactClick}
               aria-label="Copy contact email"
-              className="text-foreground hover:text-primary transition-colors"
+              className={`transition-colors ${
+                isHomePage ? "text-white hover:text-white" : "text-foreground hover:text-primary"
+              }`}
             >
               contact us
             </button>
@@ -55,9 +61,14 @@ const Header = () => {
 
           {/* Left - Logo */}
           <div className="flex-shrink-0">
-            <h1 onClick={() => navigate('/')} className="shop-title text-2xl leading-none cursor-pointer hover:text-primary transition-colors">
+            <h1
+              onClick={() => navigate('/')}
+              className={`shop-title text-2xl leading-none cursor-pointer transition-colors ${
+                isHomePage ? "text-white hover:text-white" : "hover:text-primary"
+              }`}
+            >
               CHUN WANG<br />STUDIO<br />
-              <span className="text-primary">SHOP</span>
+              <span className={isHomePage ? "text-white" : "text-primary"}>SHOP</span>
             </h1>
           </div>
 
