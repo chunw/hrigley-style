@@ -15,7 +15,6 @@ const Header = () => {
       toast({
         title: "Email copied to your clipboard",
         description: `${email}`,
-        className: "handwritten",
       });
     } catch {
       toast({
