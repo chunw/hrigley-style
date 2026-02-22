@@ -26,7 +26,7 @@ const Index = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left - Text Content */}
             <div className="space-y-8">
-              <div className="space-y-4">
+              <div className="space-y-1 lg:space-y-4">
 {/* 
            
              <div className="handwritten text-sm text-muted-foreground">Welcome to</div> */}
@@ -35,12 +35,12 @@ const Index = () => {
                  Chun Wang <br />Studio<br />
                   <span className="text-primary">SHOP</span>
                 </h1>
-                <p className="hidden sm:block text-muted-foreground max-w-md handwritten">
+                <p className="hidden lg:block text-muted-foreground max-w-md handwritten">
                   {/* What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity.
                    */}
                   Unique works for the imaginative collectors
                 </p>
-                <div className="sm:hidden flex items-center gap-4">
+                <div className="lg:hidden flex items-start gap-4">
                   <p className="text-muted-foreground max-w-md handwritten flex-1">
                     Unique works for the imaginative collectors
                   </p>
@@ -48,7 +48,7 @@ const Index = () => {
                     href="https://ls.chunwang.me/"
                     target="_blank"
                     rel="noreferrer"
-                    className="block rounded-lg overflow-hidden shrink-0 w-32 h-32"
+                    className="block rounded-lg overflow-hidden shrink-0 w-40 h-40"
                   >
                     <img
                       src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/bcfb5ed3-e3df-489e-ba87-518d4adccdd0_rw_1200.png?h=3e84d177c91ced5bbf3cede876150ae5"
@@ -65,7 +65,7 @@ const Index = () => {
             </div>
 
             {/* Right - Image */}
-            <div className="hidden sm:block relative">
+            <div className="hidden lg:block relative">
               <a
                 href="https://ls.chunwang.me/"
                 target="_blank"
@@ -75,7 +75,7 @@ const Index = () => {
                 <img 
                   src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/bcfb5ed3-e3df-489e-ba87-518d4adccdd0_rw_1200.png?h=3e84d177c91ced5bbf3cede876150ae5"
                   alt="chun wang shop cover image"
-                  className="w-2/3 h-2/3 sm:w-3/4 sm:h-3/4 object-cover"
+                  className="w-3/4 h-3/4 object-cover"
                 />
               </a>
               {/* <p className="mt-3 text-xs text-muted-foreground/70">
