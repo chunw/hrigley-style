@@ -15,12 +15,14 @@ const Header = () => {
       toast({
         title: "Email copied to your clipboard",
         description: `${email}`,
+        className: "font-helvetica normal-case tracking-normal",
       });
     } catch {
       toast({
         title: "Copy failed",
         description: `Please copy manually: ${email}`,
         variant: "destructive",
+        className: "font-helvetica normal-case tracking-normal",
       });
     }
   };
@@ -53,17 +55,10 @@ const Header = () => {
 
           {/* Left - Logo */}
           <div className="flex-shrink-0">
-            <div className="flex items-end gap-3">
-              <h1 onClick={() => navigate('/')} className="shop-title text-2xl leading-none cursor-pointer hover:text-primary transition-colors">
-                CHUN WANG<br />STUDIO<br />
-                <span className="text-primary">SHOP</span>
-              </h1>
-              <img
-                src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/bcfb5ed3-e3df-489e-ba87-518d4adccdd0_rw_1200.png?h=3e84d177c91ced5bbf3cede876150ae5"
-                alt="Chun Wang portrait"
-                className="w-24 h-24 object-cover"
-              />
-            </div>
+            <h1 onClick={() => navigate('/')} className="shop-title text-2xl leading-none cursor-pointer hover:text-primary transition-colors">
+              CHUN WANG<br />STUDIO<br />
+              <span className="text-primary">SHOP</span>
+            </h1>
           </div>
 
           <div className="flex-1" />
