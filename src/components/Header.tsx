@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Instagram } from "lucide-react";
-import { INSTAGRAM_URL, SITE_NAME } from "@/lib/constants";
+import { INSTAGRAM_URL } from "@/lib/constants";
 import { useToast } from "@/hooks/use-toast";
 
 const Header = () => {
@@ -53,9 +53,17 @@ const Header = () => {
 
           {/* Left - Logo */}
           <div className="flex-shrink-0">
-            <h1 onClick={() => navigate('/')} className="shop-title text-2xl cursor-pointer hover:text-primary transition-colors">
-              {SITE_NAME.split(' ').slice(0, 2).join(' ')}<br />{SITE_NAME.split(' ').slice(2).join(' ')}
-            </h1>
+            <div className="flex items-end gap-3">
+              <h1 onClick={() => navigate('/')} className="shop-title text-2xl leading-none cursor-pointer hover:text-primary transition-colors">
+                CHUN WANG<br />STUDIO<br />
+                <span className="text-primary">SHOP</span>
+              </h1>
+              <img
+                src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/bcfb5ed3-e3df-489e-ba87-518d4adccdd0_rw_1200.png?h=3e84d177c91ced5bbf3cede876150ae5"
+                alt="Chun Wang portrait"
+                className="w-24 h-24 object-cover"
+              />
+            </div>
           </div>
 
           <div className="flex-1" />
