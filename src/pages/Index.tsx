@@ -35,11 +35,28 @@ const Index = () => {
                  Chun Wang <br />Studio<br />
                   <span className="text-primary">SHOP</span>
                 </h1>
-                <p className="text-muted-foreground max-w-md handwritten">
+                <p className="hidden sm:block text-muted-foreground max-w-md handwritten">
                   {/* What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity.
                    */}
                   Unique works for the imaginative collectors
                 </p>
+                <div className="sm:hidden flex items-center gap-4">
+                  <p className="text-muted-foreground max-w-md handwritten flex-1">
+                    Unique works for the imaginative collectors
+                  </p>
+                  <a
+                    href="https://ls.chunwang.me/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="block rounded-lg overflow-hidden shrink-0 w-32 h-32"
+                  >
+                    <img
+                      src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/bcfb5ed3-e3df-489e-ba87-518d4adccdd0_rw_1200.png?h=3e84d177c91ced5bbf3cede876150ae5"
+                      alt="chun wang shop cover image"
+                      className="w-full h-full object-cover"
+                    />
+                  </a>
+                </div>
               </div>
 
               {/* <div className="space-y-2">
@@ -48,17 +65,17 @@ const Index = () => {
             </div>
 
             {/* Right - Image */}
-            <div className="relative">
+            <div className="hidden sm:block relative">
               <a
                 href="https://ls.chunwang.me/"
                 target="_blank"
                 rel="noreferrer"
-                className="block aspect-square lg:aspect-[4/3] rounded-lg overflow-hidden scale-80"
+                className="flex items-center justify-center aspect-square lg:aspect-[4/3] rounded-lg overflow-hidden scale-80"
               >
                 <img 
                   src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/bcfb5ed3-e3df-489e-ba87-518d4adccdd0_rw_1200.png?h=3e84d177c91ced5bbf3cede876150ae5"
                   alt="chun wang shop cover image"
-                  className="w-full h-full object-cover"
+                  className="w-2/3 h-2/3 sm:w-3/4 sm:h-3/4 object-cover"
                 />
               </a>
               {/* <p className="mt-3 text-xs text-muted-foreground/70">
