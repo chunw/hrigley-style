@@ -49,6 +49,17 @@ const Header = () => {
             <span aria-hidden="true" className={isHomePage ? "text-white" : "text-muted-foreground"}>|</span>
             <button
               type="button"
+              onClick={() => navigate('/delivery')}
+              aria-label="Go to delivery page"
+              className={`transition-colors ${
+                isHomePage ? "text-white hover:text-white" : "text-foreground hover:text-primary"
+              }`}
+            >
+              delivery
+            </button>
+            <span aria-hidden="true" className={isHomePage ? "text-white" : "text-muted-foreground"}>|</span>
+            <button
+              type="button"
               onClick={handleContactClick}
               aria-label="Copy contact email"
               className={`transition-colors ${

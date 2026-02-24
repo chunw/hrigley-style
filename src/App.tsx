@@ -9,6 +9,7 @@ import ProductDetails from "./pages/ProductDetails";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import Cart from "./pages/Cart";
 import NotFound from "./pages/NotFound";
+import Delivery from "./pages/Delivery";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/delivery" element={<Delivery />} />
             <Route path="/product/:id" element={<ProductDetails />} />
             {/* <Route path="/cart" element={<Cart />} />
             <Route path="/payment-success" element={<PaymentSuccess />} /> */}
