@@ -2,11 +2,15 @@ import deliveryGif from "@/assets/delivery.gif";
 import deliveryJpg from "@/assets/delivery.jpg";
 import deliveryExampleOrderPng from "@/assets/delivery_example order.png";
 
-// UPDATE ME WITH REAL DATA BEFORE SENDING
+// UPDATE WITH REAL DATA BEFORE SENDING
 const customerName = "[CUSTOMER NAME]";
 const customerMessage = "[MESSAGE]";
 const trackingNumber = "[TRACKING NUMBER]";
 const trackingLink = `[TRACKING LINK WITH ${trackingNumber}]`;
+const carrier = "USPS";
+const estimatedArrival = "7-10 business days";
+const itemName = "Remains Tote Bag";
+const quantity = "1";
 const customerMessageHtml = customerMessage.replace(/\n/g, "<br>");
 
 const deliveryHtml = `<!DOCTYPE html>
@@ -465,7 +469,7 @@ const deliveryHtml = `<!DOCTYPE html>
             <div style="font-family: 'Space Mono', 'Courier New', monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#ffffff;margin-bottom:10px;">
               Tracking Number: ${trackingNumber}
               <br>
-              Carrier: USPS · Est. Arrival: 7-10 Business Days
+              Carrier: ${carrier} · Est. Arrival: ${estimatedArrival}
             </div>
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
               <tr>
@@ -474,8 +478,8 @@ const deliveryHtml = `<!DOCTYPE html>
                 </td>
                 <td valign="top" style="font-family: var(--handwritten-font);font-weight:400;letter-spacing:0.05em;color:#ffffff;text-transform:uppercase;">
                   <div style="font-size:18px;line-height:1.1;margin-bottom:4px;">Your Order</div>
-                  <div style="font-size:12px;line-height:1.35;">Item: Remains Tote Bag</div>
-                  <div style="font-size:12px;line-height:1.35;">Quantity: 1</div>
+                  <div style="font-size:12px;line-height:1.35;">Item: ${itemName}</div>
+                  <div style="font-size:12px;line-height:1.35;">Quantity: ${quantity}</div>
                 </td>
               </tr>
             </table>
