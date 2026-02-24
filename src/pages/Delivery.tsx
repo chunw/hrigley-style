@@ -276,9 +276,11 @@ const deliveryHtml = `<!DOCTYPE html>
       margin-bottom: 10px;
     }
     .email-headline {
-      font-family: 'Bebas Neue', 'Arial Narrow', Arial, sans-serif;
+      font-family: 'Gloria Hallelujah', 'Comic Sans MS', cursive;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
       font-size: 36px;
-      letter-spacing: 4px;
       color: #000000;
       line-height: 1.1;
       margin-bottom: 20px;
@@ -339,8 +341,10 @@ const deliveryHtml = `<!DOCTYPE html>
       color: #ffffff !important;
       text-decoration: none;
       font-family: 'Gloria Hallelujah', 'Comic Sans MS', cursive;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
       font-size: 20px;
-      letter-spacing: 4px;
       padding: 14px 36px;
       margin-bottom: 32px;
       transition: background 0.2s;
@@ -405,7 +409,7 @@ const deliveryHtml = `<!DOCTYPE html>
     <span style="font-size: 24px; line-height: 1;">📬</span> <br>
     <br>
     <span style="font-family: Helvetica, Arial, sans-serif;">Hi Mars,</span> <br><br>
-    您的包裹已寄出 - 不好意思，最近纽约暴风雪，邮寄服务有所延迟！
+    您的包裹已寄出！不好意思，最近纽约遇暴风雪，邮寄服务有所延迟😛
     <br>
     <br>
     <br>
