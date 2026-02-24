@@ -40,10 +40,14 @@ const Index = () => {
                    */}
                   Unique works for the imaginative collectors
                 </p>
+                <p className="hidden lg:block text-muted-foreground max-w-md handwritten">
+                  created exclusively by chun wang
+                </p>
                 <div className="lg:hidden flex items-start gap-4">
-                  <p className="text-muted-foreground max-w-md handwritten flex-1">
-                    Unique works for the imaginative collectors
-                  </p>
+                  <div className="text-muted-foreground max-w-md handwritten flex-1">
+                    <p>Unique works for the imaginative collectors</p>
+                    <p>created exclusively by chun wang</p>
+                  </div>
                   <a
                     href="https://ls.chunwang.me/"
                     target="_blank"
