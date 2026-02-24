@@ -10,6 +10,9 @@ const deliveryHtml = `<!DOCTYPE html>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="x-apple-disable-message-reformatting">
   <title>Your Package Is On Its Way</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap" rel="stylesheet">
 
   <!--[if mso]>
   <noscript>
@@ -24,8 +27,9 @@ const deliveryHtml = `<!DOCTYPE html>
     table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
     img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
 
-    /* Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap');
+    :root {
+      --handwritten-font: 'Gloria Hallelujah', 'Comic Sans MS', 'Bradley Hand', 'Marker Felt', 'Chalkboard SE', cursive;
+    }
 
     body {
       font-family: 'Space Mono', 'Courier New', monospace;
@@ -276,7 +280,7 @@ const deliveryHtml = `<!DOCTYPE html>
       margin-bottom: 10px;
     }
     .email-headline {
-      font-family: 'Gloria Hallelujah', 'Comic Sans MS', cursive;
+      font-family: var(--handwritten-font);
       font-weight: 400;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -340,7 +344,7 @@ const deliveryHtml = `<!DOCTYPE html>
       background: #d42b1a;
       color: #ffffff !important;
       text-decoration: none;
-      font-family: 'Gloria Hallelujah', 'Comic Sans MS', cursive;
+      font-family: var(--handwritten-font);
       font-weight: 400;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -392,7 +396,7 @@ const deliveryHtml = `<!DOCTYPE html>
       background: #ffffff;
       border-left: 4px solid #d42b1a;
       padding: 14px 18px;
-      font-family: 'Gloria Hallelujah', 'Comic Sans MS', cursive;
+      font-family: var(--handwritten-font);
       font-size: 16px;
       color: #000000;
       margin: 20px auto;
