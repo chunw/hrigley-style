@@ -461,7 +461,9 @@ const deliveryHtml = `<!DOCTYPE html>
           </div>
           <div style="background:#000000;border:1px solid #ffffff;padding:14px;">
             <div style="font-family: 'Space Mono', 'Courier New', monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#ffffff;margin-bottom:10px;">
-              Tracking Number: TRK · 7X4-88201-NP
+              Tracking Number: CH249401526US
+              <br>
+              Carrier: USPS · Est. Arrival: 7-10 Business Days
             </div>
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
               <tr>
@@ -472,14 +474,13 @@ const deliveryHtml = `<!DOCTYPE html>
                   <div style="font-size:18px;line-height:1.1;margin-bottom:4px;">Your Order</div>
                   <div style="font-size:12px;line-height:1.35;color:#ff5ebc;">Item: Remains Tote Bag</div>
                   <div style="font-size:12px;line-height:1.35;">Quantity: 1</div>
-                  <div style="font-size:12px;line-height:1.35;">Est. Arrival: 7-10 Business Days</div>
                 </td>
               </tr>
             </table>
           </div>
         </div>
 
-        <a href="https://www.google.com" class="cta-btn">Track Your Package</a>
+        <a href="https://tools.usps.com/go/TrackConfirmAction?tLabels=CH249401526US" target="_blank" rel="noopener noreferrer" class="cta-btn">Track Your Package</a>
 
         <div class="footer-text">
         <!--Great news — your package has left our facility and is making its way to you across the tundra. 
