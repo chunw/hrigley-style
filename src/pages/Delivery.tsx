@@ -345,6 +345,12 @@ const deliveryHtml = `<!DOCTYPE html>
       margin-bottom: 32px;
       transition: background 0.2s;
     }
+    .cta-btn:link,
+    .cta-btn:visited,
+    .cta-btn:hover,
+    .cta-btn:active {
+      text-decoration: none !important;
+    }
 
     .divider {
       height: 1px;
