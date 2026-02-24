@@ -2,6 +2,13 @@ import deliveryGif from "@/assets/delivery.gif";
 import deliveryJpg from "@/assets/delivery.jpg";
 import deliveryExampleOrderPng from "@/assets/delivery_example order.png";
 
+// UPDATE ME WITH REAL DATA BEFORE SENDING
+const customerName = "SHUNYUAN";
+const customerMessage = "您的包裹已寄出！";
+const trackingNumber = "CH249401526US";
+const trackingLink = `https://tools.usps.com/go/TrackConfirmAction?tLabels=${trackingNumber}`;
+const customerMessageHtml = customerMessage.replace(/\n/g, "<br>");
+
 const deliveryHtml = `<!DOCTYPE html>
 <!-- saved from url=(0065)file:///Users/chunwangpersonallaptop/Downloads/package-email.html -->
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -412,8 +419,8 @@ const deliveryHtml = `<!DOCTYPE html>
   <div class="how-to-use">
     <span style="font-size: 24px; line-height: 1;">📬</span> <br>
     <br>
-    <span style="font-family: Helvetica, Arial, sans-serif;">Hi Mars,</span> <br><br>
-    您的包裹已寄出！不好意思，最近纽约的确遇暴风雪，邮寄有所延迟😛
+    <span style="font-family: Helvetica, Arial, sans-serif;">Hi ${customerName},</span> <br><br>
+    ${customerMessageHtml}
     <br>
     <br>
     <br>
@@ -440,7 +447,7 @@ const deliveryHtml = `<!DOCTYPE html>
 
       
 
-        <div class="email-greeting"><span style="font-family: Helvetica, Arial, sans-serif;">Hello, SHUNYUAN</span></div>
+        <div class="email-greeting"><span style="font-family: Helvetica, Arial, sans-serif;">Hello, ${customerName}</span></div>
         <div class="email-headline">Your order<br>has <span>shipped</span>.</div>
        
       <div class="tracking-box">
@@ -449,7 +456,7 @@ const deliveryHtml = `<!DOCTYPE html>
           </div>
           <div style="background:#000000;border:1px solid #ffffff;padding:14px;">
             <div style="font-family: 'Space Mono', 'Courier New', monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#ffffff;margin-bottom:10px;">
-              Tracking Number: CH249401526US
+              Tracking Number: ${trackingNumber}
               <br>
               Carrier: USPS · Est. Arrival: 7-10 Business Days
             </div>
@@ -468,7 +475,7 @@ const deliveryHtml = `<!DOCTYPE html>
           </div>
         </div>
 
-        <a href="https://tools.usps.com/go/TrackConfirmAction?tLabels=CH249401526US" target="_blank" rel="noopener noreferrer" class="cta-btn">Track Your Package</a>
+        <a href="${trackingLink}" target="_blank" rel="noopener noreferrer" class="cta-btn">Track Your Package</a>
 
         <div class="footer-text">
         <!--Great news — your package has left our facility and is making its way to you across the tundra. 
