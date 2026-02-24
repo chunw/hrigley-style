@@ -432,13 +432,6 @@ const deliveryHtml = `<!DOCTYPE html>
         <div class="email-header-logo"></div>
         <div class="email-header-subtitle"></div>
       </div>
-
-
-
-  <div style="max-width:600px;margin:0 auto 24px;">
-    <img src="${deliveryGif}" alt="Delivery animation" style="display:block;width:100%;height:auto;" />
-  </div>
-
       <!-- EMAIL BODY -->
       <div class="email-body">
 
@@ -460,6 +453,9 @@ const deliveryHtml = `<!DOCTYPE html>
 
         <!-- Tracking box -->
       <div class="tracking-box">
+          <div style="margin: 0 0 16px;">
+            <img src="${deliveryGif}" alt="Delivery animation" style="display:block;width:100%;height:auto;" />
+          </div>
           <div>
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
               <tr>
