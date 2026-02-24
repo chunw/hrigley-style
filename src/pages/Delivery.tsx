@@ -465,7 +465,7 @@ const deliveryHtml = `<!DOCTYPE html>
           </div>
         </div>
 
-        <a href="file:///Users/chunwangpersonallaptop/Downloads/package-email.html#" class="cta-btn">Track Your Package</a>
+        <a href="https://www.google.com" class="cta-btn">Track Your Package</a>
 
         <div class="footer-text">
          Questions about your order? Reply to this email.
