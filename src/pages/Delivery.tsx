@@ -403,14 +403,20 @@ const deliveryHtml = `<!DOCTYPE html>
       background: #ffffff;
       border-left: 4px solid #d42b1a;
       padding: 14px 18px;
-      font-family: var(--handwritten-font);
-      font-size: 16px;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 24px;
+      line-height: 1;
       color: #000000;
       margin: 20px auto;
       max-width: 600px;
     }
+    .how-to-use * {
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 24px;
+      line-height: 1;
+    }
     .how-to-use strong { color: #d42b1a; }
-    .how-to-use code { background: #ffffff; padding: 1px 5px; border-radius: 3px; font-size: 14px; }
+    .how-to-use code { background: #ffffff; padding: 1px 5px; border-radius: 3px; font-size: 24px; line-height: 1; }
   </style>
 </head>
 <body style="margin:0;padding:20px 0;background:#ffffff;">
@@ -425,9 +431,10 @@ const deliveryHtml = `<!DOCTYPE html>
     <br>
     <br>
     
-    祝好，
+    
+    Warmly,
     <br>
-    淳子 
+    Chun 
     
   </div>
 
