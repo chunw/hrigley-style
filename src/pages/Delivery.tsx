@@ -1,3 +1,5 @@
+import deliveryGif from "@/assets/delivery.gif";
+
 const deliveryHtml = `<!DOCTYPE html>
 <!-- saved from url=(0065)file:///Users/chunwangpersonallaptop/Downloads/package-email.html -->
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -561,6 +563,10 @@ const deliveryHtml = `<!DOCTYPE html>
       </div>
 
     </div>
+  </div>
+
+  <div style="max-width:600px;margin:16px auto 0;display:none;">
+    <img src="${deliveryGif}" alt="Delivery animation" style="display:block;width:100%;height:auto;" />
   </div>
 
 
