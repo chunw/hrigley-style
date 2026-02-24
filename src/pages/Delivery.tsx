@@ -284,7 +284,7 @@ const deliveryHtml = `<!DOCTYPE html>
       font-weight: 400;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      font-size: 36px;
+      font-size: 24px;
       color: #000000;
       line-height: 1.1;
       margin-bottom: 20px;
@@ -344,11 +344,11 @@ const deliveryHtml = `<!DOCTYPE html>
       background: #d42b1a;
       color: #ffffff !important;
       text-decoration: none;
-      font-family: var(--handwritten-font);
+      font-family: Helvetica, Arial, sans-serif;
       font-weight: 400;
-      text-transform: uppercase;
+      text-transform: none;
       letter-spacing: 0.05em;
-      font-size: 20px;
+      font-size: 16px;
       padding: 14px 36px;
       margin-bottom: 32px;
       transition: background 0.2s;
