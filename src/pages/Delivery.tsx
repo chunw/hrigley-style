@@ -396,7 +396,7 @@ const deliveryHtml = `<!DOCTYPE html>
 
   <!-- HOW TO SEND NOTICE (remove before sending) -->
   <div class="how-to-use">
-    📬 <br>
+    <span style="font-size: 24px; line-height: 1;">📬</span> <br>
     <br>
     Hi Mars, <br><br>
     您的包裹已寄出，tracking info如下。不好意思，最近纽约暴风雪，邮寄服务有所延迟！
