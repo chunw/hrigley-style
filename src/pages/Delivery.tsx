@@ -3,10 +3,10 @@ import deliveryJpg from "@/assets/delivery.jpg";
 import deliveryExampleOrderPng from "@/assets/delivery_example order.png";
 
 // UPDATE ME WITH REAL DATA BEFORE SENDING
-const customerName = "CUSTOMER NAME";
-const customerMessage = "MESSAGE";
+const customerName = "[CUSTOMER NAME]";
+const customerMessage = "[MESSAGE]";
 const trackingNumber = "[TRACKING NUMBER]";
-const trackingLink = `TRACKING LINK WITH ${trackingNumber}`;
+const trackingLink = `[TRACKING LINK WITH ${trackingNumber}]`;
 const customerMessageHtml = customerMessage.replace(/\n/g, "<br>");
 
 const deliveryHtml = `<!DOCTYPE html>
@@ -404,7 +404,7 @@ const deliveryHtml = `<!DOCTYPE html>
       border-left: 4px solid #d42b1a;
       padding: 14px 18px;
       font-family: Helvetica, Arial, sans-serif;
-      font-size: 24px;
+      font-size: 16px;
       line-height: 1;
       color: #000000;
       margin: 20px auto;
@@ -412,18 +412,18 @@ const deliveryHtml = `<!DOCTYPE html>
     }
     .how-to-use * {
       font-family: Helvetica, Arial, sans-serif;
-      font-size: 24px;
+      font-size: 16px;
       line-height: 1;
     }
     .how-to-use strong { color: #d42b1a; }
-    .how-to-use code { background: #ffffff; padding: 1px 5px; border-radius: 3px; font-size: 24px; line-height: 1; }
+    .how-to-use code { background: #ffffff; padding: 1px 5px; border-radius: 3px; font-size: 16px; line-height: 1; }
   </style>
 </head>
 <body style="margin:0;padding:20px 0;background:#ffffff;">
 
   <!-- HOW TO SEND NOTICE (remove before sending) -->
   <div class="how-to-use">
-    <span style="font-size: 24px; line-height: 1;">📬</span> <br>
+    <span style="font-size: 16px; line-height: 1;">📬</span> <br>
     <br>
     <span style="font-family: Helvetica, Arial, sans-serif;">Hi ${customerName},</span> <br><br>
     ${customerMessageHtml}
