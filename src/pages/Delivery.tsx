@@ -21,7 +21,12 @@ const deliveryHtml = `<!DOCTYPE html>
     img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
 
     /* Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap');
+
+    body {
+      font-family: 'Space Mono', 'Courier New', monospace;
+      font-size: 16px;
+    }
 
     /* ===== ANIMATION SCENE ===== */
     .scene-wrapper {
@@ -219,7 +224,7 @@ const deliveryHtml = `<!DOCTYPE html>
     }
     .progress-eta {
       font-family: 'Space Mono', 'Courier New', monospace;
-      font-size: 8px;
+      font-size: 12px;
       color: #000000;
       letter-spacing: 2px;
       text-transform: uppercase;
@@ -249,7 +254,7 @@ const deliveryHtml = `<!DOCTYPE html>
       text-decoration: none;
     }
     .email-header-subtitle {
-      font-size: 9px;
+      font-size: 12px;
       color: #000000;
       letter-spacing: 3px;
       margin-top: 3px;
@@ -260,7 +265,7 @@ const deliveryHtml = `<!DOCTYPE html>
       padding: 32px;
     }
     .email-greeting {
-      font-size: 11px;
+      font-size: 15px;
       color: #000000;
       letter-spacing: 2px;
       text-transform: uppercase;
@@ -276,7 +281,7 @@ const deliveryHtml = `<!DOCTYPE html>
     }
     .email-headline span { color: #d42b1a; }
     .email-body-text {
-      font-size: 11px;
+      font-size: 15px;
       line-height: 1.9;
       color: #000000;
       margin-bottom: 28px;
@@ -291,14 +296,14 @@ const deliveryHtml = `<!DOCTYPE html>
       margin-bottom: 28px;
     }
     .tracking-label {
-      font-size: 9px;
+      font-size: 12px;
       color: #000000;
       letter-spacing: 3px;
       text-transform: uppercase;
       margin-bottom: 6px;
     }
     .tracking-number {
-      font-size: 15px;
+      font-size: 20px;
       color: #000000;
       letter-spacing: 3px;
       font-weight: 700;
@@ -311,14 +316,14 @@ const deliveryHtml = `<!DOCTYPE html>
     }
     .tracking-field { flex: 1; }
     .tracking-field-label {
-      font-size: 8px;
+      font-size: 11px;
       color: #000000;
       letter-spacing: 2px;
       text-transform: uppercase;
       margin-bottom: 3px;
     }
     .tracking-field-value {
-      font-size: 11px;
+      font-size: 14px;
       color: #000000;
       letter-spacing: 1px;
     }
@@ -329,8 +334,8 @@ const deliveryHtml = `<!DOCTYPE html>
       background: #d42b1a;
       color: #ffffff !important;
       text-decoration: none;
-      font-family: 'Bebas Neue', 'Arial Narrow', Arial, sans-serif;
-      font-size: 16px;
+      font-family: Arial, sans-serif;
+      font-size: 20px;
       letter-spacing: 4px;
       padding: 14px 36px;
       margin-bottom: 32px;
@@ -349,7 +354,7 @@ const deliveryHtml = `<!DOCTYPE html>
       border-top: 1px solid #d42b1a;
     }
     .footer-text {
-      font-size: 9px;
+      font-size: 12px;
       color: #000000;
       letter-spacing: 1.5px;
       line-height: 1.8;
@@ -357,7 +362,7 @@ const deliveryHtml = `<!DOCTYPE html>
     }
     .footer-links {
       margin-top: 10px;
-      font-size: 9px;
+      font-size: 12px;
       letter-spacing: 1.5px;
     }
     .footer-links a {
@@ -371,14 +376,14 @@ const deliveryHtml = `<!DOCTYPE html>
       background: #ffffff;
       border-left: 4px solid #d42b1a;
       padding: 14px 18px;
-      font-family: Arial, sans-serif;
-      font-size: 13px;
+      font-family: 'Gloria Hallelujah', 'Comic Sans MS', cursive;
+      font-size: 16px;
       color: #000000;
       margin: 20px auto;
       max-width: 600px;
     }
     .how-to-use strong { color: #d42b1a; }
-    .how-to-use code { background: #ffffff; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+    .how-to-use code { background: #ffffff; padding: 1px 5px; border-radius: 3px; font-size: 14px; }
   </style>
 </head>
 <body style="margin:0;padding:20px 0;background:#ffffff;">
@@ -388,7 +393,7 @@ const deliveryHtml = `<!DOCTYPE html>
     📬 <br>
     <br>
     Hi Mars, <br><br>
-    您的包裹已寄出，tracking info如下。不好意思，最近纽约暴风雪，邮寄服务延迟了些！
+    您的包裹已寄出，tracking info如下。不好意思，最近纽约暴风雪，邮寄服务有所延迟！
     <br>
     <br>
     <br>
@@ -404,8 +409,8 @@ const deliveryHtml = `<!DOCTYPE html>
 
       <!-- HEADER -->
       <div class="email-header">
-        <div class="email-header-logo">DISPATCH</div>
-        <div class="email-header-subtitle">Delivery Notification System</div>
+        <div class="email-header-logo">CHUN WANG STUDIO</div>
+        <div class="email-header-subtitle">Your package has been shipped</div>
       </div>
 
       <!-- ANIMATION SCENE -->
@@ -509,8 +514,8 @@ const deliveryHtml = `<!DOCTYPE html>
         <div class="email-headline">Your order<br>is <span>en route.</span></div>
 
         <div class="email-body-text">
-          Great news — your package has left our facility and is making its way to you across the tundra. Our most trusted courier is on the case. You'll receive another notification once your order arrives.
-        </div>
+          Great news — your package has left our facility and is making its way to you across the tundra. 
+           </div>
 
         <!-- Tracking box -->
         <div class="tracking-box">
@@ -536,7 +541,7 @@ const deliveryHtml = `<!DOCTYPE html>
 
         <div class="divider"></div>
 
-        <div class="email-body-text" style="font-size:10px;margin-bottom:0;">
+        <div class="email-body-text" style="font-size:14px;margin-bottom:0;">
           Questions about your order? Reply to this email.
         </div>
 
