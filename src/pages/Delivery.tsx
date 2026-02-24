@@ -434,6 +434,9 @@ const deliveryHtml = `<!DOCTYPE html>
       </div>
       <!-- EMAIL BODY -->
       <div class="email-body">
+        <div style="margin-bottom:20px;">
+          <img src="${deliveryGif}" alt="Delivery animation" style="display:block;width:100%;height:auto;" />
+        </div>
 
       
 
@@ -453,26 +456,23 @@ const deliveryHtml = `<!DOCTYPE html>
 
         <!-- Tracking box -->
       <div class="tracking-box">
-          <div style="margin: 0 0 16px;">
-            <img src="${deliveryGif}" alt="Delivery animation" style="display:block;width:100%;height:auto;" />
+          <div style="margin:0;background:#000000;padding-bottom:16px;">
+            <img src="${deliveryJpg}" alt="Delivery" style="display:block;width:100%;height:auto;" />
           </div>
-          <div>
+          <div style="background:#000000;border:1px solid #ffffff;padding:14px;">
+            <div style="font-family: 'Space Mono', 'Courier New', monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#ffffff;margin-bottom:10px;">
+              Tracking Number: TRK · 7X4-88201-NP
+            </div>
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
               <tr>
-                <td valign="top" style="width: 250px; padding-right: 16px;">
-                  <img src="${deliveryExampleOrderPng}" alt="Example order" style="display:block;width:100%;max-width:170px;height:auto;border:1px solid #e5e5e5;" />
+                <td valign="top" style="width:84px;padding-right:12px;">
+                  <img src="${deliveryExampleOrderPng}" alt="Example order" style="display:block;width:100%;max-width:84px;height:auto;border:1px solid #d9d9d9;" />
                 </td>
-             
-                <td>
-                   <div class="tracking-label">Tracking Number</div>
-          <div class="tracking-number">TRK · 7X4-88201-NP</div>
-          <div class="tracking-row">
-            <div class="tracking-field">
-            <div class="tracking-field-label">Item: Remains Tote Bag </div>
-            <div class="tracking-field-label">Quantity: 1</div>
-              <div class="tracking-field-label">Est. Arrival: [Delivery Date]</div>
-            </div>
-          </div>
+                <td valign="top" style="font-family: 'Gloria Hallelujah', 'Comic Sans MS', cursive;color:#ffffff;text-transform:uppercase;">
+                  <div style="font-size:18px;line-height:1.1;margin-bottom:4px;">Your Order</div>
+                  <div style="font-size:12px;line-height:1.35;color:#ff5ebc;">Item: Remains Tote Bag</div>
+                  <div style="font-size:12px;line-height:1.35;">Quantity: 1</div>
+                  <div style="font-size:12px;line-height:1.35;">Est. Arrival: [Delivery Date]</div>
                 </td>
               </tr>
             </table>
@@ -496,10 +496,6 @@ const deliveryHtml = `<!DOCTYPE html>
            <a target="_blank" href="https://www.instagram.com/chunwang.art">Follow Us</a>
             </div>
       </div>
-
-      <div style="margin-bottom:20px;">
-         <img src="${deliveryJpg}" alt="Delivery" style="display:block;width:100%;height:auto;" />
-         </div>
 
     </div>
   </div>
