@@ -398,8 +398,8 @@ const deliveryHtml = `<!DOCTYPE html>
   <div class="how-to-use">
     <span style="font-size: 24px; line-height: 1;">📬</span> <br>
     <br>
-    Hi Mars, <br><br>
-    您的包裹已寄出，tracking info如下。不好意思，最近纽约暴风雪，邮寄服务有所延迟！
+    <span style="font-family: Helvetica, Arial, sans-serif;">Hi Mars,</span> <br><br>
+    您的包裹已寄出 - 不好意思，最近纽约暴风雪，邮寄服务有所延迟！
     <br>
     <br>
     <br>
@@ -415,22 +415,26 @@ const deliveryHtml = `<!DOCTYPE html>
 
       <!-- HEADER -->
       <div class="email-header">
-        <div class="email-header-logo">CHUN WANG STUDIO</div>
-        <div class="email-header-subtitle">Your package has shipped</div>
+        <div class="email-header-logo"></div>
+        <div class="email-header-subtitle"></div>
       </div>
 
       <!-- EMAIL BODY -->
       <div class="email-body">
 
-        <div style="margin-bottom:20px;">
-          <img src="${deliveryJpg}" alt="Delivery" style="display:block;width:100%;height:auto;" />
-        </div>
+        <!-- <div style="margin-bottom:20px;">
+         <img src="${deliveryJpg}" alt="Delivery" style="display:block;width:100%;height:auto;" />
+         </div> -->
 
-        <div class="email-greeting">Hello, SHUNYUAN</div>
-        <div class="email-headline">Your order<br>is <span>en route.</span></div>
+  <div style="max-width:600px;margin:0 auto 24px;">
+    <img src="${deliveryGif}" alt="Delivery animation" style="display:block;width:100%;height:auto;" />
+  </div>
+
+        <div class="email-greeting"><span style="font-family: Helvetica, Arial, sans-serif;">Hello, SHUNYUAN</span></div>
+        <div class="email-headline">Your order<br>has <span>shipped</span>.</div>
 
         <div class="email-body-text">
-          Great news — your package has left our facility and is making its way to you across the tundra. 
+          <span style="font-family: Helvetica, Arial, sans-serif;">Great news — your package has left our facility and is making its way to you across the tundra.</span>
            </div>
 
         <div style="margin-bottom:20px;">
@@ -438,18 +442,16 @@ const deliveryHtml = `<!DOCTYPE html>
         </div>
 
         <!-- Tracking box -->
-        <div class="tracking-box">
+      <div class="tracking-box">
           <div class="tracking-label">Tracking Number</div>
           <div class="tracking-number">TRK · 7X4-88201-NP</div>
+
+           
           <div class="tracking-row">
-            <div class="tracking-field">
-              <div class="tracking-field-label">Shipped From</div>
-              <div class="tracking-field-value">Arctic Facility 04</div>
-            </div>
-            <div class="tracking-field">
-              <div class="tracking-field-label">Destination</div>
-              <div class="tracking-field-value">[Your Address]</div>
-            </div>
+            
+         
+          
+        
             <div class="tracking-field">
               <div class="tracking-field-label">Est. Arrival</div>
               <div class="tracking-field-value">[Delivery Date]</div>
@@ -474,10 +476,6 @@ const deliveryHtml = `<!DOCTYPE html>
       </div>
 
     </div>
-  </div>
-
-  <div style="max-width:600px;margin:0 auto 0;">
-    <img src="${deliveryGif}" alt="Delivery animation" style="display:block;width:100%;height:auto;" />
   </div>
 
 
