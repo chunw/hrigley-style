@@ -453,20 +453,33 @@ const deliveryHtml = `<!DOCTYPE html>
           Great news — your package has left our facility and is making its way to you across the tundra.</span>
            </div>
 
+           <!--
         <div style="margin-bottom:20px;">
           <img src="${deliveryExampleOrderPng}" alt="Order details" style="display:block;width:100%;height:auto;" />
-        </div>
+        </div>-->
 
         <!-- Tracking box -->
       <div class="tracking-box">
-          <div class="tracking-label">Tracking Number</div>
+          <div>
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+              <tr>
+                <td valign="top" style="width: 250px; padding-right: 16px;">
+                  <img src="${deliveryExampleOrderPng}" alt="Example order" style="display:block;width:100%;max-width:170px;height:auto;border:1px solid #e5e5e5;" />
+                </td>
+             
+                <td>
+                   <div class="tracking-label">Tracking Number</div>
           <div class="tracking-number">TRK · 7X4-88201-NP</div>
-
           <div class="tracking-row">
             <div class="tracking-field">
-              <div class="tracking-field-label">Est. Arrival</div>
-              <div class="tracking-field-value">[Delivery Date]</div>
+            <div class="tracking-field-label">Item: Remains Tote Bag </div>
+            <div class="tracking-field-label">Quantity: 1</div>
+              <div class="tracking-field-label">Est. Arrival: [Delivery Date]</div>
             </div>
+          </div>
+                </td>
+              </tr>
+            </table>
           </div>
         </div>
 
