@@ -434,7 +434,7 @@ const deliveryHtml = `<!DOCTYPE html>
       </div>
       <!-- EMAIL BODY -->
       <div class="email-body">
-        <div style="margin-bottom:20px;">
+        <div style="margin-bottom:36px;">
           <img src="${deliveryGif}" alt="Delivery animation" style="display:block;width:100%;height:auto;" />
         </div>
 
