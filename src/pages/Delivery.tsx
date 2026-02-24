@@ -433,22 +433,24 @@ const deliveryHtml = `<!DOCTYPE html>
         <div class="email-header-subtitle"></div>
       </div>
 
-      <!-- EMAIL BODY -->
-      <div class="email-body">
 
-        <!-- <div style="margin-bottom:20px;">
-         <img src="${deliveryJpg}" alt="Delivery" style="display:block;width:100%;height:auto;" />
-         </div> -->
 
   <div style="max-width:600px;margin:0 auto 24px;">
     <img src="${deliveryGif}" alt="Delivery animation" style="display:block;width:100%;height:auto;" />
   </div>
 
+      <!-- EMAIL BODY -->
+      <div class="email-body">
+
+      
+
         <div class="email-greeting"><span style="font-family: Helvetica, Arial, sans-serif;">Hello, SHUNYUAN</span></div>
         <div class="email-headline">Your order<br>has <span>shipped</span>.</div>
 
+
         <div class="email-body-text">
-          <span style="font-family: Helvetica, Arial, sans-serif;">Great news — your package has left our facility and is making its way to you across the tundra.</span>
+          <span style="display: none; font-family: Helvetica, Arial, sans-serif;">
+          Great news — your package has left our facility and is making its way to you across the tundra.</span>
            </div>
 
         <div style="margin-bottom:20px;">
@@ -460,12 +462,7 @@ const deliveryHtml = `<!DOCTYPE html>
           <div class="tracking-label">Tracking Number</div>
           <div class="tracking-number">TRK · 7X4-88201-NP</div>
 
-           
           <div class="tracking-row">
-            
-         
-          
-        
             <div class="tracking-field">
               <div class="tracking-field-label">Est. Arrival</div>
               <div class="tracking-field-value">[Delivery Date]</div>
@@ -476,7 +473,9 @@ const deliveryHtml = `<!DOCTYPE html>
         <a href="https://www.google.com" class="cta-btn">Track Your Package</a>
 
         <div class="footer-text">
-         Questions about your order? Reply to this email.
+        <!--Great news — your package has left our facility and is making its way to you across the tundra. 
+       -->
+        Questions about your order? Reply to this email.
         </div>
       </div>
 
@@ -488,6 +487,10 @@ const deliveryHtml = `<!DOCTYPE html>
            <a target="_blank" href="https://www.instagram.com/chunwang.art">Follow Us</a>
             </div>
       </div>
+
+      <div style="margin-bottom:20px;">
+         <img src="${deliveryJpg}" alt="Delivery" style="display:block;width:100%;height:auto;" />
+         </div>
 
     </div>
   </div>
