@@ -1,4 +1,6 @@
 import deliveryGif from "@/assets/delivery.gif";
+import deliveryJpg from "@/assets/delivery.jpg";
+import deliveryExampleOrderPng from "@/assets/delivery_example order.png";
 
 const deliveryHtml = `<!DOCTYPE html>
 <!-- saved from url=(0065)file:///Users/chunwangpersonallaptop/Downloads/package-email.html -->
@@ -360,7 +362,8 @@ const deliveryHtml = `<!DOCTYPE html>
       color: #000000;
       letter-spacing: 1.5px;
       line-height: 1.8;
-      text-transform: uppercase;
+      text-transform: none;
+      font-family: Helvetica, Arial, sans-serif;
     }
     .footer-links {
       margin-top: 10px;
@@ -412,105 +415,15 @@ const deliveryHtml = `<!DOCTYPE html>
       <!-- HEADER -->
       <div class="email-header">
         <div class="email-header-logo">CHUN WANG STUDIO</div>
-        <div class="email-header-subtitle">Your package has been shipped</div>
+        <div class="email-header-subtitle">Your package has shipped</div>
       </div>
-
-      <!-- ANIMATION SCENE -->
-      <div class="scene-wrapper">
-
-        <!-- Moon -->
-        <div class="moon"></div>
-
-        <!-- Mountains SVG -->
-        <div class="mountains-div">
-          <svg viewBox="0 0 600 80" width="100%" height="100%" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <polygon points="0,80 80,14 160,80" fill="#000000"></polygon>
-            <polygon points="60,80 140,6 220,80" fill="#d42b1a"></polygon>
-            <polygon points="130,80 210,20 290,80" fill="#000000"></polygon>
-            <polygon points="210,80 290,10 380,80" fill="#d42b1a"></polygon>
-            <polygon points="300,80 370,18 450,80" fill="#000000"></polygon>
-            <polygon points="390,80 460,8 540,80" fill="#d42b1a"></polygon>
-            <polygon points="480,80 560,16 620,80" fill="#000000"></polygon>
-            <polygon points="140,80 210,6 260,80" fill="rgba(212,43,26,0.1)"></polygon>
-            <polygon points="290,80 370,10 420,80" fill="rgba(212,43,26,0.07)"></polygon>
-          </svg>
-        </div>
-
-        <!-- Ground -->
-        <div class="ground"></div>
-        <div class="track"></div>
-
-        <!-- Oil pump -->
-        <div class="pump">
-          <svg viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
-            <rect x="28" y="86" width="24" height="10" fill="#000000" rx="2"></rect>
-            <rect x="35" y="44" width="10" height="50" fill="#000000"></rect>
-            <circle cx="40" cy="44" r="6" fill="#000000"></circle>
-            <rect x="6" y="38" width="68" height="8" fill="#000000" rx="2" transform="rotate(-15, 40, 42)"></rect>
-            <rect x="56" y="26" width="20" height="16" fill="#d42b1a" rx="2" transform="rotate(-15, 40, 42)"></rect>
-            <rect x="10" y="46" width="5" height="38" fill="#000000" transform="rotate(-15, 40, 42)"></rect>
-            <!-- tiny amazon box on pump -->
-            <rect x="46" y="30" width="16" height="11" fill="#d42b1a" rx="1"></rect>
-            <text x="54" y="39" text-anchor="middle" font-size="6" fill="#ffffff" font-family="Arial" font-weight="bold">↗</text>
-          </svg>
-        </div>
-
-        <!-- Flat open box -->
-        <div class="box-flat">
-          <div class="box-flat-stripe"></div>
-        </div>
-
-        <!-- Upright box -->
-        <div class="box-upright">
-          <svg width="30" height="18" viewBox="0 0 50 30" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 22 Q25 30 45 22" stroke="#d42b1a" stroke-width="4" fill="none" stroke-linecap="round"></path>
-            <circle cx="44" cy="22" r="4" fill="#d42b1a"></circle>
-          </svg>
-        </div>
-
-        <!-- Polar Bear with box -->
-        <div class="bear-group">
-          <!-- Amazon Box -->
-          <div class="amazon-box">
-            <div class="amazon-box-stripe"></div>
-            <div class="amazon-box-arrow">↗</div>
-          </div>
-          <!-- Bear SVG -->
-          <svg class="bear-svg" viewBox="0 0 76 62" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="38" cy="44" rx="22" ry="16" fill="#ffffff"></ellipse>
-            <ellipse cx="38" cy="24" rx="16" ry="14" fill="#ffffff"></ellipse>
-            <circle cx="27" cy="13" r="6" fill="#ffffff"></circle>
-            <circle cx="49" cy="13" r="6" fill="#ffffff"></circle>
-            <circle cx="27" cy="13" r="3.5" fill="#d42b1a"></circle>
-            <circle cx="49" cy="13" r="3.5" fill="#d42b1a"></circle>
-            <circle cx="33" cy="22" r="2.5" fill="#000000"></circle>
-            <circle cx="43" cy="22" r="2.5" fill="#000000"></circle>
-            <circle cx="33.8" cy="21.2" r="0.9" fill="white"></circle>
-            <circle cx="43.8" cy="21.2" r="0.9" fill="white"></circle>
-            <ellipse cx="38" cy="30" rx="7" ry="5" fill="#ffffff"></ellipse>
-            <ellipse cx="38" cy="28.5" rx="3.2" ry="2" fill="#000000"></ellipse>
-            <rect x="20" y="50" width="11" height="10" rx="4" fill="#ffffff" transform="rotate(-12,25.5,55)"></rect>
-            <rect x="45" y="50" width="11" height="10" rx="4" fill="#ffffff" transform="rotate(12,50.5,55)"></rect>
-          </svg>
-        </div>
-
-        <!-- Scanlines -->
-        <div class="scanlines"></div>
-
-        <!-- Status bar -->
-        <div class="scene-status">
-          <span class="scene-status-text">YOUR PACKAGE IS ON ITS WAY</span>
-          <div class="progress-track">
-            <div class="progress-fill"></div>
-          </div>
-          <span class="progress-eta">Estimated Delivery · Beyond The Mountains</span>
-        </div>
-
-      </div>
-      <!-- END SCENE -->
 
       <!-- EMAIL BODY -->
       <div class="email-body">
+
+        <div style="margin-bottom:20px;">
+          <img src="${deliveryJpg}" alt="Delivery" style="display:block;width:100%;height:auto;" />
+        </div>
 
         <div class="email-greeting">Hello, SHUNYUAN</div>
         <div class="email-headline">Your order<br>is <span>en route.</span></div>
@@ -518,6 +431,10 @@ const deliveryHtml = `<!DOCTYPE html>
         <div class="email-body-text">
           Great news — your package has left our facility and is making its way to you across the tundra. 
            </div>
+
+        <div style="margin-bottom:20px;">
+          <img src="${deliveryExampleOrderPng}" alt="Order details" style="display:block;width:100%;height:auto;" />
+        </div>
 
         <!-- Tracking box -->
         <div class="tracking-box">
@@ -565,7 +482,7 @@ const deliveryHtml = `<!DOCTYPE html>
     </div>
   </div>
 
-  <div style="max-width:600px;margin:16px auto 0;display:none;">
+  <div style="max-width:600px;margin:16px auto 0;">
     <img src="${deliveryGif}" alt="Delivery animation" style="display:block;width:100%;height:auto;" />
   </div>
 
