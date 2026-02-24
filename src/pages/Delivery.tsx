@@ -338,7 +338,7 @@ const deliveryHtml = `<!DOCTYPE html>
       background: #d42b1a;
       color: #ffffff !important;
       text-decoration: none;
-      font-family: Arial, sans-serif;
+      font-family: 'Gloria Hallelujah', 'Comic Sans MS', cursive;
       font-size: 20px;
       letter-spacing: 4px;
       padding: 14px 36px;
