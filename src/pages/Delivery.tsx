@@ -369,6 +369,7 @@ const deliveryHtml = `<!DOCTYPE html>
       margin-top: 10px;
       font-size: 12px;
       letter-spacing: 1.5px;
+      font-family: Helvetica, Arial, sans-serif;
     }
     .footer-links a {
       color: #d42b1a;
@@ -458,31 +459,24 @@ const deliveryHtml = `<!DOCTYPE html>
 
         <a href="file:///Users/chunwangpersonallaptop/Downloads/package-email.html#" class="cta-btn">Track Your Package</a>
 
-        <div class="divider"></div>
-
-        <div class="email-body-text" style="font-size:14px;margin-bottom:0;">
-          Questions about your order? Reply to this email.
+        <div class="footer-text">
+         Questions about your order? Reply to this email.
         </div>
-
       </div>
 
       <!-- FOOTER -->
       <div class="email-footer">
-        <div class="footer-text">
-          You're receiving this because you placed an order with us.<br>
-          Chun Wang Studio · New York City, NY, USA
-        </div>
-        <!-- <div class="footer-links">
-          <a href="file:///Users/chunwangpersonallaptop/Downloads/package-email.html#">Unsubscribe</a>
-          <a href="file:///Users/chunwangpersonallaptop/Downloads/package-email.html#">Privacy Policy</a>
-          <a href="file:///Users/chunwangpersonallaptop/Downloads/package-email.html#">Contact Us</a>
-        </div> -->
+      
+       <div class="footer-links">
+          <a target="_blank" href="https://www.chunwangshop.com/">Visit Shop</a>
+           <a target="_blank" href="https://www.instagram.com/chunwang.art">Follow Us</a>
+            </div>
       </div>
 
     </div>
   </div>
 
-  <div style="max-width:600px;margin:16px auto 0;">
+  <div style="max-width:600px;margin:0 auto 0;">
     <img src="${deliveryGif}" alt="Delivery animation" style="display:block;width:100%;height:auto;" />
   </div>
 
