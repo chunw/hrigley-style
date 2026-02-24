@@ -442,19 +442,7 @@ const deliveryHtml = `<!DOCTYPE html>
 
         <div class="email-greeting"><span style="font-family: Helvetica, Arial, sans-serif;">Hello, SHUNYUAN</span></div>
         <div class="email-headline">Your order<br>has <span>shipped</span>.</div>
-
-
-        <div class="email-body-text">
-          <span style="display: none; font-family: Helvetica, Arial, sans-serif;">
-          Great news — your package has left our facility and is making its way to you across the tundra.</span>
-           </div>
-
-           <!--
-        <div style="margin-bottom:20px;">
-          <img src="${deliveryExampleOrderPng}" alt="Order details" style="display:block;width:100%;height:auto;" />
-        </div>-->
-
-        <!-- Tracking box -->
+       
       <div class="tracking-box">
           <div style="margin:0;background:#000000;padding-bottom:16px;">
             <img src="${deliveryJpg}" alt="Delivery" style="display:block;width:100%;height:auto;" />
@@ -470,9 +458,9 @@ const deliveryHtml = `<!DOCTYPE html>
                 <td valign="top" style="width:84px;padding-right:12px;">
                   <img src="${deliveryExampleOrderPng}" alt="Example order" style="display:block;width:100%;max-width:84px;height:auto;border:1px solid #d9d9d9;" />
                 </td>
-                <td valign="top" style="font-family: 'Gloria Hallelujah', 'Comic Sans MS', cursive;color:#ffffff;text-transform:uppercase;">
+                <td valign="top" style="font-family: var(--handwritten-font);font-weight:400;letter-spacing:0.05em;color:#ffffff;text-transform:uppercase;">
                   <div style="font-size:18px;line-height:1.1;margin-bottom:4px;">Your Order</div>
-                  <div style="font-size:12px;line-height:1.35;color:#ff5ebc;">Item: Remains Tote Bag</div>
+                  <div style="font-size:12px;line-height:1.35;">Item: Remains Tote Bag</div>
                   <div style="font-size:12px;line-height:1.35;">Quantity: 1</div>
                 </td>
               </tr>
