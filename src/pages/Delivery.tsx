@@ -3,10 +3,10 @@ import deliveryJpg from "@/assets/delivery.jpg";
 import deliveryExampleOrderPng from "@/assets/delivery_example order.png";
 
 // UPDATE ME WITH REAL DATA BEFORE SENDING
-const customerName = "SHUNYUAN";
-const customerMessage = "您的包裹已寄出！";
-const trackingNumber = "CH249401526US";
-const trackingLink = `https://tools.usps.com/go/TrackConfirmAction?tLabels=${trackingNumber}`;
+const customerName = "CUSTOMER NAME";
+const customerMessage = "MESSAGE";
+const trackingNumber = "[TRACKING NUMBER]";
+const trackingLink = `TRACKING LINK WITH ${trackingNumber}`;
 const customerMessageHtml = customerMessage.replace(/\n/g, "<br>");
 
 const deliveryHtml = `<!DOCTYPE html>
