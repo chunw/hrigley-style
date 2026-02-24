@@ -472,7 +472,7 @@ const deliveryHtml = `<!DOCTYPE html>
                   <div style="font-size:18px;line-height:1.1;margin-bottom:4px;">Your Order</div>
                   <div style="font-size:12px;line-height:1.35;color:#ff5ebc;">Item: Remains Tote Bag</div>
                   <div style="font-size:12px;line-height:1.35;">Quantity: 1</div>
-                  <div style="font-size:12px;line-height:1.35;">Est. Arrival: [Delivery Date]</div>
+                  <div style="font-size:12px;line-height:1.35;">Est. Arrival: 7-10 Business Days</div>
                 </td>
               </tr>
             </table>
