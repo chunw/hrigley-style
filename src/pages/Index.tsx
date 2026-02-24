@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ProductGrid from "@/components/ProductGrid";
 import Footer from "@/components/Footer";
+import { SITE_URL } from "@/lib/constants";
 import { Analytics } from "@vercel/analytics/next";
 
 const Index = () => {
@@ -41,17 +42,25 @@ const Index = () => {
                   Unique works for the imaginative collectors
                 </p>
                 <p className="hidden lg:block text-muted-foreground max-w-md handwritten">
-                  created exclusively by chun wang
+                  created exclusively by{" "}
+                  <a href={SITE_URL} target="_blank" rel="noopener noreferrer" className="text-primary">
+                    chun wang
+                  </a>
                 </p>
                 <div className="lg:hidden flex items-start gap-4">
                   <div className="text-muted-foreground max-w-md handwritten flex-1">
                     <p>Unique works for the imaginative collectors</p>
-                    <p>created exclusively by chun wang</p>
+                    <p>
+                      created exclusively by{" "}
+                      <a href={SITE_URL} target="_blank" rel="noopener noreferrer" className="text-primary">
+                        chun wang
+                      </a>
+                    </p>
                   </div>
                   <a
-                    href="https://ls.chunwang.me/"
+                    href={SITE_URL}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     className="block rounded-lg overflow-hidden shrink-0 w-40 h-40"
                   >
                     <img
@@ -71,9 +80,9 @@ const Index = () => {
             {/* Right - Image */}
             <div className="hidden lg:block relative">
               <a
-                href="https://ls.chunwang.me/"
+                href={SITE_URL}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="flex items-center justify-center aspect-square lg:aspect-[4/3] rounded-lg overflow-hidden scale-80"
               >
                 <img 
