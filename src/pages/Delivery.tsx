@@ -413,7 +413,7 @@ const deliveryHtml = `<!DOCTYPE html>
     <span style="font-size: 24px; line-height: 1;">📬</span> <br>
     <br>
     <span style="font-family: Helvetica, Arial, sans-serif;">Hi Mars,</span> <br><br>
-    您的包裹已寄出！不好意思，最近纽约遇暴风雪，耽搁了邮寄😛
+    您的包裹已寄出！不好意思，最近纽约的确遇暴风雪，邮寄有所延迟😛
     <br>
     <br>
     <br>
