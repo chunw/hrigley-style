@@ -35,19 +35,7 @@ const Header = () => {
         <div className="relative flex items-center justify-between h-28">
           <div className="absolute inset-y-0 right-0 inline-flex items-center gap-4 text-sm font-helvetica">
            
-             <a
-              href={INSTAGRAM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Follow on Instagram"
-              className={`inline-flex items-center gap-1 transition-colors ${
-                isHomePage ? "text-white hover:text-white" : "text-foreground hover:text-primary"
-              }`}
-            >
-              <Instagram className="h-4 w-4" />
-              <span>follow us</span>
-            </a>
-            <span aria-hidden="true" className={isHomePage ? "text-white" : "text-muted-foreground"}>|</span>
+            
              <a
               href={ABOUT_URL}
               target="_blank"
@@ -70,6 +58,20 @@ const Header = () => {
             >
               contact us
             </button>
+ <span aria-hidden="true" className={isHomePage ? "text-white" : "text-muted-foreground"}>|</span>
+             <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow on Instagram"
+              className={`inline-flex items-center gap-1 transition-colors ${
+                isHomePage ? "text-white hover:text-white" : "text-foreground hover:text-primary"
+              }`}
+            >
+              <Instagram className="h-4 w-4" />
+              <span>follow us</span>
+            </a>
+           
           </div>
 
           {/* Left - Logo */}
