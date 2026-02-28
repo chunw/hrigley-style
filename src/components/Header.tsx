@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Instagram } from "lucide-react";
-import { INSTAGRAM_URL } from "@/lib/constants";
+import { ABOUT_URL, INSTAGRAM_URL } from "@/lib/constants";
 import { useToast } from "@/hooks/use-toast";
 
 const Header = () => {
@@ -35,6 +35,18 @@ const Header = () => {
         <div className="relative flex items-center justify-between h-28">
           <div className="absolute inset-y-0 right-0 inline-flex items-center gap-4 text-sm font-helvetica">
             <a
+              href={ABOUT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow on Instagram"
+              className={`inline-flex items-center gap-1 transition-colors ${
+                isHomePage ? "text-white hover:text-white" : "text-foreground hover:text-primary"
+              }`}
+            >
+              <Instagram className="h-4 w-4" />
+              <span>about</span>
+            </a>
+             <a
               href={INSTAGRAM_URL}
               target="_blank"
               rel="noopener noreferrer"
