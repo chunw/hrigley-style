@@ -33,7 +33,7 @@ const Header = () => {
     <header className="border-b border-border bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-28">
-          <div className="absolute inset-y-0 right-0 inline-flex items-center gap-4 text-sm font-helvetica">
+          <div className="absolute inset-y-0 right-0 inline-flex items-center gap-8 text-sm font-helvetica">
            
             
              <a
@@ -41,30 +41,30 @@ const Header = () => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="about"
-              className={`inline-flex items-center gap-1 transition-colors ${
+              className={`handwritten inline-flex items-center gap-1 transition-colors ${
                 isHomePage ? "text-white hover:text-white" : "text-foreground hover:text-primary"
               }`}
             >
-              <span>About</span> 
+              <span>about</span> 
             </a>
-             <span aria-hidden="true" className={isHomePage ? "text-white" : "text-muted-foreground"}>|</span>
+           
             <button
               type="button"
               onClick={handleContactClick}
               aria-label="Copy contact email"
-              className={`transition-colors ${
+              className={`handwritten transition-colors ${
                 isHomePage ? "text-white hover:text-white" : "text-foreground hover:text-primary"
               }`}
             >
               contact us
             </button>
- <span aria-hidden="true" className={isHomePage ? "text-white" : "text-muted-foreground"}>|</span>
+            
              <a
               href={INSTAGRAM_URL}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Follow on Instagram"
-              className={`inline-flex items-center gap-1 transition-colors ${
+              className={`handwritten inline-flex items-center gap-1 transition-colors ${
                 isHomePage ? "text-white hover:text-white" : "text-foreground hover:text-primary"
               }`}
             >
