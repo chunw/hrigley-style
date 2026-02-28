@@ -65,7 +65,7 @@ const Header = () => {
               rel="noopener noreferrer"
               aria-label="Follow on Instagram"
               className={`handwritten inline-flex items-center gap-1 transition-colors ${
-                isHomePage ? "display-none" : "text-foreground hover:text-primary"
+                isHomePage ? "text-foreground hover:text-primary" : "text-foreground hover:text-primary"
               }`}
             >
               <Instagram className="h-4 w-4" />
@@ -79,7 +79,7 @@ const Header = () => {
             <h1
               onClick={() => navigate('/')}
               className={`shop-title text-2xl leading-none cursor-pointer transition-colors ${
-                isHomePage ? "display:none" : "hover:text-primary"
+                isHomePage ? "hidden" : "hover:text-primary"
               }`}
             >
               CHUN WANG<br />STUDIO<br />
