@@ -42,7 +42,7 @@ const Header = () => {
               rel="noopener noreferrer"
               aria-label="about"
               className={`handwritten inline-flex items-center gap-1 transition-colors ${
-                isHomePage ? "text-white hover:text-white" : "text-foreground hover:text-primary"
+                isHomePage ? "text-white hover:text-primary" : "text-foreground hover:text-primary"
               }`}
             >
               <span>about</span> 
@@ -53,7 +53,7 @@ const Header = () => {
               onClick={handleContactClick}
               aria-label="Copy contact email"
               className={`handwritten transition-colors ${
-                isHomePage ? "text-white hover:text-white" : "text-foreground hover:text-primary"
+                isHomePage ? "text-white hover:text-primary" : "text-foreground hover:text-primary"
               }`}
             >
               contact
