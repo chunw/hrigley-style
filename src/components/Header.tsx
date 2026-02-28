@@ -45,7 +45,7 @@ const Header = () => {
                 isHomePage ? "text-white hover:text-white" : "text-foreground hover:text-primary"
               }`}
             >
-              <span>about</span> 
+              <span>msg. from Chun</span> 
             </a>
              <span aria-hidden="true" className={isHomePage ? "text-white" : "text-muted-foreground"}>|</span>
             <button
