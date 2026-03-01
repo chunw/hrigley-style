@@ -14,11 +14,12 @@ const HeroSection = () => {
                Chun Wang <br />Studio<br />
                 <span className="text-primary">SHOP</span>
               </h1>
-              <p className="handwritten max-w-md ">
+              <p className="handwritten text-muted-foreground max-w-md ">
             
                What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity,
                
-              
+              </p>
+                <p>
                   created exclusively by{" "}
                   <a href={SITE_URL} target="_blank" rel="noopener noreferrer" className="text-primary">
                     chun wang
