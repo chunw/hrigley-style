@@ -444,7 +444,6 @@ const deliveryHtml = `<!DOCTYPE html>
 
        
       <div class="tracking-box" style="display:none; ">
-
           <div style="margin:0; background:#000000;padding-bottom:16px;">
             <img src="${deliveryJpg}" alt="Delivery" style="display:block;width:100%;height:auto;" />
           </div>
@@ -469,8 +468,6 @@ const deliveryHtml = `<!DOCTYPE html>
             </table>
           </div>
         </div>
-
-      
       </div>
 
       <!-- FOOTER 
@@ -478,7 +475,7 @@ const deliveryHtml = `<!DOCTYPE html>
       
        <div class="footer-links">
          
-           <a target="_blank" href="https://www.instagram.com/chunwang.art">Follow Us</a>
+           <a target="_blank" href="https://www.instagram.com/chunwang.art">Back to Shop</a>
             </div>
       </div>-->
 
@@ -487,15 +484,9 @@ const deliveryHtml = `<!DOCTYPE html>
 
   <div class="how-to-use">
   
- <div style="">
-          <img src="${deliveryGif}" alt="Delivery animation" style="display:block;width:100%;height:auto;" />
-        </div>
-  <div class="footer-text">
-
-    
-    </div>
-
+<img src="${deliveryGif}" alt="Delivery animation" style="display:block;width:100%;height:auto;" />
         
+ 
   </div>
 
   
