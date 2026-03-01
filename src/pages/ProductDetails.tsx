@@ -30,7 +30,7 @@ const ProductDetails = () => {
   if (productLoading || imagesLoading) {
     return (
       <div className="min-h-screen bg-background">
-        <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+        <Header  />
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-lg text-muted-foreground handwritten">Loading...</div>
         </div>
@@ -41,7 +41,7 @@ const ProductDetails = () => {
   if (productError || !product) {
     return (
       <div className="min-h-screen bg-background">
-        <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+        <Header  />
       </div>
     );
   }
@@ -178,14 +178,12 @@ const ProductDetails = () => {
 
             {product.edition_info && (
               <div className="space-y-2">
-                {/* <h3 className="font-semibold">Edition Info</h3> */}
                 <p className="text-muted-foreground font-helvetica">{product.edition_info}</p>
               </div>
             )}
 
             {product.edition_size && (
               <div className="space-y-2">
-                {/* <h3 className="font-semibold">Edition Size</h3> */}
                 <p className="text-muted-foreground font-helvetica">Limited edition of {product.edition_size}</p>
               </div>
             )}
@@ -202,7 +200,6 @@ const ProductDetails = () => {
                   <span>
                     ORDER NOW - {formatPrice(product.price, product.currency) } 
                   </span>
-                 
                 </Button> 
                 
                 <p className="pt-4 w-full text-xs text-muted-foreground font-helvetica">Shipping included</p>
@@ -234,6 +231,7 @@ const ProductDetails = () => {
             </div>
           </section>
         )} */}
+
       </main>
       <About />
       <Footer />
