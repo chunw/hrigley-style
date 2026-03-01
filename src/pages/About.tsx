@@ -460,7 +460,7 @@ const deliveryHtml = `<!DOCTYPE html>
         <div class="email-headline">About Chun Wang <br> Studio <span>Shop</span></div>
           <div class="footer-text">
           Our shop started as a collection of observations of the modern society that wouldn't leave us alone until they became physical things.
-          At the nexus of art and utility, Chun Wang Studio produces whimsical objects for people who see the world a little differently. 
+          Chun Wang Studio produces whimsical objects at the nexus of art and utility for people who want to see the world a little differently. 
         </div>   
 
       <div class="tracking-box" style="margin-top: 24px;">
