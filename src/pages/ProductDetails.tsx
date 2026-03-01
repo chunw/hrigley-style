@@ -15,6 +15,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Analytics } from "@vercel/analytics/next";
+import About from "./About";
 
 const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -234,7 +235,7 @@ const ProductDetails = () => {
           </section>
         )} */}
       </main>
-
+      <About />
       <Footer />
 
     </div>
