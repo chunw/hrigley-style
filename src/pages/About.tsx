@@ -459,8 +459,8 @@ const deliveryHtml = `<!DOCTYPE html>
         <div class="email-greeting"><span style="font-family: Helvetica, Arial, sans-serif;"></span></div>
         <div class="email-headline">About Chun Wang <br> Studio <span>Shop</span></div>
           <div class="footer-text">
-          Our shop started as a collection of observations of the modern society that wouldn't leave us alone until they became physical things with daily functionality.
-          Based in the intersection of art and utility, Chun Wang Studio makes whimsical objects for people who see the world a little differently. 
+          Our shop started as a collection of observations of the modern society that wouldn't leave us alone until they became physical things.
+          At the nexus of art and utility, Chun Wang Studio produces whimsical objects for people who see the world a little differently. 
         </div>   
 
       <div class="tracking-box" style="margin-top: 24px;">
