@@ -25,7 +25,7 @@ const Footer = () => {
             </a>
           </div> */}
           <p className="text-sm font-helvetica" style={
-          {fontSize: '0.8rem'}
+          {fontSize: '0.8rem', }
         }>
             © {new Date().getFullYear()} Chun Wang Studio. All rights reserved.
           </p>
