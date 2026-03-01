@@ -41,7 +41,7 @@ const About = () => {
               marginBottom: 20,
             }}
           >
-            About the {" "}
+            About this {" "}
             <span style={{ color: "#d42b1a" }}>Shop</span>
           </div>
 
