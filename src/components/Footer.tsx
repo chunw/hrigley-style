@@ -5,8 +5,10 @@ const Footer = () => {
   return (
     <footer className="">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="border-primary-foreground/20 text-center">
-          <div className="space-y-6 pb-6">
+        <div className="border-primary-foreground/20 text-center py-4" style={
+          {opacity: 0.8}
+        }>
+          {/* <div className="space-y-6 pb-6">
             <p className="font-helvetica text-primary-foreground"></p>
             <a
               href={INSTAGRAM_URL}
@@ -21,7 +23,7 @@ const Footer = () => {
                 @chunwang.art
               </Button>
             </a>
-          </div>
+          </div> */}
           <p className="text-sm font-helvetica">
             © {new Date().getFullYear()} Chun Wang Studio. All rights reserved.
           </p>

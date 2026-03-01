@@ -92,6 +92,7 @@ const About = () => {
             >
               Back to Shop
             </a>
+           
           </div>
         </div>
       </div>
