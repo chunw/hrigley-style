@@ -428,6 +428,10 @@ const deliveryHtml = `<!DOCTYPE html>
     <div class="email-container">
 
       <!-- HEADER -->
+         <a href="${trackingLink}"  rel="noopener noreferrer" class="cta-btn" style="margin-top:1rem;">
+        <span>Visit Shop</span>
+        </a>
+
       <div class="email-header">
         <div class="email-header-logo"></div>
         <div class="email-header-subtitle"></div>
@@ -443,10 +447,7 @@ const deliveryHtml = `<!DOCTYPE html>
          Feel free to stay as long as your curiosity allows.
         </div>   
 
-          <a href="${trackingLink}"  rel="noopener noreferrer" class="cta-btn" style="margin-top:1rem;">
-        <span>Visit Shop</span>
-        </a>
-
+       
       <div class="tracking-box" style="display:none; ">
 
           <div style="margin:0; background:#000000;padding-bottom:16px;">
