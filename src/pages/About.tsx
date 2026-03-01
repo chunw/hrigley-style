@@ -427,8 +427,7 @@ const deliveryHtml = `<!DOCTYPE html>
 <div class="email-wrapper">
     <div class="email-container">
 
-      <!-- HEADER -->
-         <a href="${trackingLink}"  rel="noopener noreferrer" class="cta-btn" style="margin-top:1rem;">
+      <!-- HEADER -->   <a href="${trackingLink}"  rel="noopener noreferrer" class="cta-btn" style="margin-top:1rem;">
         <span>Visit Shop</span>
         </a>
 
