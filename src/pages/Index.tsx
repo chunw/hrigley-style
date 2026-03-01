@@ -5,6 +5,7 @@ import ProductGrid from "@/components/ProductGrid";
 import Footer from "@/components/Footer";
 import { SITE_URL } from "@/lib/constants";
 import { Analytics } from "@vercel/analytics/next";
+import About from "./About";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -22,6 +23,7 @@ const Index = () => {
         matchedCount={matchedCount}
       />
  
+
       <section className=" relative bg-background py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -30,32 +32,21 @@ const Index = () => {
               <div className="space-y-1 lg:space-y-4">
 {/* 
            
+             
              <div className="handwritten text-sm text-muted-foreground">Welcome to</div> */}
-              
                 <h1 className=" shop-title text-4xl md:text-6xl lg:text-7xl leading-none">
                  Chun Wang <br />Studio<br />
                   <span className="text-primary">SHOP</span>
                 </h1>
                 <p className="hidden lg:block text-muted-foreground max-w-md handwritten">
-                  {/* What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity.
-                   */}
+                
                   Unique works for the imaginative collectors
                 </p>
-                <p className="hidden lg:block text-muted-foreground max-w-md handwritten">
-                  created exclusively by{" "}
-                  <a href={SITE_URL} target="_blank" rel="noopener noreferrer" className="text-primary">
-                    chun wang
-                  </a>
-                </p>
+               
                 <div className="lg:hidden flex items-start gap-4">
                   <div className="text-muted-foreground max-w-md handwritten flex-1">
                     <p>Unique works for the imaginative collectors</p>
-                    <p>
-                      created exclusively by{" "}
-                      <a href={SITE_URL} target="_blank" rel="noopener noreferrer" className="text-primary">
-                        chun wang
-                      </a>
-                    </p>
+                  
                   </div>
                   <a
                     href={SITE_URL}
@@ -72,9 +63,7 @@ const Index = () => {
                 </div>
               </div>
 
-              {/* <div className="space-y-2">
-                created exclusively by Chun Wang. 
-              </div> */}
+             
             </div>
 
             {/* Right - Image */}
@@ -108,8 +97,10 @@ const Index = () => {
           </div>
         </div>
       </section>
-
-      <Footer />
+      <section id="about">
+        <About /> <Footer />
+      </section>
+      
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Instagram } from "lucide-react";
-import { ABOUT_URL, INSTAGRAM_URL } from "@/lib/constants";
+import {  INSTAGRAM_URL } from "@/lib/constants";
 import { useToast } from "@/hooks/use-toast";
 
 const Header = () => {
@@ -37,8 +37,7 @@ const Header = () => {
            
             
              <a
-              href={ABOUT_URL}
-              target="_blank"
+              href="#about"
               rel="noopener noreferrer"
               aria-label="about"
               className={`handwritten inline-flex items-center gap-1 transition-colors ${
