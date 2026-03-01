@@ -5,19 +5,6 @@ const Footer = () => {
   return (
     <footer className="bg-[hsl(var(--footer-background))] text-primary-foreground py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* <div className="grid grid-cols-1 gap-8">
-         
-          <div className="space-y-4">
-            
-            <div className="space-y-2">
-              <p className="text-sm font-helvetica">CONTACT</p>
-              <p className="text-sm font-helvetica">chunwang.me@gmail.com</p>
-              <p className="text-sm font-helvetica">
-                NEW YORK CITY, USA<br />
-              </p>
-            </div>
-          </div>
-        </div> */}
 
         <div className="border-primary-foreground/20 text-center">
           <div className="space-y-6 pb-6">

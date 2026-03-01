@@ -487,7 +487,7 @@ const deliveryHtml = `<!DOCTYPE html>
 
   <div class="how-to-use">
   
- <div style="margin-bottom:36px;">
+ <div style="">
           <img src="${deliveryGif}" alt="Delivery animation" style="display:block;width:100%;height:auto;" />
         </div>
   <div class="footer-text">
