@@ -57,8 +57,8 @@ const About = () => {
           >
             Based in New York City, our shop started as a collection of observations of the modern
             society that wouldn't leave us alone until they became physical
-            things. We produce whimsical objects at the nexus of art and utility
-            for people who want to see the world just a little differently. Feel
+            things. We produce whimsical objects at the nexus of utility and comtempoary art,
+            designed for people who want to see the world just a little differently. Feel
             free to stay as long as your curiosity allows.
           </p>
         </div>
