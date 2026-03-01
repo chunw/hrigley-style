@@ -411,7 +411,7 @@ const deliveryHtml = `<!DOCTYPE html>
       font-size: 16px;
       line-height: 2;
       color: #000000;
-      margin: 20px auto;
+      margin: 0 auto;
       max-width: 600px;
     }
     .how-to-use * {
@@ -424,25 +424,7 @@ const deliveryHtml = `<!DOCTYPE html>
   </style>
 </head>
 <body style="margin:0;padding:20px 0;background:#ffffff;">
-
-  <!-- HOW TO SEND NOTICE (remove before sending) -->
-  <div class="how-to-use">
-  
-  <div class="footer-text">
-
-    ${customerMessageHtml}
-    <br>
-    <br>
-    
-    
-    Warmly,
-    <br>
-    Chun 
-    
-    </div>
-  </div>
-
-  <div class="email-wrapper">
+<div class="email-wrapper">
     <div class="email-container">
 
       <!-- HEADER -->
@@ -452,10 +434,7 @@ const deliveryHtml = `<!DOCTYPE html>
       </div>
       <!-- EMAIL BODY -->
       <div class="email-body">
-        <div style="margin-bottom:36px;">
-          <img src="${deliveryGif}" alt="Delivery animation" style="display:block;width:100%;height:auto;" />
-        </div>
-
+       
         <div class="email-greeting"><span style="font-family: Helvetica, Arial, sans-serif;"></span></div>
         <div class="email-headline">About Chun Wang <br> Studio <span>Shop</span></div>
           <div class="footer-text">
@@ -463,8 +442,12 @@ const deliveryHtml = `<!DOCTYPE html>
           Chun Wang Studio produces whimsical objects at the nexus of art and utility for people who want to see the world a little differently. 
         </div>   
 
-      <div class="tracking-box" style="margin-top: 24px;">
-      
+          <a href="${trackingLink}"  rel="noopener noreferrer" class="cta-btn" style="margin-top:1rem;">
+        <span>Visit Shop</span>
+        </a>
+
+      <div class="tracking-box" style="display:none; ">
+
           <div style="margin:0; background:#000000;padding-bottom:16px;">
             <img src="${deliveryJpg}" alt="Delivery" style="display:block;width:100%;height:auto;" />
           </div>
@@ -490,25 +473,43 @@ const deliveryHtml = `<!DOCTYPE html>
           </div>
         </div>
 
-        <a href="${trackingLink}"  rel="noopener noreferrer" class="cta-btn">
-        <span>Visit Shop</span>
-        </a>
-
-     
+      
       </div>
 
-      <!-- FOOTER -->
+      <!-- FOOTER 
       <div class="email-footer">
       
        <div class="footer-links">
          
            <a target="_blank" href="https://www.instagram.com/chunwang.art">Follow Us</a>
             </div>
-      </div>
+      </div>-->
 
     </div>
   </div>
 
+  <div class="how-to-use">
+  
+ <div style="margin-bottom:36px;">
+          <img src="${deliveryGif}" alt="Delivery animation" style="display:block;width:100%;height:auto;" />
+        </div>
+  <div class="footer-text">
+
+    ${customerMessageHtml}
+    <br>
+    <br>
+    
+    
+    Warmly,
+    <br>
+    Chun 
+    
+    </div>
+
+        
+  </div>
+
+  
 
 
 </body></html>`;
