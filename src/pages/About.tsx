@@ -41,7 +41,7 @@ const About = () => {
               marginBottom: 20,
             }}
           >
-            Welcome to the {" "}
+            About the {" "}
             <span style={{ color: "#d42b1a" }}>Shop</span>
           </div>
 
@@ -60,7 +60,6 @@ const About = () => {
             things. We produce whimsical objects at the nexus of art and utility
             for people who want to see the world just a little differently. Feel
             free to stay as long as your curiosity allows.
-          
           </p>
         </div>
 
@@ -93,7 +92,6 @@ const About = () => {
             >
               Back to Shop
             </a>
-           
           </div>
         </div>
       </div>
