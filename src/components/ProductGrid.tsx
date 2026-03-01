@@ -142,12 +142,6 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
           </div>
         )}
 
-        {/* Load More */}
-        {/* <div className="text-center mt-12">
-          <button className="handwritten text-sm px-8 py-3 border-2 border-border hover:border-primary hover:text-primary transition-colors">
-            LOAD MORE REALLY GOOD STUFF
-          </button>
-        </div> */}
       </div>
     </section>
   );

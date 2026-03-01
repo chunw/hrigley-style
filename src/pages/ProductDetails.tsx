@@ -212,7 +212,7 @@ const ProductDetails = () => {
         </div>
 
         {/* Related Products */}
-        {relatedProducts && relatedProducts.length > 0 && (
+        {/* {relatedProducts && relatedProducts.length > 0 && (
           <section className="mt-16">
             <h2 className="shop-title text-2xl md:text-3xl mb-8 text-center">
               YOU MAY ALSO LIKE
@@ -232,8 +232,10 @@ const ProductDetails = () => {
               ))}
             </div>
           </section>
-        )}
+        )} */}
       </main>
+
+      <Footer />
 
     </div>
   );
