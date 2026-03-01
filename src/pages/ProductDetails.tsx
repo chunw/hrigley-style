@@ -228,15 +228,13 @@ const ProductDetails = () => {
                   price={relatedProduct.price}
                   currency={relatedProduct.currency}
                   image_url={relatedProduct.image_url}
-                  category={relatedProduct.category}
-                />
+                  category={relatedProduct.category} paylink={""}                />
               ))}
             </div>
           </section>
         )}
       </main>
 
-      <Footer />
     </div>
   );
 };
