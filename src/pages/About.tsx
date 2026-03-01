@@ -3,6 +3,7 @@ import deliveryGif from "@/assets/delivery.gif";
 const About = () => {
   return (
     <div
+      id="about"
       style={{
         fontFamily: "'Space Mono', 'Courier New', monospace",
         fontSize: 16,

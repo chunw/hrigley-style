@@ -79,9 +79,8 @@ const Index = () => {
           </div>
         </div>
       </section>
-      <section id="about">
+     
         <About /> <Footer />
-      </section>
       
     </div>
   );
