@@ -18,8 +18,7 @@ const HeroSection = () => {
             
                What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity,
                
-              </p>
-                <p>
+             <br></br>
                   created exclusively by{" "}
                   <a href={SITE_URL} target="_blank" rel="noopener noreferrer" className="text-primary">
                     chun wang
