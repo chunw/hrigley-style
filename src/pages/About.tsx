@@ -4,7 +4,7 @@ import deliveryExampleOrderPng from "@/assets/delivery_example order.png";
 
 // UPDATE WITH REAL DATA BEFORE SENDING
 const customerName = "[CUSTOMER NAME]";
-const customerMessage = "Welcome to the studio! Feel free to stay as long as your curiosity allows.";
+const customerMessage = "Welcome to the studio!";
 const trackingNumber = "[TRACKING NUMBER]";
 const trackingLink = `https://www.chunwangshop.com/`;
 const carrier = "USPS";
@@ -436,10 +436,11 @@ const deliveryHtml = `<!DOCTYPE html>
       <div class="email-body">
        
         <div class="email-greeting"><span style="font-family: Helvetica, Arial, sans-serif;"></span></div>
-        <div class="email-headline">About Chun Wang <br> Studio <span>Shop</span></div>
+        <div class="email-headline">Welcome to Chun Wang <br> Studio <span>Shop</span></div>
           <div class="footer-text">
           Our shop started as a collection of observations of the modern society that wouldn't leave us alone until they became physical things.
-          Chun Wang Studio produces whimsical objects at the nexus of art and utility for people who want to see the world a little differently. 
+          We produce whimsical objects at the nexus of art and utility for people who want to see the world just a little differently. 
+         Feel free to stay as long as your curiosity allows.
         </div>   
 
           <a href="${trackingLink}"  rel="noopener noreferrer" class="cta-btn" style="margin-top:1rem;">
@@ -495,14 +496,6 @@ const deliveryHtml = `<!DOCTYPE html>
         </div>
   <div class="footer-text">
 
-    ${customerMessageHtml}
-    <br>
-    <br>
-    
-    
-    Warmly,
-    <br>
-    Chun 
     
     </div>
 
