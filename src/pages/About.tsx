@@ -470,15 +470,7 @@ const deliveryHtml = `<!DOCTYPE html>
         </div>
       </div>
 
-      <!-- FOOTER 
-      <div class="email-footer">
-      
-       <div class="footer-links">
-         
-           <a target="_blank" href="https://www.instagram.com/chunwang.art">Back to Shop</a>
-            </div>
-      </div>-->
-
+    
     </div>
   </div>
 
@@ -486,7 +478,15 @@ const deliveryHtml = `<!DOCTYPE html>
   
 <img src="${deliveryGif}" alt="Delivery animation" style="display:block;width:100%;height:auto;" />
         
- 
+   <!-- FOOTER -->
+      <div class="email-footer">
+      
+       <div class="footer-links">
+         
+           <a  href="#">Back to Shop</a>
+            </div>
+      </div>
+
   </div>
 
   
