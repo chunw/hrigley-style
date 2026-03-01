@@ -15,7 +15,7 @@ const Header = () => {
     try {
       await navigator.clipboard.writeText(email);
       toast({
-        title: "Email copied to your clipboard",
+        title: "Drop us an email at (copied to clipboard):",
         description: `${email}`,
         className: "font-helvetica normal-case tracking-normal",
       });
