@@ -21,19 +21,14 @@ const Index = () => {
         onSearchChange={setSearchQuery}
         onMatchCountChange={setMatchedCount}
         matchedCount={matchedCount}
-      />
- 
+      /> 
 
       <section className=" relative bg-background py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left - Text Content */}
             <div className="space-y-8">
-              <div className="space-y-1 lg:space-y-4">
-{/* 
-           
-             
-             <div className="handwritten text-sm text-muted-foreground">Welcome to</div> */}
+              <div className="space-y-1 lg:space-y-4"> 
                 <h1 className=" shop-title text-4xl md:text-6xl lg:text-7xl leading-none">
                  Chun Wang <br />Studio<br />
                   <span className="text-primary">SHOP</span>
@@ -61,9 +56,7 @@ const Index = () => {
                     />
                   </a>
                 </div>
-              </div>
-
-             
+              </div> 
             </div>
 
             {/* Right - Image */}
@@ -79,18 +72,7 @@ const Index = () => {
                   alt="chun wang shop cover image"
                   className="w-3/4 h-3/4 object-cover"
                 />
-              </a>
-              {/* <p className="mt-3 text-xs text-muted-foreground/70">
-               
-                <a
-                  href="https://ls.chunwang.me/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline-offset-2 hover:underline"
-                >
-                  chunwang.art
-                </a>
-              </p> */}
+              </a> 
               {/* Decorative border */}
               <div className="absolute inset-0 border-4 border-primary translate-x-4 translate-y-4 rounded-lg -z-10"></div>
             </div>
