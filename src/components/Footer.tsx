@@ -3,12 +3,11 @@ import { INSTAGRAM_URL, SITE_NAME } from "@/lib/constants";
 
 const Footer = () => {
   return (
-    <footer className="bg-[hsl(var(--footer-background))] text-primary-foreground py-12">
+    <footer className="">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
         <div className="border-primary-foreground/20 text-center">
           <div className="space-y-6 pb-6">
-            <p className="font-helvetica text-primary-foreground">Follow us on Instagram</p>
+            <p className="font-helvetica text-primary-foreground"></p>
             <a
               href={INSTAGRAM_URL}
               target="_blank"
