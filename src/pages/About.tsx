@@ -4,7 +4,7 @@ import deliveryExampleOrderPng from "@/assets/delivery_example order.png";
 
 // UPDATE WITH REAL DATA BEFORE SENDING
 const customerName = "[CUSTOMER NAME]";
-const customerMessage = "Welcome to the studio. Feel free to stay as long as your curiosity allows.";
+const customerMessage = "Welcome to the studio! Feel free to stay as long as your curiosity allows.";
 const trackingNumber = "[TRACKING NUMBER]";
 const trackingLink = `https://www.chunwangshop.com/`;
 const carrier = "USPS";
@@ -409,7 +409,7 @@ const deliveryHtml = `<!DOCTYPE html>
       padding: 14px 18px;
       font-family: Helvetica, Arial, sans-serif;
       font-size: 16px;
-      line-height: 1;
+      line-height: 2;
       color: #000000;
       margin: 20px auto;
       max-width: 600px;
@@ -417,7 +417,7 @@ const deliveryHtml = `<!DOCTYPE html>
     .how-to-use * {
       font-family: Helvetica, Arial, sans-serif;
       font-size: 16px;
-      line-height: 1;
+      line-height: 2;
     }
     .how-to-use strong { color: #d42b1a; }
     .how-to-use code { background: #ffffff; padding: 1px 5px; border-radius: 3px; font-size: 16px; line-height: 1; }
@@ -427,8 +427,10 @@ const deliveryHtml = `<!DOCTYPE html>
 
   <!-- HOW TO SEND NOTICE (remove before sending) -->
   <div class="how-to-use">
+  
+  <div class="footer-text">
+
     ${customerMessageHtml}
-    <br>
     <br>
     <br>
     
@@ -437,6 +439,7 @@ const deliveryHtml = `<!DOCTYPE html>
     <br>
     Chun 
     
+    </div>
   </div>
 
   <div class="email-wrapper">
@@ -457,7 +460,7 @@ const deliveryHtml = `<!DOCTYPE html>
         <div class="email-headline">About Chun Wang <br> Studio <span>Shop</span></div>
           <div class="footer-text">
           Our shop started as a collection of observations of the modern society that wouldn't leave us alone until they became physical things with daily functionality.
-          Based in the intersection of art and utility, Chun Wang Studio don’t just make products; we make whimsical objects for people who see the world a little differently. 
+          Based in the intersection of art and utility, Chun Wang Studio makes whimsical objects for people who see the world a little differently. 
         </div>   
 
       <div class="tracking-box" style="margin-top: 24px;">
@@ -487,7 +490,9 @@ const deliveryHtml = `<!DOCTYPE html>
           </div>
         </div>
 
-        <a href="${trackingLink}"  rel="noopener noreferrer" class="cta-btn">Visit Shop</a>
+        <a href="${trackingLink}"  rel="noopener noreferrer" class="cta-btn">
+        <span>Visit Shop</span>
+        </a>
 
      
       </div>
