@@ -42,8 +42,8 @@ const About = () => {
               marginBottom: 20,
             }}
           >
-            About this {" "}
-            <span style={{ color: "#d42b1a" }}>Shop</span>
+            About 
+            {/* <span style={{ color: "#d42b1a" }}>Shop</span> */}
           </div>
 
           <p
