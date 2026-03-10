@@ -171,7 +171,7 @@ const ProductDetails = () => {
 
             {product.dimensions && (
               <div className="space-y-2">
-                {/* <h3 className="font-semibold">Dimensions</h3> */}
+                {/* <h3 className="font-semibold">Dimension</h3> */}
                 <p className="text-muted-foreground font-helvetica">{product.dimensions}</p>
               </div>
             )}
