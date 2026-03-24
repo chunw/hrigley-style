@@ -25,9 +25,13 @@ const HeroSection = () => {
               }}>
 
                 created exclusively by{" "}
-                <a href={SITE_URL} target="_blank" rel="noopener noreferrer" className="text-primary">
+                {/* <a href={SITE_URL} target="_blank" rel="noopener noreferrer" className="text-primary">
                   chun wang
-                </a>
+                </a> */}
+                 <p className="text-primary">
+                  chun wang
+                </p>
+                
               </p>
             </div>
           </div>
