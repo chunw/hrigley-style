@@ -246,7 +246,7 @@ function buildPrintHTML(origin: string): string {
       margin-bottom: 16px;
     }
     .cover-subtitle {
-      font-size: 11px;
+      font-size: 48px;
       letter-spacing: 0.22em;
       text-transform: uppercase;
       color: #777;
@@ -298,7 +298,7 @@ const WatercolorCatalog = () => {
         <header className="flex flex-col md:flex-row md:items-start justify-between gap-6">
           <div>
             <h1 className="shop-title text-6xl md:text-7xl leading-none">Chun Wang</h1>
-            <p className="mt-3 text-sm text-muted-foreground">Visions in Watercolor</p>
+            <p className="mt-3 text-4xl text-muted-foreground">Visions in Watercolor</p>
             <p className="font-mono text-xs text-muted-foreground/60 mt-1">
               {watercolors.length} works
             </p>
