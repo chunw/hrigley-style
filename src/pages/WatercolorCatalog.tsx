@@ -322,7 +322,7 @@ const WatercolorCatalog = () => {
                 <div className="flex items-baseline gap-3">
                   <span className="font-mono text-xs tracking-widest">{s.label}</span>
                   <span className="text-2xl leading-none">{s.englishName}</span>
-                  <span className="font-mono text-lg leading-none text-muted-foreground">{s.chineseName}</span>
+                  <span className="text-lg leading-none text-muted-foreground">{s.chineseName}</span>
                 </div>
                 <p className="font-mono text-xs mt-2 text-muted-foreground">{s.subtitle}</p>
               </div>
@@ -330,7 +330,7 @@ const WatercolorCatalog = () => {
             <div className="py-6 px-1 md:px-6">
               <div className="flex items-baseline gap-3">
                 <span className="font-mono text-xs tracking-widest">NOTE</span>
-                <span className="font-mono text-2xl leading-none">物质性</span>
+                <span className="text-2xl leading-none">物质性</span>
               </div>
               <p className="font-mono text-xs mt-2 text-muted-foreground">
                 Watercolor remains a pursuit of materiality — especially now
@@ -359,7 +359,7 @@ const WatercolorCatalog = () => {
                   to stand above life. I believe that everyday objects can also offer fresh visual and psychological experiences to the viewers.
                 </p>
               ) : (
-                <p className="font-mono">
+                <p>
                   我把家当作自己的"私人博物馆"来经营。从水彩速写开始，我对散落家中的小摆设的兴趣愈发增长。
                   这些有时带有怪诞气息的物件，是我从各处打捞的馆藏，也会时常被我排列组合，形成新的景观现场，供想象力嬉戏。
                   我相信日常小物也可以为观者带来新鲜的视觉体验与心理感受。

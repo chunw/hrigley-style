@@ -34,7 +34,7 @@ const About = () => {
           <div
             style={{
               fontFamily:
-                "'Gloria Hallelujah', 'Comic Sans MS', 'Bradley Hand', cursive",
+                "'CJK-Heiti', 'Gloria Hallelujah', 'Comic Sans MS', 'Bradley Hand', cursive",
               fontWeight: 400,
               textTransform: "uppercase",
               letterSpacing: "0.05em",
@@ -49,7 +49,7 @@ const About = () => {
 
           <p
             style={{
-              fontFamily: "Helvetica, Arial, sans-serif",
+              fontFamily: "'CJK-Heiti', Helvetica, Arial, sans-serif",
               fontSize: 12,
               color: "#000000",
               letterSpacing: "1.5px",
@@ -81,7 +81,7 @@ const About = () => {
               marginTop: 10,
               fontSize: 12,
               letterSpacing: "1.5px",
-              fontFamily: "Helvetica, Arial, sans-serif",
+              fontFamily: "'CJK-Heiti', Helvetica, Arial, sans-serif",
             }}
           >
             <a

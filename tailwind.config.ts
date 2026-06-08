@@ -19,8 +19,9 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				'handwritten': ['Comic Sans MS', 'cursive'],
-				'helvetica': ['Helvetica', 'Arial', 'sans-serif'],
+				'handwritten': ['CJK-Heiti', 'Comic Sans MS', 'cursive'],
+				'helvetica': ['CJK-Heiti', 'Helvetica', 'Arial', 'sans-serif'],
+				'mono': ['CJK-Heiti', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
