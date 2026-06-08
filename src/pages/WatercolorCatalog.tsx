@@ -8,6 +8,7 @@ const HIGHLIGHTED = new Set(["1", "9"]);
 const WorkCard = ({ work }: { work: Watercolor }) => {
   const padded = work.id.padStart(2, "0");
   const highlighted = HIGHLIGHTED.has(work.id);
+  const series = seriesList.find((s) => s.id === work.series);
 
   return (
     <article>
