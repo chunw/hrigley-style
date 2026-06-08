@@ -1,6 +1,8 @@
 import deliveryGif from "@/assets/delivery.gif";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const About = () => {
+  const { t } = useLanguage();
   return (
     <div
       id="about"
@@ -42,8 +44,7 @@ const About = () => {
               marginBottom: 20,
             }}
           >
-            About 
-            {/* <span style={{ color: "#d42b1a" }}>Shop</span> */}
+            {t.about.title}
           </div>
 
           <p
@@ -56,11 +57,7 @@ const About = () => {
               margin: 0,
             }}
           >
-            Based in New York City, our shop started as a collection of observations of the modern
-            society that wouldn't leave us alone until they became physical
-            things. We produce whimsical objects at the nexus of utility and comtempoary art,
-            designed for people who want to see the world just a little differently. Feel
-            free to stay as long as your curiosity allows.
+            {t.about.body}
           </p>
         </div>
 
@@ -91,7 +88,7 @@ const About = () => {
               href="https://www.chunwangshop.com/"
               style={{ color: "#d42b1a", textDecoration: "none", marginRight: 16 }}
             >
-              Back to Shop
+              {t.about.backToShop}
             </a>
           </div>
         </div>

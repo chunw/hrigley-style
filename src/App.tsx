@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import Index from "./pages/Index";
 import ProductDetails from "./pages/ProductDetails";
 import PaymentSuccess from "./pages/PaymentSuccess";
@@ -11,11 +12,14 @@ import Cart from "./pages/Cart";
 import NotFound from "./pages/NotFound";
 import Delivery from "./pages/Delivery";
 import About from "./pages/About";
+import WatercolorDetail from "./pages/WatercolorDetail";
+import WatercolorCatalog from "./pages/WatercolorCatalog";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
+    <LanguageProvider>
     <CartProvider>
       <TooltipProvider>
         <Toaster />
@@ -25,6 +29,8 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/delivery" element={<Delivery />} />
             <Route path="/product/:id" element={<ProductDetails />} />
+            <Route path="/watercolors/:id" element={<WatercolorDetail />} />
+            <Route path="/watercolor-catalog" element={<WatercolorCatalog />} />
             {/* <Route path="/cart" element={<Cart />} />
             <Route path="/payment-success" element={<PaymentSuccess />} /> */}
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
@@ -33,6 +39,7 @@ const App = () => (
         </BrowserRouter>
       </TooltipProvider>
     </CartProvider>
+    </LanguageProvider>
   </QueryClientProvider>
 );
 

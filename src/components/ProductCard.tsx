@@ -1,23 +1,33 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ProductCardProps {
   id: string;
   name: string;
   title: string | null;
+  title_zh?: string | null;
   description: string | null;
+  description_zh?: string | null;
   price: number;
   currency: string;
   image_url: string | null;
   category: string | null;
+  category_zh?: string | null;
   paylink: string;
   highlightQuery?: string;
   isSearchHighlighted?: boolean;
 }
 
-const ProductCard = ({ id, name, title, description, price, currency, image_url, category, paylink, highlightQuery, isSearchHighlighted }: ProductCardProps) => {
+const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, currency, image_url, category, category_zh, paylink, highlightQuery, isSearchHighlighted }: ProductCardProps) => {
   const navigate = useNavigate();
+  const { t, lang } = useLanguage();
+
+  const zh = lang === "zh";
+  const displayTitle = (zh && title_zh) ? title_zh : (title || name);
+  const displayDescription = (zh && description_zh) ? description_zh : description;
+  const displayCategory = (zh && category_zh) ? category_zh : category;
 
   const renderHighlightedText = (text: string) => {
     if (!highlightQuery?.trim()) {
@@ -43,15 +53,14 @@ const ProductCard = ({ id, name, title, description, price, currency, image_url,
   };
 
   const handleOrderNow = (e: React.MouseEvent) => {
-    // 检查 gtag 是否存在（防止脚本还没加载完就点击报错）
     if (typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('event', 'click_paypal_link', {
         'event_category': 'ecommerce',
         'event_label': 'Chun Wang Shop Item - ' + (title || name),
-        'value': 1 // 你可以标记这个动作的权重
+        'value': 1
       });
     }
-    e.stopPropagation(); // Prevent card navigation when clicking button
+    e.stopPropagation();
     window.open(paylink, '_blank');
   };
 
@@ -64,8 +73,8 @@ const ProductCard = ({ id, name, title, description, price, currency, image_url,
     >
       <CardContent className="p-4">
         <div className="aspect-square bg-black mb-4 overflow-hidden">
-          <img 
-            src={image_url || "/placeholder.svg"} 
+          <img
+            src={image_url || "/placeholder.svg"}
             alt={name}
             className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"
             onError={(e) => {
@@ -75,28 +84,27 @@ const ProductCard = ({ id, name, title, description, price, currency, image_url,
             loading="lazy"
           />
         </div>
-        
+
         <div className="space-y-2">
-          <p className="text-xs handwritten text-muted-foreground">{category ? renderHighlightedText(category) : null}</p>
-          <h3 className="text-lg leading-tight handwritten">{renderHighlightedText(title || name)}</h3>
-          {description && (
-            <p className="text-sm font-helvetica text-muted-foreground line-clamp-2">{renderHighlightedText(description)}</p>
+          <p className="text-xs handwritten text-muted-foreground">{displayCategory ? renderHighlightedText(displayCategory) : null}</p>
+          <h3 className="text-lg leading-tight handwritten">{renderHighlightedText(displayTitle)}</h3>
+          {displayDescription && (
+            <p className="text-sm font-helvetica text-muted-foreground line-clamp-2">{renderHighlightedText(displayDescription)}</p>
           )}
           <p className="text-lg font-bold handwritten">
             {renderHighlightedText(`${currency === 'gbp' ? '£' : '$'}${price.toFixed(2)}`)}
           </p>
-          <p className="text-xs text-muted-foreground font-helvetica">Shipping included</p>
-       
-          <Button 
+          <p className="text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>
+
+          <Button
             variant="outline-pink"
             className="w-full handwritten"
             size="sm"
             onClick={handleOrderNow}
           >
-            <b>ORDER NOW</b>
+            <b>{t.productDetails.orderNow}</b>
           </Button>
-
-             </div>
+        </div>
       </CardContent>
     </Card>
   );

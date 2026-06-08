@@ -1,8 +1,7 @@
-import { Button } from "@/components/ui/button";
-import heroBag from "@/assets/hero-bag.jpg";
-import { SITE_URL } from "@/lib/constants";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const HeroSection = () => {
+  const { t } = useLanguage();
   return (
     <section className="relative bg-background py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -11,27 +10,22 @@ const HeroSection = () => {
           <div className="space-y-8">
             <div className="space-y-4">
               <h1 className="shop-title text-4xl md:text-6xl lg:text-7xl leading-none">
-                Chun Wang <br />Studio<br />
-                <span className="text-primary">SHOP</span>
+                {t.shopTitle.line1} <br />{t.shopTitle.line2}<br />
+                <span className="text-primary">{t.shopTitle.line3}</span>
               </h1>
               <p className="handwritten max-w-md" style={{
                 opacity: 0.7,
                 fontSize: '0.85rem',
               }}>
-                What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity,
+                {t.hero.description}
               </p>
               <p className="handwritten text-muted-foreground max-w-md" style={{
                 fontSize: '0.9rem',
               }}>
-
-                created exclusively by{" "}
-                {/* <a href={SITE_URL} target="_blank" rel="noopener noreferrer" className="text-primary">
+                {t.hero.createdExclusivelyBy}{" "}
+                <span className="text-primary">
                   chun wang
-                </a> */}
-                 <p className="text-primary">
-                  chun wang
-                </p>
-                
+                </span>
               </p>
             </div>
           </div>

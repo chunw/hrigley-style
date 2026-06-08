@@ -2,11 +2,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Instagram } from "lucide-react";
 import {  INSTAGRAM_URL } from "@/lib/constants";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
+  const { lang, toggleLang, t } = useLanguage();
   const isHomePage = location.pathname === "/";
 
   const handleContactClick = async () => {
@@ -34,9 +36,18 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-28">
           <div className="absolute inset-y-0 right-0 inline-flex items-center gap-8 text-sm font-helvetica">
-           
-            
-             <a
+            <button
+              type="button"
+              onClick={toggleLang}
+              aria-label="Toggle language"
+              className={`handwritten transition-colors text-xs border px-2 py-1 ${
+                isHomePage ? "text-white border-white/40 hover:text-primary hover:border-primary" : "text-foreground border-border hover:text-primary hover:border-primary"
+              }`}
+            >
+              {lang === "en" ? "中文" : "EN"}
+            </button>
+
+            <a
               href="#about"
               rel="noopener noreferrer"
               aria-label="about"
@@ -44,9 +55,9 @@ const Header = () => {
                 isHomePage ? "text-white hover:text-primary" : "text-foreground hover:text-primary"
               }`}
             >
-              <span>about</span> 
+              <span>{t.header.about}</span>
             </a>
-           
+
             <button
               type="button"
               onClick={handleContactClick}
@@ -55,10 +66,10 @@ const Header = () => {
                 isHomePage ? "text-white hover:text-primary" : "text-foreground hover:text-primary"
               }`}
             >
-              contact
+              {t.header.contact}
             </button>
-            
-             <a
+
+            <a
               href={INSTAGRAM_URL}
               target="_blank"
               rel="noopener noreferrer"
@@ -68,9 +79,7 @@ const Header = () => {
               }`}
             >
               <Instagram className="h-4 w-4" />
-              {/* <span>follow us</span> */}
             </a>
-           
           </div>
 
           {/* Left - Logo */}
@@ -81,8 +90,8 @@ const Header = () => {
                 isHomePage ? "hidden" : "hover:text-primary"
               }`}
             >
-              CHUN WANG<br />STUDIO<br />
-              <span className={isHomePage ? "text-white" : "text-primary"}>SHOP</span>
+              {t.shopTitle.line1}<br />{t.shopTitle.line2}<br />
+              <span className={isHomePage ? "text-white" : "text-primary"}>{t.shopTitle.line3}</span>
             </h1>
           </div>
 

@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { INSTAGRAM_URL, SITE_NAME } from "@/lib/constants";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Footer = () => {
+  const { t } = useLanguage();
   return (
     <footer className="">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -27,7 +27,7 @@ const Footer = () => {
           <p className="text-sm font-helvetica" style={
           {fontSize: '0.8rem', }
         }>
-            © {new Date().getFullYear()} Chun Wang Studio. All rights reserved.
+            © {new Date().getFullYear()} Chun Wang Studio. {t.footer.copyright}
           </p>
         </div>
       </div>
