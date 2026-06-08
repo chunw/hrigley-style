@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { getWatercolor } from "@/lib/watercolors";
+import { getWatercolor, seriesList } from "@/lib/watercolors";
 import { ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ZoomableImage } from "@/components/ZoomableImage";
@@ -56,6 +56,8 @@ const WatercolorDetail = () => {
   }
 
   const currentImage = images[selectedIndex] ?? null;
+
+  const seriesData = seriesList.find((s) => s.id === work.series);
 
   const handleInquire = () => {
     navigator.clipboard.writeText(INQUIRY_EMAIL).then(() => {
@@ -122,8 +124,8 @@ const WatercolorDetail = () => {
           {/* Details */}
           <div className="space-y-8">
             <div>
-              <p className={`font-mono tracking-widest text-muted-foreground uppercase mb-2 ${lang === "zh" ? "text-sm" : "text-xs"}`}>
-                {t.watercolor.seriesPrefix} {work.series}
+              <p className="font-mono text-xs tracking-widest text-muted-foreground uppercase mb-2">
+                {seriesData ? `${seriesData.label} · ${seriesData.englishName} · ${seriesData.chineseName}` : `${t.watercolor.seriesPrefix} ${work.series}`}
               </p>
               <h1 className="shop-title text-4xl leading-none">
                 {lang === "zh" && work.titleZh ? work.titleZh : work.title}
@@ -140,6 +142,9 @@ const WatercolorDetail = () => {
             )}
 
             <div className={`space-y-1 font-mono text-muted-foreground ${lang === "zh" ? "text-sm" : "text-xs"}`}>
+              {seriesData && (
+                <p>{seriesData.label} · {seriesData.englishName} · {seriesData.chineseName}</p>
+              )}
               <p>{lang === "zh" && work.mediumZh ? work.mediumZh : work.medium}</p>
               {(work.dimensions || work.dimensionsZh) && (
                 <p>{lang === "zh" && work.dimensionsZh ? work.dimensionsZh : work.dimensions}</p>

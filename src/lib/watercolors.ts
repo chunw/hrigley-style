@@ -45,8 +45,8 @@ export const watercolors: Watercolor[] = [
   {
     id: "1",
     title: "Breakfast Residuals 01",
-    titleZh: "早餐残留 01",
-    series: "早餐残留",
+    titleZh: "早餐残留 其一",
+    series: "I",
     note: "exhibited at Apsara London Gallery 'Before It Dissolves' (May 2026)",
     noteZh: "曾联展于Apsara伦敦画廊《在消散之前》（2026年5月） ",
     year: "2026",
