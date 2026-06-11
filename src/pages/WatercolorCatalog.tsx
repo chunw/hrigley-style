@@ -240,15 +240,15 @@ function buildPrintHTML(origin: string, lang: "en" | "zh"): string {
     .meta {
       margin-top: 22px;
       padding-top: 16px;
-      border-top: 1px solid #e8e8e8;
     }
     .meta-title {
       font-family: Georgia, 'Times New Roman', serif;
-      font-size: 15px;
-      letter-spacing: 0.01em;
+      font-size: 10px;
+      letter-spacing: 0.08em;
       margin-bottom: 6px;
       line-height: 1.2;
       font-style: italic;
+      color: #999;
     }
     .meta-year {
       font-size: 10px;
