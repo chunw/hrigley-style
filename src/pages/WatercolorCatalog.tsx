@@ -1,13 +1,14 @@
 import { Link } from "react-router-dom";
-import { BookOpen } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { watercolors, seriesList, type Watercolor } from "@/lib/watercolors";
+import { products, productImages } from "@/lib/products";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const HIGHLIGHTED = new Set(["1", "9"]);
 
 const WorkCard = ({ work }: { work: Watercolor }) => {
+  const { lang, t } = useLanguage();
   const padded = work.id.padStart(2, "0");
   const highlighted = HIGHLIGHTED.has(work.id);
   const series = seriesList.find((s) => s.id === work.series);
@@ -17,7 +18,7 @@ const WorkCard = ({ work }: { work: Watercolor }) => {
       <div className="flex justify-between items-center mb-2">
         <span className="font-mono text-xs">P{padded}</span>
         <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-          {series ? `${series.label} · ${series.englishName} · ${series.chineseName}` : `Series ${work.series}`}
+          {series ? `${series.label} · ${lang === "zh" ? series.chineseName : series.englishName}` : `Series ${work.series}`}
         </span>
       </div>
 
@@ -34,7 +35,7 @@ const WorkCard = ({ work }: { work: Watercolor }) => {
       >
         <div className="absolute inset-0 flex items-center justify-center">
           <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/40">
-            Upload Image
+            {t.watercolorCatalog.uploadImage}
           </span>
         </div>
 
@@ -68,7 +69,6 @@ const WorkCard = ({ work }: { work: Watercolor }) => {
 
       <div className="mt-3">
         <h3 className="text-sm leading-snug">{work.title}</h3>
-        <p className="font-mono text-xs text-muted-foreground mt-1">{work.note}</p>
       </div>
     </article>
   );
@@ -78,7 +78,8 @@ const WorkCard = ({ work }: { work: Watercolor }) => {
 // Print helpers
 // ---------------------------------------------------------------------------
 
-function buildPrintHTML(origin: string): string {
+function buildPrintHTML(origin: string, lang: "en" | "zh"): string {
+  const isZh = lang === "zh";
   const pairs: (Watercolor | null)[][] = [];
   for (let i = 0; i < watercolors.length; i += 2) {
     pairs.push([watercolors[i], watercolors[i + 1] ?? null]);
@@ -87,9 +88,9 @@ function buildPrintHTML(origin: string): string {
   const workPage = (work: Watercolor | null, side: "left" | "right") => {
     if (!work) return `<div class="page page-${side}"></div>`;
     const padded = work.id.padStart(2, "0");
-    const series = seriesList.find((s) => s.id === work.series);
-    const seriesLabel = series ? series.label : "";
-    const detail = [seriesLabel, work.year, work.medium].filter(Boolean).join(" · ");
+    const title = isZh ? work.titleZh ?? work.title : work.title;
+    const medium = isZh ? work.mediumZh ?? work.medium : work.medium;
+    const dimensions = isZh ? work.dimensionsZh ?? work.dimensions : work.dimensions;
     return `
       <div class="page page-${side}">
         <div class="page-num">P${padded}</div>
@@ -97,12 +98,15 @@ function buildPrintHTML(origin: string): string {
           <img src="${origin}/watercolors/${padded}/main.jpg" alt="${work.title}" onerror="this.style.visibility='hidden'" />
         </div>
         <div class="meta">
-          <div class="meta-title">${work.title}${work.titleZh ? ` <span class="meta-zh">${work.titleZh}</span>` : ""}</div>
-          <div class="meta-sub">${detail}</div>
-          ${work.dimensions ? `<div class="meta-sub">${work.dimensions}</div>` : ""}
+          <div class="meta-title">${title}</div>
+          <div class="meta-year">${work.year}</div>
+          ${medium ? `<div class="meta-sub">${medium}</div>` : ""}
+          ${dimensions ? `<div class="meta-dimensions">${dimensions}</div>` : ""}
         </div>
       </div>`;
   };
+
+  const totalItems = watercolors.length + products.length;
 
   const coverSpread = `
     <div class="spread">
@@ -111,18 +115,18 @@ function buildPrintHTML(origin: string): string {
           ${seriesList.map((s) => `
             <div class="cover-series-item">
               <span class="cs-label">${s.label}</span>
-              <span class="cs-name">${s.englishName}</span>
-              <span class="cs-zh">${s.chineseName}</span>
+              <span class="cs-name">${isZh ? s.chineseName : s.englishName}</span>
+              ${((isZh ? s.subtitleZh ?? s.subtitle : s.subtitle) ? `<span class="cs-sub">${isZh ? s.subtitleZh ?? s.subtitle : s.subtitle}</span>` : "")}
             </div>
           `).join("")}
-          <div class="cover-count">${watercolors.length} works</div>
+          <div class="cover-count">${isZh ? `${totalItems} 件作品` : `${totalItems} works`}</div>
         </div>
       </div>
       <div class="page page-right cover-right">
         <div class="cover-body">
           <div class="cover-title">Chun Wang</div>
-          <div class="cover-subtitle">Visions in Watercolor</div>
-          <div class="cover-year">New York · ${new Date().getFullYear()}</div>
+          <div class="cover-subtitle">${isZh ? "水彩视界" : "Visions in Watercolor"}</div>
+          <div class="cover-year">${isZh ? `纽约 · ${new Date().getFullYear()}` : `New York · ${new Date().getFullYear()}`}</div>
         </div>
       </div>
     </div>`;
@@ -132,6 +136,57 @@ function buildPrintHTML(origin: string): string {
       <div class="spread">
         ${workPage(a, "left")}
         ${workPage(b, "right")}
+      </div>`)
+    .join("\n");
+
+  const shopDividerSpread = `
+    <div class="spread">
+      <div class="page page-left cover-left">
+        <div class="cover-series-list">
+          ${products.map((p) => `
+            <div class="cover-series-item">
+              <span class="cs-name">${isZh ? (p.title_zh ?? p.title) : p.title}</span>
+            </div>
+          `).join("")}
+          <div class="cover-count">${isZh ? `${products.length} 件商品` : `${products.length} item${products.length !== 1 ? "s" : ""}`}</div>
+        </div>
+      </div>
+      <div class="page page-right cover-right">
+        <div class="cover-body">
+          <div class="cover-title">Chun Wang</div>
+          <div class="cover-subtitle">${isZh ? "商店" : "Shop"}</div>
+          <div class="cover-year">${isZh ? `chunwangshop.com · ${new Date().getFullYear()}` : `chunwangshop.com · ${new Date().getFullYear()}`}</div>
+        </div>
+      </div>
+    </div>`;
+
+  const productPage = (p: typeof products[number] | null, side: "left" | "right") => {
+    if (!p) return `<div class="page page-${side}"></div>`;
+    const imgs = productImages.filter((img) => img.product_id === p.id);
+    const imgSrc = imgs.length > 0 ? imgs[0].image_url : p.image_url;
+    const title = isZh ? (p.title_zh ?? p.title) : p.title;
+    return `
+      <div class="page page-${side}">
+        <div class="page-num">${isZh ? "商店" : "SHOP"}</div>
+        <div class="img-area">
+          <img src="${imgSrc}" alt="${p.title}" onerror="this.style.visibility='hidden'" />
+        </div>
+        <div class="meta">
+          <div class="meta-title">${title}</div>
+          ${p.price ? `<div class="meta-price">$${p.price}</div>` : ""}
+        </div>
+      </div>`;
+  };
+
+  const productPairs: (typeof products[number] | null)[][] = [];
+  for (let i = 0; i < products.length; i += 2) {
+    productPairs.push([products[i], products[i + 1] ?? null]);
+  }
+  const productSpreads = productPairs
+    .map(([a, b]) => `
+      <div class="spread">
+        ${productPage(a, "left")}
+        ${productPage(b, "right")}
       </div>`)
     .join("\n");
 
@@ -186,22 +241,41 @@ function buildPrintHTML(origin: string): string {
     }
     .meta-title {
       font-family: Georgia, 'Times New Roman', serif;
-      font-size: 13px;
-      letter-spacing: 0.02em;
+      font-size: 15px;
+      letter-spacing: 0.01em;
       margin-bottom: 6px;
+      line-height: 1.2;
+      font-style: italic;
     }
-    .meta-zh {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 11px;
+    .meta-year {
+      font-size: 10px;
       color: #999;
-      margin-left: 8px;
+      letter-spacing: 0.12em;
+      margin-top: 2px;
     }
     .meta-sub {
-      font-size: 9px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 0.08em;
       color: #999;
       margin-top: 4px;
+    }
+    .meta-dimensions {
+      font-size: 10px;
+      color: #999;
+      margin-top: 4px;
+      letter-spacing: 0.08em;
+    }
+    .meta-note {
+      font-size: 10px;
+      color: #999;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+    .meta-description {
+      font-size: 9px;
+      color: #666;
+      margin-top: 6px;
+      line-height: 1.4;
     }
 
     /* Cover */
@@ -215,8 +289,8 @@ function buildPrintHTML(origin: string): string {
     }
     .cover-series-item {
       display: flex;
-      align-items: baseline;
-      gap: 8px;
+      flex-direction: column;
+      gap: 2px;
       font-size: 10px;
     }
     .cs-label {
@@ -225,7 +299,11 @@ function buildPrintHTML(origin: string): string {
       color: #bbb;
     }
     .cs-name { color: #555; }
-    .cs-zh { color: #bbb; font-size: 10px; }
+    .cs-sub {
+      color: #999;
+      font-size: 9px;
+      line-height: 1.2;
+    }
     .cover-count {
       font-size: 9px;
       letter-spacing: 0.16em;
@@ -270,6 +348,8 @@ function buildPrintHTML(origin: string): string {
 <body>
   ${coverSpread}
   ${workSpreads}
+  ${shopDividerSpread}
+  ${productSpreads}
   <script>window.onload = function() { setTimeout(function() { window.print(); }, 300); };<\/script>
 </body>
 </html>`;
@@ -280,37 +360,31 @@ function buildPrintHTML(origin: string): string {
 // ---------------------------------------------------------------------------
 
 const WatercolorCatalog = () => {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
 
   const handlePrint = () => {
-    const blob = new Blob([buildPrintHTML(window.location.origin)], { type: "text/html" });
+    const blob = new Blob([buildPrintHTML(window.location.origin, lang)], { type: "text/html" });
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");
   };
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header />
+      <Header onPrintCatalog={handlePrint} />
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-6 md:px-10 py-10 md:py-14">
 
         {/* Catalog header */}
         <header className="flex flex-col md:flex-row md:items-start justify-between gap-6">
           <div>
-            <h1 className="shop-title text-6xl md:text-7xl leading-none">Chun Wang</h1>
-            <p className="mt-3 text-4xl text-muted-foreground">Visions in Watercolor</p>
+            <h1 className="shop-title text-6xl md:text-7xl leading-none">Chun Wang
+            </h1>
+            <h1 className="shop-title mt-3 text-4xl text-muted-foreground">
+            </h1>
+            <p className="mt-3 text-4xl ">{t.watercolorCatalog.subtitle}</p>
             <p className="font-mono text-xs text-muted-foreground/60 mt-1">
-              {watercolors.length} works
+              {watercolors.length} {t.watercolorCatalog.works}
             </p>
-          </div>
-          <div className="md:pt-2">
-            <button
-              onClick={handlePrint}
-              className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors border border-border px-4 py-2 hover:border-foreground/30"
-            >
-              <BookOpen size={13} strokeWidth={1.5} />
-              Print Catalog
-            </button>
           </div>
         </header>
 
@@ -324,16 +398,17 @@ const WatercolorCatalog = () => {
                   <span className="text-2xl leading-none">{s.englishName}</span>
                   <span className="text-lg leading-none text-muted-foreground">{s.chineseName}</span>
                 </div>
-                <p className="font-mono text-xs mt-2 text-muted-foreground">{s.subtitle}</p>
+                <p className="font-mono text-xs mt-2 text-muted-foreground">{lang === "zh" ? (s.subtitleZh ?? s.subtitle) : s.subtitle}</p>
               </div>
             ))}
             <div className="py-6 px-1 md:px-6">
               <div className="flex items-baseline gap-3">
-                <span className="font-mono text-xs tracking-widest">NOTE</span>
+                <span className="font-mono text-xs tracking-widest">{t.watercolorCatalog.noteLabel}</span>
                 <span className="text-2xl leading-none">物质性</span>
+                <span className="text-lg leading-none text-muted-foreground">Materiality</span>
               </div>
               <p className="font-mono text-xs mt-2 text-muted-foreground">
-                Watercolor remains a pursuit of materiality — especially now
+                {t.watercolorCatalog.noteText}
               </p>
             </div>
           </div>
@@ -343,9 +418,9 @@ const WatercolorCatalog = () => {
         <section className="mt-16 border-t border-border pt-8">
           <div className="grid md:grid-cols-3 gap-12">
             <div>
-              <h2 className="shop-title text-2xl leading-tight">Artist Statement</h2>
+              <h2 className="shop-title text-2xl leading-tight">{t.watercolorCatalog.artistStatement}</h2>
               <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground mt-2">
-                CHUN WANG · NEW YORK
+                {t.watercolorCatalog.artistLocation}
               </p>
             </div>
             <div className="md:col-span-2 text-sm leading-relaxed">

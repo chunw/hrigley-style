@@ -1,10 +1,14 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { Instagram } from "lucide-react";
+import { BookOpen, Instagram } from "lucide-react";
 import {  INSTAGRAM_URL } from "@/lib/constants";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-const Header = () => {
+type HeaderProps = {
+  onPrintCatalog?: () => void;
+};
+
+const Header = ({ onPrintCatalog }: HeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
@@ -68,6 +72,19 @@ const Header = () => {
             >
               {t.header.contact}
             </button>
+
+            {location.pathname === "/watercolor-catalog" && onPrintCatalog ? (
+              <button
+                type="button"
+                onClick={onPrintCatalog}
+                className={`handwritten inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest border px-3 py-2 ${
+                  isHomePage ? "text-white border-white/40 hover:text-primary hover:border-primary" : "text-foreground border-border hover:text-primary hover:border-primary"
+                }`}
+              >
+                <BookOpen className="h-4 w-4" />
+                {t.watercolorCatalog.printCatalog}
+              </button>
+            ) : null}
 
             <a
               href={INSTAGRAM_URL}

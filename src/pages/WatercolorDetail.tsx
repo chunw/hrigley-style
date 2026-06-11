@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { getWatercolor, seriesList } from "@/lib/watercolors";
-import { ArrowLeft } from "lucide-react";
+import { getWatercolor, seriesList, watercolors } from "@/lib/watercolors";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ZoomableImage } from "@/components/ZoomableImage";
 import { toast } from "sonner";
@@ -65,6 +65,10 @@ const WatercolorDetail = () => {
     });
   };
 
+  const currentIndex = work ? watercolors.findIndex((item) => item.id === work.id) : -1;
+  const prevWork = currentIndex > 0 ? watercolors[currentIndex - 1] : undefined;
+  const nextWork = currentIndex >= 0 && currentIndex < watercolors.length - 1 ? watercolors[currentIndex + 1] : undefined;
+
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
     window.open(work!.paylink, "_blank");
@@ -75,13 +79,36 @@ const WatercolorDetail = () => {
       <Header />
 
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12">
-        <button
-          onClick={() => navigate("/watercolor-catalog")}
-          className="handwritten flex items-center gap-2 text-sm text-muted-foreground hover:text-primary mb-10 transition-colors"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          {t.watercolor.back}
-        </button>
+        <div className="flex items-center justify-between gap-4 mb-10">
+          <button
+            onClick={() => navigate("/watercolor-catalog")}
+            className="handwritten flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            {t.watercolor.backToCatalog}
+          </button>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => prevWork && navigate(`/watercolors/${prevWork.id}`)}
+              disabled={!prevWork}
+              className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:border-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              {lang === "zh" ? "上一件" : "Previous"}
+            </button>
+            <button
+              type="button"
+              onClick={() => nextWork && navigate(`/watercolors/${nextWork.id}`)}
+              disabled={!nextWork}
+              className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:border-foreground hover:text-foreground transition-colors"
+            >
+              {lang === "zh" ? "下一件" : "Next"}
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           {/* Main image */}
@@ -125,14 +152,11 @@ const WatercolorDetail = () => {
           <div className="space-y-8">
             <div>
               <p className="font-mono text-xs tracking-widest text-muted-foreground uppercase mb-2">
-                {seriesData ? `${seriesData.label} · ${seriesData.englishName} · ${seriesData.chineseName}` : `${t.watercolor.seriesPrefix} ${work.series}`}
+                {seriesData ? `${seriesData.label} · ${lang === "zh" ? seriesData.chineseName : seriesData.englishName}` : `${t.watercolor.seriesPrefix} ${work.series}`}
               </p>
               <h1 className="shop-title text-4xl leading-none">
                 {lang === "zh" && work.titleZh ? work.titleZh : work.title}
               </h1>
-              <p className="font-mono text-sm text-muted-foreground mt-3">
-                {lang === "zh" && work.noteZh ? work.noteZh : work.note}
-              </p>
             </div>
 
             {(work.description || work.descriptionZh) && (
@@ -142,9 +166,6 @@ const WatercolorDetail = () => {
             )}
 
             <div className={`space-y-1 font-mono text-muted-foreground ${lang === "zh" ? "text-sm" : "text-xs"}`}>
-              {seriesData && (
-                <p>{seriesData.label} · {seriesData.englishName} · {seriesData.chineseName}</p>
-              )}
               <p>{lang === "zh" && work.mediumZh ? work.mediumZh : work.medium}</p>
               {(work.dimensions || work.dimensionsZh) && (
                 <p>{lang === "zh" && work.dimensionsZh ? work.dimensionsZh : work.dimensions}</p>
