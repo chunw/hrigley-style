@@ -76,8 +76,8 @@ export const watercolors: Watercolor[] = [
     showInStorefront: true,
     displayOrder: 2,
     year: "2026",
-    medium: "Watercolor on paper, framed",
-    mediumZh: "纸本水彩，已装裱",
+    medium: "Watercolor on paper",
+    mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
     description:

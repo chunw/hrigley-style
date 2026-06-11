@@ -168,6 +168,9 @@ function buildPrintHTML(origin: string, lang: "en" | "zh"): string {
     const imgs = productImages.filter((img) => img.product_id === p.id);
     const imgSrc = imgs.length > 0 ? imgs[0].image_url : p.image_url;
     const title = isZh ? (p.title_zh ?? p.title) : p.title;
+    const description = isZh ? (p.description_zh ?? p.description) : p.description;
+    const longDescription = isZh ? (p.detailed_description_html_zh ?? p.detailed_description_html) : p.detailed_description_html;
+    const dimensions = p.dimensions;
     return `
       <div class="page page-${side}">
         <div class="page-num">${isZh ? "商店" : "SHOP"}</div>
@@ -176,7 +179,9 @@ function buildPrintHTML(origin: string, lang: "en" | "zh"): string {
         </div>
         <div class="meta">
           <div class="meta-title">${title}</div>
-          ${p.price ? `<div class="meta-price">$${p.price}</div>` : ""}
+          ${dimensions ? `<div class="meta-sub">${dimensions}</div>` : ""}
+          ${description ? `<div class="meta-description">${description}</div>` : ""}
+          ${longDescription ? `<div class="meta-description">${longDescription}</div>` : ""}
         </div>
       </div>`;
   };
@@ -404,16 +409,6 @@ const WatercolorCatalog = () => {
                 <p className="font-mono text-xs mt-2 text-muted-foreground">{lang === "zh" ? (s.subtitleZh ?? s.subtitle) : s.subtitle}</p>
               </div>
             ))}
-            <div className="py-6 px-1 md:px-6">
-              <div className="flex items-baseline gap-3">
-                <span className="font-mono text-xs tracking-widest">{t.watercolorCatalog.noteLabel}</span>
-                <span className="text-2xl leading-none">物质性</span>
-                <span className="text-lg leading-none text-muted-foreground">Materiality</span>
-              </div>
-              <p className="font-mono text-xs mt-2 text-muted-foreground">
-                {t.watercolorCatalog.noteText}
-              </p>
-            </div>
           </div>
         </section>
 
