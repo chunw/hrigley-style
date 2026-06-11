@@ -42,8 +42,6 @@ Dimension: 35 x 35 cm</p>
     is_active: true,
     printInCatalog: true,
     showInStorefront: true,
-    displayOrder: 1,
-
     category: "Accessories",
     created_at: new Date().toISOString(),
     paylink: 'https://www.paypal.com/ncp/payment/WFPH39Q2FQJHU'

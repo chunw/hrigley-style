@@ -52,7 +52,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   });
 
   const sortedFilteredProducts = useMemo(
-    () => [...(filteredProducts || [])].sort((a, b) => ((a as any).displayOrder ?? 0) - ((b as any).displayOrder ?? 0)),
+    () => [...(filteredProducts || [])],
     [filteredProducts]
   );
 
