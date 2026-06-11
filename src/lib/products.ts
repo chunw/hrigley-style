@@ -40,6 +40,7 @@ Dimension: 35 x 35 cm</p>
     alt_text: "Remains Tote Bag",
     image_url: new URL("../assets/products/remainstote/Remains Tote 12.jpg", import.meta.url).href,
     is_active: true,
+    printInCatalog: true,
     category: "Accessories",
     created_at: new Date().toISOString(),
     paylink: 'https://www.paypal.com/ncp/payment/WFPH39Q2FQJHU'

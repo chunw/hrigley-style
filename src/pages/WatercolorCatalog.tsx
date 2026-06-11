@@ -80,9 +80,12 @@ const WorkCard = ({ work }: { work: Watercolor }) => {
 
 function buildPrintHTML(origin: string, lang: "en" | "zh"): string {
   const isZh = lang === "zh";
+  const printableWatercolors = watercolors.filter((work) => work.printInCatalog !== false);
+  const printableProducts = products.filter((product) => product.printInCatalog !== false);
+
   const pairs: (Watercolor | null)[][] = [];
-  for (let i = 0; i < watercolors.length; i += 2) {
-    pairs.push([watercolors[i], watercolors[i + 1] ?? null]);
+  for (let i = 0; i < printableWatercolors.length; i += 2) {
+    pairs.push([printableWatercolors[i], printableWatercolors[i + 1] ?? null]);
   }
 
   const workPage = (work: Watercolor | null, side: "left" | "right") => {
@@ -106,7 +109,7 @@ function buildPrintHTML(origin: string, lang: "en" | "zh"): string {
       </div>`;
   };
 
-  const totalItems = watercolors.length + products.length;
+  const totalItems = printableWatercolors.length + printableProducts.length;
 
   const coverSpread = `
     <div class="spread">
@@ -143,12 +146,12 @@ function buildPrintHTML(origin: string, lang: "en" | "zh"): string {
     <div class="spread">
       <div class="page page-left cover-left">
         <div class="cover-series-list">
-          ${products.map((p) => `
+          ${printableProducts.map((p) => `
             <div class="cover-series-item">
               <span class="cs-name">${isZh ? (p.title_zh ?? p.title) : p.title}</span>
             </div>
           `).join("")}
-          <div class="cover-count">${isZh ? `${products.length} 件商品` : `${products.length} item${products.length !== 1 ? "s" : ""}`}</div>
+          <div class="cover-count">${isZh ? `${printableProducts.length} 件商品` : `${printableProducts.length} item${printableProducts.length !== 1 ? "s" : ""}`}</div>
         </div>
       </div>
       <div class="page page-right cover-right">
@@ -179,8 +182,8 @@ function buildPrintHTML(origin: string, lang: "en" | "zh"): string {
   };
 
   const productPairs: (typeof products[number] | null)[][] = [];
-  for (let i = 0; i < products.length; i += 2) {
-    productPairs.push([products[i], products[i + 1] ?? null]);
+  for (let i = 0; i < printableProducts.length; i += 2) {
+    productPairs.push([printableProducts[i], printableProducts[i + 1] ?? null]);
   }
   const productSpreads = productPairs
     .map(([a, b]) => `
