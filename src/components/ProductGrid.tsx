@@ -26,11 +26,12 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   const hasActiveSearch = normalizedSearchQuery.length > 0;
 
   // Unique categories (keyed by English value, displayed in current language)
-  const categories = ["ALL", ...Array.from(new Set(products?.map(p => p.category) || []))];
+  const visibleProducts = products?.filter((product) => product.showInStorefront !== false);
+  const categories = ["ALL", ...Array.from(new Set(visibleProducts?.map(p => p.category) || []))];
   const categoryLabel = (cat: string) => {
     if (cat === "ALL") return t.productGrid.categoryAll;
     if (zh) {
-      const match = products?.find(p => p.category === cat);
+      const match = visibleProducts?.find(p => p.category === cat);
       return (match?.category_zh) || cat;
     }
     return cat;
@@ -43,7 +44,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
       .join(" ");
   };
 
-  const filteredProducts = products?.filter(product => {
+  const filteredProducts = visibleProducts?.filter(product => {
     const categoryMatch = selectedCategory === "ALL" || product.category === selectedCategory;
     const searchText = buildProductSearchText(product as Record<string, unknown>);
     const searchMatch = !normalizedSearchQuery || searchText.includes(normalizedSearchQuery.toLowerCase());
@@ -51,7 +52,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   });
 
   const sortedFilteredProducts = useMemo(
-    () => [...(filteredProducts || [])].sort((a, b) => ((a as any).display_order || 0) - ((b as any).display_order || 0)),
+    () => [...(filteredProducts || [])].sort((a, b) => ((a as any).displayOrder ?? 0) - ((b as any).displayOrder ?? 0)),
     [filteredProducts]
   );
 

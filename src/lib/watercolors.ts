@@ -32,6 +32,8 @@ export interface Watercolor {
   titleZh?: string;
   series: string;
   printInCatalog?: boolean;
+  showInStorefront?: boolean;
+  displayOrder?: number;
   year: string;
   medium: string;
   mediumZh?: string;
@@ -51,6 +53,8 @@ export const watercolors: Watercolor[] = [
     titleZh: "早餐残留 其一",
     series: "I",
     printInCatalog: true,
+    showInStorefront: true,
+    displayOrder: 1,
     year: "2026",
     medium: "Watercolor on paper",
     mediumZh: "纸本水彩",
@@ -69,6 +73,8 @@ export const watercolors: Watercolor[] = [
     titleZh: "早餐残留 其二",
     series: "I",
     printInCatalog: true,
+    showInStorefront: true,
+    displayOrder: 2,
     year: "2026",
     medium: "Watercolor on paper, framed",
     mediumZh: "纸本水彩，已装裱",
@@ -86,6 +92,8 @@ export const watercolors: Watercolor[] = [
     titleZh: "早餐残留 其三",
     series: "II",
     printInCatalog: true,
+    showInStorefront: true,
+    displayOrder: 3,
     year: "2026",
     medium: "Watercolor on paper",
     mediumZh: "纸本水彩",
@@ -100,6 +108,8 @@ export const watercolors: Watercolor[] = [
     titleZh: "早餐残留 其四",
     series: "II",
     printInCatalog: true,
+    showInStorefront: true,
+    displayOrder: 4,
     year: "2025",
     medium: "Watercolor on paper",
     mediumZh: "纸本水彩",
@@ -116,6 +126,8 @@ export const watercolors: Watercolor[] = [
     titleZh: "静物 其一",
     series: "II",
     printInCatalog: true,
+    showInStorefront: true,
+    displayOrder: 5,
     year: "2025",
     medium: "Watercolor on paper",
     mediumZh: "纸本水彩",
@@ -130,6 +142,8 @@ export const watercolors: Watercolor[] = [
     titleZh: "静物 其二",
     series: "II",
     printInCatalog: true,
+    showInStorefront: true,
+    displayOrder: 6,
     year: "2025",
     medium: "Watercolor on paper",
     mediumZh: "纸本水彩",
@@ -144,6 +158,8 @@ export const watercolors: Watercolor[] = [
     titleZh: "静物 其三",
     series: "II",
     printInCatalog: true,
+    showInStorefront: true,
+    displayOrder: 7,
     year: "2025",
     medium: "Watercolor on paper",
     mediumZh: "纸本水彩",
@@ -158,6 +174,8 @@ export const watercolors: Watercolor[] = [
     titleZh: "静物 其四",
     series: "II",
     printInCatalog: true,
+    showInStorefront: true,
+    displayOrder: 8,
     year: "2025",
     medium: "Watercolor on paper",
     mediumZh: "纸本水彩",
@@ -173,6 +191,8 @@ export const watercolors: Watercolor[] = [
     titleZh: "静物 其七",
     series: "II",
     printInCatalog: true,
+    showInStorefront: true,
+    displayOrder: 9,
     year: "2025",
     medium: "Watercolor on paper",
     mediumZh: "纸本水彩",
