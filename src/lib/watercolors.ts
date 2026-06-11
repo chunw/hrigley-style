@@ -11,10 +11,10 @@ export const seriesList: WatercolorSeries[] = [
   {
     id: "I",
     label: "SERIES I",
-    englishName: "Breakfast Residuals",
-    chineseName: "早餐残留",
-    subtitle: "Works 1–2 · Breakfast Residuals",
-    subtitleZh: "第1–2件 · 早餐残留",
+    englishName: "Residuals",
+    chineseName: "残留",
+    subtitle: "Works 1–2 · Residuals",
+    subtitleZh: "第1–2件 · 残留",
   },
   {
     id: "II",
@@ -46,11 +46,11 @@ export interface Watercolor {
 }
 
 export const watercolors: Watercolor[] = [
-  // 早餐残留
+  // 残留
   {
     id: "1",
-    title: "Breakfast Residuals #1",
-    titleZh: "早餐残留 其一",
+    title: "Residuals #1",
+    titleZh: "残留 其一",
     series: "I",
     printInCatalog: true,
     showInStorefront: true,
@@ -69,8 +69,8 @@ export const watercolors: Watercolor[] = [
   },
   {
     id: "2",
-    title: "Breakfast Residuals #2",
-    titleZh: "早餐残留 其二",
+    title: "Residuals #2",
+    titleZh: "残留 其二",
     series: "I",
     printInCatalog: true,
     showInStorefront: true,
@@ -86,14 +86,31 @@ export const watercolors: Watercolor[] = [
       "",
   },
 
+ 
   {
-    id: "7",
-    title: "Breakfast Residuals #3",
-    titleZh: "早餐残留 其三",
-    series: "II",
+    id: "3",
+     title: "Residuals #3",
+    titleZh: "残留 其三",
+    series: "I",
     printInCatalog: true,
     showInStorefront: true,
     displayOrder: 3,
+    year: "2025",
+    medium: "Watercolor on paper",
+    mediumZh: "纸本水彩",
+    dimensions: "",
+    dimensionsZh: "",
+    description: "From the home-as-museum series. A salvaged trinket rearranged into a new scene.",
+    descriptionZh: "「馆藏目录」系列。一件打捞来的小物，被重新排列成新的景观现场。",
+  },
+ {
+    id: "7",
+    title: "Residuals #4",
+    titleZh: "残留 其四",
+    series: "I",
+    printInCatalog: true,
+    showInStorefront: true,
+    displayOrder: 4,
     year: "2026",
     medium: "Watercolor on paper",
     mediumZh: "纸本水彩",
@@ -104,12 +121,12 @@ export const watercolors: Watercolor[] = [
   },
   {
     id: "8",
-     title: "Breakfast Residuals #4",
-    titleZh: "早餐残留 其四",
-    series: "II",
+     title: "Residuals #5",
+    titleZh: "残留 其五",
+   series: "I",
     printInCatalog: true,
     showInStorefront: true,
-    displayOrder: 4,
+    displayOrder: 5,
     year: "2025",
     medium: "Watercolor on paper",
     mediumZh: "纸本水彩",
@@ -119,23 +136,27 @@ export const watercolors: Watercolor[] = [
     descriptionZh: "",
   },
 
-  // 静物
+  
   {
-    id: "3",
-    title: "Still Things #1",
-    titleZh: "静物 其一",
-    series: "II",
+    id: "10",
+    title: "Residuals #6",
+    titleZh: "残留 其六",
+   series: "I",
     printInCatalog: true,
     showInStorefront: true,
-    displayOrder: 5,
-    year: "2025",
+    displayOrder: 6,
+    year: "2026",
     medium: "Watercolor on paper",
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "From the home-as-museum series. A salvaged trinket rearranged into a new scene.",
-    descriptionZh: "「馆藏目录」系列。一件打捞来的小物，被重新排列成新的景观现场。",
+    description: "",
+    descriptionZh: "",
   },
+
+
+  // 静物
+  
   {
     id: "4",
     title: "Still Things #2",
@@ -201,6 +222,8 @@ export const watercolors: Watercolor[] = [
     description: "Highlighted work balancing serenity with slight unease.",
     descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
   },
+
+  
 ];
 
 export function getWatercolor(id: string): Watercolor | undefined {
