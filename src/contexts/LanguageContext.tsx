@@ -13,7 +13,7 @@ const STORAGE_KEY = "cw-lang";
 
 export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
   const [lang, setLang] = useState<Lang>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
     return (saved === "zh" ? "zh" : "en") as Lang;
   });
   const toggleLang = () =>
