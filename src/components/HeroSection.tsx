@@ -23,9 +23,11 @@ const HeroSection = () => {
                 fontSize: '0.9rem',
               }}>
                 {t.hero.createdExclusivelyBy}{" "}
-                <span className="text-primary">
-                  chun wang
-                </span>
+                <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
+                  <span className="text-primary">
+                    chun wang
+                  </span>
+                </a>
               </p>
             </div>
           </div>
