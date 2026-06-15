@@ -80,7 +80,7 @@ export const translations = {
     },
     shopTitle: {
       line1: "Chun Wang",
-      line2: "工作室",
+      line2: "艺术",
       line3: "商店",
     },
     index: {
