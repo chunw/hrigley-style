@@ -3,6 +3,9 @@ export const translations = {
     header: {
       about: "about",
       contact: "contact",
+      contactEmailCopiedTitle: "Drop us an email at (copied to clipboard):",
+      contactEmailCopyFailedTitle: "Copy failed",
+      contactEmailCopyFailedDescription: "Please copy manually:",
     },
     hero: {
       description:
@@ -67,6 +70,9 @@ export const translations = {
     header: {
       about: "关于",
       contact: "联系我们",
+      contactEmailCopiedTitle: "给我们发邮件（邮箱地址已复制到剪贴板）：",
+      contactEmailCopyFailedTitle: "复制失败",
+      contactEmailCopyFailedDescription: "请手动复制：",
     },
     hero: {
       description:

@@ -21,14 +21,14 @@ const Header = ({ onPrintCatalog }: HeaderProps) => {
     try {
       await navigator.clipboard.writeText(email);
       toast({
-        title: "Drop us an email at (copied to clipboard):",
+        title: t.header.contactEmailCopiedTitle,
         description: `${email}`,
         className: "font-helvetica normal-case tracking-normal",
       });
     } catch {
       toast({
-        title: "Copy failed",
-        description: `Please copy manually: ${email}`,
+        title: t.header.contactEmailCopyFailedTitle,
+        description: `${t.header.contactEmailCopyFailedDescription} ${email}`,
         variant: "destructive",
         className: "font-helvetica normal-case tracking-normal",
       });
