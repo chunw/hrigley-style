@@ -15,6 +15,7 @@ export const translations = {
     about: {
       title: "About",
       body: "Based in New York City, our shop started as a collection of observations of the modern society that wouldn't leave us alone until they became physical things. We produce whimsical objects at the nexus of utility and contemporary art, designed for people who want to see the world just a little differently. Feel free to stay as long as your curiosity allows.",
+      artistLabel: "About the Artist",
       backToShop: "Back to Shop",
     },
     shopTitle: {
@@ -97,6 +98,7 @@ export const translations = {
     about: {
       title: "关于",
       body: "我们的店铺诞生于纽约，最初是一系列对现代社会的观察。那些念念不忘的想法，最终化为有形之物。这些奇思妙想的实用艺术品，专为那些希望以不同眼光看待世界的人而设计。欢迎停留，只要好奇心还在。",
+      artistLabel: "关于艺术家",
       backToShop: "返回商店",
     },
     shopTitle: {
