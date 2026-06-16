@@ -13,9 +13,9 @@ const WorkCard = ({ work }: { work: PhotographyWork }) => {
     <article>
       <div className="flex justify-between items-center mb-2">
         <span className="font-mono text-xs">PH{padded}</span>
-        <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+        {/* <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
           {t.photographyCatalog.categoryLabel}
-        </span>
+        </span> */}
       </div>
 
       <div

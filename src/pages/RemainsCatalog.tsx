@@ -14,9 +14,9 @@ const WorkCard = ({ work }: { work: RemainsWork }) => {
     <article>
       <div className="flex justify-between items-center mb-2">
         <span className="font-mono text-xs">R{padded}</span>
-        <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+        {/* <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
           {t.remainsCatalog.categoryLabel}
-        </span>
+        </span> */}
       </div>
 
       <div

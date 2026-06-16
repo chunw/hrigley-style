@@ -18,8 +18,8 @@ export interface SpiritWork {
 export const spiritWorks: SpiritWork[] = [
   {
     id: "1",
-    title: "21 Spirit No. 1",
-    titleZh: "廿一灵 其一",
+    title: "The Distance Between Us",
+    titleZh: "我们之间的距离",
     printInCatalog: true,
     year: "2025",
     medium: "",
@@ -31,8 +31,8 @@ export const spiritWorks: SpiritWork[] = [
   },
   {
     id: "2",
-    title: "21 Spirit No. 2",
-    titleZh: "廿一灵 其二",
+    title: "The Last Bargain",
+    titleZh: "最后的交易",
     printInCatalog: true,
     year: "2025",
     medium: "",
@@ -44,8 +44,8 @@ export const spiritWorks: SpiritWork[] = [
   },
   {
     id: "3",
-    title: "21 Spirit No. 3",
-    titleZh: "廿一灵 其三",
+    title: "Profile",
+    titleZh: "画像",
     printInCatalog: true,
     year: "2025",
     medium: "",
@@ -57,8 +57,8 @@ export const spiritWorks: SpiritWork[] = [
   },
   {
     id: "4",
-    title: "21 Spirit No. 4",
-    titleZh: "廿一灵 其四",
+    title: "Captive",
+    titleZh: "被俘",
     printInCatalog: true,
     year: "2025",
     medium: "",
