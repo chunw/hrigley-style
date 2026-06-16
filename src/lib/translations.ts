@@ -25,6 +25,7 @@ export const translations = {
     },
     index: {
       tagline: "Unique works for the imaginative collectors",
+      catalogsTitle: "Art Catalogs",
     },
     footer: {
       copyright: "All rights reserved.",
@@ -108,6 +109,7 @@ export const translations = {
     },
     index: {
       tagline: "献给富有想象力的收藏者们",
+      catalogsTitle: "作品系列",
     },
     footer: {
       copyright: "版权所有。",
