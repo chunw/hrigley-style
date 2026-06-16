@@ -3,8 +3,8 @@ export const catalogMeta = {
   zh: "摄影作品",
   medium: "Photography",
   mediumZh: "摄影",
-  description: "Placeholder description for Photography.",
-  descriptionZh: "《摄影作品》占位描述文字。",
+  description: "Chun Wang's photographic practice treats the camera as a philosophical instrument. She stages the four existential givens, mortality, isolation, freedom, and meaninglessness, within the structural tensions of the digital age. Her work has been recognized by the International Photography Awards, Siena International Photo Awards, International Color Awards, London International Creative Competition, and the Passepartout Photo Prize.",
+  descriptionZh: "Chun Wang的摄影实践将相机视为哲学仪器。她将死亡、孤独、自由与无意义这四重存在命题，置于数字时代的结构性张力中展开演绎。她的作品曾其创作曾获国际摄影奖（IPA）、锡耶纳国际摄影奖、国际色彩大奖、及Passepartout摄影奖等荣誉",
 };
 
 export interface PhotographyWork {

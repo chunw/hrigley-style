@@ -181,6 +181,36 @@ function getCSS(isDark: boolean): string {
     color: ${coverYear};
     margin-top: 28px;
   }
+
+  .bio-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 52px 44px 44px;
+  }
+  .bio-name {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 22px;
+    letter-spacing: 0.04em;
+    color: ${coverTitle};
+    margin-bottom: 20px;
+  }
+  .bio-label {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: ${muted};
+    margin-bottom: 14px;
+  }
+  .bio-text {
+    font-size: 9px;
+    color: ${desc};
+    line-height: 1.7;
+    max-width: 340px;
+  }
+  .bio-text em {
+    font-style: italic;
+  }
 `;}
 
 export type PrintTheme = "light" | "dark";
@@ -370,6 +400,28 @@ function productPage(
     </div>`;
 }
 
+function bioSpread(): string {
+  const enBio = `Chun Wang is a multidisciplinary artist, technologist and curator working across photography, art, and creative web projects. Her work has been recognized through international awards such as International Photography Awards (1×), London International Creative Competition (4×), Siena International Photo Awards (1×), International Color Awards (5×), Moscow International Foto Award (1×), and Passepartout Photo Prize (1×). She has also published her work in books, and exhibited at art galleries worldwide along with leading institutions including the United Nations, SFMOMA, Stanford University and Harvard University. Her notable curatorial projects include <em>Negotiated Intelligence: Unearthing Power Dynamics in Human-AI Co-Creation</em>, part of The Wrong Biennale 2025–2026 edition, and <em>IMMEMORY: On COVID-19</em>, an Official Nominee for 2021 Webby Awards in the Best Cultural Website category.`;
+
+  const zhBio = `王淳是一位跨领域艺术家、技术创作者与策展人，其创作横跨摄影、视觉艺术与创意网络项目。她的作品曾获多项国际奖项认可，包括：国际摄影奖（1次）、伦敦国际创意大赛（4次）、锡耶纳国际摄影奖（1次）、国际色彩奖（5次）、莫斯科国际摄影奖（1次）及Passepartout Photo Prize（1次）。她的作品已出版成书，并在全球多个画廊及艺术机构展出，包括联合国、旧金山现代艺术博物馆(SFMOMA)、斯坦福大学及哈佛大学。她的重要策展项目包括《<em>Negotiated Intelligence: Unearthing Power Dynamics in Human-AI Co-Creation</em>》，为The Wrong Biennale 2025–2026届参展项目；以及《<em>IMMEMORY: On COVID-19</em>》，该项目获2021年韦比奖最佳文化网站类别官方提名。`;
+
+  const left = `
+    <div class="page page-left bio-page">
+      <div class="bio-label">关于艺术家</div>
+      <div class="bio-name">王淳</div>
+      <div class="bio-text">${zhBio}</div>
+    </div>`;
+
+  const right = `
+    <div class="page page-right bio-page">
+      <div class="bio-label">About the Artist</div>
+      <div class="bio-name">Chun Wang</div>
+      <div class="bio-text">${enBio}</div>
+    </div>`;
+
+  return spread(left, right);
+}
+
 function pairSpreads<T>(
   items: T[],
   renderPage: (item: T, side: "left" | "right") => string,
@@ -537,6 +589,7 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
 </head>
 <body>
   ${masterCover}
+  ${bioSpread()}
   ${spiritCover}
   ${spiritSpreads}
   ${remainsCover}
