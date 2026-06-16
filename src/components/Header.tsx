@@ -73,7 +73,7 @@ const Header = ({ onPrintCatalog }: HeaderProps) => {
               {t.header.contact}
             </button>
 
-            {location.pathname === "/watercolor-catalog" && onPrintCatalog ? (
+            {onPrintCatalog ? (
               <button
                 type="button"
                 onClick={onPrintCatalog}
