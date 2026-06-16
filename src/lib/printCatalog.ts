@@ -1,6 +1,7 @@
 import { watercolors, seriesList, type Watercolor } from "./watercolors";
 import { remainsWorks, type RemainsWork } from "./remains";
 import { spiritWorks, type SpiritWork } from "./21spirit";
+import { photographyWorks, type PhotographyWork } from "./photography";
 import { products, productImages } from "./products";
 
 const CSS = `
@@ -261,6 +262,31 @@ function spiritPage(
     </div>`;
 }
 
+function photographyPage(
+  work: PhotographyWork,
+  side: "left" | "right",
+  origin: string,
+  isZh: boolean,
+): string {
+  const padded = work.id.padStart(2, "0");
+  const title = isZh ? (work.titleZh ?? work.title) : work.title;
+  const medium = isZh ? (work.mediumZh ?? work.medium) : work.medium;
+  const dimensions = isZh ? (work.dimensionsZh ?? work.dimensions) : work.dimensions;
+  return `
+    <div class="page page-${side}">
+      <div class="page-num">PH${padded}</div>
+      <div class="img-area">
+        <img src="${origin}/photography/${padded}/${work.printInCatalogImage ?? "main"}.jpg" alt="${work.title}" onerror="this.style.visibility='hidden'" />
+      </div>
+      <div class="meta">
+        <div class="meta-title">${title}</div>
+        <div class="meta-year">${work.year}</div>
+        ${medium ? `<div class="meta-sub">${medium}</div>` : ""}
+        ${dimensions ? `<div class="meta-dimensions">${dimensions}</div>` : ""}
+      </div>
+    </div>`;
+}
+
 function productPage(
   p: (typeof products)[number],
   side: "left" | "right",
@@ -307,9 +333,10 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh"): strin
   const printableWatercolors = watercolors.filter((w) => w.printInCatalog !== false);
   const printableRemains = remainsWorks.filter((w) => w.printInCatalog !== false);
   const printableSpirit = spiritWorks.filter((w) => w.printInCatalog !== false);
+  const printablePhotography = photographyWorks.filter((w) => w.printInCatalog !== false);
   const printableProducts = products.filter((p) => p.printInCatalog !== false);
 
-  const totalArt = printableWatercolors.length + printableRemains.length + printableSpirit.length;
+  const totalArt = printableWatercolors.length + printableRemains.length + printableSpirit.length + printablePhotography.length;
 
   // Master cover
   const masterCover = sectionCoverSpread(
@@ -321,12 +348,14 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh"): strin
       { label: "Visions in Watercolor", name: `${printableWatercolors.length} works` },
       { label: "Remains", name: `${printableRemains.length} works` },
       { label: "21 Spirit", name: `${printableSpirit.length} works` },
+      { label: "Photography", name: `${printablePhotography.length} works` },
       { label: "Shop", name: `${printableProducts.length} items` },
     ],
     [
       { label: "水彩视界", name: `${printableWatercolors.length} 件` },
       { label: "遗存", name: `${printableRemains.length} 件` },
       { label: "廿一灵", name: `${printableSpirit.length} 件` },
+      { label: "摄影", name: `${printablePhotography.length} 件` },
       { label: "商店", name: `${printableProducts.length} 件` },
     ],
     totalArt,
@@ -389,6 +418,22 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh"): strin
     (w, side) => spiritPage(w, side, origin, isZh),
   );
 
+  // Photography section
+  const photographyCover = sectionCoverSpread(
+    "Photography",
+    "摄影",
+    "",
+    "",
+    [{ name: isZh ? "摄影" : "Photography", sub: isZh ? `第1–${printablePhotography.length}件` : `Works 1–${printablePhotography.length}` }],
+    [{ name: "摄影", sub: `第1–${printablePhotography.length}件` }],
+    printablePhotography.length,
+    isZh,
+  );
+  const photographySpreads = pairSpreads(
+    printablePhotography,
+    (w, side) => photographyPage(w, side, origin, isZh),
+  );
+
   // Shop section
   const shopCover = `
     <div class="spread">
@@ -430,6 +475,8 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh"): strin
   ${remainsSpreads}
   ${spiritCover}
   ${spiritSpreads}
+  ${photographyCover}
+  ${photographySpreads}
   ${shopCover}
   ${shopSpreads}
   <script>window.onload = function() { setTimeout(function() { window.print(); }, 300); };<\/script>
