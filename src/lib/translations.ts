@@ -68,7 +68,7 @@ export const translations = {
     photographyCatalog: {
       subtitle: "Photography",
       works: "works",
-      categoryLabel: "Photography · 摄影",
+      categoryLabel: "Photography · 摄影作品",
     },
     remainsCatalog: {
       subtitle: "Remains",
@@ -147,9 +147,9 @@ export const translations = {
       uploadImage: "上传图片",
     },
     photographyCatalog: {
-      subtitle: "摄影",
+      subtitle: "摄影作品",
       works: "件作品",
-      categoryLabel: "Photography · 摄影",
+      categoryLabel: "Photography · 摄影作品",
     },
     remainsCatalog: {
       subtitle: "遗迹",

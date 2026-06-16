@@ -1,4 +1,4 @@
-export const catalogMeta = { en: "Photography", zh: "摄影" };
+export const catalogMeta = { en: "Photography", zh: "摄影作品" };
 
 export interface PhotographyWork {
   id: string;
@@ -25,7 +25,7 @@ export const photographyWorks: PhotographyWork[] = [
     printInCatalog: true,
     year: "2024",
     medium: "Photography",
-    mediumZh: "摄影",
+    mediumZh: "摄影作品",
     dimensions: "",
     dimensionsZh: "",
     description: "",
@@ -38,7 +38,7 @@ export const photographyWorks: PhotographyWork[] = [
     printInCatalog: true,
     year: "2023",
     medium: "Photography",
-    mediumZh: "摄影",
+    mediumZh: "摄影作品",
     dimensions: "",
     dimensionsZh: "",
     description: "",
@@ -51,7 +51,7 @@ export const photographyWorks: PhotographyWork[] = [
     printInCatalog: true,
     year: "2023",
     medium: "Photography",
-    mediumZh: "摄影",
+    mediumZh: "摄影作品",
     dimensions: "",
     dimensionsZh: "",
     description: "",
@@ -64,7 +64,7 @@ export const photographyWorks: PhotographyWork[] = [
     printInCatalog: true,
     year: "2025",
     medium: "Photography",
-    mediumZh: "摄影",
+    mediumZh: "摄影作品",
     dimensions: "",
     dimensionsZh: "",
     description: "",
