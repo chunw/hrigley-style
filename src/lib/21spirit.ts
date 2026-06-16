@@ -1,3 +1,5 @@
+export const catalogMeta = { en: "21 Spirit", zh: "廿一灵" };
+
 export interface SpiritWork {
   id: string;
   title: string;

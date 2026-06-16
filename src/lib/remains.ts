@@ -1,3 +1,5 @@
+export const catalogMeta = { en: "Remains", zh: "遗存" };
+
 export interface RemainsWork {
   id: string;
   title: string;

@@ -370,20 +370,20 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
   // Master cover
   const masterCover = sectionCoverSpread(
     "Complete Catalog",
-    "全集",
+    "目录",
     "",
     "",
     [
       { label: "Visions in Watercolor", name: `${printableWatercolors.length} works` },
       { label: "Remains", name: `${printableRemains.length} works` },
-      { label: "21 Spirit", name: `${printableSpirit.length} works` },
+      { label: "In The Spirit of The 21st Century", name: `${printableSpirit.length} works` },
       { label: "Photography", name: `${printablePhotography.length} works` },
       { label: "Shop", name: `${printableProducts.length} items` },
     ],
     [
       { label: "水彩视界", name: `${printableWatercolors.length} 件` },
-      { label: "遗存", name: `${printableRemains.length} 件` },
-      { label: "廿一灵", name: `${printableSpirit.length} 件` },
+      { label: "遗迹", name: `${printableRemains.length} 件` },
+      { label: "21世纪精神", name: `${printableSpirit.length} 件` },
       { label: "摄影", name: `${printablePhotography.length} 件` },
       { label: "商店", name: `${printableProducts.length} 件` },
     ],
@@ -433,12 +433,12 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
 
   // 21 Spirit section
   const spiritCover = sectionCoverSpread(
-    "21 Spirit",
-    "廿一灵",
+    "In The Spirit of The 21st Century",
+    "21世纪精神",
     "",
     "",
-    [{ name: isZh ? "廿一灵" : "21 Spirit", sub: isZh ? `第1–${printableSpirit.length}件` : `Works 1–${printableSpirit.length}` }],
-    [{ name: "廿一灵", sub: `第1–${printableSpirit.length}件` }],
+    [{ name: isZh ? "21世纪精神" : "In The Spirit of The 21st Century", sub: isZh ? `第1–${printableSpirit.length}件` : `Works 1–${printableSpirit.length}` }],
+    [{ name: "21世纪精神", sub: `第1–${printableSpirit.length}件` }],
     printableSpirit.length,
     isZh,
   );
@@ -498,12 +498,12 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
 </head>
 <body>
   ${masterCover}
-  ${watercolorCover}
-  ${watercolorSpreads}
-  ${remainsCover}
-  ${remainsSpreads}
   ${spiritCover}
   ${spiritSpreads}
+  ${remainsCover}
+  ${remainsSpreads}
+  ${watercolorCover}
+  ${watercolorSpreads}
   ${photographyCover}
   ${photographySpreads}
   ${shopCover}

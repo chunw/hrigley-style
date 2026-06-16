@@ -1,3 +1,5 @@
+export const catalogMeta = { en: "Photography", zh: "摄影" };
+
 export interface PhotographyWork {
   id: string;
   title: string;

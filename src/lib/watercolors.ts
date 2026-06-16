@@ -1,3 +1,5 @@
+export const catalogMeta = { en: "Visions in Watercolor", zh: "水彩视界" };
+
 export interface WatercolorSeries {
   id: string;
   label: string;        // e.g. "SERIES I"
