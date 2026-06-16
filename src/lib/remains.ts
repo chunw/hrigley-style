@@ -1,4 +1,4 @@
-export const catalogMeta = { en: "Remains", zh: "遗存" };
+export const catalogMeta = { en: "Remains", zh: "遗迹" };
 
 export interface RemainsWork {
   id: string;
@@ -21,7 +21,7 @@ export const remainsWorks: RemainsWork[] = [
   {
     id: "1",
     title: "Remains No. 1",
-    titleZh: "遗存 其一",
+    titleZh: "遗迹 其一",
     printInCatalog: true,
     year: "2025",
     medium: "",
@@ -34,7 +34,7 @@ export const remainsWorks: RemainsWork[] = [
   {
     id: "2",
     title: "Remains No. 2",
-    titleZh: "遗存 其二",
+    titleZh: "遗迹 其二",
     printInCatalog: true,
     year: "2025",
     medium: "",
@@ -47,7 +47,7 @@ export const remainsWorks: RemainsWork[] = [
   {
     id: "3",
     title: "Remains No. 3",
-    titleZh: "遗存 其三",
+    titleZh: "遗迹 其三",
     printInCatalog: true,
     year: "2025",
     medium: "",
@@ -60,7 +60,7 @@ export const remainsWorks: RemainsWork[] = [
   {
     id: "4",
     title: "Remains No. 4",
-    titleZh: "遗存 其四",
+    titleZh: "遗迹 其四",
     printInCatalog: true,
     year: "2025",
     medium: "",
@@ -73,7 +73,7 @@ export const remainsWorks: RemainsWork[] = [
   {
     id: "5",
     title: "Remains No. 5",
-    titleZh: "遗存 其五",
+    titleZh: "遗迹 其五",
     printInCatalog: true,
     year: "2025",
     medium: "",
@@ -86,7 +86,7 @@ export const remainsWorks: RemainsWork[] = [
   {
     id: "6",
     title: "Remains No. 6",
-    titleZh: "遗存 其六",
+    titleZh: "遗迹 其六",
     printInCatalog: true,
     year: "2025",
     medium: "",

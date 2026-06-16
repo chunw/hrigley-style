@@ -149,7 +149,7 @@ const Spirit21Detail = () => {
           <div className="space-y-8">
             <div>
               <p className="font-mono text-xs tracking-widest text-muted-foreground uppercase mb-2">
-                In The Spirit of the 21st Century — {paddedId}
+                In The Spirit of the 21st Century {paddedId}
               </p>
               <h1 className="shop-title text-4xl leading-none">{title}</h1>
             </div>

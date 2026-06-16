@@ -149,7 +149,7 @@ const RemainsDetail = () => {
           <div className="space-y-8">
             <div>
               <p className="font-mono text-xs tracking-widest text-muted-foreground uppercase mb-2">
-                R{paddedId}
+                Remains {paddedId}
               </p>
               <h1 className="shop-title text-4xl leading-none">{title}</h1>
             </div>
