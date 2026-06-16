@@ -4,10 +4,26 @@ import { spiritWorks, type SpiritWork } from "./21spirit";
 import { photographyWorks, type PhotographyWork } from "./photography";
 import { products, productImages } from "./products";
 
-const CSS = `
+function getCSS(isDark: boolean): string {
+  const bg = isDark ? "#0a0a0a" : "#fff";
+  const fg = isDark ? "#e0e0e0" : "#111";
+  const divider = isDark ? "#2a2a2a" : "#d4d4d4";
+  const muted = isDark ? "#555" : "#aaa";
+  const meta = isDark ? "#666" : "#999";
+  const desc = isDark ? "#777" : "#666";
+  const csLabel = isDark ? "#444" : "#bbb";
+  const csName = isDark ? "#999" : "#555";
+  const csSub = isDark ? "#555" : "#999";
+  const countColor = isDark ? "#3a3a3a" : "#ccc";
+  const countBorder = isDark ? "#1e1e1e" : "#ececec";
+  const coverTitle = isDark ? "#e8e8e8" : "#111";
+  const coverSubtitle = isDark ? "#555" : "#777";
+  const coverYear = isDark ? "#3a3a3a" : "#bbb";
+
+  return `
   @page { size: landscape; margin: 0; }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #fff; color: #111; font-family: 'Courier New', Courier, monospace; }
+  body { background: ${bg}; color: ${fg}; font-family: 'Courier New', Courier, monospace; }
 
   .spread {
     width: 100vw;
@@ -24,14 +40,15 @@ const CSS = `
     flex-direction: column;
     padding: 52px 44px 44px;
     position: relative;
+    background: ${bg};
   }
-  .page-left { border-right: 1px solid #d4d4d4; }
+  .page-left { border-right: 1px solid ${divider}; }
 
   .page-num {
     font-size: 9px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: #aaa;
+    color: ${muted};
     margin-bottom: 18px;
   }
   .img-area {
@@ -58,29 +75,29 @@ const CSS = `
     margin-bottom: 6px;
     line-height: 1.2;
     font-style: italic;
-    color: #999;
+    color: ${meta};
   }
   .meta-year {
     font-size: 10px;
-    color: #999;
+    color: ${meta};
     letter-spacing: 0.12em;
     margin-top: 2px;
   }
   .meta-sub {
     font-size: 10px;
     letter-spacing: 0.08em;
-    color: #999;
+    color: ${meta};
     margin-top: 4px;
   }
   .meta-dimensions {
     font-size: 10px;
-    color: #999;
+    color: ${meta};
     margin-top: 4px;
     letter-spacing: 0.08em;
   }
   .meta-description {
     font-size: 9px;
-    color: #666;
+    color: ${desc};
     margin-top: 6px;
     line-height: 1.4;
   }
@@ -102,11 +119,11 @@ const CSS = `
   .cs-label {
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: #bbb;
+    color: ${csLabel};
   }
-  .cs-name { color: #555; }
+  .cs-name { color: ${csName}; }
   .cs-sub {
-    color: #999;
+    color: ${csSub};
     font-size: 9px;
     line-height: 1.2;
   }
@@ -114,10 +131,10 @@ const CSS = `
     font-size: 9px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #ccc;
+    color: ${countColor};
     margin-top: 8px;
     padding-top: 16px;
-    border-top: 1px solid #ececec;
+    border-top: 1px solid ${countBorder};
   }
 
   .cover-body { display: flex; flex-direction: column; gap: 0; }
@@ -126,23 +143,25 @@ const CSS = `
     font-size: 60px;
     line-height: 1;
     letter-spacing: -0.01em;
-    color: #111;
+    color: ${coverTitle};
     margin-bottom: 16px;
   }
   .cover-subtitle {
     font-size: 48px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: #777;
+    color: ${coverSubtitle};
   }
   .cover-year {
     font-size: 9px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #bbb;
+    color: ${coverYear};
     margin-top: 28px;
   }
-`;
+`;}
+
+export type PrintTheme = "light" | "dark";
 
 function spread(left: string, right: string) {
   return `<div class="spread">${left}${right}</div>`;
@@ -155,8 +174,8 @@ function emptyPage(side: "left" | "right") {
 function sectionCoverSpread(
   titleEn: string,
   titleZh: string,
-  subtitleEn: string,
-  subtitleZh: string,
+  _subtitleEn: string,
+  _subtitleZh: string,
   itemsEn: Array<{ label?: string; name: string; sub?: string }>,
   itemsZh: Array<{ label?: string; name: string; sub?: string }>,
   count: number,
@@ -327,8 +346,10 @@ function pairSpreads<T>(
   return spreads.join("\n");
 }
 
-export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh"): string {
+export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme: PrintTheme = "light"): string {
+  const isDark = theme === "dark";
   const isZh = lang === "zh";
+  const css = getCSS(isDark);
 
   const printableWatercolors = watercolors.filter((w) => w.printInCatalog !== false);
   const printableRemains = remainsWorks.filter((w) => w.printInCatalog !== false);
@@ -465,7 +486,7 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh"): strin
 <head>
   <meta charset="UTF-8" />
   <title>Chun Wang — ${isZh ? "全集" : "Complete Catalog"}</title>
-  <style>${CSS}</style>
+  <style>${css}</style>
 </head>
 <body>
   ${masterCover}
