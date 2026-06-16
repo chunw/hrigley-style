@@ -32,6 +32,7 @@ export interface Watercolor {
   titleZh?: string;
   series: string;
   printInCatalog?: boolean;
+  printInCatalogImage?: string;
   showInStorefront?: boolean;
   year: string;
   medium: string;
@@ -169,7 +170,7 @@ export const watercolors: Watercolor[] = [
     title: "Still Things #2",
     titleZh: "静物 其二",
     series: "II",
-    printInCatalog: true,
+    printInCatalog: false,
     showInStorefront: true,
     year: "2025",
     medium: "Watercolor on paper",
@@ -185,6 +186,7 @@ export const watercolors: Watercolor[] = [
     titleZh: "静物 其三",
     series: "II",
     printInCatalog: true,
+    printInCatalogImage: "2",
     showInStorefront: true,
     year: "2025",
     medium: "Watercolor on paper",
@@ -200,6 +202,7 @@ export const watercolors: Watercolor[] = [
     titleZh: "静物 其四",
     series: "II",
     printInCatalog: true,
+    printInCatalogImage: "1",
     showInStorefront: true,
     year: "2025",
     medium: "Watercolor on paper",
@@ -215,7 +218,7 @@ export const watercolors: Watercolor[] = [
     title: "Still Things #7",
     titleZh: "静物 其七",
     series: "II",
-    printInCatalog: true,
+    printInCatalog: false,
     showInStorefront: true,
     year: "2025",
     medium: "Watercolor on paper",

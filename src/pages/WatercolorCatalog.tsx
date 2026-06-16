@@ -98,7 +98,7 @@ function buildPrintHTML(origin: string, lang: "en" | "zh"): string {
       <div class="page page-${side}">
         <div class="page-num">P${padded}</div>
         <div class="img-area">
-          <img src="${origin}/watercolors/${padded}/main.jpg" alt="${work.title}" onerror="this.style.visibility='hidden'" />
+          <img src="${origin}/watercolors/${padded}/${work.printInCatalogImage ?? 'main'}.jpg" alt="${work.title}" onerror="this.style.visibility='hidden'" />
         </div>
         <div class="meta">
           <div class="meta-title">${title}</div>
@@ -232,7 +232,7 @@ function buildPrintHTML(origin: string, lang: "en" | "zh"): string {
     .img-area {
       flex: 1;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       overflow: hidden;
     }
@@ -413,7 +413,7 @@ const WatercolorCatalog = () => {
         </section>
 
         {/* Artist statement */}
-        <section className="mt-16 border-t border-border pt-8">
+        {/* <section className="mt-16 border-t border-border pt-8">
           <div className="grid md:grid-cols-3 gap-12">
             <div>
               <h2 className="shop-title text-2xl leading-tight">{t.watercolorCatalog.artistStatement}</h2>
@@ -440,7 +440,7 @@ const WatercolorCatalog = () => {
               )}
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Works grid */}
         <section className="mt-12">
