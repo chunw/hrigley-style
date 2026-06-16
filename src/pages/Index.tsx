@@ -101,6 +101,35 @@ const Index = () => {
         </div>
       </section>
      
+        <section className="border-t border-border py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-6">
+              {t.index.catalogsTitle}
+            </p>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-border">
+              {[
+                { to: "/watercolor-catalog", label: t.watercolorCatalog.subtitle },
+                { to: "/remains-catalog",    label: t.remainsCatalog.subtitle },
+                { to: "/21spirit-catalog",   label: t.spirit21Catalog.subtitle },
+                { to: "/photography-catalog", label: t.photographyCatalog.subtitle },
+              ].map(({ to, label }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  className="bg-background flex items-center justify-between px-5 py-5 group hover:bg-primary/5 transition-colors"
+                >
+                  <span className="font-mono text-xs uppercase tracking-widest leading-tight">
+                    {label}
+                  </span>
+                  <span className="text-primary text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <About /> <Footer />
       
     </div>
