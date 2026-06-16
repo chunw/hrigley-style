@@ -132,8 +132,6 @@ export const watercolors: Watercolor[] = [
     description: "",
     descriptionZh: "",
   },
-
-  
   {
     id: "10",
     title: "Residuals #6",
@@ -155,7 +153,7 @@ export const watercolors: Watercolor[] = [
      title: "Residuals #7",
     titleZh: "残留 其七",
     series: "I",
-    printInCatalog: true,
+    printInCatalog: false,
     printInCatalogImage: "1",
     showInStorefront: true,
     year: "2025",
@@ -302,7 +300,7 @@ export const watercolors: Watercolor[] = [
     title: "Still Things #10",
     titleZh: "静物 其十",
     series: "II",
-    printInCatalog: true,
+    printInCatalog: false,
     showInStorefront: true,
     year: "2025",
     medium: "Watercolor on paper",
@@ -318,7 +316,7 @@ export const watercolors: Watercolor[] = [
     title: "Still Things #11",
     titleZh: "静物 其十一",
     series: "II",
-    printInCatalog: true,
+    printInCatalog: false,
     showInStorefront: true,
     year: "2025",
     medium: "Watercolor on paper",
