@@ -107,6 +107,11 @@ const WatercolorCatalog = () => {
             <p className="font-mono text-xs text-muted-foreground/60 mt-1">
               {watercolors.length} {t.watercolorCatalog.works}
             </p>
+            {catalogMeta.description && (
+              <p className="text-sm text-muted-foreground mt-3 max-w-prose">
+                {lang === "zh" ? (catalogMeta.descriptionZh ?? catalogMeta.description) : catalogMeta.description}
+              </p>
+            )}
           </div>
         </header>
 
@@ -121,6 +126,11 @@ const WatercolorCatalog = () => {
                   <span className="text-lg leading-none text-muted-foreground">{s.chineseName}</span>
                 </div>
                 <p className="font-mono text-xs mt-2 text-muted-foreground">{lang === "zh" ? (s.subtitleZh ?? s.subtitle) : s.subtitle}</p>
+                {s.description && (
+                  <p className="text-sm text-muted-foreground mt-2">
+                    {lang === "zh" ? (s.descriptionZh ?? s.description) : s.description}
+                  </p>
+                )}
               </div>
             ))}
           </div>

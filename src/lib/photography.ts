@@ -1,4 +1,11 @@
-export const catalogMeta = { en: "Photography", zh: "摄影作品", medium: "Photography", mediumZh: "摄影" };
+export const catalogMeta = {
+  en: "Photography",
+  zh: "摄影作品",
+  medium: "Photography",
+  mediumZh: "摄影",
+  description: "Placeholder description for Photography.",
+  descriptionZh: "《摄影作品》占位描述文字。",
+};
 
 export interface PhotographyWork {
   id: string;

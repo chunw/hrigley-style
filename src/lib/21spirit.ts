@@ -1,4 +1,11 @@
-export const catalogMeta = { en: "In the Spirit of the 21st Century", zh: "21世纪精神", medium: "Mixed Media", mediumZh: "综合媒材" };
+export const catalogMeta = {
+  en: "In the Spirit of the 21st Century",
+  zh: "21世纪精神",
+  medium: "Mixed Media",
+  mediumZh: "综合媒材",
+  description: "Placeholder description for In the Spirit of the 21st Century.",
+  descriptionZh: "《21世纪精神》占位描述文字。",
+};
 
 export interface SpiritWork {
   id: string;

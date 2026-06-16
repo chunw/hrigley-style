@@ -167,6 +167,13 @@ function getCSS(isDark: boolean): string {
     color: ${coverSubtitle};
     margin-top: 10px;
   }
+  .cover-description {
+    font-size: 9px;
+    color: ${desc};
+    margin-top: 16px;
+    line-height: 1.5;
+    max-width: 280px;
+  }
   .cover-year {
     font-size: 9px;
     letter-spacing: 0.16em;
@@ -191,13 +198,16 @@ function sectionCoverSpread(
   titleZh: string,
   mediumEn: string,
   mediumZh: string,
-  itemsEn: Array<{ label?: string; name: string; sub?: string }>,
-  itemsZh: Array<{ label?: string; name: string; sub?: string }>,
+  itemsEn: Array<{ label?: string; name: string; sub?: string; desc?: string }>,
+  itemsZh: Array<{ label?: string; name: string; sub?: string; desc?: string }>,
   count: number,
   isZh: boolean,
+  descriptionEn?: string,
+  descriptionZh?: string,
 ): string {
   const items = isZh ? itemsZh : itemsEn;
   const medium = isZh ? mediumZh : mediumEn;
+  const description = isZh ? (descriptionZh ?? descriptionEn) : descriptionEn;
   const left = `
     <div class="page page-left cover-left">
       <div class="cover-series-list">
@@ -206,6 +216,7 @@ function sectionCoverSpread(
             ${item.label ? `<span class="cs-label">${item.label}</span>` : ""}
             <span class="cs-name">${item.name}</span>
             ${item.sub ? `<span class="cs-sub">${item.sub}</span>` : ""}
+            ${item.desc ? `<span class="cs-sub">${item.desc}</span>` : ""}
           </div>
         `).join("")}
         <div class="cover-count">${isZh ? `${count} 件作品` : `${count} works`}</div>
@@ -217,6 +228,7 @@ function sectionCoverSpread(
         <div class="cover-title">Chun Wang</div>
         <div class="cover-subtitle">${isZh ? titleZh : titleEn}</div>
         ${medium ? `<div class="cover-medium">${medium}</div>` : ""}
+        ${description ? `<div class="cover-description">${description}</div>` : ""}
         <div class="cover-year">${isZh ? `纽约 · ${new Date().getFullYear()}` : `New York · ${new Date().getFullYear()}`}</div>
       </div>
     </div>`;
@@ -410,14 +422,18 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
       label: s.label,
       name: s.englishName,
       sub: s.subtitle,
+      desc: s.description,
     })),
     seriesList.map((s) => ({
       label: s.label,
       name: s.chineseName,
       sub: s.subtitleZh ?? s.subtitle,
+      desc: s.descriptionZh ?? s.description,
     })),
     printableWatercolors.length,
     isZh,
+    watercolorMeta.description,
+    watercolorMeta.descriptionZh,
   );
   const watercolorSpreads = pairSpreads(
     printableWatercolors,
@@ -434,6 +450,8 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
     [{ name: remainsMeta.zh, sub: `第1–${printableRemains.length}件` }],
     printableRemains.length,
     isZh,
+    remainsMeta.description,
+    remainsMeta.descriptionZh,
   );
   const remainsSpreads = pairSpreads(
     printableRemains,
@@ -450,6 +468,8 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
     [{ name: spiritMeta.zh, sub: `第1–${printableSpirit.length}件` }],
     printableSpirit.length,
     isZh,
+    spiritMeta.description,
+    spiritMeta.descriptionZh,
   );
   const spiritSpreads = pairSpreads(
     printableSpirit,
@@ -466,6 +486,8 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
     [{ name: photographyMeta.zh, sub: `第1–${printablePhotography.length}件` }],
     printablePhotography.length,
     isZh,
+    photographyMeta.description,
+    photographyMeta.descriptionZh,
   );
   const photographySpreads = pairSpreads(
     printablePhotography,

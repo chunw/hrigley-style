@@ -79,6 +79,11 @@ const PhotographyCatalog = () => {
             <p className="font-mono text-xs text-muted-foreground/60 mt-1">
               {photographyWorks.length} {t.photographyCatalog.works}
             </p>
+            {catalogMeta.description && (
+              <p className="text-sm text-muted-foreground mt-3 max-w-prose">
+                {lang === "zh" ? (catalogMeta.descriptionZh ?? catalogMeta.description) : catalogMeta.description}
+              </p>
+            )}
           </div>
         </header>
 

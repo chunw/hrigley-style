@@ -26,6 +26,8 @@ export const seriesList: WatercolorSeries[] = [
     chineseName: "残留",
     subtitle: "Works 1–2 · Residuals",
     subtitleZh: "第1–2件 · 残留",
+    description: "Placeholder description for Series I: Residuals.",
+    descriptionZh: "第一辑「残留」占位描述文字。",
   },
   {
     id: "II",
@@ -34,6 +36,8 @@ export const seriesList: WatercolorSeries[] = [
     chineseName: "静物",
     subtitle: "Works 3–11 · Still Things",
     subtitleZh: "第3–11件 · 静物",
+    description: "Placeholder description for Series II: Still Things.",
+    descriptionZh: "第二辑「静物」占位描述文字。",
   },
 ];
 
