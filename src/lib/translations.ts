@@ -73,7 +73,7 @@ export const translations = {
     remainsCatalog: {
       subtitle: "Remains",
       works: "works",
-      categoryLabel: "Remains · 遗留",
+      categoryLabel: "Remains · 遗迹",
     },
     spirit21Catalog: {
       subtitle: "21 Spirit",
@@ -152,9 +152,9 @@ export const translations = {
       categoryLabel: "Photography · 摄影",
     },
     remainsCatalog: {
-      subtitle: "遗留",
+      subtitle: "遗迹",
       works: "件作品",
-      categoryLabel: "Remains · 遗留",
+      categoryLabel: "Remains · 遗迹",
     },
     spirit21Catalog: {
       subtitle: "21世纪精神",
