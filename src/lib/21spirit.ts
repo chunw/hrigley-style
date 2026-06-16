@@ -3,8 +3,8 @@ export const catalogMeta = {
   zh: "21世纪精神",
   medium: "Mixed Media",
   mediumZh: "综合媒材",
-  description: "Placeholder description for In the Spirit of the 21st Century.",
-  descriptionZh: "《21世纪精神》占位描述文字。",
+  description: "2021 London International Creative Competition (LICC) Finalist · Create/Art. An ongoing series of figurative interpretations of contemporary sociopolitical and cultural issues, drawing inspiration from current news and sociology research.",
+  descriptionZh: "伦敦国际创意大赛（LICC）决赛入围 · 艺术创作类。《21世纪精神》以具象绘画回应新闻与社会学中的当代议题。我将热点事件与研究数据转译为人物与场景，试图在快速流动的时代里，打捞一种可被观看、被共感的21世纪精神图景。",
 };
 
 export interface SpiritWork {

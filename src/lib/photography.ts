@@ -35,8 +35,8 @@ export const photographyWorks: PhotographyWork[] = [
     mediumZh: "摄影作品",
     dimensions: "",
     dimensionsZh: "",
-    description: "",
-    descriptionZh: "",
+    description: "2024 London International Creative Competition (LICC) Shortlist · Photo/Video",
+    descriptionZh: "2024年伦敦国际创意大赛（LICC）入围短名单 · 影像类",
   },
   {
     id: "2",
@@ -48,8 +48,8 @@ export const photographyWorks: PhotographyWork[] = [
     mediumZh: "摄影作品",
     dimensions: "",
     dimensionsZh: "",
-    description: "",
-    descriptionZh: "",
+    description: "16th International Color Awards Official Nominee · Portrait · 2022 International Photography Awards (IPA) Official Selection",
+    descriptionZh: "第16届国际色彩大奖官方提名 · 肖像 · 2022年国际摄影奖（IPA）官方入选",
   },
   {
     id: "3",
@@ -61,8 +61,8 @@ export const photographyWorks: PhotographyWork[] = [
     mediumZh: "摄影作品",
     dimensions: "",
     dimensionsZh: "",
-    description: "",
-    descriptionZh: "",
+    description: "15th International Color Awards Official Nominee · Fine Art",
+    descriptionZh: "第15届国际色彩大奖官方提名 · 纯艺术",
   },
   {
     id: "4",
@@ -74,8 +74,8 @@ export const photographyWorks: PhotographyWork[] = [
     mediumZh: "摄影作品",
     dimensions: "",
     dimensionsZh: "",
-    description: "",
-    descriptionZh: "",
+    description: "18th International Color Awards Honorable Mention · Portrait",
+    descriptionZh: "第18届国际色彩大奖荣誉奖 · 肖像",
   },
 ];
 

@@ -245,6 +245,7 @@ function watercolorPage(
   const title = isZh ? (work.titleZh ?? work.title) : work.title;
   const medium = isZh ? (work.mediumZh ?? work.medium) : work.medium;
   const dimensions = isZh ? (work.dimensionsZh ?? work.dimensions) : work.dimensions;
+  const description = isZh ? (work.descriptionZh ?? work.description) : work.description;
   return `
     <div class="page page-${side}">
       <div class="page-num">P${padded}</div>
@@ -256,6 +257,7 @@ function watercolorPage(
         <div class="meta-year">${work.year}</div>
         ${medium ? `<div class="meta-sub">${medium}</div>` : ""}
         ${dimensions ? `<div class="meta-dimensions">${dimensions}</div>` : ""}
+        ${description ? `<div class="meta-description">${description}</div>` : ""}
       </div>
     </div>`;
 }
@@ -270,6 +272,7 @@ function remainsPage(
   const title = isZh ? (work.titleZh ?? work.title) : work.title;
   const medium = isZh ? (work.mediumZh ?? work.medium) : work.medium;
   const dimensions = isZh ? (work.dimensionsZh ?? work.dimensions) : work.dimensions;
+  const description = isZh ? (work.descriptionZh ?? work.description) : work.description;
   return `
     <div class="page page-${side}">
       <div class="page-num">R${padded}</div>
@@ -281,6 +284,7 @@ function remainsPage(
         <div class="meta-year">${work.year}</div>
         ${medium ? `<div class="meta-sub">${medium}</div>` : ""}
         ${dimensions ? `<div class="meta-dimensions">${dimensions}</div>` : ""}
+        ${description ? `<div class="meta-description">${description}</div>` : ""}
       </div>
     </div>`;
 }
@@ -295,6 +299,7 @@ function spiritPage(
   const title = isZh ? (work.titleZh ?? work.title) : work.title;
   const medium = isZh ? (work.mediumZh ?? work.medium) : work.medium;
   const dimensions = isZh ? (work.dimensionsZh ?? work.dimensions) : work.dimensions;
+  const description = isZh ? (work.descriptionZh ?? work.description) : work.description;
   return `
     <div class="page page-${side}">
       <div class="page-num">S${padded}</div>
@@ -306,6 +311,7 @@ function spiritPage(
         <div class="meta-year">${work.year}</div>
         ${medium ? `<div class="meta-sub">${medium}</div>` : ""}
         ${dimensions ? `<div class="meta-dimensions">${dimensions}</div>` : ""}
+        ${description ? `<div class="meta-description">${description}</div>` : ""}
       </div>
     </div>`;
 }
@@ -320,6 +326,7 @@ function photographyPage(
   const title = isZh ? (work.titleZh ?? work.title) : work.title;
   const medium = isZh ? (work.mediumZh ?? work.medium) : work.medium;
   const dimensions = isZh ? (work.dimensionsZh ?? work.dimensions) : work.dimensions;
+  const description = isZh ? (work.descriptionZh ?? work.description) : work.description;
   return `
     <div class="page page-${side}">
       <div class="page-num">PH${padded}</div>
@@ -331,6 +338,7 @@ function photographyPage(
         <div class="meta-year">${work.year}</div>
         ${medium ? `<div class="meta-sub">${medium}</div>` : ""}
         ${dimensions ? `<div class="meta-dimensions">${dimensions}</div>` : ""}
+        ${description ? `<div class="meta-description">${description}</div>` : ""}
       </div>
     </div>`;
 }

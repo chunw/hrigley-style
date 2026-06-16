@@ -4,7 +4,7 @@ export const catalogMeta = {
   medium: "Mixed Media",
   mediumZh: "综合媒材",
   description: "Official Selection for 2024 London International Creative Competition (LICC) in Create/Art category, Remains was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions, making them perfect companions for the mundane modern office. ",
-  descriptionZh: "《遗迹》系列曾入选伦敦国际创意大赛(LICC) 艺术创作组别。它诞生于一种淡淡的荒诞感：在研究那些古代陶俑时，我被它们那种亲切、笨拙又风趣的样子吸引。它们看起来不像什么伟大的纪念碑，倒像是一个个人在“无所事事”的瞬间被定格，很具有耐人寻味的想象空间，因此正合适放在当代无聊的办公室场景里。",
+  descriptionZh: "《遗迹》系列曾入选伦敦国际创意大赛(LICC)艺术创作组别。《Remains》系列灵感源自世界各地博物馆的藏品、展陈与物质痕迹。作品以拼贴、水彩、墨线与数字合成并置不同时空的视觉语法，将不同文明中的陶俑形像与当代平面语言重组为同一画面。我关注的并非怀旧式的复刻，而是“遗存”作为活性介质的持续迁移、磨损与再诠释。通过碎片的重组、比例的错置与材质的叠加，我在现代艺术的当下性与过往文明的多元美学之间建立一种非线性连续，让观看成为一次跨时间的触碰，使过去不再是玻璃柜中的标本，而是参与当下意义生产的共作者。",
 };
 
 export interface RemainsWork {
