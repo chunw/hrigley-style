@@ -1,7 +1,7 @@
-import { watercolors, seriesList, type Watercolor } from "./watercolors";
-import { remainsWorks, type RemainsWork } from "./remains";
-import { spiritWorks, type SpiritWork } from "./21spirit";
-import { photographyWorks, type PhotographyWork } from "./photography";
+import { watercolors, seriesList, catalogMeta as watercolorMeta, type Watercolor } from "./watercolors";
+import { remainsWorks, catalogMeta as remainsMeta, type RemainsWork } from "./remains";
+import { spiritWorks, catalogMeta as spiritMeta, type SpiritWork } from "./21spirit";
+import { photographyWorks, catalogMeta as photographyMeta, type PhotographyWork } from "./photography";
 import { products, productImages } from "./products";
 
 function getCSS(isDark: boolean): string {
@@ -374,17 +374,17 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
     "",
     "",
     [
-      { label: "Visions in Watercolor", name: `${printableWatercolors.length} works` },
-      { label: "Remains", name: `${printableRemains.length} works` },
-      { label: "In The Spirit of The 21st Century", name: `${printableSpirit.length} works` },
-      { label: "Photography", name: `${printablePhotography.length} works` },
+      { label: watercolorMeta.en, name: `${printableWatercolors.length} works` },
+      { label: remainsMeta.en, name: `${printableRemains.length} works` },
+      { label: spiritMeta.en, name: `${printableSpirit.length} works` },
+      { label: photographyMeta.en, name: `${printablePhotography.length} works` },
       { label: "Shop", name: `${printableProducts.length} items` },
     ],
     [
-      { label: "水彩视界", name: `${printableWatercolors.length} 件` },
-      { label: "遗迹", name: `${printableRemains.length} 件` },
-      { label: "21世纪精神", name: `${printableSpirit.length} 件` },
-      { label: "摄影", name: `${printablePhotography.length} 件` },
+      { label: watercolorMeta.zh, name: `${printableWatercolors.length} 件` },
+      { label: remainsMeta.zh, name: `${printableRemains.length} 件` },
+      { label: spiritMeta.zh, name: `${printableSpirit.length} 件` },
+      { label: photographyMeta.zh, name: `${printablePhotography.length} 件` },
       { label: "商店", name: `${printableProducts.length} 件` },
     ],
     totalArt,
@@ -393,8 +393,8 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
 
   // Watercolors section
   const watercolorCover = sectionCoverSpread(
-    "Visions in Watercolor",
-    "水彩视界",
+    watercolorMeta.en,
+    watercolorMeta.zh,
     "",
     "",
     seriesList.map((s) => ({
@@ -417,12 +417,12 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
 
   // Remains section
   const remainsCover = sectionCoverSpread(
-    "Remains",
-    "遗存",
+    remainsMeta.en,
+    remainsMeta.zh,
     "",
     "",
-    [{ name: isZh ? "遗存" : "Remains", sub: isZh ? `第1–${printableRemains.length}件` : `Works 1–${printableRemains.length}` }],
-    [{ name: "遗存", sub: `第1–${printableRemains.length}件` }],
+    [{ name: remainsMeta.en, sub: `Works 1–${printableRemains.length}` }],
+    [{ name: remainsMeta.zh, sub: `第1–${printableRemains.length}件` }],
     printableRemains.length,
     isZh,
   );
@@ -433,12 +433,12 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
 
   // 21 Spirit section
   const spiritCover = sectionCoverSpread(
-    "In The Spirit of The 21st Century",
-    "21世纪精神",
+    spiritMeta.en,
+    spiritMeta.zh,
     "",
     "",
-    [{ name: isZh ? "21世纪精神" : "In The Spirit of The 21st Century", sub: isZh ? `第1–${printableSpirit.length}件` : `Works 1–${printableSpirit.length}` }],
-    [{ name: "21世纪精神", sub: `第1–${printableSpirit.length}件` }],
+    [{ name: spiritMeta.en, sub: `Works 1–${printableSpirit.length}` }],
+    [{ name: spiritMeta.zh, sub: `第1–${printableSpirit.length}件` }],
     printableSpirit.length,
     isZh,
   );
@@ -449,12 +449,12 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
 
   // Photography section
   const photographyCover = sectionCoverSpread(
-    "Photography",
-    "摄影",
+    photographyMeta.en,
+    photographyMeta.zh,
     "",
     "",
-    [{ name: isZh ? "摄影" : "Photography", sub: isZh ? `第1–${printablePhotography.length}件` : `Works 1–${printablePhotography.length}` }],
-    [{ name: "摄影", sub: `第1–${printablePhotography.length}件` }],
+    [{ name: photographyMeta.en, sub: `Works 1–${printablePhotography.length}` }],
+    [{ name: photographyMeta.zh, sub: `第1–${printablePhotography.length}件` }],
     printablePhotography.length,
     isZh,
   );
