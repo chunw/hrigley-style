@@ -15,8 +15,11 @@ import About from "./pages/About";
 import WatercolorDetail from "./pages/WatercolorDetail";
 import WatercolorCatalog from "./pages/WatercolorCatalog";
 import RemainsCatalog from "./pages/RemainsCatalog";
+import RemainsDetail from "./pages/RemainsDetail";
 import Spirit21Catalog from "./pages/Spirit21Catalog";
+import Spirit21Detail from "./pages/Spirit21Detail";
 import PhotographyCatalog from "./pages/PhotographyCatalog";
+import PhotographyDetail from "./pages/PhotographyDetail";
 
 const queryClient = new QueryClient();
 
@@ -35,8 +38,11 @@ const App = () => (
             <Route path="/watercolors/:id" element={<WatercolorDetail />} />
             <Route path="/watercolor-catalog" element={<WatercolorCatalog />} />
             <Route path="/remains-catalog" element={<RemainsCatalog />} />
+            <Route path="/remains/:id" element={<RemainsDetail />} />
             <Route path="/21spirit-catalog" element={<Spirit21Catalog />} />
+            <Route path="/21spirit/:id" element={<Spirit21Detail />} />
             <Route path="/photography-catalog" element={<PhotographyCatalog />} />
+            <Route path="/photography/:id" element={<PhotographyDetail />} />
             {/* <Route path="/cart" element={<Cart />} />
             <Route path="/payment-success" element={<PaymentSuccess />} /> */}
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { photographyWorks, type PhotographyWork } from "@/lib/photography";
@@ -5,7 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { buildCombinedPrintHTML, type PrintTheme } from "@/lib/printCatalog";
 
 const WorkCard = ({ work }: { work: PhotographyWork }) => {
-  const { lang, t } = useLanguage();
+  const { lang } = useLanguage();
   const padded = work.id.padStart(2, "0");
   const title = lang === "zh" ? (work.titleZh ?? work.title) : work.title;
 
@@ -13,12 +14,10 @@ const WorkCard = ({ work }: { work: PhotographyWork }) => {
     <article>
       <div className="flex justify-between items-center mb-2">
         <span className="font-mono text-xs">PH{padded}</span>
-        {/* <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-          {t.photographyCatalog.categoryLabel}
-        </span> */}
       </div>
 
-      <div
+      <Link
+        to={`/photography/${work.id}`}
         className="block relative border border-border"
         style={{ backgroundColor: "#111", minHeight: "2rem" }}
       >
@@ -39,7 +38,7 @@ const WorkCard = ({ work }: { work: PhotographyWork }) => {
             (e.target as HTMLImageElement).style.display = "none";
           }}
         />
-      </div>
+      </Link>
 
       <div className="mt-3">
         <h3 className="text-sm leading-snug">{title}</h3>
