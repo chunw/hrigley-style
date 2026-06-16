@@ -1,4 +1,4 @@
-export const catalogMeta = { en: "Visions in Watercolor", zh: "水彩视界" };
+export const catalogMeta = { en: "Visions in Watercolor", zh: "水彩视界", medium: "Watercolor", mediumZh: "水彩" };
 
 export interface WatercolorSeries {
   id: string;
@@ -67,6 +67,20 @@ export const watercolors: Watercolor[] = [
       "",
     price: 95,
       paylink: "https://www.paypal.com/ncp/payment/PLACEHOLDER",
+  },{
+    id: "3",
+     title: "Residuals #3",
+    titleZh: "残留 其三",
+    series: "I",
+    printInCatalog: true,
+    showInStorefront: true,
+    year: "2025",
+    medium: "Watercolor on paper",
+    mediumZh: "纸本水彩",
+    dimensions: "",
+    dimensionsZh: "",
+    description: "From the home-as-museum series. A salvaged trinket rearranged into a new scene.",
+    descriptionZh: "「馆藏目录」系列。一件打捞来的小物，被重新排列成新的景观现场。",
   },
   {
     id: "2",
@@ -87,21 +101,7 @@ export const watercolors: Watercolor[] = [
   },
 
  
-  {
-    id: "3",
-     title: "Residuals #3",
-    titleZh: "残留 其三",
-    series: "I",
-    printInCatalog: true,
-    showInStorefront: true,
-    year: "2025",
-    medium: "Watercolor on paper",
-    mediumZh: "纸本水彩",
-    dimensions: "",
-    dimensionsZh: "",
-    description: "From the home-as-museum series. A salvaged trinket rearranged into a new scene.",
-    descriptionZh: "「馆藏目录」系列。一件打捞来的小物，被重新排列成新的景观现场。",
-  },
+  
  {
     id: "7",
     title: "Residuals #4",

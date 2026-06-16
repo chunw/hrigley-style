@@ -1,4 +1,4 @@
-export const catalogMeta = { en: "Remains", zh: "遗迹" };
+export const catalogMeta = { en: "Remains", zh: "遗迹", medium: "Mixed Media", mediumZh: "综合媒材" };
 
 export interface RemainsWork {
   id: string;
