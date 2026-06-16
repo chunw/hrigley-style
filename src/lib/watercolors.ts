@@ -1,12 +1,21 @@
-export const catalogMeta = { en: "Visions in Watercolor", zh: "水彩视界", medium: "Watercolor", mediumZh: "水彩" };
+export const catalogMeta = {
+  en: "Visions in Watercolor",
+  zh: "水彩视界",
+  medium: "Watercolor",
+  mediumZh: "水彩",
+  description: "Placeholder description for Visions in Watercolor.",
+  descriptionZh: "《水彩视界》系列占位描述文字。",
+};
 
 export interface WatercolorSeries {
   id: string;
-  label: string;        // e.g. "SERIES I"
-  englishName: string;  // e.g. "Breakfast"
-  chineseName: string;  // e.g. "早餐"
-  subtitle: string;     // short description shown in catalog header
+  label: string;
+  englishName: string;
+  chineseName: string;
+  subtitle: string;
   subtitleZh?: string;
+  description?: string;
+  descriptionZh?: string;
 }
 
 export const seriesList: WatercolorSeries[] = [
