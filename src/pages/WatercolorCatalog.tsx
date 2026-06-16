@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { watercolors, seriesList, type Watercolor } from "@/lib/watercolors";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { buildCombinedPrintHTML } from "@/lib/printCatalog";
+import { buildCombinedPrintHTML, type PrintTheme } from "@/lib/printCatalog";
 
 const HIGHLIGHTED = new Set(["1", "9"]);
 
@@ -81,8 +81,8 @@ const WorkCard = ({ work }: { work: Watercolor }) => {
 const WatercolorCatalog = () => {
   const { lang, t } = useLanguage();
 
-  const handlePrint = () => {
-    const blob = new Blob([buildCombinedPrintHTML(window.location.origin, lang)], { type: "text/html" });
+  const handlePrint = (theme: PrintTheme) => {
+    const blob = new Blob([buildCombinedPrintHTML(window.location.origin, lang, theme)], { type: "text/html" });
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");
   };

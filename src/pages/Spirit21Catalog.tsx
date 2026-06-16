@@ -2,10 +2,10 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { spiritWorks, type SpiritWork } from "@/lib/21spirit";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { buildCombinedPrintHTML } from "@/lib/printCatalog";
+import { buildCombinedPrintHTML, type PrintTheme } from "@/lib/printCatalog";
 
 const WorkCard = ({ work }: { work: SpiritWork }) => {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
   const padded = work.id.padStart(2, "0");
   const title = lang === "zh" ? (work.titleZh ?? work.title) : work.title;
 
@@ -14,7 +14,7 @@ const WorkCard = ({ work }: { work: SpiritWork }) => {
       <div className="flex justify-between items-center mb-2">
         <span className="font-mono text-xs">S{padded}</span>
         <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-          21 Spirit · 廿一灵
+          {t.spirit21Catalog.categoryLabel}
         </span>
       </div>
 
@@ -67,10 +67,10 @@ const WorkCard = ({ work }: { work: SpiritWork }) => {
 // ---------------------------------------------------------------------------
 
 const Spirit21Catalog = () => {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
 
-  const handlePrint = () => {
-    const blob = new Blob([buildCombinedPrintHTML(window.location.origin, lang)], { type: "text/html" });
+  const handlePrint = (theme: PrintTheme) => {
+    const blob = new Blob([buildCombinedPrintHTML(window.location.origin, lang, theme)], { type: "text/html" });
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");
   };
@@ -85,9 +85,9 @@ const Spirit21Catalog = () => {
         <header className="flex flex-col md:flex-row md:items-start justify-between gap-6">
           <div>
             <h1 className="shop-title text-6xl md:text-7xl leading-none">Chun Wang</h1>
-            <p className="mt-3 text-4xl">{lang === "zh" ? "廿一灵" : "21 Spirit"}</p>
+            <p className="mt-3 text-4xl">{t.spirit21Catalog.subtitle}</p>
             <p className="font-mono text-xs text-muted-foreground/60 mt-1">
-              {spiritWorks.length} {lang === "zh" ? "件作品" : "works"}
+              {spiritWorks.length} {t.spirit21Catalog.works}
             </p>
           </div>
         </header>

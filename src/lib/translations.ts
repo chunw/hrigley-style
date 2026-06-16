@@ -65,6 +65,21 @@ export const translations = {
       artistLocation: "CHUN WANG · NEW YORK",
       uploadImage: "Upload Image",
     },
+    photographyCatalog: {
+      subtitle: "Photography",
+      works: "works",
+      categoryLabel: "Photography · 摄影",
+    },
+    remainsCatalog: {
+      subtitle: "Remains",
+      works: "works",
+      categoryLabel: "Remains · 遗留",
+    },
+    spirit21Catalog: {
+      subtitle: "21 Spirit",
+      works: "works",
+      categoryLabel: "21 Spirit · 21世纪精神",
+    },
   },
   zh: {
     header: {
@@ -130,6 +145,21 @@ export const translations = {
       artistStatement: "艺术家自述",
       artistLocation: "王淳 · 纽约",
       uploadImage: "上传图片",
+    },
+    photographyCatalog: {
+      subtitle: "摄影",
+      works: "件作品",
+      categoryLabel: "Photography · 摄影",
+    },
+    remainsCatalog: {
+      subtitle: "遗留",
+      works: "件作品",
+      categoryLabel: "Remains · 遗留",
+    },
+    spirit21Catalog: {
+      subtitle: "21世纪精神",
+      works: "件作品",
+      categoryLabel: "21 Spirit · 21世纪精神",
     },
   },
 } as const;

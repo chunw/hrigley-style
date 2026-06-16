@@ -2,11 +2,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { remainsWorks, type RemainsWork } from "@/lib/remains";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { buildCombinedPrintHTML } from "@/lib/printCatalog";
+import { buildCombinedPrintHTML, type PrintTheme } from "@/lib/printCatalog";
 
 
 const WorkCard = ({ work }: { work: RemainsWork }) => {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
   const padded = work.id.padStart(2, "0");
   const title = lang === "zh" ? (work.titleZh ?? work.title) : work.title;
 
@@ -15,7 +15,7 @@ const WorkCard = ({ work }: { work: RemainsWork }) => {
       <div className="flex justify-between items-center mb-2">
         <span className="font-mono text-xs">R{padded}</span>
         <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-          Remains · 遗存
+          {t.remainsCatalog.categoryLabel}
         </span>
       </div>
 
@@ -68,10 +68,10 @@ const WorkCard = ({ work }: { work: RemainsWork }) => {
 // ---------------------------------------------------------------------------
 
 const RemainsCatalog = () => {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
 
-  const handlePrint = () => {
-    const blob = new Blob([buildCombinedPrintHTML(window.location.origin, lang)], { type: "text/html" });
+  const handlePrint = (theme: PrintTheme) => {
+    const blob = new Blob([buildCombinedPrintHTML(window.location.origin, lang, theme)], { type: "text/html" });
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");
   };
@@ -82,13 +82,12 @@ const RemainsCatalog = () => {
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-6 md:px-10 py-10 md:py-14">
 
-        {/* Catalog header */}
         <header className="flex flex-col md:flex-row md:items-start justify-between gap-6">
           <div>
             <h1 className="shop-title text-6xl md:text-7xl leading-none">Chun Wang</h1>
-            <p className="mt-3 text-4xl">{lang === "zh" ? "遗存" : "Remains"}</p>
+            <p className="mt-3 text-4xl">{t.remainsCatalog.subtitle}</p>
             <p className="font-mono text-xs text-muted-foreground/60 mt-1">
-              {remainsWorks.length} {lang === "zh" ? "件作品" : "works"}
+              {remainsWorks.length} {t.remainsCatalog.works}
             </p>
           </div>
         </header>

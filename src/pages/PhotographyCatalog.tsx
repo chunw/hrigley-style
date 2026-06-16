@@ -2,10 +2,10 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { photographyWorks, type PhotographyWork } from "@/lib/photography";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { buildCombinedPrintHTML } from "@/lib/printCatalog";
+import { buildCombinedPrintHTML, type PrintTheme } from "@/lib/printCatalog";
 
 const WorkCard = ({ work }: { work: PhotographyWork }) => {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
   const padded = work.id.padStart(2, "0");
   const title = lang === "zh" ? (work.titleZh ?? work.title) : work.title;
 
@@ -14,32 +14,21 @@ const WorkCard = ({ work }: { work: PhotographyWork }) => {
       <div className="flex justify-between items-center mb-2">
         <span className="font-mono text-xs">PH{padded}</span>
         <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-          Photography · 摄影
+          {t.photographyCatalog.categoryLabel}
         </span>
       </div>
 
       <div
-        className="block relative overflow-hidden border border-border"
-        style={{
-          aspectRatio: "3/2",
-          backgroundColor: "#111",
-        }}
+        className="block relative border border-border"
+        style={{ backgroundColor: "#111", minHeight: "2rem" }}
       >
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/40">
-            {padded}
-          </span>
-        </div>
-
         <img
           src={`/photography/${padded}/main.jpg`}
           alt={work.title}
           style={{
-            position: "absolute",
-            inset: 0,
+            display: "block",
             width: "100%",
-            height: "100%",
-            objectFit: "cover",
+            height: "auto",
             opacity: 0,
             transition: "opacity 0.2s",
           }}
@@ -67,10 +56,10 @@ const WorkCard = ({ work }: { work: PhotographyWork }) => {
 // ---------------------------------------------------------------------------
 
 const PhotographyCatalog = () => {
-  const { lang } = useLanguage();
+  const { lang, t } = useLanguage();
 
-  const handlePrint = () => {
-    const blob = new Blob([buildCombinedPrintHTML(window.location.origin, lang)], { type: "text/html" });
+  const handlePrint = (theme: PrintTheme) => {
+    const blob = new Blob([buildCombinedPrintHTML(window.location.origin, lang, theme)], { type: "text/html" });
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");
   };
@@ -84,9 +73,9 @@ const PhotographyCatalog = () => {
         <header className="flex flex-col md:flex-row md:items-start justify-between gap-6">
           <div>
             <h1 className="shop-title text-6xl md:text-7xl leading-none">Chun Wang</h1>
-            <p className="mt-3 text-4xl">{lang === "zh" ? "摄影" : "Photography"}</p>
+            <p className="mt-3 text-4xl">{t.photographyCatalog.subtitle}</p>
             <p className="font-mono text-xs text-muted-foreground/60 mt-1">
-              {photographyWorks.length} {lang === "zh" ? "件作品" : "works"}
+              {photographyWorks.length} {t.photographyCatalog.works}
             </p>
           </div>
         </header>

@@ -23,7 +23,13 @@ function getCSS(isDark: boolean): string {
   return `
   @page { size: landscape; margin: 0; }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: ${bg}; color: ${fg}; font-family: 'Courier New', Courier, monospace; }
+  body {
+    background: ${bg};
+    color: ${fg};
+    font-family: 'Courier New', Courier, monospace;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
 
   .spread {
     width: 100vw;
@@ -41,6 +47,8 @@ function getCSS(isDark: boolean): string {
     padding: 52px 44px 44px;
     position: relative;
     background: ${bg};
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
   .page-left { border-right: 1px solid ${divider}; }
 
