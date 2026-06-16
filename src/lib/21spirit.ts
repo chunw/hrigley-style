@@ -18,7 +18,7 @@ export interface SpiritWork {
 export const spiritWorks: SpiritWork[] = [
   {
     id: "1",
-    title: "The Distance Between Us",
+    title: "Alone Together",
     titleZh: "我们之间的距离",
     printInCatalog: true,
     year: "2025",
@@ -31,7 +31,7 @@ export const spiritWorks: SpiritWork[] = [
   },
   {
     id: "2",
-    title: "The Last Bargain",
+    title: "Climate Collapse & The War Against Powered Interest",
     titleZh: "最后的交易",
     printInCatalog: true,
     year: "2025",
@@ -44,7 +44,7 @@ export const spiritWorks: SpiritWork[] = [
   },
   {
     id: "3",
-    title: "Profile",
+    title: "Information Overload & Surveillance Capitalism",
     titleZh: "画像",
     printInCatalog: true,
     year: "2025",
@@ -57,7 +57,7 @@ export const spiritWorks: SpiritWork[] = [
   },
   {
     id: "4",
-    title: "Captive",
+    title: "The Attention Economy",
     titleZh: "被俘",
     printInCatalog: true,
     year: "2025",
