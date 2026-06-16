@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { watercolors, seriesList, type Watercolor } from "@/lib/watercolors";
+import { watercolors, seriesList, catalogMeta, type Watercolor } from "@/lib/watercolors";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { buildCombinedPrintHTML, type PrintTheme } from "@/lib/printCatalog";
 
@@ -101,6 +101,9 @@ const WatercolorCatalog = () => {
             <h1 className="shop-title mt-3 text-4xl text-muted-foreground">
             </h1>
             <p className="mt-3 text-4xl ">{t.watercolorCatalog.subtitle}</p>
+            <p className="font-mono text-xs text-muted-foreground/60 mt-1">
+              {lang === "zh" ? catalogMeta.mediumZh : catalogMeta.medium}
+            </p>
             <p className="font-mono text-xs text-muted-foreground/60 mt-1">
               {watercolors.length} {t.watercolorCatalog.works}
             </p>

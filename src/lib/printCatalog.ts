@@ -160,6 +160,13 @@ function getCSS(isDark: boolean): string {
     text-transform: uppercase;
     color: ${coverSubtitle};
   }
+  .cover-medium {
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: ${coverSubtitle};
+    margin-top: 10px;
+  }
   .cover-year {
     font-size: 9px;
     letter-spacing: 0.16em;
@@ -182,14 +189,15 @@ function emptyPage(side: "left" | "right") {
 function sectionCoverSpread(
   titleEn: string,
   titleZh: string,
-  _subtitleEn: string,
-  _subtitleZh: string,
+  mediumEn: string,
+  mediumZh: string,
   itemsEn: Array<{ label?: string; name: string; sub?: string }>,
   itemsZh: Array<{ label?: string; name: string; sub?: string }>,
   count: number,
   isZh: boolean,
 ): string {
   const items = isZh ? itemsZh : itemsEn;
+  const medium = isZh ? mediumZh : mediumEn;
   const left = `
     <div class="page page-left cover-left">
       <div class="cover-series-list">
@@ -208,6 +216,7 @@ function sectionCoverSpread(
       <div class="cover-body">
         <div class="cover-title">Chun Wang</div>
         <div class="cover-subtitle">${isZh ? titleZh : titleEn}</div>
+        ${medium ? `<div class="cover-medium">${medium}</div>` : ""}
         <div class="cover-year">${isZh ? `纽约 · ${new Date().getFullYear()}` : `New York · ${new Date().getFullYear()}`}</div>
       </div>
     </div>`;
@@ -395,8 +404,8 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
   const watercolorCover = sectionCoverSpread(
     watercolorMeta.en,
     watercolorMeta.zh,
-    "",
-    "",
+    watercolorMeta.medium,
+    watercolorMeta.mediumZh,
     seriesList.map((s) => ({
       label: s.label,
       name: s.englishName,
@@ -419,8 +428,8 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
   const remainsCover = sectionCoverSpread(
     remainsMeta.en,
     remainsMeta.zh,
-    "",
-    "",
+    remainsMeta.medium,
+    remainsMeta.mediumZh,
     [{ name: remainsMeta.en, sub: `Works 1–${printableRemains.length}` }],
     [{ name: remainsMeta.zh, sub: `第1–${printableRemains.length}件` }],
     printableRemains.length,
@@ -435,8 +444,8 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
   const spiritCover = sectionCoverSpread(
     spiritMeta.en,
     spiritMeta.zh,
-    "",
-    "",
+    spiritMeta.medium,
+    spiritMeta.mediumZh,
     [{ name: spiritMeta.en, sub: `Works 1–${printableSpirit.length}` }],
     [{ name: spiritMeta.zh, sub: `第1–${printableSpirit.length}件` }],
     printableSpirit.length,
@@ -451,8 +460,8 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
   const photographyCover = sectionCoverSpread(
     photographyMeta.en,
     photographyMeta.zh,
-    "",
-    "",
+    photographyMeta.medium,
+    photographyMeta.mediumZh,
     [{ name: photographyMeta.en, sub: `Works 1–${printablePhotography.length}` }],
     [{ name: photographyMeta.zh, sub: `第1–${printablePhotography.length}件` }],
     printablePhotography.length,

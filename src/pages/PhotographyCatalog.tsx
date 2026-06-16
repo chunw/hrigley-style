@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { photographyWorks, type PhotographyWork } from "@/lib/photography";
+import { photographyWorks, catalogMeta, type PhotographyWork } from "@/lib/photography";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { buildCombinedPrintHTML, type PrintTheme } from "@/lib/printCatalog";
 
@@ -73,6 +73,9 @@ const PhotographyCatalog = () => {
           <div>
             <h1 className="shop-title text-6xl md:text-7xl leading-none">Chun Wang</h1>
             <p className="mt-3 text-4xl">{t.photographyCatalog.subtitle}</p>
+            <p className="font-mono text-xs text-muted-foreground/60 mt-1">
+              {lang === "zh" ? catalogMeta.mediumZh : catalogMeta.medium}
+            </p>
             <p className="font-mono text-xs text-muted-foreground/60 mt-1">
               {photographyWorks.length} {t.photographyCatalog.works}
             </p>
