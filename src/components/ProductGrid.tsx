@@ -145,9 +145,9 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 grid-rows-[auto]" style={{ gridAutoRows: '1fr' }}>
             {sortedFilteredProducts.map((product, index) => (
-              <div key={product.id} ref={index === 0 && hasActiveSearch ? firstMatchedCardRef : null}>
+              <div key={product.id} ref={index === 0 && hasActiveSearch ? firstMatchedCardRef : null} className="h-full">
                 <ProductCard
                   {...product}
                   highlightQuery={normalizedSearchQuery}

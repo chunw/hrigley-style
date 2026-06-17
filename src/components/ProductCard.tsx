@@ -66,13 +66,13 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
 
   return (
     <Card
-      className={`group hover:shadow-lg transition-shadow duration-200 border-2 cursor-pointer ${
+      className={`group hover:shadow-lg transition-shadow duration-200 border-2 cursor-pointer h-full flex flex-col ${
         isSearchHighlighted ? "border-primary ring-2 ring-primary/30" : "border-border"
       }`}
       onClick={handleCardClick}
     >
-      <CardContent className="p-4">
-        <div className="aspect-square bg-black mb-4 overflow-hidden">
+      <CardContent className="p-4 flex flex-col flex-1">
+        <div className="aspect-square bg-black mb-4 overflow-hidden shrink-0">
           <img
             src={image_url || "/placeholder.svg"}
             alt={name}
@@ -85,7 +85,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
           />
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 flex flex-col flex-1">
           <p className="text-xs handwritten text-muted-foreground">{displayCategory ? renderHighlightedText(displayCategory) : null}</p>
           <h3 className="text-lg leading-tight handwritten">{renderHighlightedText(displayTitle)}</h3>
           {displayDescription && (
@@ -98,7 +98,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
 
           <Button
             variant="outline-pink"
-            className="w-full handwritten"
+            className="w-full handwritten mt-auto"
             size="sm"
             onClick={handleOrderNow}
           >
