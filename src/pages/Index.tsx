@@ -142,9 +142,9 @@ const Index = () => {
 
         <section className="border-t border-border py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-            <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            {/* <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
               {t.watercolorCatalog.printCatalog}
-            </p>
+            </p> */}
             <div className="relative">
               {printMenuOpen && (
                 <div className="fixed inset-0 z-10" onClick={() => setPrintMenuOpen(false)} />
