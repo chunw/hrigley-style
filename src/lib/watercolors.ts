@@ -4,7 +4,7 @@ export const catalogMeta = {
   medium: "Watercolor",
   mediumZh: "水彩",
   description: "In my watercolor practice, I believe everyday objects can give viewers a fresh visual encounter and a quiet psychological shift. I am less interested in what an object is for than in the trace it leaves after use: the edge of a water ring, scattered crumbs, the crease of a napkin. Watercolor’s transparency, bleeding, and unpredictability mirror the way memory blurs and time flows. I let pigment perform the act of preservation instead of cleaning, holding onto the moment just before it disappears. The familiar becomes slightly unfamiliar, creating a small pause where seeing turns into feeling.",
-  descriptionZh: "在我的水彩实践中，我始终相信日常小物能够为观者带来新鲜的视觉体验与微妙的心理感受。我关注的不是物体的功能，而是它被使用后留下的痕迹：一滴水的边缘、面包屑的散落、餐巾的褶皱。水彩的透明、渗化与不可控，恰好对应记忆的模糊与时间的流动。我让颜料代替清洁的动作，去“保留”那个即将被抹去的瞬间，使熟悉之物产生轻微的陌生化，从而在观看者心中激起一种安静的停顿与共情",
+  descriptionZh: "在水彩实践中，我始终相信日常小物能够为观者带来新鲜的视觉体验与微妙的心理感受。我关注的不是物体的功能，而是它被使用后留下的痕迹，“保留”那个即将被抹去的瞬间，使熟悉之物产生轻微的陌生化，从而在观看者心中激起一种安静的停顿与共情。",
 };
 
 export interface WatercolorSeries {

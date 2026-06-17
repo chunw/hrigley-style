@@ -592,7 +592,7 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
 <html lang="${lang}">
 <head>
   <meta charset="UTF-8" />
-  <title>Chun Wang — ${isZh ? "总目录" : "Complete Catalog"}</title>
+  <title>Chun Wang — ${isZh ? "作品目录" : "Complete Catalog"}</title>
   <style>${css}</style>
 </head>
 <body>
