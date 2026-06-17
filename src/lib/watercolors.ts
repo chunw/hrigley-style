@@ -3,7 +3,7 @@ export const catalogMeta = {
   zh: "水彩视界",
   medium: "Watercolor",
   mediumZh: "水彩",
-  description: "In my watercolor practice, I believe everyday objects can give viewers a fresh visual encounter and a quiet psychological shift. I am less interested in what an object is for than in the trace it leaves after use: the edge of a water ring, scattered crumbs, the crease of a napkin. Watercolor’s transparency, bleeding, and unpredictability mirror the way memory blurs and time flows. I let pigment perform the act of preservation instead of cleaning, holding onto the moment just before it disappears. The familiar becomes slightly unfamiliar, creating a small pause where seeing turns into feeling.",
+  description: "In my watercolor practice, I have always believed that everyday objects can bring viewers a fresh visual experience and subtle psychological sensations. I pay attention to the traces objects leave after use. ‘Preserving’ that moment about to be erased makes the familiar slightly unfamiliar, stirring a quiet pause and empathy in the viewer.",
   descriptionZh: "在水彩实践中，我始终相信日常小物能够为观者带来新鲜的视觉体验与微妙的心理感受。我关注物被使用后留下的痕迹。“保留”那个即将被抹去的瞬间，使熟悉之物产生轻微的陌生化，从而在观者心中激起一种安静的停顿与共情。",
 };
 
@@ -98,7 +98,7 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "From the home-as-museum series. A salvaged trinket rearranged into a new scene.",
+    description: "From the 'Collection Catalog' series. A salvaged object, rearranged into a new scene.",
     descriptionZh: "「馆藏目录」系列。一件打捞来的小物，被重新排列成新的景观现场。",
   },
   {
@@ -162,7 +162,7 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Highlighted work balancing serenity with slight unease.",
+    description: "Featured work maintaining a subtle balance between serenity and faint unease.",
     descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
   },
 
@@ -180,7 +180,7 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Exploring the grotesque and tender qualities of domestic objects.",
+    description: "Exploring the dual qualities of everyday objects — simultaneously grotesque and tender.",
     descriptionZh: "探索日常物件兼具怪诞与温柔的双重气质。",
   },
   {
@@ -195,7 +195,7 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Transparency of watercolor meets the oddity of a found object.",
+    description: "The transparency of watercolor meets the strangeness of a found object.",
     descriptionZh: "水彩的透明性与拾得物的奇异感在此相遇。",
   },
   {
@@ -211,7 +211,7 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Continues the private museum practice — arranging and recording.",
+    description: "Continuing the 'private museum' working method — arranging, recording.",
     descriptionZh: "延续「私人博物馆」的工作方式——排列，记录。",
   },
   
@@ -227,7 +227,7 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Highlighted work balancing serenity with slight unease.",
+    description: "Featured work maintaining a subtle balance between serenity and faint unease.",
     descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
   },
 
@@ -243,7 +243,7 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Highlighted work balancing serenity with slight unease.",
+    description: "Featured work maintaining a subtle balance between serenity and faint unease.",
     descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
   },
 
@@ -259,7 +259,7 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Highlighted work balancing serenity with slight unease.",
+    description: "Featured work maintaining a subtle balance between serenity and faint unease.",
     descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
   },
 
@@ -275,7 +275,7 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Highlighted work balancing serenity with slight unease.",
+    description: "Featured work maintaining a subtle balance between serenity and faint unease.",
     descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
   },
 
@@ -291,7 +291,7 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Highlighted work balancing serenity with slight unease.",
+    description: "Featured work maintaining a subtle balance between serenity and faint unease.",
     descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
   },
 
@@ -307,7 +307,7 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Highlighted work balancing serenity with slight unease.",
+    description: "Featured work maintaining a subtle balance between serenity and faint unease.",
     descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
   },
 
@@ -323,7 +323,7 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Highlighted work balancing serenity with slight unease.",
+    description: "Featured work maintaining a subtle balance between serenity and faint unease.",
     descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
   },
 

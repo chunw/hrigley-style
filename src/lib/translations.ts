@@ -14,7 +14,7 @@ export const translations = {
     },
     about: {
       title: "About",
-      body: "Based in New York City, our shop started as a collection of observations of the modern society that wouldn't leave us alone until they became physical things. We produce whimsical objects at the nexus of utility and contemporary art, designed for people who want to see the world just a little differently. Feel free to stay as long as your curiosity allows.",
+      body: "Based in New York City, Chun Wang Studio Shop started as a collection of observations of the modern society that wouldn't leave us alone until they became physical things. We produce whimsical objects at the nexus of utility and contemporary art, designed for people who want to see the world just a little differently. Feel free to stay as long as your curiosity allows.",
       artistLabel: "About the Artist",
       backToShop: "Back to Shop",
     },
