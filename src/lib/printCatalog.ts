@@ -274,7 +274,9 @@ function watercolorPage(
 ): string {
   const padded = work.id.padStart(2, "0");
   const title = isZh ? (work.titleZh ?? work.title) : work.title;
-  const medium = isZh ? (work.mediumZh ?? work.medium) : work.medium;
+  const medium = isZh
+    ? (work.mediumZh || watercolorMeta.mediumZh || watercolorMeta.medium)
+    : (work.medium || watercolorMeta.medium);
   const dimensions = isZh ? (work.dimensionsZh ?? work.dimensions) : work.dimensions;
   const description = isZh ? (work.descriptionZh ?? work.description) : work.description;
   return `
@@ -301,7 +303,9 @@ function remainsPage(
 ): string {
   const padded = work.id.padStart(2, "0");
   const title = isZh ? (work.titleZh ?? work.title) : work.title;
-  const medium = isZh ? (work.mediumZh ?? work.medium) : work.medium;
+  const medium = isZh
+    ? (work.mediumZh || remainsMeta.mediumZh || remainsMeta.medium)
+    : (work.medium || remainsMeta.medium);
   const dimensions = isZh ? (work.dimensionsZh ?? work.dimensions) : work.dimensions;
   const description = isZh ? (work.descriptionZh ?? work.description) : work.description;
   return `
@@ -328,7 +332,9 @@ function spiritPage(
 ): string {
   const padded = work.id.padStart(2, "0");
   const title = isZh ? (work.titleZh ?? work.title) : work.title;
-  const medium = isZh ? (work.mediumZh ?? work.medium) : work.medium;
+  const medium = isZh
+    ? (work.mediumZh || spiritMeta.mediumZh || spiritMeta.medium)
+    : (work.medium || spiritMeta.medium);
   const dimensions = isZh ? (work.dimensionsZh ?? work.dimensions) : work.dimensions;
   const description = isZh ? (work.descriptionZh ?? work.description) : work.description;
   return `
@@ -355,7 +361,9 @@ function photographyPage(
 ): string {
   const padded = work.id.padStart(2, "0");
   const title = isZh ? (work.titleZh ?? work.title) : work.title;
-  const medium = isZh ? (work.mediumZh ?? work.medium) : work.medium;
+  const medium = isZh
+    ? (work.mediumZh || photographyMeta.mediumZh || photographyMeta.medium)
+    : (work.medium || photographyMeta.medium);
   const dimensions = isZh ? (work.dimensionsZh ?? work.dimensions) : work.dimensions;
   const description = isZh ? (work.descriptionZh ?? work.description) : work.description;
   return `
