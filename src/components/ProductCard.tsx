@@ -85,25 +85,29 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
           />
         </div>
 
-        <div className="space-y-2 flex flex-col flex-1">
-          <p className="text-xs handwritten text-muted-foreground">{displayCategory ? renderHighlightedText(displayCategory) : null}</p>
-          <h3 className="text-lg leading-tight handwritten">{renderHighlightedText(displayTitle)}</h3>
-          {displayDescription && (
-            <p className="text-sm font-helvetica text-muted-foreground line-clamp-2">{renderHighlightedText(displayDescription)}</p>
-          )}
-          <p className="text-lg font-bold handwritten">
-            {renderHighlightedText(`${currency === 'gbp' ? '£' : '$'}${price.toFixed(2)}`)}
-          </p>
-          <p className="text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>
+        <div className="flex flex-col flex-1">
+          <div className="space-y-2">
+            <p className="text-xs handwritten text-muted-foreground">{displayCategory ? renderHighlightedText(displayCategory) : null}</p>
+            <h3 className="text-lg leading-tight handwritten">{renderHighlightedText(displayTitle)}</h3>
+            {displayDescription && (
+              <p className="text-sm font-helvetica text-muted-foreground line-clamp-2">{renderHighlightedText(displayDescription)}</p>
+            )}
+          </div>
 
-          <Button
-            variant="outline-pink"
-            className="w-full handwritten mt-auto"
-            size="sm"
-            onClick={handleOrderNow}
-          >
-            <b>{t.productDetails.orderNow}</b>
-          </Button>
+          <div className="mt-auto pt-3 space-y-2">
+            <p className="text-lg font-bold handwritten">
+              {renderHighlightedText(`${currency === 'gbp' ? '£' : '$'}${price.toFixed(2)}`)}
+            </p>
+            <p className="text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>
+            <Button
+              variant="outline-pink"
+              className="w-full handwritten"
+              size="sm"
+              onClick={handleOrderNow}
+            >
+              <b>{t.productDetails.orderNow}</b>
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
