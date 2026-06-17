@@ -118,17 +118,23 @@ const Index = () => {
             </p>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-border">
               {[
-                { to: "/watercolor-catalog", label: t.watercolorCatalog.subtitle },
-                { to: "/remains-catalog",    label: t.remainsCatalog.subtitle },
-                { to: "/21spirit-catalog",   label: t.spirit21Catalog.subtitle },
-                { to: "/photography-catalog", label: t.photographyCatalog.subtitle },
-              ].map(({ to, label }) => (
+                { to: "/watercolor-catalog",  label: t.watercolorCatalog.subtitle,  image: "/watercolors/01/main.jpg" },
+                { to: "/remains-catalog",     label: t.remainsCatalog.subtitle,     image: "/remains/01/main.jpg" },
+                { to: "/21spirit-catalog",    label: t.spirit21Catalog.subtitle,    image: "/21spirit/01/main.jpg" },
+                { to: "/photography-catalog", label: t.photographyCatalog.subtitle, image: "/photography/01/main.jpg" },
+              ].map(({ to, label, image }) => (
                 <Link
                   key={to}
                   to={to}
-                  className="bg-background flex items-center justify-between px-5 py-5 group hover:bg-primary/5 transition-colors"
+                  className="bg-background flex items-center gap-3 px-5 py-5 group hover:bg-primary/5 transition-colors"
                 >
-                  <span className="font-mono text-xs uppercase tracking-widest leading-tight">
+                  <img
+                    src={image}
+                    alt={label}
+                    className="w-12 h-12 object-cover shrink-0 grayscale group-hover:grayscale-0 transition-all"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                  />
+                  <span className="font-mono text-xs uppercase tracking-widest leading-tight flex-1">
                     {label}
                   </span>
                   <span className="text-primary text-sm opacity-0 group-hover:opacity-100 transition-opacity">
