@@ -84,11 +84,11 @@ const ProductDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           {/* Image Gallery */}
           <div className="space-y-4">
-            <div className="aspect-square rounded-lg overflow-hidden bg-black border-2 border-primary/20">
+            <div className="rounded-lg overflow-hidden bg-black border-2 border-primary/20">
               <ZoomableImage
                 src={currentImage?.image_url || "/placeholder.svg"}
                 alt={product.name}
-                imgClassName="w-full h-full object-contain"
+                imgClassName="w-full h-auto block"
                 images={allImages.map((img) => img.image_url)}
                 startIndex={selectedImageIndex}
                 onNavigate={setSelectedImageIndex}
