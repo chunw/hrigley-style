@@ -18,7 +18,7 @@ const WorkCard = ({ work }: { work: Watercolor }) => {
       <div className="flex justify-between items-center mb-2">
         <span className="font-mono text-xs">P{padded}</span>
         <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-          {series ? `${series.label} · ${lang === "zh" ? series.chineseName : series.englishName}` : `Series ${work.series}`}
+          {series ? `${lang === "zh" ? series.chineseName : series.englishName}` : `Series ${work.series}`}
         </span>
       </div>
 
@@ -118,53 +118,25 @@ const WatercolorCatalog = () => {
         {/* Series list */}
         <section className="mt-10 border-y border-border">
           <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border">
-            {seriesList.map((s) => (
+            {seriesList.map((s) => {
+              const count = watercolors.filter((w) => w.series === s.id).length;
+              return (
               <div key={s.id} className="py-6 px-1 md:px-6">
                 <div className="flex items-baseline gap-3">
-                  <span className="font-mono text-xs tracking-widest">{s.label}</span>
-                  <span className="text-2xl leading-none">{s.englishName}</span>
-                  <span className="text-lg leading-none text-muted-foreground">{s.chineseName}</span>
+                  <span className="text-2xl leading-none">{lang === "zh" ? s.chineseName : s.englishName}</span>
+                  <span className="text-lg leading-none text-muted-foreground">{lang === "zh" ? s.englishName : s.chineseName}</span>
                 </div>
-                <p className="font-mono text-xs mt-2 text-muted-foreground">{lang === "zh" ? (s.subtitleZh ?? s.subtitle) : s.subtitle}</p>
+                <p className="font-mono text-xs mt-2 text-muted-foreground">{count} {t.watercolorCatalog.works}</p>
                 {s.description && (
                   <p className="text-sm text-muted-foreground mt-2">
                     {lang === "zh" ? (s.descriptionZh ?? s.description) : s.description}
                   </p>
                 )}
               </div>
-            ))}
+              );
+            })}
           </div>
         </section>
-
-        {/* Artist statement */}
-        {/* <section className="mt-16 border-t border-border pt-8">
-          <div className="grid md:grid-cols-3 gap-12">
-            <div>
-              <h2 className="shop-title text-2xl leading-tight">{t.watercolorCatalog.artistStatement}</h2>
-              <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground mt-2">
-                {t.watercolorCatalog.artistLocation}
-              </p>
-            </div>
-            <div className="md:col-span-2 text-sm leading-relaxed">
-              {lang === "en" ? (
-                <p>
-                  I run my home as my own private museum. It started with watercolor sketches,
-                  and my interest in the small trinkets scattered around the house has only grown
-                  since. These objects, sometimes a little grotesque, are pieces I've salvaged
-                  from all over for my collection. I often rearrange and combine them into new
-                  scenes where the imagination can play. As Wang Yuping said, art doesn't have
-                  to stand above life. I believe that everyday objects can also offer fresh visual and psychological experiences to the viewers.
-                </p>
-              ) : (
-                <p>
-                  我把家当作自己的"私人博物馆"来经营。从水彩速写开始，我对散落家中的小摆设的兴趣愈发增长。
-                  这些有时带有怪诞气息的物件，是我从各处打捞的馆藏，也会时常被我排列组合，形成新的景观现场，供想象力嬉戏。
-                  我相信日常小物也可以为观者带来新鲜的视觉体验与心理感受。
-                </p>
-              )}
-            </div>
-          </div>
-        </section> */}
 
         {/* Works grid */}
         <section className="mt-12">

@@ -9,10 +9,9 @@ export const catalogMeta = {
 
 export interface WatercolorSeries {
   id: string;
-  label: string;
   englishName: string;
   chineseName: string;
-  subtitle: string;
+  subtitle?: string;
   subtitleZh?: string;
   description?: string;
   descriptionZh?: string;
@@ -21,23 +20,13 @@ export interface WatercolorSeries {
 export const seriesList: WatercolorSeries[] = [
   {
     id: "I",
-    label: "SERIES I",
     englishName: "Residuals",
     chineseName: "残留",
-    subtitle: "Works 1–2 · Residuals",
-    subtitleZh: "第1–2件 · 残留",
-    // description: "Placeholder description for Series I: Residuals.",
-    // descriptionZh: "第一辑「残留」占位描述文字。",
   },
   {
     id: "II",
-    label: "SERIES II",
     englishName: "Still Things",
     chineseName: "静物",
-    subtitle: "Works 3–11 · Still Things",
-    subtitleZh: "第3–11件 · 静物",
-    // description: "Placeholder description for Series II: Still Things.",
-    // descriptionZh: "第二辑「静物」占位描述文字。",
   },
 ];
 

@@ -487,13 +487,11 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
     watercolorMeta.medium,
     watercolorMeta.mediumZh,
     seriesList.map((s) => ({
-      label: s.label,
       name: s.englishName,
       sub: s.subtitle,
       desc: s.description,
     })),
     seriesList.map((s) => ({
-      label: s.label,
       name: s.chineseName,
       sub: s.subtitleZh ?? s.subtitle,
       desc: s.descriptionZh ?? s.description,

@@ -152,7 +152,7 @@ const WatercolorDetail = () => {
           <div className="space-y-8">
             <div>
               <p className="font-mono text-xs tracking-widest text-muted-foreground uppercase mb-2">
-                {seriesData ? `${seriesData.label} · ${lang === "zh" ? seriesData.chineseName : seriesData.englishName}` : `${t.watercolor.seriesPrefix} ${work.series}`}
+                {seriesData ? `${lang === "zh" ? seriesData.chineseName : seriesData.englishName}` : `${t.watercolor.seriesPrefix} ${work.series}`}
               </p>
               <h1 className="shop-title text-4xl leading-none">
                 {lang === "zh" && work.titleZh ? work.titleZh : work.title}
