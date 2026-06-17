@@ -104,7 +104,7 @@ export const translations = {
     },
     shopTitle: {
       line1: "Chun Wang",
-      line2: "艺术",
+      line2: "创意工作室",
       line3: "商店",
     },
     index: {

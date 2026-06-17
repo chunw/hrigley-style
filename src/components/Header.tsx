@@ -1,22 +1,14 @@
-import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { BookOpen, Instagram } from "lucide-react";
+import { Instagram } from "lucide-react";
 import { INSTAGRAM_URL } from "@/lib/constants";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-type PrintTheme = "light" | "dark";
-
-type HeaderProps = {
-  onPrintCatalog?: (theme: PrintTheme) => void;
-};
-
-const Header = ({ onPrintCatalog }: HeaderProps) => {
+const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
   const { lang, toggleLang, t } = useLanguage();
-  const [printMenuOpen, setPrintMenuOpen] = useState(false);
   const isHomePage = location.pathname === "/";
 
   const handleContactClick = async () => {
@@ -76,39 +68,6 @@ const Header = ({ onPrintCatalog }: HeaderProps) => {
             >
               {t.header.contact}
             </button>
-
-            {onPrintCatalog ? (
-              <div className="relative">
-                {printMenuOpen && (
-                  <div className="fixed inset-0 z-10" onClick={() => setPrintMenuOpen(false)} />
-                )}
-                <button
-                  type="button"
-                  onClick={() => setPrintMenuOpen(o => !o)}
-                  className={`handwritten inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest border px-3 py-2 ${
-                    isHomePage ? "text-white border-white/40 hover:text-primary hover:border-primary" : "text-foreground border-border hover:text-primary hover:border-primary"
-                  }`}
-                >
-                  <BookOpen className="h-4 w-4" />
-                  {t.watercolorCatalog.printCatalog}
-                </button>
-                {printMenuOpen && (
-                  <div className="absolute right-0 top-full mt-1 z-20 border border-border bg-background min-w-[120px]">
-                    {(["light", "dark"] as const).map(theme => (
-                      <button
-                        key={theme}
-                        type="button"
-                        onClick={() => { onPrintCatalog(theme); setPrintMenuOpen(false); }}
-                        className="w-full flex items-center gap-2 px-3 py-2 font-mono text-xs hover:bg-muted transition-colors text-foreground"
-                      >
-                        <span className={`inline-block w-3 h-3 border border-current ${theme === "dark" ? "bg-foreground" : ""}`} />
-                        {theme === "light" ? "Light" : "Dark"}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : null}
 
             <a
               href={INSTAGRAM_URL}

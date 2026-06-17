@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { remainsWorks, catalogMeta, type RemainsWork } from "@/lib/remains";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { buildCombinedPrintHTML, type PrintTheme } from "@/lib/printCatalog";
+
 
 
 const WorkCard = ({ work }: { work: RemainsWork }) => {
@@ -69,15 +69,9 @@ const WorkCard = ({ work }: { work: RemainsWork }) => {
 const RemainsCatalog = () => {
   const { lang, t } = useLanguage();
 
-  const handlePrint = (theme: PrintTheme) => {
-    const blob = new Blob([buildCombinedPrintHTML(window.location.origin, lang, theme)], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-    window.open(url, "_blank");
-  };
-
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header onPrintCatalog={handlePrint} />
+      <Header />
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-6 md:px-10 py-10 md:py-14">
 
