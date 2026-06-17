@@ -78,9 +78,9 @@ export const translations = {
       categoryLabel: "Remains · 遗迹",
     },
     spirit21Catalog: {
-      subtitle: "21 Spirit",
+      subtitle: "In The Spirit of the 21st Century",
       works: "works",
-      categoryLabel: "21 Spirit · 21世纪精神",
+      categoryLabel: "In The Spirit of the 21st Century · 21世纪精神",
     },
   },
   zh: {
@@ -163,7 +163,7 @@ export const translations = {
     spirit21Catalog: {
       subtitle: "21世纪精神",
       works: "件作品",
-      categoryLabel: "21 Spirit · 21世纪精神",
+      categoryLabel: "In The Spirit of the 21st Century · 21世纪精神",
     },
   },
 } as const;

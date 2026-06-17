@@ -131,10 +131,10 @@ const Index = () => {
                   <img
                     src={image}
                     alt={label}
-                    className="w-12 h-12 object-cover shrink-0 grayscale group-hover:grayscale-0 transition-all"
+                    className="w-12 h-12 object-cover shrink-0 transition-all duration-300 group-hover:scale-[2] group-hover:shadow-xl z-10 group-hover:z-20 relative"
                     onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
                   />
-                  <span className="font-mono text-xs uppercase tracking-widest leading-tight flex-1">
+                  <span className="font-mono text-xs uppercase tracking-widest leading-tight flex-1 transition-all duration-300 group-hover:text-base group-hover:tracking-wide">
                     {label}
                   </span>
                   <span className="text-primary text-sm opacity-0 group-hover:opacity-100 transition-opacity">
