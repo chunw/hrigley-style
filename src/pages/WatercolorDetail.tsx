@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { getWatercolor, seriesList, watercolors } from "@/lib/watercolors";
+import { getWatercolor, seriesList, watercolors as allWatercolors } from "@/lib/watercolors";
+
+const watercolors = allWatercolors.filter((w) => w.showInStorefront !== false);
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ZoomableImage } from "@/components/ZoomableImage";
