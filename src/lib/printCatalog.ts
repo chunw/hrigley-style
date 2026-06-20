@@ -162,7 +162,7 @@ function getCSS(isDark: boolean): string {
     color: ${coverSubtitle};
   }
   .cover-medium {
-    font-size: 9px;
+    font-size: 11px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: ${coverSubtitle};
@@ -586,11 +586,14 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
     (p, side) => productPage(p, side, isZh),
   );
 
+  const now = new Date();
+  const dateStamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
+
   return `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
   <meta charset="UTF-8" />
-  <title>Chun Wang — ${isZh ? "作品目录" : "Complete Catalog"}</title>
+  <title>Chun Wang Complete Catalog ${dateStamp}</title>
   <style>${css}</style>
 </head>
 <body>
