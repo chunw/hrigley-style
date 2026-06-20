@@ -68,7 +68,7 @@ export const translations = {
       uploadImage: "Upload Image",
     },
     photographyCatalog: {
-      subtitle: "Photography",
+      subtitle: "Visions In Photography",
       works: "works",
       categoryLabel: "Photography · 摄影作品",
     },
