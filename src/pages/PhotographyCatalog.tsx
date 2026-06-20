@@ -1,16 +1,82 @@
-import { Link } from "react-router-dom";
-import { Printer } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { photographyWorks, seriesList, catalogMeta, type PhotographyWork } from "@/lib/photography";
+import { photographyWorks as allPhotographyWorks, seriesList, catalogMeta, type PhotographyWork } from "@/lib/photography";
+
+const photographyWorks = allPhotographyWorks.filter((w) => w.showInStorefront !== false);
 import { useLanguage } from "@/contexts/LanguageContext";
 
 
-const WorkCard = ({ work }: { work: PhotographyWork }) => {
+const WorkCard = ({ work, uniformHeight }: { work: PhotographyWork; uniformHeight: boolean }) => {
   const { lang } = useLanguage();
+  const navigate = useNavigate();
   const padded = work.id.padStart(2, "0");
   const title = lang === "zh" ? (work.titleZh ?? work.title) : work.title;
   const series = seriesList.find((s) => s.id === work.series);
+
+  const [objPos, setObjPos] = useState(work.cropPosition ?? { x: 50, y: 50 });
+  const containerRef = useRef<HTMLDivElement>(null);
+  const drag = useRef<{
+    active: boolean;
+    startX: number;
+    startY: number;
+    startObjX: number;
+    startObjY: number;
+    containerW: number;
+    containerH: number;
+    moved: boolean;
+  } | null>(null);
+
+  useEffect(() => {
+    if (!uniformHeight) {
+      setObjPos(work.cropPosition ?? { x: 50, y: 50 });
+      return;
+    }
+    const onMouseMove = (e: MouseEvent) => {
+      if (!drag.current?.active) return;
+      const dx = e.clientX - drag.current.startX;
+      const dy = e.clientY - drag.current.startY;
+      if (Math.abs(dx) > 2 || Math.abs(dy) > 2) drag.current.moved = true;
+      const x = Math.max(0, Math.min(100, drag.current.startObjX - (dx / drag.current.containerW) * 100));
+      const y = Math.max(0, Math.min(100, drag.current.startObjY - (dy / drag.current.containerH) * 100));
+      setObjPos({ x, y });
+    };
+    const onMouseUp = () => {
+      if (drag.current) drag.current.active = false;
+    };
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+    return () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+    };
+  }, [uniformHeight]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!uniformHeight) return;
+    e.preventDefault();
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    drag.current = {
+      active: true,
+      startX: e.clientX,
+      startY: e.clientY,
+      startObjX: objPos.x,
+      startObjY: objPos.y,
+      containerW: rect.width,
+      containerH: rect.height,
+      moved: false,
+    };
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (drag.current?.moved) {
+      e.preventDefault();
+      return;
+    }
+    navigate(`/photography/${work.id}`);
+  };
 
   return (
     <article>
@@ -23,20 +89,30 @@ const WorkCard = ({ work }: { work: PhotographyWork }) => {
         )}
       </div>
 
-      <Link
-        to={`/photography/${work.id}`}
-        className="block relative border border-border"
-        style={{ backgroundColor: "#111", minHeight: "2rem" }}
+      <div
+        ref={containerRef}
+        className="block relative border border-border overflow-hidden"
+        style={{
+          backgroundColor: "#111",
+          minHeight: "2rem",
+          ...(uniformHeight ? { height: 280, cursor: "grab" } : {}),
+        }}
+        onMouseDown={handleMouseDown}
+        onClick={handleClick}
       >
         <img
           src={`/photography/${padded}/main.jpg`}
           alt={work.title}
+          draggable={false}
           style={{
             display: "block",
             width: "100%",
-            height: "auto",
+            height: uniformHeight ? "100%" : "auto",
+            objectFit: uniformHeight ? "cover" : undefined,
+            objectPosition: uniformHeight ? `${objPos.x}% ${objPos.y}%` : undefined,
             opacity: 0,
             transition: "opacity 0.2s",
+            userSelect: "none",
           }}
           onLoad={(e) => {
             (e.target as HTMLImageElement).style.opacity = "1";
@@ -45,7 +121,17 @@ const WorkCard = ({ work }: { work: PhotographyWork }) => {
             (e.target as HTMLImageElement).style.display = "none";
           }}
         />
-      </Link>
+        {uniformHeight && (Math.round(objPos.x) !== 50 || Math.round(objPos.y) !== 50) && (
+          <div style={{
+            position: "absolute", bottom: 6, right: 6,
+            fontFamily: "monospace", fontSize: 9, letterSpacing: "0.08em",
+            color: "#fff", background: "rgba(0,0,0,0.55)",
+            padding: "2px 6px", pointerEvents: "none",
+          }}>
+            {Math.round(objPos.x)}% {Math.round(objPos.y)}%
+          </div>
+        )}
+      </div>
 
       <div className="mt-3">
         <h3 className="text-sm leading-snug">{title}</h3>
@@ -63,6 +149,7 @@ const WorkCard = ({ work }: { work: PhotographyWork }) => {
 
 const PhotographyCatalog = () => {
   const { lang, t } = useLanguage();
+  const [uniformHeight, setUniformHeight] = useState(false);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -127,9 +214,21 @@ const PhotographyCatalog = () => {
 
         {/* Works in array order */}
         <section className="mt-12">
+          <div className="flex justify-end mb-6">
+            <button
+              onClick={() => setUniformHeight((v) => !v)}
+              className={`font-mono text-[10px] uppercase tracking-widest px-3 py-1.5 border transition-colors ${
+                uniformHeight
+                  ? "border-primary text-primary bg-primary/10"
+                  : "border-border text-muted-foreground hover:text-primary hover:border-primary"
+              }`}
+            >
+              {uniformHeight ? "View Original Image Height" : "Uniform Height"}
+            </button>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
             {photographyWorks.map((work) => (
-              <WorkCard key={work.id} work={work} />
+              <WorkCard key={work.id} work={work} uniformHeight={uniformHeight} />
             ))}
           </div>
         </section>
