@@ -60,7 +60,7 @@ export const translations = {
     watercolorCatalog: {
       subtitle: "Visions in Watercolor",
       works: "works",
-      printCatalog: "Print Complete atalog",
+      printCatalog: "Print Complete Catalog",
       noteLabel: "NOTE",
       noteText: "Watercolor remains a pursuit of materiality — especially now",
       artistStatement: "Artist Statement",

@@ -149,7 +149,7 @@ const WorkCard = ({ work, uniformHeight }: { work: PhotographyWork; uniformHeigh
 
 const PhotographyCatalog = () => {
   const { lang, t } = useLanguage();
-  const [uniformHeight, setUniformHeight] = useState(false);
+  const [uniformHeight, setUniformHeight] = useState(true);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
