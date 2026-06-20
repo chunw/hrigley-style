@@ -1,6 +1,6 @@
 export const catalogMeta = {
-  en: "Photography",
-  zh: "摄影作品",
+  en: "Inner Wilderness",
+  zh: "内在荒原",
   medium: "Photography",
   mediumZh: "摄影",
   description: `My photographic practice begins with a proposition: that the camera can be a philosophical instrument. Philosophy asks its questions in language. Photography asks them in looking. In El Otro, El Mismo, the human figure arrives burdened by what only humans carry: the knowledge that they exist, that they will not always, and that neither fact explains the other. The portraits capture these existential essences: There is the loneliness that comes not from abandonment but from becoming — an act of separation from the familiar anchor is also an act of growth, and the cost of that growth is an existential solitude that is fundamental. There is time, which does not pass abstractly but is inscribed in faces, made legible in light and shadow. There is the passage from the unrestrained freedom of youth into a world that seeks to shape and contain it. And there is death, which is never only death: a body arranged in the posture of an ending can discover it is also the posture of a beginning.
