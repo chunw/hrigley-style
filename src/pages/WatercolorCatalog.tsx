@@ -103,7 +103,16 @@ const WatercolorCatalog = () => {
             <p className="font-mono text-xs text-muted-foreground/60 mt-1">
               {watercolors.length} {t.watercolorCatalog.works}
             </p>
-            {catalogMeta.description && (
+            {catalogMeta.descriptionHtml ? (
+              <div
+                className="text-sm text-muted-foreground mt-3 max-w-prose space-y-3 [&_em]:italic"
+                dangerouslySetInnerHTML={{
+                  __html: lang === "zh"
+                    ? (catalogMeta.descriptionHtmlZh ?? catalogMeta.descriptionHtml)
+                    : catalogMeta.descriptionHtml,
+                }}
+              />
+            ) : catalogMeta.description && (
               <p className="text-sm text-muted-foreground mt-3 max-w-prose">
                 {lang === "zh" ? (catalogMeta.descriptionZh ?? catalogMeta.description) : catalogMeta.description}
               </p>

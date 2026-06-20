@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import { BookOpen } from "lucide-react";
+import { Printer } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { photographyWorks, catalogMeta, type PhotographyWork } from "@/lib/photography";
+import { photographyWorks, seriesList, catalogMeta, type PhotographyWork } from "@/lib/photography";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 
@@ -10,11 +10,17 @@ const WorkCard = ({ work }: { work: PhotographyWork }) => {
   const { lang } = useLanguage();
   const padded = work.id.padStart(2, "0");
   const title = lang === "zh" ? (work.titleZh ?? work.title) : work.title;
+  const series = seriesList.find((s) => s.id === work.series);
 
   return (
     <article>
       <div className="flex justify-between items-center mb-2">
         <span className="font-mono text-xs">PH{padded}</span>
+        {series && (
+          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            {lang === "zh" ? series.chineseName : series.englishName}
+          </span>
+        )}
       </div>
 
       <Link
@@ -75,20 +81,51 @@ const PhotographyCatalog = () => {
               {photographyWorks.length} {t.photographyCatalog.works}
             </p>
             {catalogMeta.description && (
-              <p className="text-sm text-muted-foreground mt-3 max-w-prose">
-                {lang === "zh" ? (catalogMeta.descriptionZh ?? catalogMeta.description) : catalogMeta.description}
-              </p>
+              <div className="mt-3 max-w-prose space-y-3">
+                {(lang === "zh" ? (catalogMeta.descriptionZh ?? catalogMeta.description) : catalogMeta.description)
+                  .split("\n\n")
+                  .map((para, i) => (
+                    <p key={i} className="text-sm text-muted-foreground leading-relaxed">{para}</p>
+                  ))}
+              </div>
             )}
           </div>
-          <Link
-            to="/photography-photobook"
-            className="flex items-center gap-2 px-4 py-2 border border-border font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors self-start"
-          >
-            <BookOpen className="h-3 w-3 shrink-0" />
-            Print Photobook
-          </Link>
+          <div className="flex flex-col gap-2 self-start">
+            {/* <Link
+              to="/photography-photobook"
+              className="flex items-center gap-2 px-4 py-2 border border-border font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
+            >
+              <BookOpen className="h-3 w-3 shrink-0" />
+              Print Photobook
+            </Link> */}
+            {/* <a
+              href="/cargo-print.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 border border-border font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
+            >
+              <Printer className="h-3 w-3 shrink-0" />
+              Print Cargo
+            </a> */}
+          </div>
         </header>
 
+        {/* Series list */}
+        <section className="mt-10 border-y border-border">
+          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border">
+            {seriesList.map((s) => {
+              const count = photographyWorks.filter((w) => w.series === s.id).length;
+              return (
+                <div key={s.id} className="py-6 px-1 md:px-6">
+                  <span className="text-2xl leading-none">{lang === "zh" ? s.chineseName : s.englishName}</span>
+                  <p className="font-mono text-xs mt-2 text-muted-foreground">{count} {t.photographyCatalog.works}</p>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Works in array order */}
         <section className="mt-12">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
             {photographyWorks.map((work) => (

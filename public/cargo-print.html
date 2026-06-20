@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Cargo Print — Chun Wang</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #d8d8d8; font-family: -apple-system, sans-serif; }
+
+    /* ── toolbar ── */
+    #toolbar {
+      position: sticky; top: 0; z-index: 100;
+      background: #fff; border-bottom: 1px solid #ccc;
+      padding: 10px 20px; display: flex; align-items: center; gap: 16px;
+      font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: #888;
+    }
+    #toolbar a { color: #888; text-decoration: none; }
+    #toolbar button {
+      margin-left: auto; background: #111; color: #fff; border: none;
+      padding: 7px 18px; cursor: pointer;
+      font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+    }
+
+    /* ── book ── */
+    #book { padding: 28px 20px; display: flex; flex-direction: column; gap: 28px; max-width: 1400px; margin: 0 auto; }
+
+    /* ── spread: two pages side by side ── */
+    .spread {
+      display: flex; position: relative;
+      width: 100%; aspect-ratio: 22 / 17;
+      background: #fff; box-shadow: 0 2px 16px rgba(0,0,0,.15);
+      overflow: hidden;
+    }
+    .spine {
+      position: absolute; left: 50%; top: 0; width: 1px; height: 100%;
+      background: rgba(0,0,0,.12); z-index: 10; pointer-events: none;
+    }
+
+    /* ── page slot ── */
+    .slot { width: 50%; height: 100%; display: flex; flex-direction: column; overflow: hidden; }
+    .slot-empty { background: #fafafa; }
+    .slot-label {
+      flex-shrink: 0; padding: 5px 8px;
+      font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: #bbb;
+    }
+    .slot-frame-wrap { flex: 1 1 0; position: relative; overflow: hidden; }
+
+    /* iframe sits at natural Cargo size; JS scales it to fill the slot */
+    iframe {
+      border: none; display: block;
+      width: 1338px;   /* Cargo page natural width from saved HTML */
+      height: 900px;
+      transform-origin: top left;
+      transform: scale(0.4); /* overridden by fitFrame() */
+      pointer-events: none;
+    }
+
+    /* ── print ── */
+    @page { size: letter landscape; margin: 0; }
+    @media print {
+      *, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      body { background: #fff; }
+      #toolbar { display: none !important; }
+      #book { padding: 0; max-width: 100%; gap: 0; }
+      .spread {
+        box-shadow: none; aspect-ratio: unset;
+        width: 100vw; height: 100vh;
+        page-break-before: always; break-before: page;
+      }
+      .spread:first-child { page-break-before: avoid; break-before: avoid; }
+      .slot-label { display: none; }
+      /* letter landscape = 11in × 8.5in; half-width = 5.5in = ~528px at 96dpi
+         Cargo page width = 1338px → scale = 528/1338 ≈ 0.3946 */
+      iframe { transform: scale(0.3946) !important; }
+    }
+  </style>
+</head>
+<body>
+  <div id="toolbar">
+    <a href="/photography-catalog">← Catalog</a>
+    <span>15 pages · 8 spreads</span>
+    <button onclick="window.print()">Print / Save as PDF</button>
+  </div>
+  <div id="book">
+    
+  <div class="spread">
+    
+    <div class="slot">
+      <div class="slot-label">Cover</div>
+      <div class="slot-frame-wrap">
+        <iframe src="/cargo/Chun%20Wang%20-%20Photography%20Portfolio.html" title="Cover" scrolling="no" onload="fitFrame(this)"></iframe>
+      </div>
+    </div>
+    <div class="spine"></div>
+    
+    <div class="slot">
+      <div class="slot-label">Table of Contents</div>
+      <div class="slot-frame-wrap">
+        <iframe src="/cargo/Table%20of%20Content%20%E2%80%94%20Chun%20Wang%20-%20Photography%20Portfolio.html" title="Table of Contents" scrolling="no" onload="fitFrame(this)"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="spread">
+    
+    <div class="slot">
+      <div class="slot-label">El Otro, El Mismo — Cover</div>
+      <div class="slot-frame-wrap">
+        <iframe src="/cargo/El%20Otro%2C%20El%20Mismo%20-%20Cover%20%E2%80%94%20Chun%20Wang%20-%20Photography%20Portfolio.html" title="El Otro, El Mismo — Cover" scrolling="no" onload="fitFrame(this)"></iframe>
+      </div>
+    </div>
+    <div class="spine"></div>
+    
+    <div class="slot">
+      <div class="slot-label">El Otro, El Mismo — Intro</div>
+      <div class="slot-frame-wrap">
+        <iframe src="/cargo/El%20Otro%2C%20El%20Mismo%20-%20Intro%20%E2%80%94%20Chun%20Wang%20-%20Photography%20Portfolio.html" title="El Otro, El Mismo — Intro" scrolling="no" onload="fitFrame(this)"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="spread">
+    
+    <div class="slot">
+      <div class="slot-label">Doppelgänger</div>
+      <div class="slot-frame-wrap">
+        <iframe src="/cargo/El%20Otro%2C%20El%20Mismo%20-%20Doppelganger%20%E2%80%94%20Chun%20Wang%20-%20Photography%20Portfolio.html" title="Doppelgänger" scrolling="no" onload="fitFrame(this)"></iframe>
+      </div>
+    </div>
+    <div class="spine"></div>
+    
+    <div class="slot">
+      <div class="slot-label">In The Lonely Hour</div>
+      <div class="slot-frame-wrap">
+        <iframe src="/cargo/El%20Otro%2C%20El%20Mismo%20-%20Lonely%20Hour%20%E2%80%94%20Chun%20Wang%20-%20Photography%20Portfolio.html" title="In The Lonely Hour" scrolling="no" onload="fitFrame(this)"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="spread">
+    
+    <div class="slot">
+      <div class="slot-label">Puppetry</div>
+      <div class="slot-frame-wrap">
+        <iframe src="/cargo/El%20Otro%2C%20El%20Mismo%20-%20Puppetry%20%E2%80%94%20Chun%20Wang%20-%20Photography%20Portfolio.html" title="Puppetry" scrolling="no" onload="fitFrame(this)"></iframe>
+      </div>
+    </div>
+    <div class="spine"></div>
+    
+    <div class="slot">
+      <div class="slot-label">Rebirth</div>
+      <div class="slot-frame-wrap">
+        <iframe src="/cargo/El%20Otro%2C%20El%20Mismo%20-%20Rebirth%20%E2%80%94%20Chun%20Wang%20-%20Photography%20Portfolio.html" title="Rebirth" scrolling="no" onload="fitFrame(this)"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="spread">
+    
+    <div class="slot">
+      <div class="slot-label">Being And Time</div>
+      <div class="slot-frame-wrap">
+        <iframe src="/cargo/El%20Otro%2C%20El%20Mismo%20-%20Being%20And%20Time%20%E2%80%94%20Chun%20Wang%20-%20Photography%20Portfolio.html" title="Being And Time" scrolling="no" onload="fitFrame(this)"></iframe>
+      </div>
+    </div>
+    <div class="spine"></div>
+    
+    <div class="slot">
+      <div class="slot-label">Departures — Cover</div>
+      <div class="slot-frame-wrap">
+        <iframe src="/cargo/Departures%20-%20Cover%20%E2%80%94%20Chun%20Wang%20-%20Photography%20Portfolio.html" title="Departures — Cover" scrolling="no" onload="fitFrame(this)"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="spread">
+    
+    <div class="slot">
+      <div class="slot-label">Aquí No Hay Soledad</div>
+      <div class="slot-frame-wrap">
+        <iframe src="/cargo/All%20The%20World%20Is%20A%20Stage%20-%20Aqu%C3%AD%20No%20Hay%20Soledad%20%E2%80%94%20Chun%20Wang%20-%20Photography%20Portfolio.html" title="Aquí No Hay Soledad" scrolling="no" onload="fitFrame(this)"></iframe>
+      </div>
+    </div>
+    <div class="spine"></div>
+    
+    <div class="slot">
+      <div class="slot-label">Archive from 5 to 9</div>
+      <div class="slot-frame-wrap">
+        <iframe src="/cargo/All%20The%20World%20Is%20A%20Stage%20-%20Archive%20from%205%20to%209%20%E2%80%94%20Chun%20Wang%20-%20Photography%20Portfolio.html" title="Archive from 5 to 9" scrolling="no" onload="fitFrame(this)"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="spread">
+    
+    <div class="slot">
+      <div class="slot-label">Reflection In The Death Valley</div>
+      <div class="slot-frame-wrap">
+        <iframe src="/cargo/All%20The%20World%20Is%20A%20Stage%20-%20Reflection%20In%20The%20Death%20Valley%20%E2%80%94%20Chun%20Wang%20-%20Photography%20Portfolio.html" title="Reflection In The Death Valley" scrolling="no" onload="fitFrame(this)"></iframe>
+      </div>
+    </div>
+    <div class="spine"></div>
+    
+    <div class="slot">
+      <div class="slot-label">Nostalgia</div>
+      <div class="slot-frame-wrap">
+        <iframe src="/cargo/Nostalgia%20%E2%80%94%20Chun%20Wang%20-%20Photography%20Portfolio.html" title="Nostalgia" scrolling="no" onload="fitFrame(this)"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="spread">
+    
+    <div class="slot">
+      <div class="slot-label">About</div>
+      <div class="slot-frame-wrap">
+        <iframe src="/cargo/About%20%E2%80%94%20Chun%20Wang%20-%20Photography%20Portfolio.html" title="About" scrolling="no" onload="fitFrame(this)"></iframe>
+      </div>
+    </div>
+    <div class="spine"></div>
+    <div class="slot slot-empty"></div>
+  </div>
+  </div>
+  <script>
+    function fitFrame(iframe) {
+      const wrap = iframe.parentElement;
+      const scaleX = wrap.clientWidth  / 1338;
+      const scaleY = wrap.clientHeight / 900;
+      iframe.style.transform = `scale(${Math.min(scaleX, scaleY)})`;
+    }
+    window.addEventListener("resize", () => {
+      document.querySelectorAll("iframe").forEach(fitFrame);
+    });
+  </script>
+</body>
+</html>

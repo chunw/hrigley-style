@@ -2,7 +2,21 @@ import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { spiritWorks, catalogMeta, type SpiritWork } from "@/lib/21spirit";
+import { seriesIntro } from "@/lib/constants";
 import { useLanguage } from "@/contexts/LanguageContext";
+
+function renderInlineMarkdown(text: string) {
+  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={i}>{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith("*") && part.endsWith("*")) {
+      return <em key={i}>{part.slice(1, -1)}</em>;
+    }
+    return part;
+  });
+}
 
 
 const WorkCard = ({ work }: { work: SpiritWork }) => {
@@ -92,6 +106,15 @@ const Spirit21Catalog = () => {
             )}
           </div>
         </header>
+
+        {/* Series intro */}
+        <div className="mt-8 max-w-prose space-y-4 text-sm text-muted-foreground">
+          {(lang === "zh" ? seriesIntro.zh : seriesIntro.en)
+            .split("\n\n")
+            .map((para, i) => (
+              <p key={i}>{renderInlineMarkdown(para)}</p>
+            ))}
+        </div>
 
         {/* Works grid */}
         <section className="mt-12">
