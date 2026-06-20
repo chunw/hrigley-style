@@ -202,7 +202,7 @@ export const photographyWorks: PhotographyWork[] = [
     id: "13",
     title: "",
     series: "II",
-    showInStorefront: true,
+    showInStorefront: false,
     printInCatalog: false,
     year: "",
     medium: "Photography",
