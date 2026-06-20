@@ -68,7 +68,7 @@ export const translations = {
       uploadImage: "Upload Image",
     },
     photographyCatalog: {
-      subtitle: "Visions In Photography",
+      subtitle: "Inner Wilderness",
       works: "works",
       categoryLabel: "Photography · 摄影作品",
     },
@@ -151,7 +151,7 @@ export const translations = {
       uploadImage: "上传图片",
     },
     photographyCatalog: {
-      subtitle: "摄影作品",
+      subtitle: "内在荒原",
       works: "件作品",
       categoryLabel: "Photography · 摄影作品",
     },
