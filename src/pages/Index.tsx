@@ -118,10 +118,9 @@ const Index = () => {
             </p>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-border">
               {[
-                { to: "/watercolor-catalog",  label: t.watercolorCatalog.subtitle,  image: "/watercolors/01/main.jpg" },
-                { to: "/remains-catalog",     label: t.remainsCatalog.subtitle,     image: "/remains/01/main.jpg" },
-                { to: "/21spirit-catalog",    label: t.spirit21Catalog.subtitle,    image: "/21spirit/01/main.jpg" },
-                { to: "/photography-catalog", label: t.photographyCatalog.subtitle, image: "/photography/01/main.jpg" },
+                { to: "/watercolor-catalog", label: t.watercolorCatalog.subtitle, image: "/watercolors/01/main.jpg" },
+                { to: "/remains-catalog",    label: t.remainsCatalog.subtitle,    image: "/remains/01/main.jpg" },
+                { to: "/21spirit-catalog",   label: t.spirit21Catalog.subtitle,   image: "/21spirit/01/main.jpg" },
               ].map(({ to, label, image }) => (
                 <Link
                   key={to}
@@ -142,6 +141,25 @@ const Index = () => {
                   </span>
                 </Link>
               ))}
+
+              {/* Photography — catalog link */}
+              <Link
+                to="/photography-catalog"
+                className="bg-background flex items-center gap-3 px-5 py-5 group hover:bg-primary/5 transition-colors"
+              >
+                <img
+                  src="/photography/01/main.jpg"
+                  alt={t.photographyCatalog.subtitle}
+                  className="w-12 h-12 object-cover shrink-0 transition-all duration-300 group-hover:w-24 group-hover:h-24 group-hover:shadow-xl"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                />
+                <span className="font-mono text-xs uppercase tracking-widest leading-tight flex-1 transition-all duration-300 group-hover:text-base group-hover:tracking-wide group-hover:text-primary">
+                  {t.photographyCatalog.subtitle}
+                </span>
+                <span className="text-primary text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                  →
+                </span>
+              </Link>
             </div>
           </div>
         </section>

@@ -1,0 +1,114 @@
+/* ── Photography Photobook — Print styles ───────────────────────────────────── */
+
+/* Page box: US Letter portrait, zero margin for full-bleed photography.
+   The inner binding gutter is created via :left/:right page rules so that
+   left (verso) pages have more margin on the right and right (recto) pages
+   have more margin on the left — matching how a bound book opens. */
+
+@page {
+  size: letter portrait;
+  margin: 0.4in 0.45in;
+}
+
+/* Recto (odd, right-hand) pages — extra left margin toward the spine */
+@page :right {
+  margin-left: 0.65in;
+  margin-right: 0.35in;
+}
+
+/* Verso (even, left-hand) pages — extra right margin toward the spine */
+@page :left {
+  margin-right: 0.65in;
+  margin-left: 0.35in;
+}
+
+/* Page number centered at the bottom of each page */
+@page {
+  @bottom-center {
+    content: counter(page);
+    font-size: 7pt;
+    font-family: "Courier New", Courier, monospace;
+    color: rgba(255, 255, 255, 0.25);
+    padding-bottom: 4mm;
+  }
+}
+
+@media print {
+  /* ── Force background color + image printing ── */
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* ── Hide all screen-only chrome ── */
+  [data-noprint] {
+    display: none !important;
+  }
+
+  /* ── All images visible regardless of JS load state ── */
+  img {
+    opacity: 1 !important;
+    transition: none !important;
+  }
+
+  /* ── Each section starts on a new page ── */
+  .pb-page {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  /* ── Chapter openers always start on a recto (right-hand) page ── */
+  .pb-recto {
+    break-before: recto;
+    page-break-before: right;
+  }
+
+  /* ── Full-page sections fill the page vertically ── */
+  .pb-full-page {
+    min-height: 100vh;
+  }
+
+  /* ── Avoid splitting an image block across a page ── */
+  .pb-no-break {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* ── Strip layout: on screen it scrolls horizontally;
+        in print, reflow into a 3-column grid ── */
+  .pb-strip-wrapper {
+    overflow: visible;
+  }
+  .pb-strip-track {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    width: 100% !important;
+    gap: 2px !important;
+    /* clear the flex + w-max that drive the horizontal scroll */
+    flex-wrap: wrap !important;
+  }
+  .pb-strip-item {
+    width: auto !important;
+    flex-shrink: unset !important;
+  }
+
+  /* ── Constrain images inside full-page sections to page height ── */
+  .pb-full-page img {
+    max-height: 90vh;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  /* ── Cover background image: fill the whole page ── */
+  .pb-cover-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}

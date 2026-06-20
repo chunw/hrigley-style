@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { BookOpen } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { photographyWorks, catalogMeta, type PhotographyWork } from "@/lib/photography";
@@ -79,6 +80,13 @@ const PhotographyCatalog = () => {
               </p>
             )}
           </div>
+          <Link
+            to="/photography-photobook"
+            className="flex items-center gap-2 px-4 py-2 border border-border font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors self-start"
+          >
+            <BookOpen className="h-3 w-3 shrink-0" />
+            Print Photobook
+          </Link>
         </header>
 
         <section className="mt-12">

@@ -20,6 +20,7 @@ import Spirit21Catalog from "./pages/Spirit21Catalog";
 import Spirit21Detail from "./pages/Spirit21Detail";
 import PhotographyCatalog from "./pages/PhotographyCatalog";
 import PhotographyDetail from "./pages/PhotographyDetail";
+import PhotographyPhotobook from "./pages/PhotographyPhotobook";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,7 @@ const App = () => (
             <Route path="/21spirit/:id" element={<Spirit21Detail />} />
             <Route path="/photography-catalog" element={<PhotographyCatalog />} />
             <Route path="/photography/:id" element={<PhotographyDetail />} />
+            <Route path="/photography-photobook" element={<PhotographyPhotobook />} />
             {/* <Route path="/cart" element={<Cart />} />
             <Route path="/payment-success" element={<PaymentSuccess />} /> */}
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
