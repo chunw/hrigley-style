@@ -29,10 +29,6 @@ const CATALOGS = [
   },
 ];
 
-// Right image stops at this fraction of the section height,
-// leaving a dark strip at the bottom so the title "peeks" into it.
-const RIGHT_IMG_HEIGHT = "78%";
-
 const Catalogs = () => {
   const { lang, t } = useLanguage();
   const [printMenuOpen, setPrintMenuOpen] = useState(false);
@@ -58,47 +54,58 @@ const Catalogs = () => {
               className="group relative block bg-black border-b border-border overflow-hidden"
               style={{ height: "56vw", maxHeight: "85vh", minHeight: "300px" }}
             >
-              {/* LEFT image — full height */}
-              <div
-                className="absolute inset-y-0 left-0 overflow-hidden"
-                style={{ width: "calc(50% - 1px)" }}
-              >
-                <img
-                  src={images[0]}
-                  alt=""
-                  className="w-full h-full object-cover opacity-90 transition-all duration-700 group-hover:opacity-70 group-hover:scale-105"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-                />
-                {/* gradient so title is legible over left image */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent pointer-events-none" />
-              </div>
-
-              {/* 1px black gutter between columns */}
-              <div className="absolute inset-y-0 bg-black" style={{ left: "calc(50% - 1px)", width: 2 }} />
-
-              {/* RIGHT image — top-aligned, stops at RIGHT_IMG_HEIGHT (stagger) */}
+              {/* ── Layer 1 (back): RIGHT image — BEHIND the title text ── */}
               <div
                 className="absolute top-0 right-0 overflow-hidden"
-                style={{ width: "50%", height: RIGHT_IMG_HEIGHT }}
+                style={{
+                  width: "38%",
+                  height: "50%",
+                  zIndex: 5,
+                  // soft right and bottom edges — organic, not rigid
+                  maskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
+                  WebkitMaskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
+                }}
               >
                 <img
                   src={images[1]}
                   alt=""
-                  className="w-full h-full object-cover opacity-90 transition-all duration-700 group-hover:opacity-70 group-hover:scale-105"
+                  className="w-full h-full object-cover opacity-90 group-hover:opacity-70 group-hover:scale-105 transition-all duration-700"
                   onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
                 />
-                {/* soften the bottom edge of the right image so title blends in */}
-                <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
               </div>
 
-              {/* TITLE — bottom of section, z-index above images so it overlaps their bottom edges */}
-              <div className="absolute bottom-0 left-0 right-0 z-10 px-5 pb-5">
+              {/* ── Layer 2 (middle): TITLE — in front of right image, behind left image ── */}
+              {/* spans the full row width */}
+              <div
+                className="absolute bottom-0 left-0 right-0 px-5 pb-5"
+                style={{ zIndex: 10 }}
+              >
                 <h2
-                  className="shop-title text-white leading-none"
+                  className="shop-title text-white leading-none w-full"
                   style={{ fontSize: "clamp(2rem, 9vw, 7.5rem)" }}
                 >
                   {label}
                 </h2>
+              </div>
+
+              {/* ── Layer 3 (front): LEFT image — ON TOP of the title, rests on the text ── */}
+              {/* natural gap on the right side; bottom mask lets title peek through */}
+              <div
+                className="absolute top-0 left-0 overflow-hidden"
+                style={{
+                  width: "37%",
+                  height: "68%",
+                  zIndex: 20,
+                  maskImage: "linear-gradient(to bottom, black 60%, transparent 100%)",
+                  WebkitMaskImage: "linear-gradient(to bottom, black 60%, transparent 100%)",
+                }}
+              >
+                <img
+                  src={images[0]}
+                  alt=""
+                  className="w-full h-full object-cover opacity-90 group-hover:opacity-70 group-hover:scale-105 transition-all duration-700"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                />
               </div>
             </Link>
           );
