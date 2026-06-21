@@ -85,6 +85,23 @@ export const watercolors: Watercolor[] = [
     description: "Featured work maintaining a subtle balance between serenity and faint unease.",
     descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
   },
+
+  {
+    id: "25",
+     title: "Residuals #8",
+    titleZh: "残留 其八",
+    series: "I",
+    printInCatalog: true,
+    showInStorefront: true,
+    year: "2026",
+    medium: "Watercolor on paper",
+    mediumZh: "纸本水彩",
+    dimensions: "",
+    dimensionsZh: "",
+    description: "Featured work maintaining a subtle balance between serenity and faint unease.",
+    descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
+  },
+  
   {
     id: "6",
  title: "Residuals #9",
