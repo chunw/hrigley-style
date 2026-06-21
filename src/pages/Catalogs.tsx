@@ -29,6 +29,10 @@ const CATALOGS = [
   },
 ];
 
+// Right image stops at this fraction of the section height,
+// leaving a dark strip at the bottom so the title "peeks" into it.
+const RIGHT_IMG_HEIGHT = "78%";
+
 const Catalogs = () => {
   const { lang, t } = useLanguage();
   const [printMenuOpen, setPrintMenuOpen] = useState(false);
@@ -51,31 +55,47 @@ const Catalogs = () => {
             <Link
               key={to}
               to={to}
-              className="group relative block overflow-hidden border-b border-border"
-              style={{ height: "55vw", maxHeight: "80vh", minHeight: "240px" }}
+              className="group relative block bg-black border-b border-border overflow-hidden"
+              style={{ height: "56vw", maxHeight: "85vh", minHeight: "300px" }}
             >
-              {/* Two images side by side */}
-              <div className="absolute inset-0 grid grid-cols-2">
-                {images.map((src, i) => (
-                  <div key={i} className="relative overflow-hidden bg-black">
-                    <img
-                      src={src}
-                      alt=""
-                      className="w-full h-full object-cover opacity-80 transition-all duration-700 group-hover:opacity-60 group-hover:scale-105"
-                      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-                    />
-                  </div>
-                ))}
+              {/* LEFT image — full height */}
+              <div
+                className="absolute inset-y-0 left-0 overflow-hidden"
+                style={{ width: "calc(50% - 1px)" }}
+              >
+                <img
+                  src={images[0]}
+                  alt=""
+                  className="w-full h-full object-cover opacity-90 transition-all duration-700 group-hover:opacity-70 group-hover:scale-105"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                />
+                {/* gradient so title is legible over left image */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent pointer-events-none" />
               </div>
 
-              {/* Bottom gradient so text is legible */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent pointer-events-none" />
+              {/* 1px black gutter between columns */}
+              <div className="absolute inset-y-0 bg-black" style={{ left: "calc(50% - 1px)", width: 2 }} />
 
-              {/* Title spanning full width at bottom */}
-              <div className="absolute bottom-0 left-0 right-0 px-4 pb-4 md:px-8 md:pb-6">
+              {/* RIGHT image — top-aligned, stops at RIGHT_IMG_HEIGHT (stagger) */}
+              <div
+                className="absolute top-0 right-0 overflow-hidden"
+                style={{ width: "50%", height: RIGHT_IMG_HEIGHT }}
+              >
+                <img
+                  src={images[1]}
+                  alt=""
+                  className="w-full h-full object-cover opacity-90 transition-all duration-700 group-hover:opacity-70 group-hover:scale-105"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                />
+                {/* soften the bottom edge of the right image so title blends in */}
+                <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+              </div>
+
+              {/* TITLE — bottom of section, z-index above images so it overlaps their bottom edges */}
+              <div className="absolute bottom-0 left-0 right-0 z-10 px-5 pb-5">
                 <h2
                   className="shop-title text-white leading-none"
-                  style={{ fontSize: "clamp(2.5rem, 8vw, 7rem)" }}
+                  style={{ fontSize: "clamp(2rem, 9vw, 7.5rem)" }}
                 >
                   {label}
                 </h2>
