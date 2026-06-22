@@ -3,8 +3,8 @@ export const catalogMeta = {
   zh: "水彩视界",
   medium: "Watercolor",
   mediumZh: "水彩",
-  description: "In my watercolor practice, I have always believed that everyday objects can bring viewers a fresh visual experience and subtle psychological sensations. I pay attention to the traces objects leave after use. ‘Preserving’ that moment about to be erased makes the familiar slightly unfamiliar, stirring a quiet pause and empathy in the viewer.",
-  descriptionZh: "在水彩实践中，我始终相信日常小物能够为观者带来新鲜的视觉体验与微妙的心理感受。我关注物被使用后留下的痕迹。”保留”那个即将被抹去的瞬间，使熟悉之物产生轻微的陌生化，从而在观者心中激起一种安静的停顿与共情。",
+  description: "",
+  descriptionZh: "",
   descriptionHtml: `<p>The book brings together two interconnected watercolor series of mine: <em>Residuals</em> and <em>Still Things,</em> unified by a single animating question: what do everyday objects reveal when we look at them just long enough to feel strange?</p><p>Both series begin with ordinary things: found objects, used surfaces, domestic artifacts — and treat them as subjects worthy of quiet, sustained attention. In <em>Residuals</em>, the focus is on traces: the marks, the leftovers, and remnants that materials leave after they’ve been used. Rather than depicting objects at their moment of pristine function, these paintings catch them just after, the moment that is normally erased in the course of daily life. The act of painting becomes a way of arresting that erasure, preserving what we would otherwise sweep away without a second glance.</p><p><em>Still Things</em> extends this sensibility into something more compositional. Here the working method is closer to what I think of as a “private museum” of domestic objects, collected, arranged, and recorded. The paintings function like accession records for a collection that nobody would curate: the grotesque and the tender placed side by side, the strangeness of an ordinary thing held up to the light. Where <em>Residuals</em> is about time — catching a moment before it disappears — <em>Still Things</em> is about attention: what happens when looking itself becomes a kind of preservation.</p><p>Together, the two series form a coherent visual argument. Each image participates in a shared project of defamiliarization: the familiar made slightly unfamiliar, the overlooked made visible, the about-to-be-discarded made permanent. Watercolor is the right medium for this, as its transparency, the way pigment blooms and dries and cannot fully be controlled, mirrors the fragility of the moments these paintings try to hold. There is always a quiet tension in these works, something that sits between serenity and unease, which I think is honest to the experience of looking carefully at ordinary things.</p><p>The book is not a retrospective, but an argument for slowness, for the kind of looking that contemporary everyday life rarely permits.</p>`,
   descriptionHtmlZh: `<p>这部分汇聚了我两个相互关联的水彩系列：<em>残留</em>与<em>静物</em>，它们由一个共同的核心问题联结：当我们凝视日常之物足够久，久到感到陌生，它究竟向我们揭示了什么？</p><p>两个系列都从平凡之物出发：拾得之物、使用过的表面、家居器物——并将它们视为值得安静而持续凝视的对象。《残留》聚焦于痕迹：材料在使用之后留下的印记、余留与残骸。这些画作并非捕捉物件处于完好功能状态的瞬间，而是描绘其”刚刚之后”的时刻——那个在日常生活中通常会被抹去的瞬间。绘画因此成为一种阻止消除的方式，保留那些我们本会不假思索地扫去的东西。</p><p>《静物》将这种感受力延伸为更具构成性的东西。这里的工作方式更接近我所说的家居之物的”私人博物馆”——收集、排列、记录。这些画作像是一份没有人会策划的藏品登录记录：怪诞与温柔并置，寻常之物的陌异感被举到光线之下。如果说《残留》关乎时间——在某个瞬间消失之前将其捕捉——那么《静物》关乎的是注意力：当凝视本身成为一种保存方式时，会发生什么。</p><p>两个系列共同构成了一个连贯的视觉论点。每一幅画都参与着一个共同的陌生化计划：使熟悉者略感陌生，使被忽视者变得可见，使即将被丢弃者成为永恒。水彩是承载这一切的恰当媒介——它的透明性，色料晕染、干燥、无法被完全掌控的方式，映照着这些画作试图定格的瞬间的脆弱性。这些作品中始终有一种静默的张力，某种介于宁静与不安之间的东西，我认为这对于仔细凝视日常之物的体验来说是诚实的。</p><p>我的水彩作品是对“缓慢”的辩护，对那种当代日常生活中鲜少允许的凝视方式的辩护。</p>`,
 };
@@ -82,8 +82,8 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Featured work maintaining a subtle balance between serenity and faint unease.",
-    descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
+    description: "",
+    descriptionZh: "",
   },
 
   {
@@ -98,8 +98,8 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Featured work maintaining a subtle balance between serenity and faint unease.",
-    descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
+    description: "",
+    descriptionZh: "",
   },
   
   {
@@ -232,8 +232,8 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Featured work maintaining a subtle balance between serenity and faint unease.",
-    descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
+    description: "",
+    descriptionZh: "",
   },
   
   // 静物
@@ -249,8 +249,8 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Featured work maintaining a subtle balance between serenity and faint unease.",
-    descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
+    description: "",
+    descriptionZh: "",
   },
 
   {
@@ -313,8 +313,8 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Featured work maintaining a subtle balance between serenity and faint unease.",
-    descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
+    description: "",
+    descriptionZh: "",
   },
 
 
@@ -330,8 +330,8 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Featured work maintaining a subtle balance between serenity and faint unease.",
-    descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
+    description: "",
+    descriptionZh: "",
   },
 
   {
@@ -346,8 +346,8 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Featured work maintaining a subtle balance between serenity and faint unease.",
-    descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
+    description: "",
+    descriptionZh: "",
   },
 
   {
@@ -362,8 +362,8 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Featured work maintaining a subtle balance between serenity and faint unease.",
-    descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
+    description: "",
+    descriptionZh: "",
   },
 
   {
@@ -378,8 +378,8 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Featured work maintaining a subtle balance between serenity and faint unease.",
-    descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
+    description: "",
+    descriptionZh: "",
   },
   
   {
@@ -394,8 +394,8 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Featured work maintaining a subtle balance between serenity and faint unease.",
-    descriptionZh: "重点作品，宁静与隐约不安之间保持着微妙的平衡。",
+    description: "",
+    descriptionZh: "",
   },
   {
     id: "18",

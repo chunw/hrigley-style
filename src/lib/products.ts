@@ -53,13 +53,13 @@ Dimension: 35 x 35 cm</p>
     detailed_description_html_zh: "《遗迹》系列曾入选2024年伦敦国际创意大赛(LICC) 艺术创作组别。它诞生于一种淡淡的荒诞感：在研究那些古代陶俑时，我被它们那种亲切、笨拙又风趣的样子吸引。它们看起来不像什么伟大的纪念碑，倒像是一个个人在”无所事事”的瞬间被定格，很具有耐人寻味的想象空间，因此正合适放在当代无聊的办公室场景里。这款T恤采用优质棉质面料制成，穿着舒适，适合日常穿着。",
     category_zh: "服饰",
     edition_info_zh: "",
-    price: 35,
+    price: 36,
     currency: "USD",
     description: "Corporate Surrealism for the daily commuter and the trendsetter alike.",
     detailed_description_html: `
   <p><a href=”https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true” target=”_blank” rel=”noreferrer”>Official Selection</a> for 2024 London International Creative Competition (LICC) in Create/Art category, <i>Remains</i> was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions, making them perfect companions for the mundane modern office. <br>
-This t-shirt is crafted from soft, premium cotton for everyday comfort. <br>
-Sizes available: S, M, L, XL</p>
+This unisex oversized  t-shirt is crafted from soft, premium cotton for everyday comfort. <br>
+Sizes available: S, M, L</p>
     `.trim(),
     dimensions: ``,
     edition_info: null,
