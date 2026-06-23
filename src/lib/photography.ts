@@ -28,7 +28,7 @@ export const seriesList: PhotographySeries[] = [
   {
     id: "II",
     englishName: "All the world is a stage",
-    chineseName: "离去",
+    chineseName: "登场",
   },
 ];
 
