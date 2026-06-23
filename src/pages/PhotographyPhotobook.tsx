@@ -108,7 +108,7 @@ const SECTION_LABELS: Record<SectionId, string> = {
   puppetry: "Puppetry",
   rebirth: "Rebirth",
   "being-and-time": "Being And Time",
-  "departures-header": "Departures",
+  "departures-header": "All the world is a stage",
   "aqui-no-hay-soledad": "Aquí No Hay Soledad",
   "archive-5-to-9": "Archive from 5 to 9",
   "death-valley": "Reflection In The Death Valley",
@@ -225,7 +225,7 @@ function TableOfContents() {
     {
       id: "departures-header",
       roman: "II",
-      title: "Departures",
+      title: "All the world is a stage",
       subtitle: "Travel Monologue",
       works: [
         "Aquí No Hay Soledad",
@@ -973,11 +973,11 @@ export default function PhotographyPhotobook() {
 
       <Nostalgia />
 
-      {/* ── Chapter II: Departures ── */}
+      {/* ── Chapter II: All the world is a stage ── */}
       <ChapterHeader
         id="departures-header"
         number="II"
-        title="Departures"
+        title="All the world is a stage"
         subtitle="Travel Monologue · 2017–2021"
       />
 

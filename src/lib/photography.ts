@@ -27,7 +27,7 @@ export const seriesList: PhotographySeries[] = [
   },
   {
     id: "II",
-    englishName: "Departures",
+    englishName: "All the world is a stage",
     chineseName: "离去",
   },
 ];
@@ -133,7 +133,7 @@ export const photographyWorks: PhotographyWork[] = [
     mediumZh: "摄影作品",
   },
 
-  // Departures
+  // All the world is a stage
   {
     id: "1",
     title: "Highland Scottlands: The heroism of the vista",
@@ -146,8 +146,8 @@ export const photographyWorks: PhotographyWork[] = [
     mediumZh: "摄影作品",
     dimensions: "",
     dimensionsZh: "",
-    description: "2024 London International Creative Competition (LICC) Shortlist · Photo/Video",
-    descriptionZh: "2024年伦敦国际创意大赛（LICC）入围短名单 · 影像类",
+    description: "Scotland, 2024. 2024 London International Creative Competition (LICC) Shortlist · Photo/Video",
+    descriptionZh: "苏格兰，2024年。2024年伦敦国际创意大赛（LICC）入围短名单 · 影像类",
   },
   {
     id: "6",
@@ -172,6 +172,8 @@ export const photographyWorks: PhotographyWork[] = [
     year: "2021",
     medium: "Photography",
     mediumZh: "摄影作品",
+    description: "Sahara, 2021.",
+    descriptionZh: "撒哈拉，2021年。",
   },
   {
     id: "9",
@@ -183,8 +185,8 @@ export const photographyWorks: PhotographyWork[] = [
     year: "2023",
     medium: "Photography",
     mediumZh: "摄影作品",
-    description: "Teatro Colón, Buenos Aires",
-    descriptionZh: "",
+    description: "Teatro Colón, Buenos Aires, 2023.",
+    descriptionZh: "科隆大剧院，布宜诺斯艾利斯，2023年。",
   },
   {
     id: "10",
@@ -196,6 +198,8 @@ export const photographyWorks: PhotographyWork[] = [
     year: "2019",
     medium: "Photography",
     mediumZh: "摄影作品",
+    description: "New Orleans, 2019.",
+    descriptionZh: "新奥尔良，2019年。",
   },
   {
     id: "11",
@@ -207,6 +211,8 @@ export const photographyWorks: PhotographyWork[] = [
     year: "2019",
     medium: "Photography",
     mediumZh: "摄影作品",
+    description: "Paris, 2019.",
+    descriptionZh: "巴黎，2019年。",
   },
   {
     id: "13",

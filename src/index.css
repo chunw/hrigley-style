@@ -167,3 +167,9 @@ All colors MUST be HSL.
     cursor: pointer !important;
   }
 }
+
+@media print {
+  .description-html a {
+    color: #888 !important;
+  }
+}
