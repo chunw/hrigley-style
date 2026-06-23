@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { photographyWorks as allPhotographyWorks, seriesList, catalogMeta, type PhotographyWork } from "@/lib/photography";
@@ -156,6 +156,12 @@ const PhotographyCatalog = () => {
       <Header />
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-6 md:px-10 py-10 md:py-14">
+
+        <div className="mb-6">
+          <Link to="/catalogs" className="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors">
+            ← Back to Art Catalogs
+          </Link>
+        </div>
 
         <header className="flex flex-col md:flex-row md:items-start justify-between gap-6">
           <div>

@@ -89,6 +89,12 @@ const WatercolorCatalog = () => {
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-6 md:px-10 py-10 md:py-14">
 
+        <div className="mb-6">
+          <Link to="/catalogs" className="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors">
+            ← Back to Art Catalogs
+          </Link>
+        </div>
+
         {/* Catalog header */}
         <header className="flex flex-col md:flex-row md:items-start justify-between gap-6">
           <div>
