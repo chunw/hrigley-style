@@ -567,11 +567,10 @@ function WorkSection({
       {/* Description */}
       <div className="px-10 md:px-20 mt-12 max-w-prose">
         <div
-          className="text-white/60 leading-relaxed text-sm"
+          className="description-html text-white/60 leading-relaxed text-sm"
           style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: "1rem" }}
-        >
-          {description}
-        </div>
+          dangerouslySetInnerHTML={{ __html: description }}
+        />
       </div>
 
       <div className="px-10 md:px-20 mt-16">
@@ -1023,12 +1022,34 @@ export default function PhotographyPhotobook() {
         images={IMGS.deathValley}
         layout="strip"
         description={
-          <p>
-            Death Valley, 2017. A landscape at the edge of the livable world.
-            The salt flats become mirrors at dawn, doubling the sky, dissolving
-            the boundary between earth and atmosphere. To stand here is to
-            stand at the threshold of something larger than oneself.
-          </p>
+          <>
+            <p className="mb-4">
+              Death Valley, 2017. At Badwater Basin — the lowest point in North
+              America — the salt flats become mirrors at dawn, doubling the sky
+              and dissolving the boundary between earth and atmosphere. To stand
+              here is to stand at the threshold of something larger than
+              oneself.
+            </p>
+            <p className="font-mono text-xs text-white/40 tracking-widest">
+              <a
+                href="https://sfmoma.tumblr.com/post/169630613975/reflections-in-the-death-valley-chun-wang/amp"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white/70 transition-colors"
+              >
+                SFMOMA
+              </a>
+              {" · "}
+              <a
+                href="https://www.lensculture.com/projects/1619117-reflections-in-death-valley"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white/70 transition-colors"
+              >
+                LENSCULTURE
+              </a>
+            </p>
+          </>
         }
       />
 

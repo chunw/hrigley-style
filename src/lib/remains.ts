@@ -86,7 +86,6 @@ export const remainsWorks: RemainsWork[] = [
     title: "Remains No. 5",
     titleZh: "遗迹 其五",
     printInCatalog: true,
-    printInCatalogImage: "1",
     year: "2025",
     medium: "Mixed Media",
     mediumZh: "综合媒材",

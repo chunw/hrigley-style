@@ -172,7 +172,7 @@ const PhotographyCatalog = () => {
                 {(lang === "zh" ? (catalogMeta.descriptionZh ?? catalogMeta.description) : catalogMeta.description)
                   .split("\n\n")
                   .map((para, i) => (
-                    <p key={i} className="text-sm text-muted-foreground leading-relaxed">{para}</p>
+                    <p key={i} className="description-html text-sm text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: para }} />
                   ))}
               </div>
             )}

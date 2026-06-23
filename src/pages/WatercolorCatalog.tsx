@@ -105,7 +105,7 @@ const WatercolorCatalog = () => {
             </p>
             {catalogMeta.descriptionHtml ? (
               <div
-                className="text-sm text-muted-foreground mt-3 max-w-prose space-y-3 [&_em]:italic"
+                className="description-html text-sm text-muted-foreground mt-3 max-w-prose space-y-3 [&_em]:italic"
                 dangerouslySetInnerHTML={{
                   __html: lang === "zh"
                     ? (catalogMeta.descriptionHtmlZh ?? catalogMeta.descriptionHtml)
@@ -113,9 +113,10 @@ const WatercolorCatalog = () => {
                 }}
               />
             ) : catalogMeta.description && (
-              <p className="text-sm text-muted-foreground mt-3 max-w-prose">
-                {lang === "zh" ? (catalogMeta.descriptionZh ?? catalogMeta.description) : catalogMeta.description}
-              </p>
+              <p
+                className="description-html text-sm text-muted-foreground mt-3 max-w-prose"
+                dangerouslySetInnerHTML={{ __html: lang === "zh" ? (catalogMeta.descriptionZh ?? catalogMeta.description) : catalogMeta.description }}
+              />
             )}
           </div>
         </header>
@@ -133,9 +134,10 @@ const WatercolorCatalog = () => {
                 </div>
                 <p className="font-mono text-xs mt-2 text-muted-foreground">{count} {t.watercolorCatalog.works}</p>
                 {s.description && (
-                  <p className="text-sm text-muted-foreground mt-2">
-                    {lang === "zh" ? (s.descriptionZh ?? s.description) : s.description}
-                  </p>
+                  <p
+                    className="description-html text-sm text-muted-foreground mt-2"
+                    dangerouslySetInnerHTML={{ __html: lang === "zh" ? (s.descriptionZh ?? s.description) : s.description }}
+                  />
                 )}
               </div>
               );

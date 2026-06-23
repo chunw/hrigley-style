@@ -100,9 +100,10 @@ const Spirit21Catalog = () => {
               {spiritWorks.length} {t.spirit21Catalog.works}
             </p>
             {catalogMeta.description && (
-              <p className="text-sm text-muted-foreground mt-3 max-w-prose">
-                {lang === "zh" ? (catalogMeta.descriptionZh ?? catalogMeta.description) : catalogMeta.description}
-              </p>
+              <p
+                className="description-html text-sm text-muted-foreground mt-3 max-w-prose"
+                dangerouslySetInnerHTML={{ __html: lang === "zh" ? (catalogMeta.descriptionZh ?? catalogMeta.description) : catalogMeta.description }}
+              />
             )}
           </div>
         </header>

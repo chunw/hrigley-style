@@ -159,6 +159,8 @@ export const photographyWorks: PhotographyWork[] = [
     year: "2017",
     medium: "Photography",
     mediumZh: "摄影作品",
+    description: `Death Valley, 2017. At Badwater Basin — the lowest point in North America — the salt flats become mirrors at dawn, doubling the sky and dissolving the boundary between earth and atmosphere. Featured on <a href="https://sfmoma.tumblr.com/post/169630613975/reflections-in-the-death-valley-chun-wang/amp" target="_blank">SFMOMA</a> · <a href="https://www.lensculture.com/projects/1619117-reflections-in-death-valley" target="_blank">LensCulture</a>`,
+    descriptionZh: `2017年，死亡谷。收录于 <a href="https://sfmoma.tumblr.com/post/169630613975/reflections-in-the-death-valley-chun-wang/amp" target="_blank">SFMOMA</a> · <a href="https://www.lensculture.com/projects/1619117-reflections-in-death-valley" target="_blank">LensCulture</a>`,
   },
   {
     id: "7",

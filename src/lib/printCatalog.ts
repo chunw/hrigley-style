@@ -61,7 +61,7 @@ function getCSS(isDark: boolean): string {
     margin-bottom: 18px;
   }
   .img-area {
-    flex: 1;
+    flex-shrink: 0;
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -69,13 +69,12 @@ function getCSS(isDark: boolean): string {
   }
   .img-area img {
     max-width: 100%;
-    max-height: 100%;
+    max-height: 65vh;
     object-fit: contain;
     display: block;
   }
   .meta {
-    margin-top: 22px;
-    padding-top: 16px;
+    margin-top: 18px;
   }
   .meta-title {
     font-family: Georgia, 'Times New Roman', serif;

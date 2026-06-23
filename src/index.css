@@ -147,6 +147,14 @@ All colors MUST be HSL.
     color: hsl(var(--primary));
   }
 
+  .description-html a {
+    color: hsl(var(--primary));
+  }
+
+  .description-html a:hover {
+    text-decoration: underline;
+  }
+
   /* Make common interactive elements show pointer cursor */
   a,
   button,

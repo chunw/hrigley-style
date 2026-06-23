@@ -155,9 +155,10 @@ const Spirit21Detail = () => {
             </div>
 
             {(work.description || work.descriptionZh) && (
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {lang === "zh" && work.descriptionZh ? work.descriptionZh : work.description}
-              </p>
+              <p
+                className="description-html text-sm text-muted-foreground leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: lang === "zh" && work.descriptionZh ? work.descriptionZh : work.description ?? "" }}
+              />
             )}
 
             <div className={`space-y-1 font-mono text-muted-foreground ${lang === "zh" ? "text-sm" : "text-xs"}`}>
