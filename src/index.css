@@ -169,7 +169,7 @@ All colors MUST be HSL.
 }
 
 @media print {
-  .description-html a {
+  a {
     color: #888 !important;
   }
 }
