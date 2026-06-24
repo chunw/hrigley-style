@@ -592,7 +592,7 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
 <html lang="${lang}">
 <head>
   <meta charset="UTF-8" />
-  <title>Chun Wang Complete Catalog ${dateStamp}</title>
+  <title>Chun Wang Complete Catalog ${dateStamp} ${lang.toUpperCase()}</title>
   <style>${css}</style>
 </head>
 <body>
