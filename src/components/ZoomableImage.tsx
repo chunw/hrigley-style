@@ -62,7 +62,7 @@ export const ZoomableImage = ({
   return (
     <>
       <div
-        className="relative group cursor-zoom-in"
+        className="relative group cursor-zoom-in h-full"
         onClick={() => { setLightboxIndex(startIndex); setOpen(true); }}
       >
         <img src={src} alt={alt} className={imgClassName} />

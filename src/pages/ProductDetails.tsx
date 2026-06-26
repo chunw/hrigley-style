@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -6,13 +6,6 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useProductDetails, useProductImages } from "@/hooks/useProductDetails";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import About from "./About";
 import { ZoomableImage } from "@/components/ZoomableImage";
 
@@ -21,6 +14,8 @@ const ProductDetails = () => {
   const zh = lang === "zh";
   const { id } = useParams<{ id: string }>();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [containerHeight, setContainerHeight] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const { data: product, isLoading: productLoading, error: productError } = useProductDetails(id!);
   const { data: images, isLoading: imagesLoading } = useProductImages(id!);
@@ -52,6 +47,25 @@ const ProductDetails = () => {
 
   const currentImage = allImages[selectedImageIndex] || allImages[0];
 
+  // Measure all images and lock container to the tallest one so layout never jumps
+  useEffect(() => {
+    const urls = allImages.map(img => img.image_url).filter(Boolean);
+    if (!urls.length || !containerRef.current) return;
+    const containerWidth = containerRef.current.offsetWidth;
+    let remaining = urls.length;
+    let maxHeight = 0;
+    urls.forEach(src => {
+      const img = new window.Image();
+      img.onload = () => {
+        const h = (img.naturalHeight / img.naturalWidth) * containerWidth;
+        if (h > maxHeight) maxHeight = h;
+        if (--remaining === 0) setContainerHeight(Math.min(maxHeight, 500));
+      };
+      img.onerror = () => { if (--remaining === 0 && maxHeight > 0) setContainerHeight(maxHeight); };
+      img.src = src;
+    });
+  }, [allImages]);
+
   const formatPrice = (price: number) => `$${price.toLocaleString()}`;
 
   const handleOrderNow = (e: React.MouseEvent) => {
@@ -81,11 +95,15 @@ const ProductDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           {/* Image Gallery */}
           <div className="space-y-4">
-            <div className="rounded-lg overflow-hidden bg-black border-2 border-primary/20">
+            <div
+              ref={containerRef}
+              className="rounded-lg overflow-hidden bg-black border-2 border-primary/20"
+              style={containerHeight ? { height: `${containerHeight}px` } : {}}
+            >
               <ZoomableImage
                 src={currentImage?.image_url || "/placeholder.svg"}
                 alt={product.name}
-                imgClassName="w-full h-auto block"
+                imgClassName="w-full h-full object-contain block"
                 images={allImages.map((img) => img.image_url)}
                 startIndex={selectedImageIndex}
                 onNavigate={setSelectedImageIndex}
@@ -93,31 +111,24 @@ const ProductDetails = () => {
             </div>
 
             {allImages.length > 1 && (
-              <div className="w-full">
-                <Carousel className="w-full">
-                  <CarouselContent className="-ml-2 md:-ml-4">
-                    {allImages.map((image, index) => (
-                      <CarouselItem key={index} className="pl-2 md:pl-4 basis-1/4">
-                        <button
-                          onClick={() => setSelectedImageIndex(index)}
-                          className={`w-full aspect-square rounded-lg overflow-hidden border-2 transition-colors bg-black ${
-                            selectedImageIndex === index
-                              ? 'border-primary'
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                        >
-                          <img
-                            src={image.image_url || "/placeholder.svg"}
-                            alt={`${product.name} view ${index + 1}`}
-                            className="w-full h-full object-contain"
-                          />
-                        </button>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious className="left-2" />
-                  <CarouselNext className="right-2" />
-                </Carousel>
+              <div className="flex gap-2 flex-wrap">
+                {allImages.map((image, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedImageIndex(index)}
+                    className={`w-24 h-24 flex-shrink-0 overflow-hidden border-2 transition-colors bg-black ${
+                      selectedImageIndex === index
+                        ? 'border-primary'
+                        : 'border-border hover:border-muted-foreground'
+                    }`}
+                  >
+                    <img
+                      src={image.image_url || "/placeholder.svg"}
+                      alt={`${product.name} view ${index + 1}`}
+                      className="w-full h-full object-contain"
+                    />
+                  </button>
+                ))}
               </div>
             )}
           </div>
