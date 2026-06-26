@@ -44,14 +44,11 @@ const ProductDetails = () => {
     );
   }
 
-  const rawImages = [
-    { image_url: product.image_url, alt_text: product.name || product.title },
-    ...(images || [])
-  ].filter(img => img && img.image_url);
+  const rawImages = (images && images.length > 0)
+    ? images
+    : [{ image_url: product.image_url, alt_text: product.name || product.title }];
 
-  const allImages = Array.from(
-    new Map(rawImages.map((img) => [img.image_url, img])).values()
-  );
+  const allImages = rawImages.filter(img => img && img.image_url);
 
   const currentImage = allImages[selectedImageIndex] || allImages[0];
 

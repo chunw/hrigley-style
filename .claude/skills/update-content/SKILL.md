@@ -40,7 +40,8 @@ description: Guide for updating product listings, watercolor works, and Chinese/
   edition_info: null,               // 留空则不显示
   edition_size: null,               // 数字或 null
   alt_text: "Image alt text",
-  image_url: new URL("../assets/products/YOUR_FOLDER/main.jpg", import.meta.url).href,
+  imageFolder: "your-folder-name",  // folder name inside src/assets/products/
+  image_url: new URL("../assets/products/your-folder-name/main.jpg", import.meta.url).href,
   is_active: true,
   category: "Accessories",         // 需要与已有分类一致，否则会出现新分类按钮
   created_at: new Date().toISOString(),
@@ -48,13 +49,52 @@ description: Guide for updating product listings, watercolor works, and Chinese/
 },
 ```
 
-### 添加产品图片（走马灯）
+**When adding a new product, ALL `_zh` fields must be filled in — never leave them as `""`.**  The site shows English as fallback when `_zh` is empty, so an empty field means Chinese-mode users always see English. Write full English AND Chinese descriptions in the shop's tone:
+- Tone: artistic, slightly dry/ironic, confident. Speaks to the creative professional — gallery-opening energy, not department-store energy.
+- `description` (card blurb): one punchy sentence, 10–15 words.
+- `detailed_description_html`: 2–3 short paragraphs in `<p>` tags. Lead with the concept or story, close with a material/practical detail.
+- `description_zh` / `detailed_description_html_zh`: faithful Chinese translation that keeps the same register — literary but not stiff. **`detailed_description_html_zh` must use `<p>` tags** just like the English field — it is rendered via `dangerouslySetInnerHTML` and plain text will have no paragraph styling. Use backtick delimiters if the text contains `"…"` quote marks.
+- `title_zh`: translate the product name naturally (not literally word-for-word).
+- `category_zh`: match the category — 配件 (Accessories), 服饰 (Apparel), 文具 (Stationery), 家居 (Home), 原创艺术 (Original Art).
 
-额外图片加在 `productImages` 数组里：
+**After adding a product, always tell the user:**
+> Drop images into `src/assets/products/<imageFolder>/` — they will auto-load into the carousel. Set `image_url` to whichever file in that folder should be the cover photo.
+
+**Cover photo selection rule (when setting `image_url`):**
+Always check `src/assets/products/<imageFolder>/` BEFORE writing the product entry.
+1. If the folder exists and has `main.jpg` → use it.
+2. If the folder exists but no `main.jpg` → use the first file alphabetically.
+3. If the folder does not exist → leave `image_url: ""` and tell the user to create the folder and add images.
+
+The cover image is always shown first in the product detail slider — this is enforced automatically by the `productImages` sort in `src/lib/products.ts`.
+
+### 产品图片放在哪里
+
+图片放在 `src/assets/products/<your-folder-name>/` 下，每个产品一个文件夹。文件夹名称任意，但要和 `image_url` 里的路径一致。
+
+```
+src/assets/products/
+  everyflushnathmat/        ← 新建文件夹（名称与 image_url 路径对应）
+    Fresh Bath Mat 1.png    ← 主图（用在 image_url 字段）
+    Fresh Bath Mat 2.png    ← 额外图（加进 productImages 数组）
+```
+
+**主图**：在产品对象的 `image_url` 字段引用：
 
 ```ts
-{ id: "unique-img-id", product_id: "your-product-id", image_url: new URL("../assets/products/YOUR_FOLDER/2.jpg", import.meta.url).href, display_order: 0 },
+image_url: new URL("../assets/products/everyflushnathmat/Fresh Bath Mat 1.png", import.meta.url).href,
 ```
+
+### 添加产品图片（走马灯）
+
+额外图片加在 `productImages` 数组里，`product_id` 要和产品的 `id` 一致：
+
+```ts
+{ id: "flush-mat-1", product_id: "every-flush-bath-mat", image_url: new URL("../assets/products/everyflushnathmat/Fresh Bath Mat 1.png", import.meta.url).href, display_order: 0 },
+{ id: "flush-mat-2", product_id: "every-flush-bath-mat", image_url: new URL("../assets/products/everyflushnathmat/Fresh Bath Mat 2.png", import.meta.url).href, display_order: 1 },
+```
+
+> `id` 字段在整个 `productImages` 数组里必须唯一。
 
 ---
 
@@ -77,7 +117,7 @@ edition_info_zh: "限量版信息（可选）",
 ```
 
 - **留空字符串 `""` = 自动显示英文原文**，不会出现空白
-- `detailed_description_html_zh` 支持 HTML 标签（`<p>`, `<b>`, `<i>`, `<a>` 等）
+- `detailed_description_html_zh` **必须使用 HTML 标签**（`<p>`, `<b>`, `<i>`, `<a>` 等）——它和英文版一样通过 `dangerouslySetInnerHTML` 渲染，纯文本不会有段落格式。每段内容都要包在 `<p>…</p>` 里。
 
 ---
 
@@ -218,7 +258,10 @@ TypeScript 编译器**不认识**弯引号作为字符串定界符，会抛出�
 
 **修复方法：**
 - 确保每个字段值的**外层**引号都是普通 ASCII 直引号 `"`（从键盘直接打出来）
-- 字符串**内容**里的弯引号（比如 `"无所事事"`）无所谓，不影响解析
+- 字符串**内容**里如果有中文直角引号（`"无所事事"`），这些引号若用的是 ASCII `"`，会提前关闭外层字符串，导致报错。解决方案：把该字段的外层定界符换成反引号 `` ` ``：
+  ```ts
+  detailed_description_html_zh: `...在"无所事事"的瞬间...`,
+  ```
 
 ---
 
@@ -228,7 +271,8 @@ TypeScript 编译器**不认识**弯引号作为字符串定界符，会抛出�
 |---|---|
 | 改产品名/价格/描述 | `src/lib/products.ts` |
 | 加新产品 | `src/lib/products.ts`，往 `products` 数组追加 |
-| 加产品图片 | `src/lib/products.ts`，往 `productImages` 数组追加 |
+| 加产品图片（文件） | `src/assets/products/<folder>/`，新建文件夹放图片 |
+| 加产品图片（走马灯） | `src/lib/products.ts`，往 `productImages` 数组追加 |
 | 填产品中文翻译 | `src/lib/products.ts`，填 `_zh` 字段 |
 | 改按钮/导航等 UI 中文 | `src/lib/translations.ts`，改 `zh:` 对象 |
 | 改按钮/导航等 UI 英文 | `src/lib/translations.ts`，改 `en:` 对象 |
