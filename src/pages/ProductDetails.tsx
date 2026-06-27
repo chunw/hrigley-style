@@ -20,32 +20,11 @@ const ProductDetails = () => {
   const { data: product, isLoading: productLoading, error: productError } = useProductDetails(id!);
   const { data: images, isLoading: imagesLoading } = useProductImages(id!);
 
-  if (productLoading || imagesLoading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-lg text-muted-foreground handwritten">{t.productDetails.loading}</div>
-        </div>
-      </div>
-    );
-  }
-
-  if (productError || !product) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header />
-      </div>
-    );
-  }
-
+  // Compute allImages before early returns so the useEffect below is never conditional
   const rawImages = (images && images.length > 0)
     ? images
-    : [{ image_url: product.image_url, alt_text: product.name || product.title }];
-
+    : product ? [{ image_url: product.image_url, alt_text: product.name || product.title }] : [];
   const allImages = rawImages.filter(img => img && img.image_url);
-
-  const currentImage = allImages[selectedImageIndex] || allImages[0];
 
   // Measure all images and lock container to the tallest one so layout never jumps
   useEffect(() => {
@@ -65,6 +44,27 @@ const ProductDetails = () => {
       img.src = src;
     });
   }, [allImages]);
+
+  if (productLoading || imagesLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-lg text-muted-foreground handwritten">{t.productDetails.loading}</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (productError || !product) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+      </div>
+    );
+  }
+
+  const currentImage = allImages[selectedImageIndex] || allImages[0];
 
   const formatPrice = (price: number) => `$${price.toLocaleString()}`;
 
