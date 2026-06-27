@@ -235,6 +235,40 @@ export const watercolors: Watercolor[] = [
     description: "",
     descriptionZh: "",
   },
+
+{
+    id: "26",
+     title: "Residuals #8",
+    titleZh: "残留 其八",
+    series: "I",
+    printInCatalog: true,
+    printInCatalogImage: "1",
+    showInStorefront: true,
+    year: "2026",
+    medium: "Watercolor on paper",
+    mediumZh: "纸本水彩",
+    dimensions: "",
+    dimensionsZh: "",
+    description: "",
+    descriptionZh: "",
+  },
+
+{
+    id: "27",
+     title: "Residuals #9",
+    titleZh: "残留 其九",
+    series: "I",
+    printInCatalog: true,
+    printInCatalogImage: "1",
+    showInStorefront: true,
+    year: "2026",
+    medium: "Watercolor on paper",
+    mediumZh: "纸本水彩",
+    dimensions: "",
+    dimensionsZh: "",
+    description: "",
+    descriptionZh: "",
+  },
   
   // 静物
 {
