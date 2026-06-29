@@ -9,7 +9,7 @@ export const translations = {
     },
     hero: {
       description:
-        "What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity,",
+        "What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity.",
       createdExclusivelyBy: "created exclusively by",
     },
     about: {

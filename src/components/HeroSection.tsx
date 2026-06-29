@@ -13,14 +13,14 @@ const HeroSection = () => {
                 {t.shopTitle.line1} <br />{t.shopTitle.line2}<br />
                 <span className="text-primary">{t.shopTitle.line3}</span>
               </h1>
-              <p className="handwritten max-w-md" style={{
+              <p className="max-w-md" style={{
                 opacity: 0.7,
-                fontSize: '0.85rem',
+                fontSize: '1rem',
               }}>
                 {t.hero.description}
               </p>
-              <p className="handwritten text-muted-foreground max-w-md" style={{
-                fontSize: '0.9rem',
+              <p className="text-muted-foreground max-w-md" style={{
+                fontSize: '1rem',
               }}>
                 {t.hero.createdExclusivelyBy}{" "}
                 <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
