@@ -5,7 +5,7 @@ import { photographyWorks } from "@/lib/photography";
 
 const DEFAULT_PRINT_INFO = '9×12" fine art matte paper print';
 const DEFAULT_PRINT_INFO_ZH = '9×12英寸精细艺术哑光纸印刷品';
-const DEFAULT_PRINT_PRICE = 5;
+const DEFAULT_PRINT_PRICE = 10;
 
 const buildDescription = (desc: string | undefined | null, printInfo: string) => {
   const base = desc?.trim();
@@ -29,8 +29,8 @@ const catalogProducts = [
         price: w.printPrice ?? DEFAULT_PRINT_PRICE,
         currency: "USD",
         image_url: `/watercolors/${paddedId}/main.jpg`,
-        category: "Watercolor",
-        category_zh: "水彩",
+        category: w.series === "III" ? "Cards" : "Watercolor",
+        category_zh: w.series === "III" ? "卡片" : "水彩",
         paylink: w.paylink ?? "",
         showInStorefront: true,
         detailPath: `/watercolors/${w.id}`,
@@ -83,7 +83,8 @@ export const useProducts = () => {
       await new Promise(resolve => setTimeout(resolve, 300));
       const photographyProducts = catalogProducts.filter(p => p.category === "Photography");
       const watercolorProducts = catalogProducts.filter(p => p.category === "Watercolor");
-      return [...products, ...photographyProducts, ...watercolorProducts];
+      const cardProducts = catalogProducts.filter(p => p.category === "Cards");
+      return [...products, ...photographyProducts, ...watercolorProducts, ...cardProducts];
     },
   });
 };

@@ -184,26 +184,37 @@ const PhotographyDetail = () => {
             </div>
 
             <div className="border-t border-border pt-8 space-y-4">
-              {work.price != null && work.paylink ? (
-                <>
+              {(() => {
+                const displayPrice = work.price ?? work.printPrice;
+                if (displayPrice != null) {
+                  return (
+                    <>
+                      <p className="handwritten text-2xl font-bold">${displayPrice}</p>
+                      {work.paylink ? (
+                        <>
+                          <button
+                            onClick={handleBuyNow}
+                            className="handwritten inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
+                          >
+                            {t.watercolor.buyNow}
+                          </button>
+                          <p className="text-xs text-muted-foreground font-mono">
+                            {t.watercolor.shippingIncluded}
+                          </p>
+                        </>
+                      ) : null}
+                    </>
+                  );
+                }
+                return (
                   <button
-                    onClick={handleBuyNow}
-                    className="handwritten inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
+                    onClick={handleInquire}
+                    className="handwritten inline-block bg-primary text-primary-foreground px-8 py-3 text-sm hover:bg-primary/90 transition-colors"
                   >
-                    {t.watercolor.buyNow} — ${work.price}
+                    {t.watercolor.inquire}
                   </button>
-                  <p className="text-xs text-muted-foreground font-mono">
-                    {t.watercolor.shippingIncluded}
-                  </p>
-                </>
-              ) : (
-                <button
-                  onClick={handleInquire}
-                  className="handwritten inline-block bg-primary text-primary-foreground px-8 py-3 text-sm hover:bg-primary/90 transition-colors"
-                >
-                  {t.watercolor.inquire}
-                </button>
-              )}
+                );
+              })()}
             </div>
           </div>
         </div>

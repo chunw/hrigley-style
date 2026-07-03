@@ -30,13 +30,21 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   // Unique categories (keyed by English value, displayed in current language)
   const visibleProducts = products?.filter((product) => product.showInStorefront !== false);
   const categories = ["ALL", ...Array.from(new Set(visibleProducts?.map(p => p.category) || []))];
+  const categoryCount = (cat: string) => {
+    if (cat === "ALL") return visibleProducts?.length ?? 0;
+    return visibleProducts?.filter(p => p.category === cat).length ?? 0;
+  };
   const categoryLabel = (cat: string) => {
-    if (cat === "ALL") return t.productGrid.categoryAll;
-    if (zh) {
-      const match = visibleProducts?.find(p => p.category === cat);
-      return (match?.category_zh) || cat;
-    }
-    return cat;
+    const count = categoryCount(cat);
+    const label = (() => {
+      if (cat === "ALL") return t.productGrid.categoryAll;
+      if (zh) {
+        const match = visibleProducts?.find(p => p.category === cat);
+        return (match?.category_zh) || cat;
+      }
+      return cat;
+    })();
+    return `${label} (${count})`;
   };
 
   const buildProductSearchText = (product: Record<string, unknown>) => {
