@@ -53,6 +53,9 @@ export interface PhotographyWork {
   dimensionsZh?: string;
   description?: string;
   descriptionZh?: string;
+  printInfo?: string;
+  printInfoZh?: string;
+  printPrice?: number;
   price?: number;
   paylink?: string;
 }
@@ -72,8 +75,10 @@ export const photographyWorks: PhotographyWork[] = [
     mediumZh: "摄影作品",
     dimensions: "",
     dimensionsZh: "",
-    description: "Scotland, 2024. 2024 London International Creative Competition (LICC) Shortlist · Photo/Video",
-    descriptionZh: "苏格兰，2024年。2024年伦敦国际创意大赛（LICC）入围短名单 · 影像类",
+    description: "Scotland, 2024. 2024 London International Creative Competition Shortlist",
+    descriptionZh: "苏格兰，2024年。2024年伦敦国际创意大赛入围短名单作品",
+    printInfo: '9×12" fine art matte paper print',
+    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
   },
   {
     id: "14",
@@ -89,6 +94,8 @@ export const photographyWorks: PhotographyWork[] = [
     dimensionsZh: "",
     description: "Scotland, 2024.",
     descriptionZh: "苏格兰，2024年。",
+    printInfo: '9×12" fine art matte paper print',
+    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
   },
   {
     id: "15",
@@ -104,6 +111,8 @@ export const photographyWorks: PhotographyWork[] = [
     dimensionsZh: "",
     description: "Scotland, 2024.",
     descriptionZh: "苏格兰，2024年。",
+    printInfo: '9×12" fine art matte paper print',
+    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
   },
   {
     id: "16",
@@ -119,6 +128,8 @@ export const photographyWorks: PhotographyWork[] = [
     dimensionsZh: "",
     description: "Scotland, 2024.",
     descriptionZh: "苏格兰，2024年。",
+    printInfo: '9×12" fine art matte paper print',
+    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
   },
 
 
@@ -135,8 +146,10 @@ export const photographyWorks: PhotographyWork[] = [
     mediumZh: "摄影作品",
     dimensions: "",
     dimensionsZh: "",
-    description: "16th International Color Awards Official Nominee · Portrait · 2022 International Photography Awards (IPA) Official Selection",
-    descriptionZh: "第16届国际色彩大奖官方提名 · 肖像 · 2022年国际摄影奖（IPA）官方入选",
+    description: "2022 International Photography Awards (IPA) Official Selection",
+    descriptionZh: "2022年国际摄影奖（IPA）官方入选作品",
+    printInfo: '9×12" fine art matte paper print',
+    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
   },
   {
     id: "3",
@@ -150,8 +163,10 @@ export const photographyWorks: PhotographyWork[] = [
     mediumZh: "摄影作品",
     dimensions: "",
     dimensionsZh: "",
-    description: "15th International Color Awards Official Nominee · Fine Art",
-    descriptionZh: "第15届国际色彩大奖官方提名 · 纯艺术",
+    description: "15th International Color Awards Official Nominee",
+    descriptionZh: "第15届国际色彩大奖官方提名作品",
+    printInfo: '9×12" fine art matte paper print',
+    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
   },
   {
     id: "4",
@@ -238,8 +253,10 @@ export const photographyWorks: PhotographyWork[] = [
     year: "2023",
     medium: "Photography",
     mediumZh: "摄影作品",
-    description: "Teatro Colón, Buenos Aires, 2023.",
-    descriptionZh: "科隆大剧院，布宜诺斯艾利斯，2023年。",
+    description: "Buenos Aires, 2023.",
+    descriptionZh: "布宜诺斯艾利斯，2023年。",
+    printInfo: '9×12" fine art matte paper print',
+    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
   },
   {
     id: "10",
@@ -266,6 +283,8 @@ export const photographyWorks: PhotographyWork[] = [
     mediumZh: "摄影作品",
     description: "Paris, 2019.",
     descriptionZh: "巴黎，2019年。",
+    printInfo: '9×12" fine art matte paper print',
+    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
   },
   {
     id: "13",

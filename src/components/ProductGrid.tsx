@@ -14,9 +14,11 @@ interface ProductGridProps {
   onSearchChange?: (query: string) => void;
   onMatchCountChange?: (count: number) => void;
   matchedCount?: number;
+  hideOrderButton?: boolean;
+  hideShippingLabel?: boolean;
 }
 
-const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedCount = 0 }: ProductGridProps) => {
+const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedCount = 0, hideOrderButton, hideShippingLabel }: ProductGridProps) => {
   const { t, lang } = useLanguage();
   const zh = lang === "zh";
   const [selectedCategory, setSelectedCategory] = useState("ALL");
@@ -152,6 +154,8 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
                   {...product}
                   highlightQuery={normalizedSearchQuery}
                   isSearchHighlighted={hasActiveSearch}
+                  hideOrderButton={hideOrderButton}
+                  hideShippingLabel={hideShippingLabel}
                 />
               </div>
             ))}

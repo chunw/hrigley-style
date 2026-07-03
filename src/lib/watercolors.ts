@@ -30,6 +30,11 @@ export const seriesList: WatercolorSeries[] = [
     englishName: "Still Things",
     chineseName: "静物",
   },
+  {
+    id: "III",
+    englishName: "Chun Wang Studio Cards",
+    chineseName: "王淳工作室卡片",
+  },
 ];
 
 export interface Watercolor {
@@ -47,6 +52,9 @@ export interface Watercolor {
   dimensionsZh?: string;
   description?: string;
   descriptionZh?: string;
+  printInfo?: string;
+  printInfoZh?: string;
+  printPrice?: number;
   price?: number;
   paylink?: string;
 }
@@ -66,8 +74,10 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "The transparency of watercolor meets the strangeness of a found object.",
-    descriptionZh: "水彩的透明性与拾得物的奇异感在此相遇。",
+    description: "",
+    descriptionZh: "",
+    printInfo: `5×7" framed print, white frame, matted to 4×6"`,
+    printInfoZh: "5×7英寸装裱印刷品，白色画框，4×6英寸裱装",
   },
 
 {
@@ -100,6 +110,8 @@ export const watercolors: Watercolor[] = [
     dimensionsZh: "",
     description: "",
     descriptionZh: "",
+    printInfo: `5×7" framed print, white frame, matted to 4×6"`,
+    printInfoZh: "5×7英寸装裱印刷品，白色画框，4×6英寸裱装",
   },
   
   {
@@ -115,8 +127,8 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "Continuing the 'private museum' working method — arranging, recording.",
-    descriptionZh: "延续「私人博物馆」的工作方式——排列，记录。",
+    description: "",
+    descriptionZh: "",
   }, {
     id: "1",
     title: "Residuals #1",
@@ -183,8 +195,8 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "From the 'Collection Catalog' series. A salvaged object, rearranged into a new scene.",
-    descriptionZh: "「馆藏目录」系列。一件打捞来的小物，被重新排列成新的景观现场。",
+    description: "",
+    descriptionZh: "",
   },
   {
     id: "2",
@@ -494,6 +506,23 @@ export const watercolors: Watercolor[] = [
   //   description: "Exploring the dual qualities of everyday objects — simultaneously grotesque and tender.",
   //   descriptionZh: "探索日常物件兼具怪诞与温柔的双重气质。",
   // },
+
+  // 明信片 / Postcards
+
+  { id: "28", title: "Chun Wang Studio Card #01", titleZh: "王淳工作室卡片 #01", series: "III", showInStorefront: true, year: "2026", medium: `4×6" card, matte fine art paper`, mediumZh: "4×6英寸卡片，哑光艺术纸", printInfo: `4×6" card printed on matte fine art paper`, printInfoZh: "4×6英寸哑光艺术纸印刷卡片" },
+  { id: "29", title: "Chun Wang Studio Card #02", titleZh: "王淳工作室卡片 #02", series: "III", showInStorefront: true, year: "2026", medium: `4×6" card, matte fine art paper`, mediumZh: "4×6英寸卡片，哑光艺术纸", printInfo: `4×6" card printed on matte fine art paper`, printInfoZh: "4×6英寸哑光艺术纸印刷卡片" },
+  { id: "30", title: "Chun Wang Studio Card #03", titleZh: "王淳工作室卡片 #03", series: "III", showInStorefront: true, year: "2026", medium: `4×6" card, matte fine art paper`, mediumZh: "4×6英寸卡片，哑光艺术纸", printInfo: `4×6" card printed on matte fine art paper`, printInfoZh: "4×6英寸哑光艺术纸印刷卡片" },
+  { id: "31", title: "Chun Wang Studio Card #04", titleZh: "王淳工作室卡片 #04", series: "III", showInStorefront: true, year: "2026", medium: `4×6" card, matte fine art paper`, mediumZh: "4×6英寸卡片，哑光艺术纸", printInfo: `4×6" card printed on matte fine art paper`, printInfoZh: "4×6英寸哑光艺术纸印刷卡片" },
+  { id: "32", title: "Chun Wang Studio Card #05", titleZh: "王淳工作室卡片 #05", series: "III", showInStorefront: true, year: "2026", medium: `4×6" card, matte fine art paper`, mediumZh: "4×6英寸卡片，哑光艺术纸", printInfo: `4×6" card printed on matte fine art paper`, printInfoZh: "4×6英寸哑光艺术纸印刷卡片" },
+  { id: "33", title: "Chun Wang Studio Card #06", titleZh: "王淳工作室卡片 #06", series: "III", showInStorefront: true, year: "2026", medium: `4×6" card, matte fine art paper`, mediumZh: "4×6英寸卡片，哑光艺术纸", printInfo: `4×6" card printed on matte fine art paper`, printInfoZh: "4×6英寸哑光艺术纸印刷卡片" },
+  { id: "34", title: "Chun Wang Studio Card #07", titleZh: "王淳工作室卡片 #07", series: "III", showInStorefront: true, year: "2026", medium: `4×6" card, matte fine art paper`, mediumZh: "4×6英寸卡片，哑光艺术纸", printInfo: `4×6" card printed on matte fine art paper`, printInfoZh: "4×6英寸哑光艺术纸印刷卡片" },
+  { id: "35", title: "Chun Wang Studio Card #08", titleZh: "王淳工作室卡片 #08", series: "III", showInStorefront: true, year: "2026", medium: `4×6" card, matte fine art paper`, mediumZh: "4×6英寸卡片，哑光艺术纸", printInfo: `4×6" card printed on matte fine art paper`, printInfoZh: "4×6英寸哑光艺术纸印刷卡片" },
+  { id: "36", title: "Chun Wang Studio Card #09", titleZh: "王淳工作室卡片 #09", series: "III", showInStorefront: true, year: "2026", medium: `4×6" card, matte fine art paper`, mediumZh: "4×6英寸卡片，哑光艺术纸", printInfo: `4×6" card printed on matte fine art paper`, printInfoZh: "4×6英寸哑光艺术纸印刷卡片" },
+  { id: "37", title: "Chun Wang Studio Card #10", titleZh: "王淳工作室卡片 #10", series: "III", showInStorefront: true, year: "2026", medium: `4×6" card, matte fine art paper`, mediumZh: "4×6英寸卡片，哑光艺术纸", printInfo: `4×6" card printed on matte fine art paper`, printInfoZh: "4×6英寸哑光艺术纸印刷卡片" },
+  { id: "38", title: "Chun Wang Studio Card #11", titleZh: "王淳工作室卡片 #11", series: "III", showInStorefront: true, year: "2026", medium: `4×6" card, matte fine art paper`, mediumZh: "4×6英寸卡片，哑光艺术纸", printInfo: `4×6" card printed on matte fine art paper`, printInfoZh: "4×6英寸哑光艺术纸印刷卡片" },
+  { id: "39", title: "Chun Wang Studio Card #12", titleZh: "王淳工作室卡片 #12", series: "III", showInStorefront: true, year: "2026", medium: `4×6" card, matte fine art paper`, mediumZh: "4×6英寸卡片，哑光艺术纸", printInfo: `4×6" card printed on matte fine art paper`, printInfoZh: "4×6英寸哑光艺术纸印刷卡片" },
+  { id: "40", title: "Chun Wang Studio Card #13", titleZh: "王淳工作室卡片 #13", series: "III", showInStorefront: false, year: "2026", medium: `4×6" card, matte fine art paper`, mediumZh: "4×6英寸卡片，哑光艺术纸", printInfo: `4×6" card printed on matte fine art paper`, printInfoZh: "4×6英寸哑光艺术纸印刷卡片" },
+  { id: "41", title: "Chun Wang Studio Card #14", titleZh: "王淳工作室卡片 #14", series: "III", showInStorefront: false, year: "2026", medium: `4×6" card, matte fine art paper`, mediumZh: "4×6英寸卡片，哑光艺术纸", printInfo: `4×6" card printed on matte fine art paper`, printInfoZh: "4×6英寸哑光艺术纸印刷卡片" },
 ];
 
 export function getWatercolor(id: string): Watercolor | undefined {

@@ -23,6 +23,8 @@ const Index = () => {
         onSearchChange={setSearchQuery}
         onMatchCountChange={setMatchedCount}
         matchedCount={matchedCount}
+        hideOrderButton
+        hideShippingLabel
       />
 
 
@@ -32,9 +34,6 @@ const Index = () => {
           className="group flex items-center justify-between gap-6 px-6 md:px-12 py-10 hover:bg-muted/30 transition-colors"
         >
           <div>
-            <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-2">
-              {t.index.catalogsTitle}
-            </p>
             <h2 className="shop-title text-3xl md:text-5xl leading-none">
               {lang === "zh" ? "浏览作品系列 →" : "View Art Catalogs →"}
             </h2>

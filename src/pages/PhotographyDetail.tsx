@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { photographyWorks } from "@/lib/photography";
+import { photographyWorks, catalogMeta } from "@/lib/photography";
+import { shopOrderNavigableItems } from "@/hooks/useProducts";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ZoomableImage } from "@/components/ZoomableImage";
@@ -63,9 +64,14 @@ const PhotographyDetail = () => {
     });
   };
 
-  const currentIndex = photographyWorks.findIndex((item) => item.id === work.id);
-  const prevWork = currentIndex > 0 ? photographyWorks[currentIndex - 1] : undefined;
-  const nextWork = currentIndex >= 0 && currentIndex < photographyWorks.length - 1 ? photographyWorks[currentIndex + 1] : undefined;
+  const currentIndex = shopOrderNavigableItems.findIndex(
+    (item) => item.type === "photography" && item.id === work.id
+  );
+  const prevItem = currentIndex > 0 ? shopOrderNavigableItems[currentIndex - 1] : undefined;
+  const nextItem =
+    currentIndex >= 0 && currentIndex < shopOrderNavigableItems.length - 1
+      ? shopOrderNavigableItems[currentIndex + 1]
+      : undefined;
 
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -80,19 +86,17 @@ const PhotographyDetail = () => {
 
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex items-center justify-between gap-4 mb-10">
-          <button
-            onClick={() => navigate("/photography-catalog")}
-            className="handwritten flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {t.watercolor.backToCatalog}
-          </button>
-
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate("/")}
+              className="handwritten text-lg text-foreground hover:text-primary transition-colors"
+            >
+              {lang === "zh" ? "返回商店" : "Back to Shop"}
+            </button>
             <button
               type="button"
-              onClick={() => prevWork && navigate(`/photography/${prevWork.id}`)}
-              disabled={!prevWork}
+              onClick={() => prevItem && navigate(prevItem.path)}
+              disabled={!prevItem}
               className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:border-foreground hover:text-foreground transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
@@ -100,14 +104,21 @@ const PhotographyDetail = () => {
             </button>
             <button
               type="button"
-              onClick={() => nextWork && navigate(`/photography/${nextWork.id}`)}
-              disabled={!nextWork}
+              onClick={() => nextItem && navigate(nextItem.path)}
+              disabled={!nextItem}
               className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:border-foreground hover:text-foreground transition-colors"
             >
               {lang === "zh" ? "下一件" : "Next"}
               <ArrowRight className="h-4 w-4" />
             </button>
           </div>
+
+          <button
+            onClick={() => navigate("/photography-catalog")}
+            className="handwritten text-xs text-muted-foreground hover:text-primary transition-colors"
+          >
+            {lang === "zh" ? `查看目录 — ${catalogMeta.zh}` : `View in Catalog — ${catalogMeta.en}`}
+          </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
@@ -169,6 +180,7 @@ const PhotographyDetail = () => {
                 <p>{lang === "zh" && work.dimensionsZh ? work.dimensionsZh : work.dimensions}</p>
               )}
               {work.year && <p>{work.year}</p>}
+              <p>{lang === "zh" ? `现提供${work.printInfoZh ?? '9×12英寸精细艺术哑光纸印刷品'}` : `Available as ${work.printInfo ?? '9×12" fine art matte paper print'}`}</p>
             </div>
 
             <div className="border-t border-border pt-8 space-y-4">

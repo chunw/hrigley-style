@@ -17,11 +17,13 @@ interface ProductCardProps {
   category_zh?: string | null;
   paylink: string;
   detailPath?: string;
+  hideOrderButton?: boolean;
+  hideShippingLabel?: boolean;
   highlightQuery?: string;
   isSearchHighlighted?: boolean;
 }
 
-const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, currency, image_url, category, category_zh, paylink, detailPath, highlightQuery, isSearchHighlighted }: ProductCardProps) => {
+const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, currency, image_url, category, category_zh, paylink, detailPath, hideOrderButton, hideShippingLabel, highlightQuery, isSearchHighlighted }: ProductCardProps) => {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
 
@@ -91,7 +93,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
             <p className="text-xs handwritten text-muted-foreground">{displayCategory ? renderHighlightedText(displayCategory) : null}</p>
             <h3 className="text-lg leading-tight handwritten">{renderHighlightedText(displayTitle)}</h3>
             {displayDescription && (
-              <p className="text-sm font-helvetica text-muted-foreground line-clamp-2">{renderHighlightedText(displayDescription)}</p>
+              <p className="text-sm font-helvetica text-muted-foreground">{renderHighlightedText(displayDescription)}</p>
             )}
           </div>
 
@@ -101,8 +103,8 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
                 <p className="text-lg font-bold handwritten">
                   {renderHighlightedText(`${currency === 'gbp' ? '£' : '$'}${price.toFixed(2)}`)}
                 </p>
-                <p className="text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>
-                {paylink && (
+                {!hideShippingLabel && <p className="text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>}
+                {!hideOrderButton && paylink && (
                   <Button
                     variant="outline-pink"
                     className="w-full handwritten"
