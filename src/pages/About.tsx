@@ -133,7 +133,7 @@ const About = () => {
             }}
           >
             <a
-              href="https://www.chunwangshop.com/"
+              href="/#shop"
               style={{ color: "#d42b1a", textDecoration: "none", marginRight: 16 }}
             >
               {t.about.backToShop}

@@ -1,9 +1,7 @@
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { watercolors as allWatercolors, seriesList, catalogMeta, type Watercolor } from "@/lib/watercolors";
-
-const watercolors = allWatercolors.filter((w) => w.showInStorefront !== false);
+import { watercolors, seriesList, catalogMeta, type Watercolor } from "@/lib/watercolors";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 

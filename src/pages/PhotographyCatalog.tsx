@@ -2,9 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { photographyWorks as allPhotographyWorks, seriesList, catalogMeta, type PhotographyWork } from "@/lib/photography";
-
-const photographyWorks = allPhotographyWorks.filter((w) => w.showInStorefront !== false);
+import { photographyWorks, seriesList, catalogMeta, type PhotographyWork } from "@/lib/photography";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 

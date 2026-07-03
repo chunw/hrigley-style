@@ -16,11 +16,12 @@ interface ProductCardProps {
   category: string | null;
   category_zh?: string | null;
   paylink: string;
+  detailPath?: string;
   highlightQuery?: string;
   isSearchHighlighted?: boolean;
 }
 
-const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, currency, image_url, category, category_zh, paylink, highlightQuery, isSearchHighlighted }: ProductCardProps) => {
+const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, currency, image_url, category, category_zh, paylink, detailPath, highlightQuery, isSearchHighlighted }: ProductCardProps) => {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
 
@@ -49,7 +50,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
   };
 
   const handleCardClick = () => {
-    navigate(`/product/${id}`);
+    navigate(detailPath || `/product/${id}`);
   };
 
   const handleOrderNow = (e: React.MouseEvent) => {
@@ -95,18 +96,24 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
           </div>
 
           <div className="mt-auto pt-3 space-y-2">
-            <p className="text-lg font-bold handwritten">
-              {renderHighlightedText(`${currency === 'gbp' ? '£' : '$'}${price.toFixed(2)}`)}
-            </p>
-            <p className="text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>
-            <Button
-              variant="outline-pink"
-              className="w-full handwritten"
-              size="sm"
-              onClick={handleOrderNow}
-            >
-              <b>{t.productDetails.orderNow}</b>
-            </Button>
+            {price > 0 && (
+              <>
+                <p className="text-lg font-bold handwritten">
+                  {renderHighlightedText(`${currency === 'gbp' ? '£' : '$'}${price.toFixed(2)}`)}
+                </p>
+                <p className="text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>
+                {paylink && (
+                  <Button
+                    variant="outline-pink"
+                    className="w-full handwritten"
+                    size="sm"
+                    onClick={handleOrderNow}
+                  >
+                    <b>{t.productDetails.orderNow}</b>
+                  </Button>
+                )}
+              </>
+            )}
           </div>
         </div>
       </CardContent>

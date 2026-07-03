@@ -96,7 +96,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   }
 
   return (
-    <section className="bg-background">
+    <section id="shop" className="bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-xl mx-auto mb-8">
           <div className="relative">
