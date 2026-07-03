@@ -25,102 +25,33 @@ const Index = () => {
         matchedCount={matchedCount}
       />
 
+
       <section className="border-t border-border">
-        {CATALOGS.map(({ to, images, labelKey }) => {
-          const label = t[labelKey].subtitle;
-          return (
-            <Link
-              key={to}
-              to={to}
-              className="group relative block bg-black border-b border-border overflow-hidden"
-              style={{ height: "56vw", maxHeight: "85vh", minHeight: "300px" }}
-            >
-              <div
-                className="absolute top-0 right-0 overflow-hidden"
-                style={{
-                  width: "38%",
-                  height: "50%",
-                  zIndex: 5,
-                  maskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
-                  WebkitMaskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
-                }}
-              >
-                <img
-                  src={images[1]}
-                  alt=""
-                  className="w-full h-full object-cover opacity-90 group-hover:opacity-70 group-hover:scale-105 transition-all duration-700"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-                />
-              </div>
-
-              <div
-                className="absolute bottom-0 left-0 right-0 px-5 pb-5"
-                style={{ zIndex: 10 }}
-              >
-                <h2
-                  className="shop-title text-white leading-none w-full"
-                  style={{ fontSize: "clamp(2rem, 9vw, 7.5rem)" }}
-                >
-                  {label}
-                </h2>
-              </div>
-
-              <div
-                className="absolute top-0 left-0 overflow-hidden"
-                style={{
-                  width: "37%",
-                  height: "68%",
-                  zIndex: 20,
-                  maskImage: "linear-gradient(to bottom, black 60%, transparent 100%)",
-                  WebkitMaskImage: "linear-gradient(to bottom, black 60%, transparent 100%)",
-                }}
-              >
-                <img
-                  src={images[0]}
-                  alt=""
-                  className="w-full h-full object-cover opacity-90 group-hover:opacity-70 group-hover:scale-105 transition-all duration-700"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-                />
-              </div>
-            </Link>
-          );
-        })}
-      </section>
-
-      <section className="border-t border-border py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            {t.index.catalogsTitle}
-          </p>
-          <div className="relative">
-            {printMenuOpen && (
-              <div className="fixed inset-0 z-10" onClick={() => setPrintMenuOpen(false)} />
-            )}
-            <button
-              type="button"
-              onClick={() => setPrintMenuOpen(o => !o)}
-              className="handwritten inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest border border-border px-3 py-2 hover:text-primary hover:border-primary"
-            >
-              <BookOpen className="h-4 w-4" />
-              {t.watercolorCatalog.printCatalog}
-            </button>
-            {printMenuOpen && (
-              <div className="absolute right-0 bottom-full mb-1 z-20 border border-border bg-background min-w-[120px]">
-                {(["light", "dark"] as const).map(theme => (
-                  <button
-                    key={theme}
-                    type="button"
-                    onClick={() => handlePrint(theme)}
-                    className="w-full flex items-center gap-2 px-3 py-2 font-mono text-xs hover:bg-muted transition-colors text-foreground"
-                  >
-                    <span className={`inline-block w-3 h-3 border border-current ${theme === "dark" ? "bg-foreground" : ""}`} />
-                    {theme === "light" ? "Light" : "Dark"}
-                  </button>
-                ))}
-              </div>
-            )}
+        <Link
+          to="/catalogs"
+          className="group flex items-center justify-between gap-6 px-6 md:px-12 py-10 hover:bg-muted/30 transition-colors"
+        >
+          <div>
+            <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-2">
+              {t.index.catalogsTitle}
+            </p>
+            <h2 className="shop-title text-3xl md:text-5xl leading-none">
+              {lang === "zh" ? "浏览作品系列 →" : "View Art Catalogs →"}
+            </h2>
           </div>
-        </div>
+          <div className="flex gap-3 shrink-0">
+            {["/watercolors/01/main.jpg", "/photography/02/main.jpg", "/remains/01/main.jpg", "/21spirit/01/main.jpg"].map((src) => (
+              <div key={src} className="w-16 h-16 md:w-24 md:h-24 overflow-hidden border border-border bg-black shrink-0">
+                <img
+                  src={src}
+                  alt=""
+                  className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                />
+              </div>
+            ))}
+          </div>
+        </Link>
       </section>
 
       {/* <section className="border-t border-border">

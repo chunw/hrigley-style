@@ -57,7 +57,9 @@ export const useProducts = () => {
     queryKey: ["products"],
     queryFn: async () => {
       await new Promise(resolve => setTimeout(resolve, 300));
-      return [...products, ...catalogProducts];
+      const photographyProducts = catalogProducts.filter(p => p.category === "Photography");
+      const watercolorProducts = catalogProducts.filter(p => p.category === "Watercolor");
+      return [...products, ...photographyProducts, ...watercolorProducts];
     },
   });
 };
