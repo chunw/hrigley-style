@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { BookOpen } from "lucide-react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ProductGrid from "@/components/ProductGrid";
@@ -8,43 +7,11 @@ import Footer from "@/components/Footer";
 import { SITE_URL } from "@/lib/constants";
 import About from "./About";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { buildCombinedPrintHTML } from "@/lib/printCatalog";
-
-const CATALOGS = [
-  {
-    to: "/watercolor-catalog",
-    images: ["/watercolors/01/main.jpg", "/watercolors/02/main.jpg"],
-    labelKey: "watercolorCatalog" as const,
-  },
-  {
-    to: "/remains-catalog",
-    images: ["/remains/01/main.jpg", "/remains/02/main.jpg"],
-    labelKey: "remainsCatalog" as const,
-  },
-  {
-    to: "/21spirit-catalog",
-    images: ["/21spirit/01/main.jpg", "/21spirit/02/main.jpg"],
-    labelKey: "spirit21Catalog" as const,
-  },
-  {
-    to: "/photography-catalog",
-    images: ["/photography/01/main.jpg", "/photography/02/main.jpg"],
-    labelKey: "photographyCatalog" as const,
-  },
-];
 
 const Index = () => {
   const { lang, t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [matchedCount, setMatchedCount] = useState(0);
-  const [printMenuOpen, setPrintMenuOpen] = useState(false);
-
-  const handlePrint = (theme: "light" | "dark") => {
-    const blob = new Blob([buildCombinedPrintHTML(window.location.origin, lang, theme)], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-    window.open(url, "_blank");
-    setPrintMenuOpen(false);
-  };
 
   return (
     <div className="min-h-screen bg-background">
