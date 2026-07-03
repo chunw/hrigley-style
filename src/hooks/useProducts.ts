@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { products } from "@/lib/products";
-import { watercolors } from "@/lib/watercolors";
+import { watercolors, studioCardPayLink } from "@/lib/watercolors";
 import { photographyWorks } from "@/lib/photography";
 
 const DEFAULT_PRINT_INFO = '9×12" fine art matte paper print';
@@ -31,7 +31,7 @@ const catalogProducts = [
         image_url: `/watercolors/${paddedId}/main.jpg`,
         category: w.series === "III" ? "Cards" : "Watercolor",
         category_zh: w.series === "III" ? "卡片" : "水彩",
-        paylink: w.paylink ?? "",
+        paylink: w.series === "III" ? studioCardPayLink(w.title) : (w.paylink ?? ""),
         showInStorefront: true,
         detailPath: `/watercolors/${w.id}`,
         is_active: true,

@@ -59,6 +59,13 @@ export interface Watercolor {
   paylink?: string;
 }
 
+// Replace with the token from your $4 PayPal button (created in PayPal dashboard)
+const STUDIO_CARD_PAYPAL_TOKEN = "WFPH39Q2FQJHU";
+
+export function studioCardPayLink(title: string): string {
+  return `https://www.paypal.com/ncp/payment/${STUDIO_CARD_PAYPAL_TOKEN}?custom_id=${encodeURIComponent(title)}`;
+}
+
 export const watercolors: Watercolor[] = [
   // 残留
 
@@ -78,6 +85,7 @@ export const watercolors: Watercolor[] = [
     descriptionZh: "",
     printInfo: `5×7" framed print, white frame, matted to 4×6"`,
     printInfoZh: "5×7英寸装裱印刷品，白色画框，4×6英寸裱装",
+    price: 25,
   },
 
 {
@@ -112,6 +120,7 @@ export const watercolors: Watercolor[] = [
     descriptionZh: "",
     printInfo: `5×7" framed print, white frame, matted to 4×6"`,
     printInfoZh: "5×7英寸装裱印刷品，白色画框，4×6英寸裱装",
+    price: 25,
   },
   
   {
@@ -146,7 +155,10 @@ export const watercolors: Watercolor[] = [
     descriptionZh:
       "",
     price: 95,
-      paylink: "https://www.paypal.com/ncp/payment/PLACEHOLDER",
+    paylink: "https://www.paypal.com/ncp/payment/PLACEHOLDER",
+    printInfo: `Also available as framed print 8×10", $35`,
+    printInfoZh: `亦提供8×10英寸装裱印刷品，$35`,
+    printPrice: 35,
   },
   
 
@@ -263,6 +275,7 @@ export const watercolors: Watercolor[] = [
     dimensionsZh: "",
     description: "",
     descriptionZh: "",
+    price: 25,
   },
 
 {
@@ -509,7 +522,6 @@ export const watercolors: Watercolor[] = [
 
   // 明信片 / Postcards
 
-  { id: "28", title: "Chun Wang Studio Card #01", titleZh: "王淳工作室卡片 #01", series: "III", showInStorefront: true, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "4×6英寸哑光艺术纸印刷品", printPrice: 4 },
   { id: "29", title: "Chun Wang Studio Card #02", titleZh: "王淳工作室卡片 #02", series: "III", showInStorefront: true, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "4×6英寸哑光艺术纸印刷品", printPrice: 4 },
   { id: "30", title: "Chun Wang Studio Card #03", titleZh: "王淳工作室卡片 #03", series: "III", showInStorefront: true, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "4×6英寸哑光艺术纸印刷品", printPrice: 4 },
   { id: "31", title: "Chun Wang Studio Card #04", titleZh: "王淳工作室卡片 #04", series: "III", showInStorefront: true, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "4×6英寸哑光艺术纸印刷品", printPrice: 4 },

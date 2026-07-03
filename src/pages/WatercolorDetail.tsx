@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { getWatercolor, seriesList, catalogMeta } from "@/lib/watercolors";
+import { getWatercolor, seriesList, catalogMeta, studioCardPayLink } from "@/lib/watercolors";
 import { shopOrderNavigableItems } from "@/hooks/useProducts";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -75,9 +75,11 @@ const WatercolorDetail = () => {
       ? shopOrderNavigableItems[currentIndex + 1]
       : undefined;
 
+  const effectivePaylink = work?.series === "III" ? studioCardPayLink(work.title) : work?.paylink;
+
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
-    window.open(work!.paylink, "_blank");
+    window.open(effectivePaylink, "_blank");
   };
 
   return (
@@ -193,30 +195,19 @@ const WatercolorDetail = () => {
                   return (
                     <>
                       <p className="handwritten text-2xl font-bold">${displayPrice}</p>
-                      {work.paylink ? (
-                        <>
-                          <button
-                            onClick={handleBuyNow}
-                            className="handwritten inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
-                          >
-                            {t.watercolor.buyNow}
-                          </button>
-                          <p className="text-xs text-muted-foreground font-mono">
-                            {t.watercolor.shippingIncluded}
-                          </p>
-                        </>
-                      ) : null}
+                      <button
+                        onClick={effectivePaylink ? handleBuyNow : handleInquire}
+                        className="handwritten inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
+                      >
+                        {t.watercolor.buyNow}
+                      </button>
+                      <p className="text-xs text-muted-foreground font-mono">
+                        {t.watercolor.shippingIncluded}
+                      </p>
                     </>
                   );
                 }
-                return (
-                  <button
-                    onClick={handleInquire}
-                    className="handwritten inline-block bg-primary text-primary-foreground px-8 py-3 text-sm hover:bg-primary/90 transition-colors"
-                  >
-                    {t.watercolor.inquire}
-                  </button>
-                );
+                return null;
               })()}
             </div>
           </div>

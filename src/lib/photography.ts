@@ -27,7 +27,7 @@ export const seriesList: PhotographySeries[] = [
   },
   {
     id: "II",
-    englishName: "All the world is a stage",
+    englishName: "Theater",
     chineseName: "登场",
   },
   {
@@ -75,10 +75,10 @@ export const photographyWorks: PhotographyWork[] = [
     mediumZh: "摄影作品",
     dimensions: "",
     dimensionsZh: "",
-    description: "Scotland, 2024. 2024 London International Creative Competition Shortlist",
-    descriptionZh: "苏格兰，2024年。2024年伦敦国际创意大赛入围短名单作品",
+    description: "Scotland, 2024.",
+    descriptionZh: "苏格兰，2024年。",
     printInfo: '9×12" fine art matte paper print',
-    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
+    printInfoZh: '23×30厘米精细艺术哑光纸印刷品',
   },
   {
     id: "14",
@@ -95,7 +95,7 @@ export const photographyWorks: PhotographyWork[] = [
     description: "Scotland, 2024.",
     descriptionZh: "苏格兰，2024年。",
     printInfo: '9×12" fine art matte paper print',
-    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
+    printInfoZh: '23×30厘米精细艺术哑光纸印刷品',
   },
   {
     id: "15",
@@ -112,7 +112,7 @@ export const photographyWorks: PhotographyWork[] = [
     description: "Scotland, 2024.",
     descriptionZh: "苏格兰，2024年。",
     printInfo: '9×12" fine art matte paper print',
-    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
+    printInfoZh: '23×30厘米精细艺术哑光纸印刷品',
   },
   {
     id: "16",
@@ -129,7 +129,7 @@ export const photographyWorks: PhotographyWork[] = [
     description: "Scotland, 2024.",
     descriptionZh: "苏格兰，2024年。",
     printInfo: '9×12" fine art matte paper print',
-    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
+    printInfoZh: '23×30厘米精细艺术哑光纸印刷品',
   },
 
 
@@ -146,10 +146,10 @@ export const photographyWorks: PhotographyWork[] = [
     mediumZh: "摄影作品",
     dimensions: "",
     dimensionsZh: "",
-    description: "2022 International Photography Awards (IPA) Official Selection",
-    descriptionZh: "2022年国际摄影奖（IPA）官方入选作品",
+    description: "",
+    descriptionZh: "",
     printInfo: '9×12" fine art matte paper print',
-    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
+    printInfoZh: '23×30厘米精细艺术哑光纸印刷品',
   },
   {
     id: "3",
@@ -163,10 +163,10 @@ export const photographyWorks: PhotographyWork[] = [
     mediumZh: "摄影作品",
     dimensions: "",
     dimensionsZh: "",
-    description: "15th International Color Awards Official Nominee",
-    descriptionZh: "第15届国际色彩大奖官方提名作品",
+    description: "",
+    descriptionZh: "",
     printInfo: '9×12" fine art matte paper print',
-    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
+    printInfoZh: '23×30厘米精细艺术哑光纸印刷品',
   },
   {
     id: "4",
@@ -245,7 +245,7 @@ export const photographyWorks: PhotographyWork[] = [
   },
   {
     id: "9",
-    title: "All the world is a stage #1",
+    title: "Theater #1",
     titleZh: "舞台 其一",
     series: "II",
     showInStorefront: true,
@@ -256,11 +256,11 @@ export const photographyWorks: PhotographyWork[] = [
     description: "Buenos Aires, 2023.",
     descriptionZh: "布宜诺斯艾利斯，2023年。",
     printInfo: '9×12" fine art matte paper print',
-    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
+    printInfoZh: '23×30厘米精细艺术哑光纸印刷品',
   },
   {
     id: "10",
-     title: "All the world is a stage #2",
+     title: "Theater #2",
     titleZh: "舞台 其二",
     series: "II",
     showInStorefront: false,
@@ -273,7 +273,7 @@ export const photographyWorks: PhotographyWork[] = [
   },
   {
     id: "11",
-     title: "All the world is a stage #3",
+     title: "Theater #3",
     titleZh: "舞台 其三",
     series: "II",
     showInStorefront: true,
@@ -284,7 +284,7 @@ export const photographyWorks: PhotographyWork[] = [
     description: "Paris, 2019.",
     descriptionZh: "巴黎，2019年。",
     printInfo: '9×12" fine art matte paper print',
-    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
+    printInfoZh: '23×30厘米精细艺术哑光纸印刷品',
   },
   {
     id: "13",

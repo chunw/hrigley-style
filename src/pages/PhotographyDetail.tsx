@@ -190,30 +190,19 @@ const PhotographyDetail = () => {
                   return (
                     <>
                       <p className="handwritten text-2xl font-bold">${displayPrice}</p>
-                      {work.paylink ? (
-                        <>
-                          <button
-                            onClick={handleBuyNow}
-                            className="handwritten inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
-                          >
-                            {t.watercolor.buyNow}
-                          </button>
-                          <p className="text-xs text-muted-foreground font-mono">
-                            {t.watercolor.shippingIncluded}
-                          </p>
-                        </>
-                      ) : null}
+                      <button
+                        onClick={work.paylink ? handleBuyNow : handleInquire}
+                        className="handwritten inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
+                      >
+                        {t.watercolor.buyNow}
+                      </button>
+                      <p className="text-xs text-muted-foreground font-mono">
+                        {t.watercolor.shippingIncluded}
+                      </p>
                     </>
                   );
                 }
-                return (
-                  <button
-                    onClick={handleInquire}
-                    className="handwritten inline-block bg-primary text-primary-foreground px-8 py-3 text-sm hover:bg-primary/90 transition-colors"
-                  >
-                    {t.watercolor.inquire}
-                  </button>
-                );
+                return null;
               })()}
             </div>
           </div>

@@ -19,7 +19,7 @@ export const products = [
     edition_info_zh: "",
     price: 40,
     currency: "USD",
-    description: "Demanding the kind of looking that contemporary life rarely permits.",
+    description: "Collects paintings spanning seven years, demanding the kind of looking that contemporary life rarely permits.",
     detailed_description_html: `<p><i>Chun Wang Paintings 2019–2026</i> collects paintings spanning seven years — from watercolour to mixed media, across four series: <i>Residuals</i>, <i>Still Life</i>, <i>Remains</i>, and <i>Spirit of the 21st Century</i>.</p>`,
     dimensions: `Full color, 40 pages. 6 × 6 inches. Softcover, sleek and lightweight. Soft touch matte finish, velvety to the hand.`,
     dimensions_zh: `全彩印刷，40页，6 × 6英寸。平装本，轻巧灵便，覆哑膜软触感封面。`,
@@ -67,20 +67,20 @@ Dimension: 35 x 35 cm</p>
   {
     id: "remain-tshirt",
     imageFolder: "remainstshirt",
-    title: "Remains T-Shirt",
-    name: "Remains T-Shirt",
+    title: "The Meeting has begun",
+    name: "The Meeting has begun",
     title_zh: "《遗迹》T恤",
-    description_zh: "为日常通勤者和潮流引领者打造的企业超现实主义T恤。",
-    detailed_description_html_zh: `<p>《遗迹》系列曾入选2024年伦敦国际创意大赛(LICC) 艺术创作组别。它诞生于一种淡淡的荒诞感：在研究那些古代陶俑时，我被它们那种亲切、笨拙又风趣的样子吸引。它们看起来不像什么伟大的纪念碑，倒像是一个个人在"无所事事"的瞬间被定格，很具有耐人寻味的想象空间，因此正合适放在当代无聊的办公室场景里。<br>这款T恤采用优质棉质面料制成，穿着舒适，适合日常穿着。<br>尺码：S、M、L</p>`,
+    description_zh: "我们没什么可贡献的。",
+    detailed_description_html_zh: `<p>《遗迹》系列曾入选2024年伦敦国际创意大赛(LICC) 艺术创作组别。它诞生于一种淡淡的荒诞感：在研究那些古代陶俑时，我被它们那种亲切、笨拙又风趣的样子吸引。它们看起来不像什么伟大的纪念碑，倒像是一个个人在"无所事事"的瞬间被定格，很具有耐人寻味的想象空间，因此正合适放在当代无聊的办公室场景里。<br>这款T恤采用优质棉质面料制成，穿着舒适，适合日常穿着。<br>均码</p>`,
     category_zh: "服饰",
     edition_info_zh: "",
     price: 35,
     currency: "USD",
-    description: "Corporate Surrealism for the daily commuter and the trendsetter alike.",
+    description: "We have nothing to contribute to",
     detailed_description_html: `
   <p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank" rel="noreferrer">Official Selection</a> for 2024 London International Creative Competition (LICC) in Create/Art category, <i>Remains</i> was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions, making them perfect companions for the mundane modern office. <br>
-This unisex oversized  t-shirt is crafted from soft, premium cotton for everyday comfort. <br>
-Sizes available: S, M, L</p>
+This unisex oversized t-shirt is crafted from soft, premium cotton for everyday comfort. <br>
+One size.</p>
     `.trim(),
     dimensions: ``,
     edition_info: null,
@@ -92,7 +92,7 @@ Sizes available: S, M, L</p>
     showInStorefront: true,
     category: "Apparel",
     created_at: new Date().toISOString(),
-    paylink: 'https://www.paypal.com/ncp/payment/WFPH39Q2FQJHU'
+    paylink: 'https://www.paypal.com/ncp/payment/47BGDH4F3QUS6'
   },
   {
     id: "remains-sticker-packet",
@@ -106,7 +106,7 @@ Sizes available: S, M, L</p>
     edition_info_zh: "",
     price: 5,
     currency: "USD",
-    description: "Corporate Surrealism for the daily commuter and the trendsetter alike.",
+    description: "Ancient office workers, now adhesive.",
     detailed_description_html: `
   <p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank" rel="noreferrer">Official Selection</a> for 2024 London International Creative Competition (LICC) in Create/Art category, <i>Remains</i> was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions, making them perfect companions for the mundane modern office.</p>
     `.trim(),
@@ -134,8 +134,8 @@ Sizes available: S, M, L</p>
     edition_info_zh: "",
     price: 30,
     currency: "USD",
-    description: "",
-    detailed_description_html: ``.trim(),
+    description: "Door Mat / Bath Rug, Non-Slip",
+    detailed_description_html: `<p>Door Mat / Bath Rug, Non-Slip. Microfiber, 23.62″L × 15.75″W.</p>`.trim(),
     dimensions: ``,
     edition_info: null,
     edition_size: null,

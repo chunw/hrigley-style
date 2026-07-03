@@ -187,21 +187,23 @@ const ProductDetails = () => {
               </div>
             )}
 
-            <div className="pt-4">
-              <Button
-                variant="outline-pink"
-                size="lg"
-                onClick={handleOrderNow}
-                className="w-full handwritten text-lg font-bold px-8 py-6"
-                asChild
-              >
-                <span>
-                  {t.productDetails.orderNow} - {formatPrice(product.price)}
-                </span>
-              </Button>
+            {product.paylink && (
+              <div className="pt-4">
+                <Button
+                  variant="outline-pink"
+                  size="lg"
+                  onClick={handleOrderNow}
+                  className="w-full handwritten text-lg font-bold px-8 py-6"
+                  asChild
+                >
+                  <span>
+                    {t.productDetails.orderNow} - {formatPrice(product.price)}
+                  </span>
+                </Button>
 
-              <p className="pt-4 w-full text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>
-            </div>
+                <p className="pt-4 w-full text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>
+              </div>
+            )}
           </div>
         </div>
       </main>
