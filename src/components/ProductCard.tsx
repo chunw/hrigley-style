@@ -17,13 +17,14 @@ interface ProductCardProps {
   category_zh?: string | null;
   paylink: string;
   detailPath?: string;
+  priceLabel?: string;
   hideOrderButton?: boolean;
   hideShippingLabel?: boolean;
   highlightQuery?: string;
   isSearchHighlighted?: boolean;
 }
 
-const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, currency, image_url, category, category_zh, paylink, detailPath, hideOrderButton, hideShippingLabel, highlightQuery, isSearchHighlighted }: ProductCardProps) => {
+const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, priceLabel, currency, image_url, category, category_zh, paylink, detailPath, hideOrderButton, hideShippingLabel, highlightQuery, isSearchHighlighted }: ProductCardProps) => {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
 
@@ -98,10 +99,10 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
           </div>
 
           <div className="mt-auto pt-3 space-y-2">
-            {price > 0 && (
+            {(priceLabel || price > 0) && (
               <>
                 <p className="text-lg font-bold handwritten">
-                  {renderHighlightedText(`${currency === 'gbp' ? '£' : '$'}${price.toFixed(2)}`)}
+                  {renderHighlightedText(priceLabel ?? `${currency === 'gbp' ? '£' : '$'}${price.toFixed(2)}`)}
                 </p>
                 {!hideShippingLabel && <p className="text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>}
                 {!hideOrderButton && paylink && (

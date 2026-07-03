@@ -21,6 +21,7 @@ export interface SpiritWork {
   description?: string;
   descriptionZh?: string;
   price?: number;
+  priceLabel?: string;
   paylink?: string;
 }
 
@@ -37,6 +38,8 @@ export const spiritWorks: SpiritWork[] = [
     dimensionsZh: "",
     description: "",
     descriptionZh: "",
+    priceLabel: "$4 / $10",
+    paylink: "https://www.paypal.com/ncp/payment/KBERHU8XPCPAL",
   },
   {
     id: "2",

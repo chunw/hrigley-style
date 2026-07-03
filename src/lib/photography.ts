@@ -56,8 +56,10 @@ export interface PhotographyWork {
   printInfo?: string;
   printInfoZh?: string;
   printPrice?: number;
+  printPrice12x18?: number;
   price?: number;
   paylink?: string;
+  paylink12x18?: string;
 }
 
 export const photographyWorks: PhotographyWork[] = [
@@ -77,8 +79,11 @@ export const photographyWorks: PhotographyWork[] = [
     dimensionsZh: "",
     description: "Scotland, 2024.",
     descriptionZh: "苏格兰，2024年。",
-    printInfo: '9×12" fine art matte paper print',
-    printInfoZh: '23×30厘米精细艺术哑光纸印刷品',
+    printInfo: '9×12" or 12×18" fine art matte paper print',
+    printInfoZh: '23×30厘米或30×46厘米精细艺术哑光纸印刷品',
+    printPrice: 10,
+    printPrice12x18: 20,
+    paylink12x18: "https://www.paypal.com/ncp/payment/CEBWTTHT6Y5K6",
   },
   {
     id: "14",

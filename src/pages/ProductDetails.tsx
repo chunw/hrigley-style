@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useProductDetails, useProductImages } from "@/hooks/useProductDetails";
+import { shopOrderNavigableItems } from "@/hooks/useProducts";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import About from "./About";
 import { ZoomableImage } from "@/components/ZoomableImage";
 
@@ -13,6 +15,7 @@ const ProductDetails = () => {
   const { t, lang } = useLanguage();
   const zh = lang === "zh";
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [containerHeight, setContainerHeight] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -66,6 +69,14 @@ const ProductDetails = () => {
 
   const currentImage = allImages[selectedImageIndex] || allImages[0];
 
+  const currentShopIndex = shopOrderNavigableItems.findIndex(
+    (item) => item.type === "product" && item.id === id
+  );
+  const prevItem = currentShopIndex > 0 ? shopOrderNavigableItems[currentShopIndex - 1] : undefined;
+  const nextItem = currentShopIndex >= 0 && currentShopIndex < shopOrderNavigableItems.length - 1
+    ? shopOrderNavigableItems[currentShopIndex + 1]
+    : undefined;
+
   const formatPrice = (price: number) => `$${price.toLocaleString()}`;
 
   const handleOrderNow = (e: React.MouseEvent) => {
@@ -93,6 +104,27 @@ const ProductDetails = () => {
       <Header />
 
       <main className="container mx-auto px-4 py-2">
+        <div className="flex items-center gap-3 mb-8">
+          <button
+            type="button"
+            onClick={() => prevItem && navigate(prevItem.path)}
+            disabled={!prevItem}
+            className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:border-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            {lang === "zh" ? "上一件" : "Previous"}
+          </button>
+          <button
+            type="button"
+            onClick={() => nextItem && navigate(nextItem.path)}
+            disabled={!nextItem}
+            className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:border-foreground hover:text-foreground transition-colors"
+          >
+            {lang === "zh" ? "下一件" : "Next"}
+            <ArrowRight className="h-4 w-4" />
+          </button>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           {/* Image Gallery */}
           <div className="space-y-4">

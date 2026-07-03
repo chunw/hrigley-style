@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { photographyWorks, catalogMeta } from "@/lib/photography";
+import { photographyWorks } from "@/lib/photography";
+import { PRINT_9X12_PAYLINK } from "@/lib/watercolors";
 import { shopOrderNavigableItems } from "@/hooks/useProducts";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -73,10 +74,11 @@ const PhotographyDetail = () => {
       ? shopOrderNavigableItems[currentIndex + 1]
       : undefined;
 
-  const handleBuyNow = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    window.open(work!.paylink, "_blank");
-  };
+  const paylink9x12 = work?.paylink ?? PRINT_9X12_PAYLINK;
+  const paylink12x18 = work?.paylink12x18 ?? null;
+
+  const handleBuy9x12 = (e: React.MouseEvent) => { e.stopPropagation(); window.open(paylink9x12, "_blank"); };
+  const handleBuy12x18 = (e: React.MouseEvent) => { e.stopPropagation(); window.open(paylink12x18!, "_blank"); };
 
   const title = lang === "zh" && work.titleZh ? work.titleZh : work.title;
 
@@ -85,14 +87,7 @@ const PhotographyDetail = () => {
       <Header />
 
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex items-center justify-between gap-4 mb-10">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate("/")}
-              className="handwritten text-lg text-foreground hover:text-primary transition-colors"
-            >
-              {lang === "zh" ? "返回商店" : "Back to Shop"}
-            </button>
+        <div className="flex items-center gap-3 mb-10">
             <button
               type="button"
               onClick={() => prevItem && navigate(prevItem.path)}
@@ -111,14 +106,6 @@ const PhotographyDetail = () => {
               {lang === "zh" ? "下一件" : "Next"}
               <ArrowRight className="h-4 w-4" />
             </button>
-          </div>
-
-          <button
-            onClick={() => navigate("/photography-catalog")}
-            className="handwritten text-xs text-muted-foreground hover:text-primary transition-colors"
-          >
-            {lang === "zh" ? `查看目录 — ${catalogMeta.zh}` : `View in Catalog — ${catalogMeta.en}`}
-          </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
@@ -180,30 +167,28 @@ const PhotographyDetail = () => {
                 <p>{lang === "zh" && work.dimensionsZh ? work.dimensionsZh : work.dimensions}</p>
               )}
               {work.year && <p>{work.year}</p>}
-              <p>{lang === "zh" ? `现提供${work.printInfoZh ?? '9×12英寸精细艺术哑光纸印刷品'}` : `Available as ${work.printInfo ?? '9×12" fine art matte paper print'}`}</p>
+              <p>{lang === "zh" ? `现提供${work.printInfoZh ?? '23×30厘米精细艺术哑光纸印刷品'}` : `Available as ${work.printInfo ?? '9×12" fine art matte paper print'}`}</p>
             </div>
 
             <div className="border-t border-border pt-8 space-y-4">
-              {(() => {
-                const displayPrice = work.price ?? work.printPrice;
-                if (displayPrice != null) {
-                  return (
-                    <>
-                      <p className="handwritten text-2xl font-bold">${displayPrice}</p>
-                      <button
-                        onClick={work.paylink ? handleBuyNow : handleInquire}
-                        className="handwritten inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
-                      >
-                        {t.watercolor.buyNow}
-                      </button>
-                      <p className="text-xs text-muted-foreground font-mono">
-                        {t.watercolor.shippingIncluded}
-                      </p>
-                    </>
-                  );
-                }
-                return null;
-              })()}
+              {paylink12x18 ? (
+                <button
+                  onClick={handleBuy9x12}
+                  className="handwritten inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
+                >
+                  {lang === "zh" ? "多种尺寸可选" : "Various sizes available"}
+                </button>
+              ) : (
+                <button
+                  onClick={handleBuy9x12}
+                  className="handwritten inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
+                >
+                  {t.watercolor.buyNow}
+                </button>
+              )}
+              <p className="text-xs text-muted-foreground font-mono">
+                {t.watercolor.shippingIncluded}
+              </p>
             </div>
           </div>
         </div>

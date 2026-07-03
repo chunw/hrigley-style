@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { spiritWorks } from "@/lib/21spirit";
+import { studioCardPayLink, PRINT_9X12_PAYLINK } from "@/lib/watercolors";
+import { shopOrderNavigableItems } from "@/hooks/useProducts";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ZoomableImage } from "@/components/ZoomableImage";
@@ -63,14 +65,19 @@ const Spirit21Detail = () => {
     });
   };
 
-  const currentIndex = spiritWorks.findIndex((item) => item.id === work.id);
-  const prevWork = currentIndex > 0 ? spiritWorks[currentIndex - 1] : undefined;
-  const nextWork = currentIndex >= 0 && currentIndex < spiritWorks.length - 1 ? spiritWorks[currentIndex + 1] : undefined;
+  const currentIndex = shopOrderNavigableItems.findIndex(
+    (item) => item.type === "spirit" && item.id === work.id
+  );
+  const prevItem = currentIndex > 0 ? shopOrderNavigableItems[currentIndex - 1] : undefined;
+  const nextItem = currentIndex >= 0 && currentIndex < shopOrderNavigableItems.length - 1
+    ? shopOrderNavigableItems[currentIndex + 1]
+    : undefined;
 
-  const handleBuyNow = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    window.open(work!.paylink, "_blank");
-  };
+  const paylink4x6 = work.paylink ?? studioCardPayLink(work.title);
+  const paylink9x12 = PRINT_9X12_PAYLINK;
+
+  const handleBuy4x6 = (e: React.MouseEvent) => { e.stopPropagation(); window.open(paylink4x6, "_blank"); };
+  const handleBuy9x12 = (e: React.MouseEvent) => { e.stopPropagation(); window.open(paylink9x12, "_blank"); };
 
   const title = lang === "zh" && work.titleZh ? work.titleZh : work.title;
 
@@ -79,35 +86,25 @@ const Spirit21Detail = () => {
       <Header />
 
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex items-center justify-between gap-4 mb-10">
+        <div className="flex items-center gap-3 mb-10">
           <button
-            onClick={() => navigate("/21spirit-catalog")}
-            className="handwritten flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+            type="button"
+            onClick={() => prevItem && navigate(prevItem.path)}
+            disabled={!prevItem}
+            className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:border-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
-            {t.watercolor.backToCatalog}
+            {lang === "zh" ? "上一件" : "Previous"}
           </button>
-
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => prevWork && navigate(`/21spirit/${prevWork.id}`)}
-              disabled={!prevWork}
-              className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:border-foreground hover:text-foreground transition-colors"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              {lang === "zh" ? "上一件" : "Previous"}
-            </button>
-            <button
-              type="button"
-              onClick={() => nextWork && navigate(`/21spirit/${nextWork.id}`)}
-              disabled={!nextWork}
-              className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:border-foreground hover:text-foreground transition-colors"
-            >
-              {lang === "zh" ? "下一件" : "Next"}
-              <ArrowRight className="h-4 w-4" />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => nextItem && navigate(nextItem.path)}
+            disabled={!nextItem}
+            className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:border-foreground hover:text-foreground transition-colors"
+          >
+            {lang === "zh" ? "下一件" : "Next"}
+            <ArrowRight className="h-4 w-4" />
+          </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
@@ -169,29 +166,26 @@ const Spirit21Detail = () => {
                 <p>{lang === "zh" && work.dimensionsZh ? work.dimensionsZh : work.dimensions}</p>
               )}
               {work.year && <p>{work.year}</p>}
+              <p>{work.paylink
+                ? (lang === "zh" ? "现提供9×12英寸或4×6英寸精细艺术哑光纸印刷品" : `Available as 9×12" or 4×6" fine art matte paper print`)
+                : (lang === "zh" ? "现提供4×6英寸精细艺术哑光纸印刷品" : `Available as 4×6" fine art matte paper print`)
+              }</p>
             </div>
 
             <div className="border-t border-border pt-8 space-y-4">
-              {work.price != null && work.paylink ? (
-                <>
-                  <button
-                    onClick={handleBuyNow}
-                    className="handwritten inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
-                  >
-                    {t.watercolor.buyNow} — ${work.price}
-                  </button>
-                  <p className="text-xs text-muted-foreground font-mono">
-                    {t.watercolor.shippingIncluded}
-                  </p>
-                </>
-              ) : (
+              <>
                 <button
-                  onClick={handleInquire}
-                  className="handwritten inline-block bg-primary text-primary-foreground px-8 py-3 text-sm hover:bg-primary/90 transition-colors"
+                  onClick={handleBuy4x6}
+                  className="handwritten inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
                 >
-                  {t.watercolor.inquire}
+                  {work.paylink
+                    ? (lang === "zh" ? "多种尺寸可选" : "Various sizes available")
+                    : t.watercolor.buyNow}
                 </button>
-              )}
+                <p className="text-xs text-muted-foreground font-mono">
+                  {t.watercolor.shippingIncluded}
+                </p>
+              </>
             </div>
           </div>
         </div>

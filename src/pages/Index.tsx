@@ -28,31 +28,6 @@ const Index = () => {
       />
 
 
-      <section className="border-t border-border">
-        <Link
-          to="/catalogs"
-          className="group flex items-center justify-between gap-6 px-6 md:px-12 py-10 hover:bg-muted/30 transition-colors"
-        >
-          <div>
-            <h2 className="shop-title text-3xl md:text-5xl leading-none">
-              {lang === "zh" ? "浏览作品系列 →" : "View Art Catalogs →"}
-            </h2>
-          </div>
-          <div className="flex gap-3 shrink-0">
-            {["/watercolors/01/main.jpg", "/photography/02/main.jpg", "/remains/01/main.jpg", "/21spirit/01/main.jpg"].map((src) => (
-              <div key={src} className="w-16 h-16 md:w-24 md:h-24 overflow-hidden border border-border bg-black shrink-0">
-                <img
-                  src={src}
-                  alt=""
-                  className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-                />
-              </div>
-            ))}
-          </div>
-        </Link>
-      </section>
-
       {/* <section className="border-t border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <Link
@@ -129,6 +104,31 @@ const Index = () => {
         </div>
       </section>
      
+      <section className="border-t border-border">
+        <Link
+          to="/catalogs"
+          className="group flex items-center justify-between gap-6 px-6 md:px-12 py-10 hover:bg-muted/30 transition-colors"
+        >
+          <div>
+            <h2 className="shop-title text-3xl md:text-5xl leading-none">
+              {lang === "zh" ? "浏览作品系列 →" : "View Art Catalogs →"}
+            </h2>
+          </div>
+          <div className="flex gap-3 shrink-0">
+            {["/watercolors/01/main.jpg", "/photography/02/main.jpg", "/remains/01/main.jpg", "/21spirit/01/main.jpg"].map((src) => (
+              <div key={src} className="w-16 h-16 md:w-24 md:h-24 overflow-hidden border border-border bg-black shrink-0">
+                <img
+                  src={src}
+                  alt=""
+                  className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                />
+              </div>
+            ))}
+          </div>
+        </Link>
+      </section>
+
         <About /> <Footer />
       
     </div>
