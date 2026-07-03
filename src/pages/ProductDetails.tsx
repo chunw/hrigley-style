@@ -86,6 +86,7 @@ const ProductDetails = () => {
   const displayDescription = (zh && product.description_zh) ? product.description_zh : product.description;
   const displayDetailedHtml = (zh && product.detailed_description_html_zh) ? product.detailed_description_html_zh : product.detailed_description_html;
   const displayEditionInfo = (zh && product.edition_info_zh) ? product.edition_info_zh : product.edition_info;
+  const displayDimensions = (zh && (product as any).dimensions_zh) ? (product as any).dimensions_zh : product.dimensions;
 
   return (
     <div className="min-h-screen bg-background">
@@ -166,9 +167,9 @@ const ProductDetails = () => {
               </div>
             )}
 
-            {product.dimensions && (
+            {displayDimensions && (
               <div className="space-y-2">
-                <p className="text-muted-foreground font-helvetica">{product.dimensions}</p>
+                <p className="text-muted-foreground font-helvetica">{displayDimensions}</p>
               </div>
             )}
 
