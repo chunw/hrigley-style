@@ -125,7 +125,7 @@ const Spirit21Catalog = () => {
 
         {/* Works grid */}
         <section className="mt-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-14">
             {spiritWorks.map((work) => (
               <WorkCard key={work.id} work={work} />
             ))}

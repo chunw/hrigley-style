@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { BookOpen } from "lucide-react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ProductGrid from "@/components/ProductGrid";
@@ -6,11 +8,43 @@ import Footer from "@/components/Footer";
 import { SITE_URL } from "@/lib/constants";
 import About from "./About";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { buildCombinedPrintHTML } from "@/lib/printCatalog";
+
+const CATALOGS = [
+  {
+    to: "/watercolor-catalog",
+    images: ["/watercolors/01/main.jpg", "/watercolors/02/main.jpg"],
+    labelKey: "watercolorCatalog" as const,
+  },
+  {
+    to: "/remains-catalog",
+    images: ["/remains/01/main.jpg", "/remains/02/main.jpg"],
+    labelKey: "remainsCatalog" as const,
+  },
+  {
+    to: "/21spirit-catalog",
+    images: ["/21spirit/01/main.jpg", "/21spirit/02/main.jpg"],
+    labelKey: "spirit21Catalog" as const,
+  },
+  {
+    to: "/photography-catalog",
+    images: ["/photography/01/main.jpg", "/photography/02/main.jpg"],
+    labelKey: "photographyCatalog" as const,
+  },
+];
 
 const Index = () => {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [matchedCount, setMatchedCount] = useState(0);
+  const [printMenuOpen, setPrintMenuOpen] = useState(false);
+
+  const handlePrint = (theme: "light" | "dark") => {
+    const blob = new Blob([buildCombinedPrintHTML(window.location.origin, lang, theme)], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
+    setPrintMenuOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -23,6 +57,104 @@ const Index = () => {
         onMatchCountChange={setMatchedCount}
         matchedCount={matchedCount}
       />
+
+      <section className="border-t border-border">
+        {CATALOGS.map(({ to, images, labelKey }) => {
+          const label = t[labelKey].subtitle;
+          return (
+            <Link
+              key={to}
+              to={to}
+              className="group relative block bg-black border-b border-border overflow-hidden"
+              style={{ height: "56vw", maxHeight: "85vh", minHeight: "300px" }}
+            >
+              <div
+                className="absolute top-0 right-0 overflow-hidden"
+                style={{
+                  width: "38%",
+                  height: "50%",
+                  zIndex: 5,
+                  maskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
+                  WebkitMaskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
+                }}
+              >
+                <img
+                  src={images[1]}
+                  alt=""
+                  className="w-full h-full object-cover opacity-90 group-hover:opacity-70 group-hover:scale-105 transition-all duration-700"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                />
+              </div>
+
+              <div
+                className="absolute bottom-0 left-0 right-0 px-5 pb-5"
+                style={{ zIndex: 10 }}
+              >
+                <h2
+                  className="shop-title text-white leading-none w-full"
+                  style={{ fontSize: "clamp(2rem, 9vw, 7.5rem)" }}
+                >
+                  {label}
+                </h2>
+              </div>
+
+              <div
+                className="absolute top-0 left-0 overflow-hidden"
+                style={{
+                  width: "37%",
+                  height: "68%",
+                  zIndex: 20,
+                  maskImage: "linear-gradient(to bottom, black 60%, transparent 100%)",
+                  WebkitMaskImage: "linear-gradient(to bottom, black 60%, transparent 100%)",
+                }}
+              >
+                <img
+                  src={images[0]}
+                  alt=""
+                  className="w-full h-full object-cover opacity-90 group-hover:opacity-70 group-hover:scale-105 transition-all duration-700"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                />
+              </div>
+            </Link>
+          );
+        })}
+      </section>
+
+      <section className="border-t border-border py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+          <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            {t.index.catalogsTitle}
+          </p>
+          <div className="relative">
+            {printMenuOpen && (
+              <div className="fixed inset-0 z-10" onClick={() => setPrintMenuOpen(false)} />
+            )}
+            <button
+              type="button"
+              onClick={() => setPrintMenuOpen(o => !o)}
+              className="handwritten inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest border border-border px-3 py-2 hover:text-primary hover:border-primary"
+            >
+              <BookOpen className="h-4 w-4" />
+              {t.watercolorCatalog.printCatalog}
+            </button>
+            {printMenuOpen && (
+              <div className="absolute right-0 bottom-full mb-1 z-20 border border-border bg-background min-w-[120px]">
+                {(["light", "dark"] as const).map(theme => (
+                  <button
+                    key={theme}
+                    type="button"
+                    onClick={() => handlePrint(theme)}
+                    className="w-full flex items-center gap-2 px-3 py-2 font-mono text-xs hover:bg-muted transition-colors text-foreground"
+                  >
+                    <span className={`inline-block w-3 h-3 border border-current ${theme === "dark" ? "bg-foreground" : ""}`} />
+                    {theme === "light" ? "Light" : "Dark"}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
 
       {/* <section className="border-t border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
