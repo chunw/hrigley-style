@@ -45,6 +45,7 @@ export interface Watercolor {
   printInCatalog?: boolean;
   printInCatalogImage?: string;
   showInStorefront?: boolean;
+  includeInArtbox?: boolean;
   year: string;
   medium?: string;
   mediumZh?: string;

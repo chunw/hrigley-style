@@ -13,6 +13,7 @@ export interface SpiritWork {
   titleZh?: string;
   printInCatalog?: boolean;
   printInCatalogImage?: string;
+  includeInArtbox?: boolean;
   year: string;
   medium: string;
   mediumZh?: string;

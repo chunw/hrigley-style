@@ -44,6 +44,7 @@ export interface PhotographyWork {
   series?: string;
   showInStorefront?: boolean;
   printInCatalog?: boolean;
+  includeInArtbox?: boolean;
   cropPosition?: { x: number; y: number };
   printInCatalogImage?: string;
   year: string;
