@@ -249,8 +249,8 @@ Set of 2 original paintings.</p>`.trim(),
     edition_info_zh: "",
     price: 80,
     currency: "USD",
-    description: "Watercolor prints in a rigid keepsake box — residuals and still things, made permanent.",
-    detailed_description_html: `<p>A curated selection of 9×12" archival matte fine art paper prints from the <em>Residuals</em> and <em>Still Things</em> watercolor series — works that catch the everyday just after it has been used, just before it disappears. Presented in a rigid artbox and ready to frame. Each print is signed and editioned.</p>`,
+    description: "Watercolor prints in a box — residuals and still things, made permanent.",
+    detailed_description_html: `<p>A curated selection of 9×12" archival matte fine art paper prints from the <em>Residuals</em> and <em>Still Things</em> watercolor series — works that catch the everyday just after it has been used, just before it disappears. Presented in a rigid artbox and ready to frame. Each art box is signed and editioned.</p>`,
     dimensions: `13.2″ × 9.8″ × 1.8″`,
     dimensions_zh: `13.2″ × 9.8″ × 1.8″`,
     edition_info: null,
@@ -262,7 +262,7 @@ Set of 2 original paintings.</p>`.trim(),
     showInStorefront: true,
     category: "Art Boxes",
     created_at: new Date().toISOString(),
-    paylink: ""
+    paylink: "https://www.paypal.com/ncp/payment/VZHL787738Y7W"
   },
 
   {
@@ -277,8 +277,8 @@ Set of 2 original paintings.</p>`.trim(),
     edition_info_zh: "",
     price: 80,
     currency: "USD",
-    description: "Photography prints in a rigid keepsake box — figures, landscapes, and the long look between them.",
-    detailed_description_html: `<p>A curated selection of 9×12" archival matte fine art paper prints from the <em>El Otro, El Mismo</em>, <em>Theater</em>, and <em>Highland Scottlands</em> photography series. Each image is a proposition: that the camera is a philosophical instrument, and looking long enough changes what you see. Presented in a rigid artbox and ready to frame. Each print is signed and editioned.</p>`,
+    description: "Photography prints in a box — figures, landscapes, and the long look between them.",
+    detailed_description_html: `<p>A curated selection of 9×12" archival matte fine art paper prints from the <em>El Otro, El Mismo</em>, <em>Theater</em>, and <em>Highland Scottlands</em> photography series. Each image is a proposition: that the camera is a philosophical instrument, and looking long enough changes what you see. Presented in a rigid artbox and ready to frame. Each art box is signed and editioned.</p>`,
     dimensions: `13.2″ × 9.8″ × 1.8″`,
     dimensions_zh: `13.2″ × 9.8″ × 1.8″`,
     edition_info: null,
@@ -290,7 +290,7 @@ Set of 2 original paintings.</p>`.trim(),
     showInStorefront: true,
     category: "Art Boxes",
     created_at: new Date().toISOString(),
-    paylink: ""
+    paylink: "https://www.paypal.com/ncp/payment/VZHL787738Y7W"
   },
 ];
 

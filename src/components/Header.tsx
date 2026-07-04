@@ -1,35 +1,13 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Instagram } from "lucide-react";
 import { INSTAGRAM_URL } from "@/lib/constants";
-import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { toast } = useToast();
   const { lang, toggleLang, t } = useLanguage();
   const isHomePage = location.pathname === "/";
-
-  const handleContactClick = async () => {
-    const email = "chunwang.me@gmail.com";
-
-    try {
-      await navigator.clipboard.writeText(email);
-      toast({
-        title: t.header.contactEmailCopiedTitle,
-        description: `${email}`,
-        className: "font-helvetica normal-case tracking-normal",
-      });
-    } catch {
-      toast({
-        title: t.header.contactEmailCopyFailedTitle,
-        description: `${t.header.contactEmailCopyFailedDescription} ${email}`,
-        variant: "destructive",
-        className: "font-helvetica normal-case tracking-normal",
-      });
-    }
-  };
 
   return (
     <header className="border-b border-border bg-background">
@@ -57,17 +35,6 @@ const Header = () => {
             >
               <span>{t.header.about}</span>
             </a>
-
-            <button
-              type="button"
-              onClick={handleContactClick}
-              aria-label="Copy contact email"
-              className={`handwritten transition-colors ${
-                isHomePage ? "text-white hover:text-primary" : "text-foreground hover:text-primary"
-              }`}
-            >
-              {t.header.contact}
-            </button>
 
             <a
               href={INSTAGRAM_URL}

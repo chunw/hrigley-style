@@ -13,7 +13,7 @@ const HeroSection = () => {
                 {t.shopTitle.line1} <br />{t.shopTitle.line2}<br />
                 <span className="text-primary">{t.shopTitle.line3}</span>
               </h1>
-              <p className="max-w-md" style={{
+              <p className="font-helvetica max-w-md" style={{
                 opacity: 0.7,
                 fontSize: '1rem',
               }}>
