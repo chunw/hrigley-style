@@ -148,7 +148,7 @@ Dimension: 35 x 35 cm</p>
     is_active: true,
     printInCatalog: true,
     showInStorefront: true,
-    category: "Home",
+    category: "Home Goods",
     created_at: new Date().toISOString(),
     paylink: 'https://www.paypal.com/ncp/payment/RGB545X9XJW6G'
   },

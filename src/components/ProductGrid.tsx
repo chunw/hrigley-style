@@ -45,7 +45,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
       }
       return cat;
     })();
-    return `${label} (${count})`;
+    return <>{label} <span className="font-helvetica">({count})</span></>;
   };
 
   const buildProductSearchText = (product: Record<string, unknown>) => {
@@ -134,7 +134,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`font-helvetica text-sm px-4 py-2 border-2 transition-colors ${
+                className={`handwritten text-sm px-4 py-2 border-2 transition-colors ${
                   selectedCategory === category
                     ? "border-primary text-primary bg-primary/10"
                     : "border-border hover:border-primary hover:text-primary"
