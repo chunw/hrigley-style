@@ -32,8 +32,8 @@ const catalogProducts = [
         priceLabel: p.printPrice && p.printPrice12x18 ? `$${p.printPrice} / $${p.printPrice12x18}` : undefined,
         currency: "USD",
         image_url: `/photography/${paddedId}/main.jpg`,
-        category: "Fine Art Print",
-        category_zh: "版画",
+        category: "Fine Art Prints",
+        category_zh: "版画 · 限量版号",
         paylink: p.paylink ?? PRINT_9X12_PAYLINK,
         showInStorefront: true,
         detailPath: `/photography/${p.id}`,
@@ -53,8 +53,8 @@ const catalogProducts = [
       price: w.price ?? 4,
       currency: "USD",
       image_url: `/remains/${paddedId}/main.jpg`,
-      category: "Fine Art Print",
-      category_zh: "版画",
+      category: "Fine Art Prints",
+      category_zh: "版画 · 限量版号",
       paylink: w.paylink ?? studioCardPayLink(w.title),
       showInStorefront: true,
       detailPath: `/remains/${w.id}`,
@@ -75,8 +75,8 @@ const catalogProducts = [
       priceLabel: w.priceLabel,
       currency: "USD",
       image_url: `/21spirit/${paddedId}/main.jpg`,
-      category: "Fine Art Print",
-      category_zh: "版画",
+      category: "Fine Art Prints",
+      category_zh: "版画 · 限量版号",
       paylink: w.paylink ?? studioCardPayLink(w.title),
       showInStorefront: true,
       detailPath: `/21spirit/${w.id}`,
@@ -100,8 +100,8 @@ const catalogProducts = [
         price: w.price ?? w.printPrice ?? DEFAULT_PRINT_PRICE,
         currency: "USD",
         image_url: `/watercolors/${paddedId}/main.jpg`,
-        category: w.series === "III" ? "Cards" : "Fine Art Print",
-        category_zh: w.series === "III" ? "卡片" : "版画",
+        category: w.series === "III" ? "Cards" : "Fine Art Prints",
+        category_zh: w.series === "III" ? "卡片" : "版画 · 限量版号",
         paylink: w.series === "III" ? studioCardPayLink(w.title) : (w.paylink ?? PRINT_9X12_PAYLINK),
         showInStorefront: true,
         detailPath: `/watercolors/${w.id}`,
@@ -139,7 +139,7 @@ export const useProducts = () => {
     queryKey: ["products"],
     queryFn: async () => {
       await new Promise(resolve => setTimeout(resolve, 300));
-      const printProducts = catalogProducts.filter(p => p.category === "Fine Art Print");
+      const printProducts = catalogProducts.filter(p => p.category === "Fine Art Prints");
       const cardProducts = catalogProducts.filter(p => p.category === "Cards");
       return [...products, ...printProducts, ...cardProducts];
     },
