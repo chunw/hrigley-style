@@ -86,7 +86,7 @@ const RemainsDetail = () => {
       <Header />
 
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex items-center gap-3 mb-10">
+        <div className="flex items-center gap-3 mt-4 mb-10">
           <button
             type="button"
             onClick={() => prevItem && navigate(prevItem.path)}
