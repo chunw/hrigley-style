@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useProductDetails, useProductImages } from "@/hooks/useProductDetails";
-import { shopOrderNavigableItems } from "@/hooks/useProducts";
+import { shopOrderNavigableItems, getArtboxPrintCount } from "@/hooks/useProducts";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import About from "./About";
 import { ZoomableImage } from "@/components/ZoomableImage";
@@ -97,6 +97,7 @@ const ProductDetails = () => {
   const displayDescription = (zh && product.description_zh) ? product.description_zh : product.description;
   const displayDetailedHtml = (zh && product.detailed_description_html_zh) ? product.detailed_description_html_zh : product.detailed_description_html;
   const displayEditionInfo = (zh && product.edition_info_zh) ? product.edition_info_zh : product.edition_info;
+  const artboxPrintCount = getArtboxPrintCount(product.id);
   const displayDimensions = (zh && (product as any).dimensions_zh) ? (product as any).dimensions_zh : product.dimensions;
 
   return (
@@ -173,9 +174,11 @@ const ProductDetails = () => {
                 {displayTitle}
               </h1>
               {displayCategory && (
-                <Badge variant="secondary" className="handwritten text-sm">
-                  {displayCategory}
-                </Badge>
+                <Link to={`/?category=${encodeURIComponent(product.category ?? "")}`}>
+                  <Badge variant="secondary" className="handwritten text-sm hover:bg-secondary/80 cursor-pointer transition-colors">
+                    {displayCategory}
+                  </Badge>
+                </Link>
               )}
             </div>
 
@@ -187,6 +190,12 @@ const ProductDetails = () => {
               <div className="space-y-2">
                 <p className="text-muted-foreground font-helvetica">{displayDescription}</p>
               </div>
+            )}
+
+            {artboxPrintCount > 0 && (
+              <p className="font-mono text-sm text-muted-foreground">
+                {artboxPrintCount} {zh ? "张印刷品" : "prints included"}
+              </p>
             )}
 
             {displayDetailedHtml && (

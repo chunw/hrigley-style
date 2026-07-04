@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Search } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import ProductCard from "./ProductCard";
-import { useProducts } from "@/hooks/useProducts";
+import { useProducts, getArtboxPrintCount } from "@/hooks/useProducts";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,8 @@ interface ProductGridProps {
 const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedCount = 0, hideOrderButton, hideShippingLabel }: ProductGridProps) => {
   const { t, lang } = useLanguage();
   const zh = lang === "zh";
-  const [selectedCategory, setSelectedCategory] = useState("ALL");
+  const [searchParams] = useSearchParams();
+  const [selectedCategory, setSelectedCategory] = useState(() => searchParams.get("category") ?? "ALL");
   const { data: products, isLoading, error } = useProducts();
   const firstMatchedCardRef = useRef<HTMLDivElement | null>(null);
   const normalizedSearchQuery = searchQuery?.trim() || "";
@@ -164,6 +165,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
                   isSearchHighlighted={hasActiveSearch}
                   hideOrderButton={hideOrderButton}
                   hideShippingLabel={hideShippingLabel}
+                  artboxPrintCount={getArtboxPrintCount(product.id)}
                 />
               </div>
             ))}

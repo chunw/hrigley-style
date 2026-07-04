@@ -22,9 +22,10 @@ interface ProductCardProps {
   hideShippingLabel?: boolean;
   highlightQuery?: string;
   isSearchHighlighted?: boolean;
+  artboxPrintCount?: number;
 }
 
-const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, priceLabel, currency, image_url, category, category_zh, paylink, detailPath, hideOrderButton, hideShippingLabel, highlightQuery, isSearchHighlighted }: ProductCardProps) => {
+const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, priceLabel, currency, image_url, category, category_zh, paylink, detailPath, hideOrderButton, hideShippingLabel, highlightQuery, isSearchHighlighted, artboxPrintCount }: ProductCardProps) => {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
 
@@ -95,6 +96,9 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
             <h3 className="text-lg leading-tight handwritten">{renderHighlightedText(displayTitle)}</h3>
             {displayDescription && (
               <p className="text-sm font-helvetica text-muted-foreground">{renderHighlightedText(displayDescription)}</p>
+            )}
+            {artboxPrintCount !== undefined && artboxPrintCount > 0 && (
+              <p className="text-xs font-mono text-muted-foreground">{artboxPrintCount} {zh ? "张印刷品" : "prints included"}</p>
             )}
           </div>
 

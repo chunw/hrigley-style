@@ -134,6 +134,14 @@ export const shopOrderNavigableItems = [
     .map((w) => ({ type: "watercolor" as const, id: w.id, path: `/watercolors/${w.id}` })),
 ];
 
+export function getArtboxPrintCount(productId: string): number {
+  if (productId === "artbox-watercolor") return watercolors.filter(w => w.includeInArtbox).length;
+  if (productId === "artbox-photography") return photographyWorks.filter(w => w.includeInArtbox).length;
+  if (productId === "artbox-remains") return remainsWorks.filter(w => w.includeInArtbox).length;
+  if (productId === "artbox-spirit") return spiritWorks.filter(w => w.includeInArtbox).length;
+  return 0;
+}
+
 export const useProducts = () => {
   return useQuery({
     queryKey: ["products"],
