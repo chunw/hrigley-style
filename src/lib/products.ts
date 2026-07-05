@@ -32,7 +32,8 @@ export const products = [
     showInStorefront: true,
     category: "Books",
     created_at: new Date().toISOString(),
-    paylink: "https://www.paypal.com/ncp/payment/YXJ36FNDULK5L"
+    paylink: "https://www.paypal.com/ncp/payment/YXJ36FNDULK5L",
+    soldOut: true,
   },
   {
     id: "tote",
@@ -427,6 +428,33 @@ Set of 2 original paintings.</p>`.trim(),
     category: "Art Boxes",
     created_at: new Date().toISOString(),
     paylink: "https://www.paypal.com/ncp/payment/VZHL787738Y7W"
+  },
+
+  {
+    id: "mixology-planter-5",
+    imageFolder: "mixologyplanter5",
+    title: "Leaky Boundaries Planter #5",
+    name: "Leaky Boundaries Planter #5",
+    title_zh: "《渗漏的边界》种植盆 #5",
+    description_zh: "实用器型渗入超现实景观——泥土、釉料与不速之客。",
+    detailed_description_html_zh: `<p>我的陶瓷作品从实用器型起步——烛台、杯子、碗——而后渗入超现实的景观。</p><p>以泥板手工搭建，施以釉料，每件作品都邀请了非陶瓷的客人：干燥植物、皮毛、玻璃与微型塑料小人。一个小职员在粉色蜡烛下靠着电脑睡着了；一头猪站在盛满花朵的玻璃杯上；一个婴儿在摇摇晃晃的巢碗里等待吐司。这些是功能性容器，也属于梦境逻辑与荒诞，在实用、雕塑与故事之间制造出渗漏的边界。</p>`,
+    category_zh: "家居",
+    edition_info_zh: "",
+    price: 30,
+    currency: "USD",
+    description: "Functional form leaking into surreal landscape — clay, glaze, and uninvited guests.",
+    detailed_description_html: `<p>My ceramics begin as functional forms — a candle holder, a cup, a bowl — then leak into surreal landscapes.</p><p>Hand-built in clay with glazes, each piece invites non-ceramic guests: dried plants, fur, glass, and miniature plastic figures. A tiny worker sleeps beside his computer under a pink candle. A pig balances on a flower-filled glass. A baby waits for toast in a wobbly nest-bowl. These are functional containers, but also of dream logic and absurdity, creating leaky boundaries between utility, sculpture, and story.</p>`,
+    dimensions: "",
+    edition_info: null,
+    edition_size: null,
+    alt_text: "Leaky Boundaries Planter #5",
+    image_url: new URL("../assets/products/mixologyplanter5/main.jpg", import.meta.url).href,
+    is_active: true,
+    printInCatalog: false,
+    showInStorefront: true,
+    category: "Home Goods",
+    created_at: new Date().toISOString(),
+    paylink: ""
   },
 ];
 
