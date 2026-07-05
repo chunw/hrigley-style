@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { products } from "@/lib/products";
+import { products, FRAMED_ART_CATEGORY, FRAMED_ART_CATEGORY_ZH } from "@/lib/products";
 import { watercolors, studioCardPayLink, PRINT_9X12_PAYLINK } from "@/lib/watercolors";
 import { photographyWorks } from "@/lib/photography";
 import { remainsWorks } from "@/lib/remains";
@@ -90,6 +90,8 @@ const catalogProducts = [
       const paddedId = w.id.padStart(2, "0");
       const printInfo = w.printInfo ?? DEFAULT_PRINT_INFO;
       const printInfoZh = w.printInfoZh ?? DEFAULT_PRINT_INFO_ZH;
+      const baseCategory = w.series === "III" ? "Cards" : "Fine Art Prints";
+      const baseCategoryZh = w.series === "III" ? "卡片" : "版画 · 限量版号";
       return {
         id: `watercolor-${w.id}`,
         name: w.title,
@@ -100,8 +102,10 @@ const catalogProducts = [
         price: w.price ?? w.printPrice ?? DEFAULT_PRINT_PRICE,
         currency: "USD",
         image_url: `/watercolors/${paddedId}/main.jpg`,
-        category: w.series === "III" ? "Cards" : "Fine Art Prints",
-        category_zh: w.series === "III" ? "卡片" : "版画 · 限量版号",
+        category: baseCategory,
+        category_zh: baseCategoryZh,
+        categories: w.framed ? [baseCategory, FRAMED_ART_CATEGORY] : undefined,
+        categories_zh: w.framed ? [baseCategoryZh, FRAMED_ART_CATEGORY_ZH] : undefined,
         paylink: w.series === "III" ? studioCardPayLink(w.title) : (w.paylink ?? PRINT_9X12_PAYLINK),
         showInStorefront: true,
         detailPath: `/watercolors/${w.id}`,

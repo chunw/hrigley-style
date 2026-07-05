@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { products, productImages } from "@/lib/products";
+import { products, productImages, getProductCategories } from "@/lib/products";
 
 export const useProductDetails = (productId: string) => {
   return useQuery({
@@ -31,7 +31,7 @@ export const useRelatedProducts = (category: string, excludeId: string) => {
     queryFn: async () => {
       // Simulate network delay
       await new Promise(resolve => setTimeout(resolve, 300));
-      return products.filter(p => p.category === category && p.id !== excludeId).slice(0, 4);
+      return products.filter(p => getProductCategories(p).includes(category) && p.id !== excludeId).slice(0, 4);
     },
     enabled: !!category && !!excludeId,
   });

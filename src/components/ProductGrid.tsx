@@ -3,6 +3,7 @@ import { Search } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 import ProductCard from "./ProductCard";
 import { useProducts, getArtboxPrintCount } from "@/hooks/useProducts";
+import { getProductCategories, getProductCategoriesZh } from "@/lib/products";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,20 +29,24 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   const normalizedSearchQuery = searchQuery?.trim() || "";
   const hasActiveSearch = normalizedSearchQuery.length > 0;
 
-  // Unique categories (keyed by English value, displayed in current language)
+  // Unique categories (keyed by English value, displayed in current language).
+  // A product can belong to multiple categories, so membership is an "includes" check.
   const visibleProducts = products?.filter((product) => product.showInStorefront !== false);
-  const categories = ["ALL", ...Array.from(new Set(visibleProducts?.map(p => p.category) || []))];
+  const categories = ["ALL", ...Array.from(new Set(visibleProducts?.flatMap(p => getProductCategories(p)) || []))];
   const categoryCount = (cat: string) => {
     if (cat === "ALL") return visibleProducts?.length ?? 0;
-    return visibleProducts?.filter(p => p.category === cat).length ?? 0;
+    return visibleProducts?.filter(p => getProductCategories(p).includes(cat)).length ?? 0;
   };
   const categoryLabel = (cat: string) => {
     const count = categoryCount(cat);
     const label = (() => {
       if (cat === "ALL") return t.productGrid.categoryAll;
       if (zh) {
-        const match = visibleProducts?.find(p => p.category === cat);
-        return (match?.category_zh) || cat;
+        for (const product of visibleProducts || []) {
+          const index = getProductCategories(product).indexOf(cat);
+          if (index !== -1) return getProductCategoriesZh(product)[index] || cat;
+        }
+        return cat;
       }
       return cat;
     })();
@@ -56,7 +61,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   };
 
   const filteredProducts = visibleProducts?.filter(product => {
-    const categoryMatch = selectedCategory === "ALL" || product.category === selectedCategory;
+    const categoryMatch = selectedCategory === "ALL" || getProductCategories(product).includes(selectedCategory);
     const searchText = buildProductSearchText(product as Record<string, unknown>);
     const searchMatch = !normalizedSearchQuery || searchText.includes(normalizedSearchQuery.toLowerCase());
     return categoryMatch && searchMatch;

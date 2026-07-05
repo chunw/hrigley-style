@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getProductCategories, getProductCategoriesZh } from "@/lib/products";
 
 interface ProductCardProps {
   id: string;
@@ -15,6 +16,8 @@ interface ProductCardProps {
   image_url: string | null;
   category: string | null;
   category_zh?: string | null;
+  categories?: string[];
+  categories_zh?: string[];
   paylink: string;
   detailPath?: string;
   priceLabel?: string;
@@ -26,14 +29,17 @@ interface ProductCardProps {
   soldOut?: boolean;
 }
 
-const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, priceLabel, currency, image_url, category, category_zh, paylink, detailPath, hideOrderButton, hideShippingLabel, highlightQuery, isSearchHighlighted, artboxPrintCount, soldOut }: ProductCardProps) => {
+const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, priceLabel, currency, image_url, category, category_zh, categories, categories_zh, paylink, detailPath, hideOrderButton, hideShippingLabel, highlightQuery, isSearchHighlighted, artboxPrintCount, soldOut }: ProductCardProps) => {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
 
   const zh = lang === "zh";
   const displayTitle = (zh && title_zh) ? title_zh : (title || name);
   const displayDescription = (zh && description_zh) ? description_zh : description;
-  const displayCategory = (zh && category_zh) ? category_zh : category;
+  const displayCategoryList = zh
+    ? getProductCategoriesZh({ category_zh, categories_zh })
+    : getProductCategories({ category, categories });
+  const displayCategory = displayCategoryList.length > 0 ? displayCategoryList.join(" · ") : null;
 
   const renderHighlightedText = (text: string) => {
     if (!highlightQuery?.trim()) {

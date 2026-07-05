@@ -58,6 +58,7 @@ export interface Watercolor {
   printPrice?: number;
   price?: number;
   paylink?: string;
+  framed?: boolean;
 }
 
 export const PRINT_9X12_PAYLINK = "https://www.paypal.com/ncp/payment/PHRVNL65LDTX2";
@@ -92,6 +93,7 @@ export const watercolors: Watercolor[] = [
     printInfoZh: "13×18厘米装裱印刷品，白色画框，10×15厘米裱装",
     price: 25,
     paylink: PRINT_FRAMED_PAYLINK,
+    framed: true,
   },
 
 {
@@ -108,6 +110,7 @@ export const watercolors: Watercolor[] = [
     dimensionsZh: "",
     description: "",
     descriptionZh: "",
+    framed: true,
   },
 
   {
@@ -129,8 +132,8 @@ export const watercolors: Watercolor[] = [
     printInfoZh: "13×18厘米装裱印刷品，白色画框，10×15厘米裱装",
     price: 25,
     paylink: PRINT_FRAMED_PAYLINK,
+    framed: true,
   },
-
   {
     id: "6",
  title: "Residuals #9",
@@ -163,11 +166,12 @@ export const watercolors: Watercolor[] = [
       "",
     descriptionZh:
       "",
-    price: 95,
+    price: 10,
     paylink: "https://www.paypal.com/ncp/payment/PLACEHOLDER",
     printInfo: `Also available as framed print 8×10", $35`,
     printInfoZh: `亦提供20×25厘米装裱印刷品，$35`,
     printPrice: 35,
+    framed: true,
   },
   
 
@@ -218,6 +222,7 @@ export const watercolors: Watercolor[] = [
     dimensionsZh: "",
     description: "",
     descriptionZh: "",
+    framed: true,
   },
   {
     id: "2",
@@ -236,6 +241,7 @@ export const watercolors: Watercolor[] = [
       "",
     descriptionZh:
       "",
+    framed: true,
   },
  {
     id: "7",

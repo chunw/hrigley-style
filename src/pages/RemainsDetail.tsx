@@ -167,7 +167,6 @@ const RemainsDetail = () => {
               )}
               {work.year && <p>{work.year}</p>}
               <p>{lang === "zh" ? "现提供4×6英寸精细艺术哑光纸印刷品" : `Available as 4×6" fine art matte paper print`}</p>
-              <p>{lang === "zh" ? "所有印刷品均有签名和限量版号" : "All prints are signed and editioned"}</p>
             </div>
 
             <div className="border-t border-border pt-8 space-y-4">

@@ -4,6 +4,10 @@ import Footer from "@/components/Footer";
 import { remainsWorks, catalogMeta, type RemainsWork } from "@/lib/remains";
 import { seriesIntro } from "@/lib/constants";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { products } from "@/lib/products";
+import ProductCard from "@/components/ProductCard";
+
+const printPacket = products.find((p) => p.id === "remains-fine-art-print-packet");
 
 function renderInlineMarkdown(text: string) {
   const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g);
@@ -122,6 +126,26 @@ const RemainsCatalog = () => {
               <p key={i}>{renderInlineMarkdown(para)}</p>
             ))}
         </div>
+
+        {/* Print packet */}
+        {printPacket && (
+          <section className="mt-12 max-w-xs">
+            <ProductCard
+              id={printPacket.id}
+              name={printPacket.name}
+              title={printPacket.title}
+              title_zh={printPacket.title_zh}
+              description={printPacket.description}
+              description_zh={printPacket.description_zh}
+              price={printPacket.price}
+              currency={printPacket.currency}
+              image_url={printPacket.image_url}
+              category={printPacket.category}
+              category_zh={printPacket.category_zh}
+              paylink={printPacket.paylink}
+            />
+          </section>
+        )}
 
         {/* Works grid */}
         <section className="mt-12">

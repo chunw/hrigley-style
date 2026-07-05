@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useProductDetails, useProductImages } from "@/hooks/useProductDetails";
 import { shopOrderNavigableItems, getArtboxPrintCount } from "@/hooks/useProducts";
+import { getProductCategories, getProductCategoriesZh } from "@/lib/products";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import About from "./About";
 import { ZoomableImage } from "@/components/ZoomableImage";
@@ -93,7 +94,8 @@ const ProductDetails = () => {
 
   // Pick the right language field, fall back to English if Chinese not filled in
   const displayTitle = (zh && product.title_zh) ? product.title_zh : (product.title || product.name);
-  const displayCategory = (zh && product.category_zh) ? product.category_zh : product.category;
+  const englishCategories = getProductCategories(product);
+  const displayCategories = zh ? getProductCategoriesZh(product) : englishCategories;
   const displayDescription = (zh && product.description_zh) ? product.description_zh : product.description;
   const displayDetailedHtml = (zh && product.detailed_description_html_zh) ? product.detailed_description_html_zh : product.detailed_description_html;
   const displayEditionInfo = (zh && product.edition_info_zh) ? product.edition_info_zh : product.edition_info;
@@ -173,12 +175,16 @@ const ProductDetails = () => {
               <h1 className="shop-title text-3xl md:text-4xl leading-tight mb-2 mt-4">
                 {displayTitle}
               </h1>
-              {displayCategory && (
-                <Link to={`/?category=${encodeURIComponent(product.category ?? "")}`}>
-                  <Badge variant="secondary" className="handwritten text-sm hover:bg-secondary/80 cursor-pointer transition-colors">
-                    {displayCategory}
-                  </Badge>
-                </Link>
+              {displayCategories.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {displayCategories.map((label, index) => (
+                    <Link key={label} to={`/?category=${encodeURIComponent(englishCategories[index] ?? "")}`}>
+                      <Badge variant="secondary" className="handwritten text-sm hover:bg-secondary/80 cursor-pointer transition-colors">
+                        {label}
+                      </Badge>
+                    </Link>
+                  ))}
+                </div>
               )}
             </div>
 

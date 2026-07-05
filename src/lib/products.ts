@@ -5,6 +5,24 @@ const _allProductImages = import.meta.glob(
   { eager: true, query: '?url', import: 'default' }
 ) as Record<string, string>
 
+// Reference these when tagging a product as framed, to keep the name consistent.
+export const FRAMED_ART_CATEGORY = "Framed Art";
+export const FRAMED_ART_CATEGORY_ZH = "装裱艺术品";
+
+// A product's category is `category` by default. To put a product in more than
+// one category (e.g. an original painting that's also framed), set `categories`
+// (and `categories_zh`) to the full list instead — these two helpers read
+// whichever is present so callers never need to know which field was set.
+export function getProductCategories(product: { category?: string | null; categories?: string[] }): string[] {
+  if (product.categories && product.categories.length > 0) return product.categories;
+  return product.category ? [product.category] : [];
+}
+
+export function getProductCategoriesZh(product: { category_zh?: string | null; categories_zh?: string[] }): string[] {
+  if (product.categories_zh && product.categories_zh.length > 0) return product.categories_zh;
+  return product.category_zh ? [product.category_zh] : [];
+}
+
 export const products = [
 
   {
@@ -257,7 +275,7 @@ Set of 2 original paintings.</p>`.trim(),
     edition_info: null,
     edition_size: null,
     alt_text: "Watercolor Artbox — curated 9x12 print collection",
-    image_url: new URL("../assets/products/artbox-watercolor/wc-01.jpg", import.meta.url).href,
+    image_url: new URL("../assets/products/artbox-watercolor/main.jpg", import.meta.url).href,
     is_active: true,
     printInCatalog: false,
     showInStorefront: true,
@@ -300,14 +318,14 @@ Set of 2 original paintings.</p>`.trim(),
     title: "Leaky Boundaries Planter #1",
     name: "Leaky Boundaries Planter #1",
     title_zh: "《渗漏的边界》种植盆 #1",
-    description_zh: "实用器型渗入超现实景观——泥土、釉料与不速之客。",
-    detailed_description_html_zh: `<p>我的陶瓷作品从实用器型起步——烛台、杯子、碗——而后渗入超现实的景观。</p><p>以泥板手工搭建，施以釉料，每件作品都邀请了非陶瓷的客人：干燥植物、皮毛、玻璃与微型塑料小人。一个小职员在粉色蜡烛下靠着电脑睡着了；一头猪站在盛满花朵的玻璃杯上；一个婴儿在摇摇晃晃的巢碗里等待吐司。这些是功能性容器，也属于梦境逻辑与荒诞，在实用、雕塑与故事之间制造出渗漏的边界。</p>`,
+    description_zh: "层叠玻璃种植器，盛着水、根须与静静生长的绿意。",
+    detailed_description_html_zh: `<p>一件层叠玻璃种植器——透明容器层层叠起，托住一株正在生根蔓延的吊兰。</p><p>半是种植器，半是静物：水、玻璃与绿意，在任何一角落窗台上悄然构成自己的画面。</p>`,
     category_zh: "家居",
     edition_info_zh: "",
     price: 35,
     currency: "USD",
-    description: "Functional form leaking into surreal landscape — clay, glaze, and uninvited guests.",
-    detailed_description_html: `<p>My ceramics begin as functional forms — a candle holder, a cup, a bowl — then leak into surreal landscapes.</p><p>Hand-built in clay with glazes, each piece invites non-ceramic guests: dried plants, fur, glass, and miniature plastic figures. A tiny worker sleeps beside his computer under a pink candle. A pig balances on a flower-filled glass. A baby waits for toast in a wobbly nest-bowl. These are functional containers, but also of dream logic and absurdity, creating leaky boundaries between utility, sculpture, and story.</p>`,
+    description: "A layered glass planter, holding water, roots, and quiet green life.",
+    detailed_description_html: `<p>A layered glass planter — a clear vessel stacked in tiers, cradling a rooting spider plant as it trails and multiplies.</p><p>Part planter, part still life: water, glass, and green making their own quiet composition on any shelf or windowsill.</p>`,
     dimensions: "",
     edition_info: null,
     edition_size: null,
@@ -358,7 +376,7 @@ Set of 2 original paintings.</p>`.trim(),
     detailed_description_html_zh: `<p>我的陶瓷作品从实用器型起步——烛台、杯子、碗——而后渗入超现实的景观。</p><p>以泥板手工搭建，施以釉料，每件作品都邀请了非陶瓷的客人：干燥植物、皮毛、玻璃与微型塑料小人。一个小职员在粉色蜡烛下靠着电脑睡着了；一头猪站在盛满花朵的玻璃杯上；一个婴儿在摇摇晃晃的巢碗里等待吐司。这些是功能性容器，也属于梦境逻辑与荒诞，在实用、雕塑与故事之间制造出渗漏的边界。</p><p>陶瓷，玻璃鸡尾酒杯，仿皮草，鲜花，樱桃梗，微型猪偶。约 5 × 5 × 6 英寸。</p>`,
     category_zh: "家居",
     edition_info_zh: "",
-    price: 40,
+    price: 35,
     currency: "USD",
     description: "A pig on a flower-filled glass — the hour before dinner, suspended in clay and faux fur.",
     detailed_description_html: `<p>My ceramics begin as functional forms — a candle holder, a cup, a bowl — then leak into surreal landscapes.</p><p>Hand-built in clay with glazes, each piece invites non-ceramic guests: dried plants, fur, glass, and miniature plastic figures. A tiny worker sleeps beside his computer under a pink candle. A pig balances on a flower-filled glass. A baby waits for toast in a wobbly nest-bowl. These are functional containers, but also of dream logic and absurdity, creating leaky boundaries between utility, sculpture, and story.</p><p>Ceramics, glass cocktail cup, faux fur, fresh flowers, cherry stem, miniature pig. Approx. 5 × 5 × 6 in.</p>`,
@@ -385,7 +403,7 @@ Set of 2 original paintings.</p>`.trim(),
     detailed_description_html_zh: `<p>我的陶瓷作品从实用器型起步——烛台、杯子、碗——而后渗入超现实的景观。</p><p>以泥板手工搭建，施以釉料，每件作品都邀请了非陶瓷的客人：干燥植物、皮毛、玻璃与微型塑料小人。一个小职员在粉色蜡烛下靠着电脑睡着了；一头猪站在盛满花朵的玻璃杯上；一个婴儿在摇摇晃晃的巢碗里等待吐司。这些是功能性容器，也属于梦境逻辑与荒诞，在实用、雕塑与故事之间制造出渗漏的边界。</p><p>手建炻器，釉料，蜡烛，干草，微型电脑及人偶。约 5 × 8 × 18 英寸。</p>`,
     category_zh: "家居",
     edition_info_zh: "",
-    price: 45,
+    price: 50,
     currency: "USD",
     description: "A tiny worker asleep at his desk, beneath a pink candle — overtime extended into another dimension.",
     detailed_description_html: `<p>My ceramics begin as functional forms — a candle holder, a cup, a bowl — then leak into surreal landscapes.</p><p>Hand-built in clay with glazes, each piece invites non-ceramic guests: dried plants, fur, glass, and miniature plastic figures. A tiny worker sleeps beside his computer under a pink candle. A pig balances on a flower-filled glass. A baby waits for toast in a wobbly nest-bowl. These are functional containers, but also of dream logic and absurdity, creating leaky boundaries between utility, sculpture, and story.</p><p>Hand-built stoneware, glaze, candle, dried grass, miniature computer and figure. Approx. 5 × 8 × 18 in.</p>`,
@@ -421,7 +439,7 @@ Set of 2 original paintings.</p>`.trim(),
     edition_info: null,
     edition_size: null,
     alt_text: "Photography Artbox — curated 9x12 print collection",
-    image_url: new URL("../assets/products/artbox-photography/photo-01.jpg", import.meta.url).href,
+    image_url: new URL("../assets/products/artbox-photography/main.jpg", import.meta.url).href,
     is_active: true,
     printInCatalog: false,
     showInStorefront: true,
@@ -453,6 +471,60 @@ Set of 2 original paintings.</p>`.trim(),
     printInCatalog: false,
     showInStorefront: true,
     category: "Home Goods",
+    created_at: new Date().toISOString(),
+    paylink: ""
+  },
+
+  {
+    id: "remains-fine-art-print-packet",
+    imageFolder: "remains-print-packet",
+    title: "Remains Fine Art Print Packet",
+    name: "Remains Fine Art Print Packet",
+    title_zh: "《遗迹》艺术微喷印刷套装",
+    description_zh: "一套《遗迹》系列艺术微喷印刷品——陶俑与当代图像重组进同一时空。",
+    detailed_description_html_zh: `<p>《遗迹》系列曾入选2024年伦敦国际创意大赛(LICC)艺术创作组别。系列灵感源自世界各地博物馆的藏品、展陈与物质痕迹，将不同文明中的陶俑形象与当代平面语言重组为同一画面，让过去不再是玻璃柜中的标本，而是参与当下意义生产的共作者。</p><p>本套装收录多张精选画面，以艺术微喷工艺印制于哑光艺术纸，尺寸小巧，方便收藏、装框或随手分享。</p>`,
+    category_zh: "艺术微喷印刷",
+    edition_info_zh: "",
+    price: 20,
+    currency: "USD",
+    description: "A packet of fine art prints from Remains — ancient terracotta figures recombined into the present tense.",
+    detailed_description_html: `<p><i>Remains</i> was <a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank" rel="noreferrer">Officially Selected</a> for the 2024 London International Creative Competition (LICC) in the Create/Art category. Drawing on museum collections and material traces from around the world, the series recombines terracotta figures from different civilizations with contemporary graphic language — the past reassembled as a co-author of the present, rather than a specimen behind glass.</p><p>This packet gathers a selection of images from the series, printed as fine art prints on matte archival paper. Small enough to collect, frame, or pass along.</p>`,
+    dimensions: "",
+    edition_info: null,
+    edition_size: null,
+    alt_text: "Remains Fine Art Print Packet",
+    image_url: new URL("../assets/products/remains-print-packet/main.jpg", import.meta.url).href,
+    is_active: true,
+    printInCatalog: false,
+    showInStorefront: true,
+    category: "Fine Art Prints",
+    created_at: new Date().toISOString(),
+    paylink: ""
+  },
+
+  {
+    id: "spirit-21-fine-art-print-packet",
+    imageFolder: "spirit21-print-packet",
+    title: "In the Spirit of the 21st Century Fine Art Print Packet",
+    name: "In the Spirit of the 21st Century Fine Art Print Packet",
+    title_zh: "《21世纪精神》艺术微喷印刷套装",
+    description_zh: "一套《21世纪精神》系列艺术微喷印刷品——将时代议题转译为可被看见的图景。",
+    detailed_description_html_zh: `<p>《21世纪精神》曾入围2021年伦敦国际创意大赛（LICC）决赛，艺术创作类。系列将当代核心社会议题与研究数据转译为人物与场景，试图在快速流动的时代里，打捞一种可被观看、被共感的21世纪精神图景。</p><p>本套装收录多张精选画面，以艺术微喷工艺印制于哑光艺术纸，尺寸小巧，方便收藏、装框或随手分享。</p>`,
+    category_zh: "艺术微喷印刷",
+    edition_info_zh: "",
+    price: 20,
+    currency: "USD",
+    description: "A packet of fine art prints from In the Spirit of the 21st Century — the era's noise, translated into image.",
+    detailed_description_html: `<p><i>In the Spirit of the 21st Century</i> was a Finalist at the 2021 London International Creative Competition (LICC), Create/Art category. The series translates core contemporary social issues and research data into figures and scenes — an attempt to salvage, from an era of rapid flux, a portrait of the 21st-century spirit that can actually be seen and felt.</p><p>This packet gathers a selection of images from the series, printed as fine art prints on matte archival paper. Small enough to collect, frame, or pass along.</p>`,
+    dimensions: "",
+    edition_info: null,
+    edition_size: null,
+    alt_text: "In the Spirit of the 21st Century Fine Art Print Packet",
+    image_url: new URL("../assets/products/spirit21-print-packet/main.jpg", import.meta.url).href,
+    is_active: true,
+    printInCatalog: false,
+    showInStorefront: true,
+    category: "Fine Art Prints",
     created_at: new Date().toISOString(),
     paylink: ""
   },
