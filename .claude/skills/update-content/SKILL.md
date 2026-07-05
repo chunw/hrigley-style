@@ -79,6 +79,7 @@ src/assets/products/
     Fresh Bath Mat 2.png    ← 额外图（加进 productImages 数组）
 ```
 
+
 **主图**：在产品对象的 `image_url` 字段引用：
 
 ```ts
