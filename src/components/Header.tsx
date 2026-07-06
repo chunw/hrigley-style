@@ -10,7 +10,7 @@ const Header = () => {
   const isHomePage = location.pathname === "/";
 
   return (
-    <header className="border-b border-border bg-background">
+    <header className="bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-28">
           <div className="absolute inset-y-0 right-0 inline-flex items-center gap-8 text-sm font-helvetica">

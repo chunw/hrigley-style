@@ -14,7 +14,7 @@ const Index = () => {
   const [matchedCount, setMatchedCount] = useState(0);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background">
       
       <Header />
       <HeroSection />

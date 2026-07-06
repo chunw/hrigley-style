@@ -1,9 +1,19 @@
+import { remainsWorks } from "./remains";
+import { spiritWorks } from "./21spirit";
+
 // Auto-discovers all images in each product's imageFolder at build time.
 // To add images to a product, just drop files into src/assets/products/<imageFolder>/.
 const _allProductImages = import.meta.glob(
   '../assets/products/**/*.{jpg,jpeg,JPG,JPEG,png,PNG,gif,webp}',
   { eager: true, query: '?url', import: 'default' }
 ) as Record<string, string>
+
+// Print packets bundle a selection of images from a series — surface each
+// item's own image as a detail image so buyers can see what's inside.
+const PRINT_PACKET_SERIES_IMAGES: Record<string, string[]> = {
+  "remains-fine-art-print-packet": remainsWorks.map((w) => `/remains/${w.id.padStart(2, "0")}/main.jpg`),
+  "spirit-21-fine-art-print-packet": spiritWorks.map((w) => `/21spirit/${w.id.padStart(2, "0")}/main.jpg`),
+}
 
 // Reference these when tagging a product as framed, to keep the name consistent.
 export const FRAMED_ART_CATEGORY = "Framed Art";
@@ -535,24 +545,26 @@ Set of 2 original paintings.</p>`.trim(),
 // The cover image (image_url) is always sorted first.
 export const productImages = products.flatMap((product) => {
   const folder = (product as { imageFolder?: string }).imageFolder
-  if (!folder) return []
-  const prefix = `../assets/products/${folder}/`
   const coverFilename = product.image_url
     ? decodeURIComponent(product.image_url.split('/').pop() || '')
     : ''
-  return Object.entries(_allProductImages)
-    .filter(([path]) => path.startsWith(prefix))
-    .sort(([a], [b]) => {
-      const aFile = a.split('/').pop() || ''
-      const bFile = b.split('/').pop() || ''
-      if (aFile === coverFilename) return -1
-      if (bFile === coverFilename) return 1
-      return a.localeCompare(b)
-    })
-    .map(([, url], i) => ({
-      id: `${product.id}-auto-${i}`,
-      product_id: product.id,
-      image_url: url,
-      display_order: i,
-    }))
+  const folderImages = folder
+    ? Object.entries(_allProductImages)
+        .filter(([path]) => path.startsWith(`../assets/products/${folder}/`))
+        .sort(([a], [b]) => {
+          const aFile = a.split('/').pop() || ''
+          const bFile = b.split('/').pop() || ''
+          if (aFile === coverFilename) return -1
+          if (bFile === coverFilename) return 1
+          return a.localeCompare(b)
+        })
+        .map(([, url]) => url)
+    : []
+  const seriesImages = PRINT_PACKET_SERIES_IMAGES[product.id] ?? []
+  return [...folderImages, ...seriesImages].map((url, i) => ({
+    id: `${product.id}-auto-${i}`,
+    product_id: product.id,
+    image_url: url,
+    display_order: i,
+  }))
 })

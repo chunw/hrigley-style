@@ -139,6 +139,30 @@ All colors MUST be HSL.
     line-height: 0.9;
   }
 
+  @keyframes fade-up-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-up-in {
+    opacity: 0;
+    animation: fade-up-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fade-up-in {
+      opacity: 1;
+      animation: none;
+      transform: none;
+    }
+  }
+
   .product-details-html a {
     font-weight: 600;
   }

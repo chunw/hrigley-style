@@ -11,6 +11,7 @@ export const translations = {
       description:
         "What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity.",
       createdExclusivelyBy: "created exclusively by",
+      forImaginativeCollectors: " for the imaginative collectors",
     },
     about: {
       title: "About",
@@ -24,7 +25,7 @@ export const translations = {
       line3: "SHOP",
     },
     index: {
-      tagline: "Unique works for the imaginative collectors",
+      tagline: "Unique works for the imaginative collectors.",
       catalogsTitle: "Art Catalogs",
     },
     footer: {
@@ -93,8 +94,9 @@ export const translations = {
     },
     hero: {
       description:
-        "从一点点生活观察，和一点点过度思考开始。想法落地，变成好用、好送、也好发呆的小物件。",
-      createdExclusivelyBy: "由艺术家独家创作",
+        "从一点点生活观察，和一点点过度思考开始。想法落地，变成好用、好送、也好对着发呆的小物件。",
+      createdExclusivelyBy: "独家创作 by",
+      forImaginativeCollectors: "，献给富有想象力的收藏者们",
     },
     about: {
       title: "关于",
