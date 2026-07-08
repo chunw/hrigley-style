@@ -278,7 +278,7 @@ Set of 2 original paintings.</p>`.trim(),
     edition_info_zh: "",
     price: 60,
     currency: "USD",
-    description: "Watercolor prints in a box — residuals and still things, made permanent.",
+    description: "Watercolor prints in a box — residuals and still things, made permanent. Signed Edition.",
     detailed_description_html: `<p>A curated selection of 9×12" archival matte fine art paper prints from the <em>Residuals</em> and <em>Still Things</em> watercolor series — works that catch the everyday just after it has been used, just before it disappears. Presented in a rigid artbox and ready to frame. Each art box is signed and editioned.</p>`,
     dimensions: `13.2″ × 9.8″ × 1.8″`,
     dimensions_zh: `13.2″ × 9.8″ × 1.8″`,
@@ -346,7 +346,7 @@ Set of 2 original paintings.</p>`.trim(),
     showInStorefront: true,
     category: "Home Goods",
     created_at: new Date().toISOString(),
-    paylink: ""
+    paylink: "https://www.paypal.com/ncp/payment/SKAWTMWVQZHY4"
   },
 
   {
@@ -359,7 +359,7 @@ Set of 2 original paintings.</p>`.trim(),
     detailed_description_html_zh: `<p>我的陶瓷作品从实用器型起步——烛台、杯子、碗——而后渗入超现实的景观。</p><p>以泥板手工搭建，施以釉料，每件作品都邀请了非陶瓷的客人：干燥植物、皮毛、玻璃与微型塑料小人。一个小职员在粉色蜡烛下靠着电脑睡着了；一头猪站在盛满花朵的玻璃杯上；一个婴儿在摇摇晃晃的巢碗里等待吐司。这些是功能性容器，也属于梦境逻辑与荒诞，在实用、雕塑与故事之间制造出渗漏的边界。</p><p>手建白炻器巢碗，四腿，釉料，枯枝，微型烤面包机与吐司，小人偶。约 6 × 10 × 18 英寸。</p>`,
     category_zh: "家居",
     edition_info_zh: "",
-    price: 40,
+    price: 35,
     currency: "USD",
     description: "A wobbly nest-bowl on four legs — where a tiny figure waits for toast that never cools.",
     detailed_description_html: `<p>My ceramics begin as functional forms — a candle holder, a cup, a bowl — then leak into surreal landscapes.</p><p>Hand-built in clay with glazes, each piece invites non-ceramic guests: dried plants, fur, glass, and miniature plastic figures. A tiny worker sleeps beside his computer under a pink candle. A pig balances on a flower-filled glass. A baby waits for toast in a wobbly nest-bowl. These are functional containers, but also of dream logic and absurdity, creating leaky boundaries between utility, sculpture, and story.</p><p>Hand-built white stoneware nest-bowl on four legs, glaze, dried twigs, miniature toaster with toast, figure. Approx. 6 × 10 × 18 in.</p>`,
@@ -373,7 +373,7 @@ Set of 2 original paintings.</p>`.trim(),
     showInStorefront: true,
     category: "Home Goods",
     created_at: new Date().toISOString(),
-    paylink: ""
+    paylink: "https://www.paypal.com/ncp/payment/SKAWTMWVQZHY4"
   },
 
   {
@@ -400,7 +400,7 @@ Set of 2 original paintings.</p>`.trim(),
     showInStorefront: true,
     category: "Home Goods",
     created_at: new Date().toISOString(),
-    paylink: ""
+    paylink: "https://www.paypal.com/ncp/payment/SKAWTMWVQZHY4"
   },
 
   {
@@ -427,7 +427,7 @@ Set of 2 original paintings.</p>`.trim(),
     showInStorefront: true,
     category: "Home Goods",
     created_at: new Date().toISOString(),
-    paylink: ""
+    paylink: "https://www.paypal.com/ncp/payment/XFL4C5U2KPP98"
   },
 
   {
@@ -442,7 +442,7 @@ Set of 2 original paintings.</p>`.trim(),
     edition_info_zh: "",
     price: 60,
     currency: "USD",
-    description: "Photography prints in a box — figures, landscapes, and the long look between them.",
+    description: "Photography prints in a box — figures, landscapes, and the long look between them. Signed Edition.",
     detailed_description_html: `<p>A curated selection of 9×12" archival matte fine art paper prints from the <em>El Otro, El Mismo</em>, <em>Theater</em>, and <em>Highland Scottlands</em> photography series. Each image is a proposition: that the camera is a philosophical instrument, and looking long enough changes what you see. Presented in a rigid artbox and ready to frame. Each art box is signed and editioned.</p>`,
     dimensions: `13.2″ × 9.8″ × 1.8″`,
     dimensions_zh: `13.2″ × 9.8″ × 1.8″`,
@@ -482,7 +482,7 @@ Set of 2 original paintings.</p>`.trim(),
     showInStorefront: true,
     category: "Home Goods",
     created_at: new Date().toISOString(),
-    paylink: ""
+    paylink: "https://www.paypal.com/ncp/payment/SKAWTMWVQZHY4"
   },
 
   {
