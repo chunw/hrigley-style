@@ -58,7 +58,7 @@ export const spiritWorks: SpiritWork[] = [
   {
     id: "3",
     title: "Information Overload & Surveillance Capitalism",
-    titleZh: "画像",
+    titleZh: "数字画像",
     printInCatalog: true,
     year: "2021",
     medium: "Mixed Media",
