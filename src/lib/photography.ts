@@ -252,7 +252,7 @@ export const photographyWorks: PhotographyWork[] = [
   {
     id: "9",
     title: "Theater #1",
-    titleZh: "舞台 其一",
+    titleZh: "登台 其一",
     series: "II",
     showInStorefront: true,
     printInCatalog: true,
@@ -267,7 +267,7 @@ export const photographyWorks: PhotographyWork[] = [
   {
     id: "10",
      title: "Theater #2",
-    titleZh: "舞台 其二",
+    titleZh: "登台 其二",
     series: "II",
     showInStorefront: false,
     printInCatalog: false,
@@ -280,7 +280,7 @@ export const photographyWorks: PhotographyWork[] = [
   {
     id: "11",
      title: "Theater #3",
-    titleZh: "舞台 其三",
+    titleZh: "登台 其三",
     series: "II",
     showInStorefront: true,
     printInCatalog: false,
