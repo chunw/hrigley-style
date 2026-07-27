@@ -894,7 +894,7 @@ export default function PhotographyPhotobook() {
               innocence, do you still remember that carefree shade of green?
               Has your Oscar Wilde died? Has your Godot arrived?
             </p>
-            <p>
+            <p className="mb-4">
               In this journey from innocence to experience, we grapple with the
               paradoxes of freedom and control. The unrestrained freedom of
               youth often gives way to the realization of the forces that seek
@@ -903,6 +903,18 @@ export default function PhotographyPhotobook() {
               those controlled by societal norms, expectations, and the passage
               of time. Amidst these transitions, we strive to reclaim our
               autonomy and redefine what it means to be free.
+            </p>
+            <p className="font-mono text-xs text-white/40 tracking-widest">
+              Published in the{" "}
+              <a
+                href="https://artsinsquare.com/photo-book-2"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white/70 transition-colors"
+              >
+                5×7 PHOTO BOOK VOLUME II
+              </a>{" "}
+              by Artsin Square
             </p>
           </>
         }
@@ -966,6 +978,18 @@ export default function PhotographyPhotobook() {
             <p className="font-mono text-[10px] text-white/25">
               Exhibition: <em>El Otro, El Mismo — Hours, Minutes</em>. PH21
               Gallery, Budapest, 2024.
+            </p>
+            <p className="font-mono text-xs text-white/40 tracking-widest mt-4">
+              Published in the{" "}
+              <a
+                href="https://artsinsquare.com/photo-book-1"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white/70 transition-colors"
+              >
+                5×7 PHOTO BOOK VOLUME I
+              </a>{" "}
+              by Artsin Square
             </p>
           </>
         }

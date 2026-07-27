@@ -186,8 +186,8 @@ export const photographyWorks: PhotographyWork[] = [
     mediumZh: "摄影作品",
     dimensions: "",
     dimensionsZh: "",
-    description: "18th International Color Awards Honorable Mention · Portrait",
-    descriptionZh: "第18届国际色彩大奖荣誉奖 · 肖像",
+    description: `18th International Color Awards Honorable Mention · Portrait · Published in the <a href="https://artsinsquare.com/photo-book-1" target="_blank">5×7 Photo Book Volume I</a> by Artsin Square`,
+    descriptionZh: `第18届国际色彩大奖荣誉奖 · 肖像 · 收录于 Artsin Square 出版的<a href="https://artsinsquare.com/photo-book-1" target="_blank">《5×7 Photo Book Volume I》</a>`,
   },
   {
     id: "5",
@@ -210,6 +210,8 @@ export const photographyWorks: PhotographyWork[] = [
     year: "2022",
     medium: "Photography",
     mediumZh: "摄影作品",
+    description: `Published in the <a href="https://artsinsquare.com/photo-book-2" target="_blank">5×7 Photo Book Volume II</a> by Artsin Square.`,
+    descriptionZh: `收录于 Artsin Square 出版的<a href="https://artsinsquare.com/photo-book-2" target="_blank">《5×7 Photo Book Volume II》</a>。`,
   },
 
   {
