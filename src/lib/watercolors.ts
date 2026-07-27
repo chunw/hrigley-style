@@ -35,6 +35,11 @@ export const seriesList: WatercolorSeries[] = [
     englishName: "Chun Wang Studio Cards",
     chineseName: "王淳工作室卡片",
   },
+  {
+    id: "IV",
+    englishName: "Notes from the Road",
+    chineseName: "行旅拾记",
+  },
 ];
 
 export interface Watercolor {
@@ -576,7 +581,9 @@ export const watercolors: Watercolor[] = [
   //   descriptionZh: "探索日常物件兼具怪诞与温柔的双重气质。",
   // },
 
-  // 明信片 / Postcards
+
+
+  // Cards
 
   { id: "29", title: "Chun Wang Studio Card #02", titleZh: "王淳工作室卡片 #02", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术纸印刷品", printPrice: 4 },
   { id: "30", title: "Chun Wang Studio Card #03", titleZh: "王淳工作室卡片 #03", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术纸印刷品", printPrice: 4 },
@@ -589,9 +596,82 @@ export const watercolors: Watercolor[] = [
   { id: "37", title: "Chun Wang Studio Card #10", titleZh: "王淳工作室卡片 #10", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术纸印刷品", printPrice: 4 },
   { id: "38", title: "Chun Wang Studio Card #11", titleZh: "王淳工作室卡片 #11", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术纸印刷品", printPrice: 4 },
   { id: "39", title: "Chun Wang Studio Card #12", titleZh: "王淳工作室卡片 #12", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术纸印刷品", printPrice: 4 },
-  { id: "40", title: "Chun Wang Studio Card #13", titleZh: "王淳工作室卡片 #13", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术纸印刷品", printPrice: 4 },
-  { id: "41", title: "Chun Wang Studio Card #14", titleZh: "王淳工作室卡片 #14", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术纸印刷品", printPrice: 4 },
-];
+
+  // 行旅拾记 / Notes from the Road
+
+  {
+    id: "44",
+    title: "Notes from the Road #1",
+    titleZh: "行旅拾记 其一",
+    series: "IV",
+    printInCatalog: false,
+    showInStorefront: true,
+    year: "2026",
+    medium: "Watercolor on paper",
+    mediumZh: "纸本水彩",
+    dimensions: "",
+    dimensionsZh: "",
+    description: "",
+    descriptionZh: "",
+    printInfo: `4×6" print on matte fine art paper`,
+    printInfoZh: "10×15厘米哑光艺术纸印刷品",
+    price: 4,
+  },
+  {
+    id: "45",
+    title: "Notes from the Road #2",
+    titleZh: "行旅拾记 其二",
+    series: "IV",
+    printInCatalog: true,
+    showInStorefront: true,
+    year: "2026",
+    medium: "Watercolor on paper",
+    mediumZh: "纸本水彩",
+    dimensions: "",
+    dimensionsZh: "",
+    description: "",
+    descriptionZh: "",
+    printInfo: `4×6" print on matte fine art paper`,
+    printInfoZh: "10×15厘米哑光艺术纸印刷品",
+    price: 4,
+  },
+  {
+    id: "46",
+    title: "Notes from the Road #3",
+    titleZh: "行旅拾记 其三",
+    series: "IV",
+    printInCatalog: true,
+    showInStorefront: true,
+    year: "2026",
+    medium: "Watercolor on paper",
+    mediumZh: "纸本水彩",
+    dimensions: "",
+    dimensionsZh: "",
+    description: "",
+    descriptionZh: "",
+    printInfo: `4×6" print on matte fine art paper`,
+    printInfoZh: "10×15厘米哑光艺术纸印刷品",
+    price: 4,
+  },
+  {
+    id: "47",
+    title: "Notes from the Road #4",
+    titleZh: "行旅拾记 其四",
+    series: "IV",
+    printInCatalog: true,
+    showInStorefront: true,
+    year: "2026",
+    medium: "Watercolor on paper",
+    mediumZh: "纸本水彩",
+    dimensions: "",
+    dimensionsZh: "",
+    description: "",
+    descriptionZh: "",
+    printInfo: `4×6" print on matte fine art paper`,
+    printInfoZh: "10×15厘米哑光艺术纸印刷品",
+    price: 4,
+  },
+  ];
 
 export function getWatercolor(id: string): Watercolor | undefined {
   return watercolors.find((w) => w.id === id);

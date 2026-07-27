@@ -12,9 +12,9 @@ export const artistBioProjects = {
 export const artistBioSegments = {
   en: {
     intro:
-      "Chun Wang is a multidisciplinary artist and curator whose practice spans photography, visual art, and creative web projects. She has received international honors including the International Photography Awards (IPA), London International Creative Competition (LICC), Siena International Photo Awards, International Color Awards, Moscow International Foto Awards, and Passepartout Photo Prize.<br><br>Her work has been published internationally and exhibited at the United Nations Headquarters in New York, the San Francisco Museum of Modern Art, Stanford University, and Harvard University, among many other venues. She is the curator of ",
-    mid: ", an official pavilion of The Wrong Biennale 2025-2026, and ",
-    outro: ", an Official Nominee for Best Cultural Website at the 2021 Webby Awards by the International Academy of Digital Arts and Sciences.",
+      "Chun Wang is a multidisciplinary artist and curator working across photography, painting, collage, and web-based projects. Her practice traces how structural forces surface in the small scale of daily life. She is drawn to the gap between what an era does and what it admits to itself.<br><br>She is the curator of ",
+    mid: ", an official pavilion of The Wrong Biennale 2025–2026, and ",
+    outro: ", a web-based archive of pandemic experience nominated for Best Cultural Website at the 2021 Webby Awards. Both projects examine how people make sense of disruption while still inside it - negotiating with technologies and histories whose consequences remain unsettled.<br><br>Her work has been exhibited at the United Nations Headquarters in New York, the San Francisco Museum of Modern Art, Stanford University, and Harvard University, and recognized with international honors including the International Photography Awards, London International Creative Competition, Siena International Photo Awards, and Passepartout Photo Prize.",
   },
   zh: {
     intro:

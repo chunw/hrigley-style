@@ -144,7 +144,7 @@ const PhotographyDetail = () => {
                     <>
                       查看目录：
                       <Link
-                        to="/photography-photobook"
+                        to="/photography-catalog"
                         className="italic normal-case text-pink hover:text-pink/80 transition-colors"
                       >
                         {catalogMeta.zh}
@@ -154,7 +154,7 @@ const PhotographyDetail = () => {
                     <>
                       View in Catalog:{" "}
                       <Link
-                        to="/photography-photobook"
+                        to="/photography-catalog"
                         className="italic normal-case text-pink hover:text-pink/80 transition-colors"
                       >
                         {catalogMeta.en}
