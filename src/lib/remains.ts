@@ -11,6 +11,7 @@ export interface RemainsWork {
   id: string;
   title: string;
   titleZh?: string;
+  showInStorefront?: boolean;
   printInCatalog?: boolean;
   printInCatalogImage?: string;
   includeInArtbox?: boolean;
@@ -31,6 +32,7 @@ export const remainsWorks: RemainsWork[] = [
     title: "Remains No. 1",
     titleZh: "遗迹 其一",
     printInCatalog: true,
+    showInStorefront: false,
     printInCatalogImage: "1",
     year: "2024",
     medium: "Mixed Media",
@@ -45,6 +47,7 @@ export const remainsWorks: RemainsWork[] = [
     title: "Remains No. 2",
     titleZh: "遗迹 其二",
     printInCatalog: true,
+    showInStorefront: false,
     printInCatalogImage: "1",
     year: "2024",
     medium: "Mixed Media",
@@ -59,6 +62,7 @@ export const remainsWorks: RemainsWork[] = [
     title: "Remains No. 3",
     titleZh: "遗迹 其三",
     printInCatalog: true,
+    showInStorefront: false,
     printInCatalogImage: "1",
     year: "2024",
     medium: "Mixed Media",
@@ -73,6 +77,7 @@ export const remainsWorks: RemainsWork[] = [
     title: "Remains No. 4",
     titleZh: "遗迹 其四",
     printInCatalog: true,
+    showInStorefront: false,
     printInCatalogImage: "1",
     year: "2024",
     medium: "Mixed Media",
@@ -87,6 +92,7 @@ export const remainsWorks: RemainsWork[] = [
     title: "Remains No. 5",
     titleZh: "遗迹 其五",
     printInCatalog: true,
+    showInStorefront: false,
     year: "2025",
     medium: "Mixed Media",
     mediumZh: "综合媒材",
@@ -100,6 +106,7 @@ export const remainsWorks: RemainsWork[] = [
     title: "Remains No. 6",
     titleZh: "遗迹 其六",
     printInCatalog: true,
+    showInStorefront: false,
     printInCatalogImage: "1",
     year: "2024",
     medium: "Mixed Media",

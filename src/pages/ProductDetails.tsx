@@ -107,26 +107,47 @@ const ProductDetails = () => {
       <Header />
 
       <main className="container mx-auto px-4 py-2">
-        <div className="flex items-center gap-3 mt-4 mb-8">
-          <button
-            type="button"
-            onClick={() => prevItem && navigate(prevItem.path)}
-            disabled={!prevItem}
-            className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:border-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {lang === "zh" ? "上一件" : "Previous"}
-          </button>
-          <button
-            type="button"
-            onClick={() => nextItem && navigate(nextItem.path)}
-            disabled={!nextItem}
-            className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:border-foreground hover:text-foreground transition-colors"
-          >
-            {lang === "zh" ? "下一件" : "Next"}
-            <ArrowRight className="h-4 w-4" />
-          </button>
-        </div>
+        {(prevItem || nextItem) && (
+          <div className="flex items-center gap-3 mt-4 mb-8">
+            <span className="font-helvetica text-[10px] uppercase tracking-widest text-muted-foreground/60">
+              {lang === "zh" ? (
+                <>
+                  查看
+                  <Link to="/" className="text-pink hover:text-pink/80 transition-colors">
+                    商店
+                  </Link>
+                </>
+              ) : (
+                <>
+                  View in{" "}
+                  <Link to="/" className="text-pink hover:text-pink/80 transition-colors">
+                    Shop
+                  </Link>
+                </>
+              )}
+            </span>
+            {prevItem && (
+              <button
+                type="button"
+                onClick={() => navigate(prevItem.path)}
+                className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs font-helvetica text-muted-foreground hover:border-foreground hover:text-foreground transition-colors"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                {lang === "zh" ? "上一件" : "Previous"}
+              </button>
+            )}
+            {nextItem && (
+              <button
+                type="button"
+                onClick={() => navigate(nextItem.path)}
+                className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs font-helvetica text-muted-foreground hover:border-foreground hover:text-foreground transition-colors"
+              >
+                {lang === "zh" ? "下一件" : "Next"}
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           {/* Image Gallery */}
@@ -239,12 +260,14 @@ const ProductDetails = () => {
                 <Button
                   variant="outline-pink"
                   size="lg"
-                  onClick={handleOrderNow}
-                  className="w-full handwritten text-lg font-bold px-8 py-6"
+                  onClick={product.soldOut ? undefined : handleOrderNow}
+                  className={`w-full handwritten text-lg font-bold px-8 py-6 ${product.soldOut ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                   asChild
                 >
                   <span>
-                    {t.productDetails.orderNow} - {formatPrice(product.price)}
+                    {product.soldOut
+                      ? t.productDetails.soldOut
+                      : `${t.productDetails.orderNow} - ${formatPrice(product.price)}`}
                   </span>
                 </Button>
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { remainsWorks } from "@/lib/remains";
@@ -86,26 +86,47 @@ const RemainsDetail = () => {
       <Header />
 
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex items-center gap-3 mt-4 mb-10">
-          <button
-            type="button"
-            onClick={() => prevItem && navigate(prevItem.path)}
-            disabled={!prevItem}
-            className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:border-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {lang === "zh" ? "上一件" : "Previous"}
-          </button>
-          <button
-            type="button"
-            onClick={() => nextItem && navigate(nextItem.path)}
-            disabled={!nextItem}
-            className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:border-foreground hover:text-foreground transition-colors"
-          >
-            {lang === "zh" ? "下一件" : "Next"}
-            <ArrowRight className="h-4 w-4" />
-          </button>
-        </div>
+        {(prevItem || nextItem) && (
+          <div className="flex items-center gap-3 mt-4 mb-10">
+            <span className="font-helvetica text-[10px] uppercase tracking-widest text-muted-foreground/60">
+              {lang === "zh" ? (
+                <>
+                  查看
+                  <Link to="/" className="text-pink hover:text-pink/80 transition-colors">
+                    商店
+                  </Link>
+                </>
+              ) : (
+                <>
+                  View in{" "}
+                  <Link to="/" className="text-pink hover:text-pink/80 transition-colors">
+                    Shop
+                  </Link>
+                </>
+              )}
+            </span>
+            {prevItem && (
+              <button
+                type="button"
+                onClick={() => navigate(prevItem.path)}
+                className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs font-helvetica text-muted-foreground hover:border-foreground hover:text-foreground transition-colors"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                {lang === "zh" ? "上一件" : "Previous"}
+              </button>
+            )}
+            {nextItem && (
+              <button
+                type="button"
+                onClick={() => navigate(nextItem.path)}
+                className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs font-helvetica text-muted-foreground hover:border-foreground hover:text-foreground transition-colors"
+              >
+                {lang === "zh" ? "下一件" : "Next"}
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           <div className="space-y-3">

@@ -14,9 +14,10 @@ const buildDescription = (desc: string | undefined | null, printInfo: string) =>
   return base ? `${base} · ${printInfo}` : printInfo;
 };
 
-const catalogProducts = [
+function buildCatalogProducts(showAll: boolean) {
+  return [
   ...photographyWorks
-    .filter((p) => p.showInStorefront)
+    .filter((p) => showAll || p.showInStorefront)
     .map((p) => {
       const paddedId = p.id.padStart(2, "0");
       const printInfo = p.printInfo ?? DEFAULT_PRINT_INFO;
@@ -41,7 +42,9 @@ const catalogProducts = [
         created_at: new Date().toISOString(),
       };
     }),
-  ...remainsWorks.map((w) => {
+  ...remainsWorks
+    .filter((w) => showAll || w.showInStorefront)
+    .map((w) => {
     const paddedId = w.id.padStart(2, "0");
     return {
       id: `remains-${w.id}`,
@@ -56,7 +59,7 @@ const catalogProducts = [
       category: "Fine Art Prints",
       category_zh: "版画 · 限量版号",
       paylink: w.paylink ?? studioCardPayLink(w.title),
-      showInStorefront: true,
+      showInStorefront: w.showInStorefront !== false,
       detailPath: `/remains/${w.id}`,
       is_active: true,
       created_at: new Date().toISOString(),
@@ -85,7 +88,7 @@ const catalogProducts = [
     };
   }),
   ...watercolors
-    .filter((w) => w.showInStorefront)
+    .filter((w) => showAll || w.showInStorefront)
     .map((w) => {
       const paddedId = w.id.padStart(2, "0");
       const printInfo = w.printInfo ?? DEFAULT_PRINT_INFO;
@@ -113,7 +116,10 @@ const catalogProducts = [
         created_at: new Date().toISOString(),
       };
     }),
-];
+  ];
+}
+
+const catalogProducts = buildCatalogProducts(false);
 
 // Ordered to match the shop grid. Used by detail pages so prev/next matches what the visitor sees.
 export const shopOrderNavigableItems = [
@@ -126,6 +132,7 @@ export const shopOrderNavigableItems = [
     .filter((p) => p.showInStorefront)
     .map((p) => ({ type: "photography" as const, id: p.id, path: `/photography/${p.id}` })),
   ...remainsWorks
+    .filter((w) => w.showInStorefront !== false)
     .map((w) => ({ type: "remains" as const, id: w.id, path: `/remains/${w.id}` })),
   ...spiritWorks
     .map((w) => ({ type: "spirit" as const, id: w.id, path: `/21spirit/${w.id}` })),
@@ -138,6 +145,11 @@ export const shopOrderNavigableItems = [
     .map((w) => ({ type: "watercolor" as const, id: w.id, path: `/watercolors/${w.id}` })),
 ];
 
+// Ordered to match the print catalog (includes works not for sale in the shop).
+export const photographyCatalogNavigableItems = photographyWorks
+  .filter((p) => p.printInCatalog !== false)
+  .map((p) => ({ type: "photography" as const, id: p.id, path: `/photography/${p.id}` }));
+
 export function getArtboxPrintCount(productId: string): number {
   if (productId === "artbox-watercolor") return watercolors.filter(w => w.includeInArtbox).length;
   if (productId === "artbox-photography") return photographyWorks.filter(w => w.includeInArtbox).length;
@@ -146,13 +158,14 @@ export function getArtboxPrintCount(productId: string): number {
   return 0;
 }
 
-export const useProducts = () => {
+export const useProducts = (showAll: boolean = false) => {
   return useQuery({
-    queryKey: ["products"],
+    queryKey: ["products", showAll],
     queryFn: async () => {
       await new Promise(resolve => setTimeout(resolve, 300));
-      const printProducts = catalogProducts.filter(p => p.category === "Fine Art Prints");
-      const cardProducts = catalogProducts.filter(p => p.category === "Cards");
+      const allCatalogProducts = showAll ? buildCatalogProducts(true) : catalogProducts;
+      const printProducts = allCatalogProducts.filter(p => p.category === "Fine Art Prints");
+      const cardProducts = allCatalogProducts.filter(p => p.category === "Cards");
       return [...products, ...printProducts, ...cardProducts];
     },
   });

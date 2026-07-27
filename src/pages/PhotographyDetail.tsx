@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { photographyWorks } from "@/lib/photography";
+import { photographyWorks, catalogMeta } from "@/lib/photography";
 import { PRINT_9X12_PAYLINK } from "@/lib/watercolors";
-import { shopOrderNavigableItems } from "@/hooks/useProducts";
+import { shopOrderNavigableItems, photographyCatalogNavigableItems } from "@/hooks/useProducts";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ZoomableImage } from "@/components/ZoomableImage";
@@ -65,13 +65,20 @@ const PhotographyDetail = () => {
     });
   };
 
-  const currentIndex = shopOrderNavigableItems.findIndex(
+  const shopIndex = shopOrderNavigableItems.findIndex(
     (item) => item.type === "photography" && item.id === work.id
   );
-  const prevItem = currentIndex > 0 ? shopOrderNavigableItems[currentIndex - 1] : undefined;
-  const nextItem =
-    currentIndex >= 0 && currentIndex < shopOrderNavigableItems.length - 1
-      ? shopOrderNavigableItems[currentIndex + 1]
+  const shopPrevItem = shopIndex > 0 ? shopOrderNavigableItems[shopIndex - 1] : undefined;
+  const shopNextItem =
+    shopIndex >= 0 && shopIndex < shopOrderNavigableItems.length - 1
+      ? shopOrderNavigableItems[shopIndex + 1]
+      : undefined;
+
+  const catalogIndex = photographyCatalogNavigableItems.findIndex((item) => item.id === work.id);
+  const catalogPrevItem = catalogIndex > 0 ? photographyCatalogNavigableItems[catalogIndex - 1] : undefined;
+  const catalogNextItem =
+    catalogIndex >= 0 && catalogIndex < photographyCatalogNavigableItems.length - 1
+      ? photographyCatalogNavigableItems[catalogIndex + 1]
       : undefined;
 
   const paylink9x12 = work?.paylink ?? PRINT_9X12_PAYLINK;
@@ -87,25 +94,96 @@ const PhotographyDetail = () => {
       <Header />
 
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex items-center gap-3 mt-4 mb-10">
-            <button
-              type="button"
-              onClick={() => prevItem && navigate(prevItem.path)}
-              disabled={!prevItem}
-              className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:border-foreground hover:text-foreground transition-colors"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              {lang === "zh" ? "上一件" : "Previous"}
-            </button>
-            <button
-              type="button"
-              onClick={() => nextItem && navigate(nextItem.path)}
-              disabled={!nextItem}
-              className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:border-foreground hover:text-foreground transition-colors"
-            >
-              {lang === "zh" ? "下一件" : "Next"}
-              <ArrowRight className="h-4 w-4" />
-            </button>
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-3 mt-4 mb-10">
+            {(shopPrevItem || shopNextItem) && (
+              <div className="flex items-center gap-3">
+                <span className="font-helvetica text-[10px] uppercase tracking-widest text-muted-foreground/60">
+                  {lang === "zh" ? (
+                    <>
+                      查看
+                      <Link to="/" className="text-pink hover:text-pink/80 transition-colors">
+                        商店
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      View in{" "}
+                      <Link to="/" className="text-pink hover:text-pink/80 transition-colors">
+                        Shop
+                      </Link>
+                    </>
+                  )}
+                </span>
+                {shopPrevItem && (
+                  <button
+                    type="button"
+                    onClick={() => navigate(shopPrevItem.path)}
+                    className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs font-helvetica text-muted-foreground hover:border-foreground hover:text-foreground transition-colors"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    {lang === "zh" ? "上一件" : "Previous"}
+                  </button>
+                )}
+                {shopNextItem && (
+                  <button
+                    type="button"
+                    onClick={() => navigate(shopNextItem.path)}
+                    className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs font-helvetica text-muted-foreground hover:border-foreground hover:text-foreground transition-colors"
+                  >
+                    {lang === "zh" ? "下一件" : "Next"}
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+            )}
+
+            {(catalogPrevItem || catalogNextItem) && (
+              <div className="flex items-center gap-3 ml-auto">
+                <span className="font-helvetica text-[10px] uppercase tracking-widest text-muted-foreground/60">
+                  {lang === "zh" ? (
+                    <>
+                      查看目录：
+                      <Link
+                        to="/photography-photobook"
+                        className="italic normal-case text-pink hover:text-pink/80 transition-colors"
+                      >
+                        {catalogMeta.zh}
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      View in Catalog:{" "}
+                      <Link
+                        to="/photography-photobook"
+                        className="italic normal-case text-pink hover:text-pink/80 transition-colors"
+                      >
+                        {catalogMeta.en}
+                      </Link>
+                    </>
+                  )}
+                </span>
+                {catalogPrevItem && (
+                  <button
+                    type="button"
+                    onClick={() => navigate(catalogPrevItem.path)}
+                    className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs font-helvetica text-muted-foreground hover:border-foreground hover:text-foreground transition-colors"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    {lang === "zh" ? "上一件" : "Previous"}
+                  </button>
+                )}
+                {catalogNextItem && (
+                  <button
+                    type="button"
+                    onClick={() => navigate(catalogNextItem.path)}
+                    className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs font-helvetica text-muted-foreground hover:border-foreground hover:text-foreground transition-colors"
+                  >
+                    {lang === "zh" ? "下一件" : "Next"}
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+            )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">

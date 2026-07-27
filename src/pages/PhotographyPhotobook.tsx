@@ -870,12 +870,28 @@ export default function PhotographyPhotobook() {
               is profound existential pain, and the relationship between people
               and the world is severely shaken.
             </p>
-            <p>
+            <p className="mb-4">
               Otto Rank believes that the process of growth is a process of
               separation, autonomy, self-reliance, independence,
               individualization, becoming oneself, and being independent. Not
               separating means not growing, and the cost of separation and
               growth is loneliness.
+            </p>
+            <p className="font-mono text-[10px] text-white/25 mb-4">
+              2022 15th International Color Awards Honorable Mention in
+              Category: Portrait
+            </p>
+            <p className="font-mono text-xs text-white/40 tracking-widest">
+              Exhibited in{" "}
+              <a
+                href="https://www.ph21gallery.com/colour-25"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white/70 transition-colors"
+              >
+                SIGNIFICANT COLOUR
+              </a>{" "}
+              at PH21 Photography Gallery, Budapest, Hungary
             </p>
           </>
         }
@@ -938,9 +954,25 @@ export default function PhotographyPhotobook() {
               mummy's gender — only males were mummified with their arms
               crossed.
             </p>
-            <p>
+            <p className="mb-4">
               Here, my female model perverts this context and embodies an
               otherworldly sense of renewal.
+            </p>
+            <p className="font-mono text-[10px] text-white/25 mb-4">
+              2022 15th International Color Awards Nominee in Category: Fine
+              Art
+            </p>
+            <p className="font-mono text-xs text-white/40 tracking-widest">
+              Exhibited in{" "}
+              <a
+                href="https://www.ph21gallery.com/colour-25"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white/70 transition-colors"
+              >
+                SIGNIFICANT COLOUR
+              </a>{" "}
+              at PH21 Photography Gallery, Budapest, Hungary
             </p>
           </>
         }
@@ -980,6 +1012,16 @@ export default function PhotographyPhotobook() {
               Gallery, Budapest, 2024.
             </p>
             <p className="font-mono text-xs text-white/40 tracking-widest mt-4">
+              <a
+                href="https://www.colorawards.com/gallery/18th/search-result.php?t=chun+wang&o=a&Submit=Search"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white/70 transition-colors"
+              >
+                18TH INTERNATIONAL COLOR AWARDS HONORABLE MENTION
+              </a>
+            </p>
+            <p className="font-mono text-xs text-white/40 tracking-widest">
               Published in the{" "}
               <a
                 href="https://artsinsquare.com/photo-book-1"
@@ -990,6 +1032,18 @@ export default function PhotographyPhotobook() {
                 5×7 PHOTO BOOK VOLUME I
               </a>{" "}
               by Artsin Square
+            </p>
+            <p className="font-mono text-xs text-white/40 tracking-widest">
+              Exhibited in{" "}
+              <a
+                href="https://www.ph21gallery.com/portraiture-24"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white/70 transition-colors"
+              >
+                PERSONALITY: CONTEMPORARY PORTRAITURE
+              </a>{" "}
+              at PH21 Photography Gallery, Budapest, Hungary
             </p>
           </>
         }

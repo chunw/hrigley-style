@@ -24,14 +24,18 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   const zh = lang === "zh";
   const [searchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState(() => searchParams.get("category") ?? "ALL");
-  const { data: products, isLoading, error } = useProducts();
+  const [showAllItems, setShowAllItems] = useState(false);
+  const [showHiddenOnly, setShowHiddenOnly] = useState(false);
+  const { data: products, isLoading, error } = useProducts(showAllItems || showHiddenOnly);
   const firstMatchedCardRef = useRef<HTMLDivElement | null>(null);
   const normalizedSearchQuery = searchQuery?.trim() || "";
   const hasActiveSearch = normalizedSearchQuery.length > 0;
 
   // Unique categories (keyed by English value, displayed in current language).
   // A product can belong to multiple categories, so membership is an "includes" check.
-  const visibleProducts = products?.filter((product) => product.showInStorefront !== false);
+  const visibleProducts = products?.filter((product) =>
+    showHiddenOnly ? product.showInStorefront === false : (showAllItems || product.showInStorefront !== false)
+  );
   const categories = ["ALL", ...Array.from(new Set(visibleProducts?.flatMap(p => getProductCategories(p)) || []))];
   const categoryCount = (cat: string) => {
     if (cat === "ALL") return visibleProducts?.length ?? 0;
@@ -150,6 +154,34 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
             ))}
           </div>
 
+          <div className="flex justify-center gap-4 mt-4">
+            <button
+              onClick={() => {
+                setShowAllItems((prev) => !prev);
+                setShowHiddenOnly(false);
+              }}
+              className={`handwritten text-sm px-4 py-2 border-2 transition-colors ${
+                showAllItems
+                  ? "border-primary text-primary bg-primary/10"
+                  : "border-border hover:border-primary hover:text-primary"
+              }`}
+            >
+              {t.productGrid.showAllItems}
+            </button>
+            <button
+              onClick={() => {
+                setShowHiddenOnly((prev) => !prev);
+                setShowAllItems(false);
+              }}
+              className={`handwritten text-sm px-4 py-2 border-2 transition-colors ${
+                showHiddenOnly
+                  ? "border-primary text-primary bg-primary/10"
+                  : "border-border hover:border-primary hover:text-primary"
+              }`}
+            >
+              {t.productGrid.showHiddenOnly}
+            </button>
+          </div>
         </div>
 
         {/* Products Grid */}
