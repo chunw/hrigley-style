@@ -60,6 +60,19 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
     );
   };
 
+  const renderDescription = (text: string) => {
+    if (/<[a-z][\s\S]*>/i.test(text)) {
+      return (
+        <span
+          className="description-html"
+          onClick={(e) => e.stopPropagation()}
+          dangerouslySetInnerHTML={{ __html: text }}
+        />
+      );
+    }
+    return renderHighlightedText(text);
+  };
+
   const handleCardClick = () => {
     navigate(detailPath || `/product/${id}`);
   };
@@ -107,7 +120,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
             <p className="text-xs handwritten text-muted-foreground">{displayCategory ? renderHighlightedText(displayCategory) : null}</p>
             <h3 className="text-lg leading-tight handwritten">{renderHighlightedText(displayTitle)}</h3>
             {displayDescription && (
-              <p className="text-sm font-helvetica text-muted-foreground">{renderHighlightedText(displayDescription)}</p>
+              <p className="text-sm font-helvetica text-muted-foreground">{renderDescription(displayDescription)}</p>
             )}
             {artboxPrintCount !== undefined && artboxPrintCount > 0 && (
               <p className="text-xs font-mono text-muted-foreground">{artboxPrintCount} {zh ? "张印刷品" : "prints included"}</p>

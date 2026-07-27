@@ -26,10 +26,13 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   const [selectedCategory, setSelectedCategory] = useState(() => searchParams.get("category") ?? "ALL");
   const [showAllItems, setShowAllItems] = useState(false);
   const [showHiddenOnly, setShowHiddenOnly] = useState(false);
-  const { data: products, isLoading, error } = useProducts(showAllItems || showHiddenOnly);
+  const { data: products, isLoading, error } = useProducts(true);
   const firstMatchedCardRef = useRef<HTMLDivElement | null>(null);
   const normalizedSearchQuery = searchQuery?.trim() || "";
   const hasActiveSearch = normalizedSearchQuery.length > 0;
+
+  const allItemsCount = products?.length ?? 0;
+  const hiddenItemsCount = products?.filter((product) => product.showInStorefront === false).length ?? 0;
 
   // Unique categories (keyed by English value, displayed in current language).
   // A product can belong to multiple categories, so membership is an "includes" check.
@@ -166,7 +169,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
                   : "border-border hover:border-primary hover:text-primary"
               }`}
             >
-              {t.productGrid.showAllItems}
+              {t.productGrid.showAllItems} <span className="font-helvetica">({allItemsCount})</span>
             </button>
             <button
               onClick={() => {
@@ -179,7 +182,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
                   : "border-border hover:border-primary hover:text-primary"
               }`}
             >
-              {t.productGrid.showHiddenOnly}
+              {t.productGrid.showHiddenOnly} <span className="font-helvetica">({hiddenItemsCount})</span>
             </button>
           </div>
         </div>
@@ -193,7 +196,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 grid-rows-[auto]" style={{ gridAutoRows: '1fr' }}>
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-auto">
             {sortedFilteredProducts.map((product, index) => (
               <div key={product.id} ref={index === 0 && hasActiveSearch ? firstMatchedCardRef : null} className="h-full">
                 <ProductCard
