@@ -65,7 +65,9 @@ function buildCatalogProducts(showAll: boolean) {
       created_at: new Date().toISOString(),
     };
   }),
-  ...spiritWorks.map((w) => {
+  ...spiritWorks
+    .filter((w) => showAll || w.showInStorefront !== false)
+    .map((w) => {
     const paddedId = w.id.padStart(2, "0");
     return {
       id: `spirit-${w.id}`,
@@ -81,7 +83,7 @@ function buildCatalogProducts(showAll: boolean) {
       category: "Fine Art Prints",
       category_zh: "版画 · 限量版号",
       paylink: w.paylink ?? studioCardPayLink(w.title),
-      showInStorefront: true,
+      showInStorefront: w.showInStorefront !== false,
       detailPath: `/21spirit/${w.id}`,
       is_active: true,
       created_at: new Date().toISOString(),
@@ -135,6 +137,7 @@ export const shopOrderNavigableItems = [
     .filter((w) => w.showInStorefront !== false)
     .map((w) => ({ type: "remains" as const, id: w.id, path: `/remains/${w.id}` })),
   ...spiritWorks
+    .filter((w) => w.showInStorefront !== false)
     .map((w) => ({ type: "spirit" as const, id: w.id, path: `/21spirit/${w.id}` })),
   // Watercolors: prints (I & II) immediately before cards (III)
   ...watercolors

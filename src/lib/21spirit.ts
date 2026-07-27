@@ -11,6 +11,7 @@ export interface SpiritWork {
   id: string;
   title: string;
   titleZh?: string;
+  showInStorefront?: boolean;
   printInCatalog?: boolean;
   printInCatalogImage?: string;
   includeInArtbox?: boolean;
@@ -46,6 +47,7 @@ export const spiritWorks: SpiritWork[] = [
     id: "2",
     title: "Climate Collapse & The War Against Powered Interest",
     titleZh: "最后的交易",
+    showInStorefront: false,
     printInCatalog: true,
     year: "2021",
     medium: "Mixed Media",
@@ -59,6 +61,7 @@ export const spiritWorks: SpiritWork[] = [
     id: "3",
     title: "Information Overload & Surveillance Capitalism",
     titleZh: "数字画像",
+    showInStorefront: false,
     printInCatalog: true,
     year: "2021",
     medium: "Mixed Media",
@@ -72,6 +75,7 @@ export const spiritWorks: SpiritWork[] = [
     id: "4",
     title: "The Attention Economy",
     titleZh: "被俘",
+    showInStorefront: false,
     printInCatalog: true,
     year: "2021",
     medium: "Mixed Media",
