@@ -26,6 +26,14 @@ const About = () => {
             {t.about.subtitle}
           </p>
 
+          <div className="about-portrait">
+            <img
+              src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/bcfb5ed3-e3df-489e-ba87-518d4adccdd0_rw_1200.png?h=3e84d177c91ced5bbf3cede876150ae5"
+              alt="Chun Wang"
+              className="about-portrait-img"
+            />
+          </div>
+
           <div className="handwritten-note">
             <p className="handwritten-note-text whitespace-pre-line">
               {t.about.body}
