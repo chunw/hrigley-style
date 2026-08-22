@@ -17,7 +17,7 @@ export const translations = {
     },
     about: {
       title: "About",
-      body: "What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity.\n\ncreated exclusively by chun wang in New York City for the imaginative collectors",
+      body: "What started as bespoke observations and a bit of overthinking turned into whimsical objects and images you can use, gift, or just stare at in existential curiosity.\n\nI'm Chun, an artist in New York City working between ceramics, painting, photography, and functional objects. I follow small, weird, everyday moments and turn them into something you can hold.\n\nEverything is created exclusively by me in my NYC studio. No factory, no AI. Just hands-on and slightly obsessive.\n\nFor imaginative collectors",
       artistLabel: "About the Artist",
       backToShop: "Back to Shop",
     },
@@ -111,7 +111,7 @@ export const translations = {
     },
     about: {
       title: "关于",
-      body: "从一点点生活观察，和一点点过度思考开始。想法落地，变成好用、好送、也好对着发呆的小物件。\n\n独家创作 by chun wang，献给富有想象力的收藏者们",
+      body: "一切始于生活里琐碎的观察，和一点点过度思考，慢慢变成了那些可以用、可以送人、也可以对着发呆的奇趣物件与影像。\n\n我是Chun，一位在纽约的艺术家，游走于陶瓷、绘画、摄影与实用器物之间。我留意那些细小又古怪的日常瞬间，把它们变成可以握在手心的东西。\n\n所有作品都由我本人在纽约工作室独立完成——没有工厂代工，没有AI，只有亲手制作，和一点点执着。\n\n献给富有想象力的收藏者们",
       artistLabel: "关于艺术家",
       backToShop: "返回商店",
     },

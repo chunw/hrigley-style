@@ -36,7 +36,6 @@ const HeroSection = () => {
 
         <nav className="cargo-hero-links" aria-label="hero links">
           <a href="/about" className="cargo-link !text-white">{t.index.ctaAbout}</a>
-          <a href="/catalogs" className="cargo-link !text-white">{t.index.ctaCatalogs}</a>
         </nav>
 
         <div className="hero-message-card">
