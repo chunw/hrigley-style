@@ -356,6 +356,11 @@ All colors MUST be HSL.
   color: #fff;
 }
 
+.theme-dark .cargo-hero-adaptive .cargo-link {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
 .cargo-hero-overlay {
   position: absolute;
   inset: 0;

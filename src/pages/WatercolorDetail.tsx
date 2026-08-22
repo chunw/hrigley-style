@@ -89,23 +89,6 @@ const WatercolorDetail = () => {
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12">
         {(prevItem || nextItem) && (
           <div className="flex items-center gap-3 mt-4 mb-10">
-              <span className="font-helvetica text-[10px] tracking-widest text-muted-foreground/60">
-                {lang === "zh" ? (
-                  <>
-                    查看
-                    <Link to="/" className="text-pink hover:text-pink/80 transition-colors">
-                      商店
-                    </Link>
-                  </>
-                ) : (
-                  <>
-                    View in{" "}
-                    <Link to="/" className="text-pink hover:text-pink/80 transition-colors">
-                      Shop
-                    </Link>
-                  </>
-                )}
-              </span>
               {prevItem && (
                 <button
                   type="button"
