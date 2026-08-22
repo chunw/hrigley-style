@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ProductGrid from "@/components/ProductGrid";
@@ -11,6 +11,14 @@ const Index = () => {
   const { lang, t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [matchedCount, setMatchedCount] = useState(0);
+  const location = useLocation();
+
+  // The initial page load's native scroll-to-hash happens before the SPA finishes
+  // rendering #products, so deep links like /#products need a manual scroll on mount.
+  useEffect(() => {
+    if (location.hash !== "#products") return;
+    document.getElementById("products")?.scrollIntoView();
+  }, [location.hash]);
 
   return (
     <div className="relative min-h-screen bg-background">
