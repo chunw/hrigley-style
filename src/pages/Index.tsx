@@ -65,7 +65,7 @@ const Index = () => {
 
                 <div className="lg:hidden flex items-start gap-4">
                   <div className="text-muted-foreground max-w-md font-helvetica flex-1">
-                    <p>{t.index.tagline}</p>
+                    <p className="font-helvetica">{t.index.tagline}</p>
                   
                   </div>
                   <a
