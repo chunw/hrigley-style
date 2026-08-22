@@ -379,6 +379,38 @@ All colors MUST be HSL.
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
+.handwritten-note {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #fbf6e8;
+  padding: 2.25rem 2.5rem;
+  border-radius: 2px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.25);
+  transform: rotate(-1.1deg);
+  position: relative;
+}
+
+.handwritten-note::before {
+  content: "";
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  width: 90px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  transform: translateX(-50%) rotate(-2deg);
+}
+
+.handwritten-note-text {
+  font-family: 'Zhuque Fangsong (technical preview)', 'Gloria Hallelujah', 'Comic Sans MS', cursive;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #2b2b2b;
+  text-shadow: none;
+  text-align: left;
+}
+
 .cargo-hero-description {
   max-width: 640px;
   margin: 0 auto;

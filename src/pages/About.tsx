@@ -26,9 +26,11 @@ const About = () => {
             {t.about.subtitle}
           </p>
 
-          <p className="font-helvetica cargo-hero-description whitespace-pre-line">
-            {t.about.body}
-          </p>
+          <div className="handwritten-note">
+            <p className="handwritten-note-text whitespace-pre-line">
+              {t.about.body}
+            </p>
+          </div>
 
           <nav className="cargo-hero-links" aria-label="about links">
             <Link to="/" className="cargo-link">{t.about.backToShop}</Link>
