@@ -1,76 +1,7 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-
-const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 
 const HeroSection = () => {
   const { t } = useLanguage();
-  const dialogRef = useRef<HTMLDivElement | null>(null);
-  const dragRef = useRef<{ pointerId: number; offsetX: number; offsetY: number } | null>(null);
-  const [dialogPosition, setDialogPosition] = useState({ x: 24, y: 24 });
-  const hasPositionedRef = useRef(false);
-
-  useLayoutEffect(() => {
-    if (hasPositionedRef.current) return;
-    const dialog = dialogRef.current;
-    const parent = dialog?.parentElement;
-    if (!dialog || !parent) return;
-
-    const parentRect = parent.getBoundingClientRect();
-    const dialogRect = dialog.getBoundingClientRect();
-
-    setDialogPosition({
-      x: 24 - 200,
-      y: clamp(parentRect.height - dialogRect.height - 24, 0, parentRect.height - dialogRect.height),
-    });
-    hasPositionedRef.current = true;
-  }, []);
-
-  useEffect(() => {
-    const handlePointerMove = (event: PointerEvent) => {
-      if (!dragRef.current || !dialogRef.current) return;
-
-      const dialog = dialogRef.current;
-      const parent = dialog.parentElement;
-      if (!parent) return;
-
-      const parentRect = parent.getBoundingClientRect();
-      const dialogRect = dialog.getBoundingClientRect();
-
-      const nextX = event.clientX - parentRect.left - dragRef.current.offsetX;
-      const nextY = event.clientY - parentRect.top - dragRef.current.offsetY;
-
-      setDialogPosition({
-        x: clamp(nextX, 0, parentRect.width - dialogRect.width),
-        y: clamp(nextY, 0, parentRect.height - dialogRect.height),
-      });
-    };
-
-    const handlePointerUp = () => {
-      dragRef.current = null;
-    };
-
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerup", handlePointerUp);
-    return () => {
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerup", handlePointerUp);
-    };
-  }, []);
-
-  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (!dialogRef.current) return;
-    if ((event.target as HTMLElement).closest("a")) return;
-
-    const dialogRect = dialogRef.current.getBoundingClientRect();
-    dragRef.current = {
-      pointerId: event.pointerId,
-      offsetX: event.clientX - dialogRect.left,
-      offsetY: event.clientY - dialogRect.top,
-    };
-
-    dialogRef.current.setPointerCapture(event.pointerId);
-  };
 
   return (
     <section className="cargo-hero relative">
@@ -107,14 +38,8 @@ const HeroSection = () => {
           <a href="/about" className="cargo-link !text-white">{t.index.ctaAbout}</a>
           <a href="/catalogs" className="cargo-link !text-white">{t.index.ctaCatalogs}</a>
         </nav>
-        <div
-          ref={dialogRef}
-          className="hero-dialog"
-          role="dialog"
-          aria-label="hero message"
-          style={{ left: `${dialogPosition.x}px`, top: `${dialogPosition.y}px` }}
-          onPointerDown={handlePointerDown}
-        >
+
+        <div className="hero-message-card">
           <h2 className="hero-dialog-title">{t.hero.dialogTitle}</h2>
           <p className="hero-dialog-sub font-helvetica">
             {t.hero.createdExclusivelyBy}{" "}

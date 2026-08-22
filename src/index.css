@@ -373,7 +373,7 @@ All colors MUST be HSL.
 /* Hero dialog — always rendered in its own light card styling, independent of the
    site-wide light/dark theme toggle (.theme-dark on <html>), so the card doesn't end up
    with light-on-light or dark-mode-inverted text when the toggle changes. */
-.hero-dialog {
+.hero-message-card {
   display: inline-block;
   background: hsl(0 0% 100% / 0.95);
   color: #111;
@@ -381,20 +381,10 @@ All colors MUST be HSL.
   padding: 1.25rem 1.5rem;
   border-radius: 8px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-  position: absolute;
-  top: 1.5rem;
-  left: 1.5rem;
   text-align: left;
   min-width: 260px;
-  max-width: 400px;
-  cursor: grab;
-  user-select: none;
-  touch-action: none;
-  z-index: 2;
-}
-
-.hero-dialog:active {
-  cursor: grabbing;
+  max-width: 420px;
+  margin-top: 2rem;
 }
 
 .hero-dialog-title {
@@ -416,5 +406,6 @@ All colors MUST be HSL.
   text-decoration: none;
   color: inherit;
   font-weight: 700;
+  background: #fff;
 }
 
