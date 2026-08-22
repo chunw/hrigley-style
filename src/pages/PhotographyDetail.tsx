@@ -97,23 +97,6 @@ const PhotographyDetail = () => {
         <div className="flex flex-wrap items-center gap-x-8 gap-y-3 mt-4 mb-10">
             {(shopPrevItem || shopNextItem) && (
               <div className="flex items-center gap-3">
-                <span className="font-helvetica text-[10px] tracking-widest text-muted-foreground/60">
-                  {lang === "zh" ? (
-                    <>
-                      查看
-                      <Link to="/" className="text-pink hover:text-pink/80 transition-colors">
-                        商店
-                      </Link>
-                    </>
-                  ) : (
-                    <>
-                      View in{" "}
-                      <Link to="/" className="text-pink hover:text-pink/80 transition-colors">
-                        Shop
-                      </Link>
-                    </>
-                  )}
-                </span>
                 {shopPrevItem && (
                   <button
                     type="button"

@@ -109,23 +109,6 @@ const ProductDetails = () => {
       <main className="container mx-auto px-4 py-2">
         {(prevItem || nextItem) && (
           <div className="flex items-center gap-3 mt-4 mb-8">
-            <span className="font-helvetica text-[10px] tracking-widest text-muted-foreground/60">
-              {lang === "zh" ? (
-                <>
-                  查看
-                  <Link to="/" className="text-pink hover:text-pink/80 transition-colors">
-                    商店
-                  </Link>
-                </>
-              ) : (
-                <>
-                  View in{" "}
-                  <Link to="/" className="text-pink hover:text-pink/80 transition-colors">
-                    Shop
-                  </Link>
-                </>
-              )}
-            </span>
             {prevItem && (
               <button
                 type="button"

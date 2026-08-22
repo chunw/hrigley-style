@@ -24,7 +24,7 @@ export const translations = {
     },
     shopTitle: {
       line1: "Chun Wang",
-      line2: "Studio",
+      line2: "STUDIO",
       line3: "SHOP",
     },
     index: {

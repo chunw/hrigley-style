@@ -63,7 +63,7 @@ const Index = () => {
             <div className="space-y-8">
               <div className="space-y-1 lg:space-y-4"> 
                 <h1 className="shop-title gloria-title text-4xl md:text-6xl lg:text-7xl leading-none">
-                  {t.shopTitle.line1} <br />{t.shopTitle.line2}<br />
+                  {t.shopTitle.line1} <br /><span className="text-3xl md:text-5xl lg:text-6xl">{t.shopTitle.line2}</span><br />
                   <span className="text-primary">{t.shopTitle.line3}</span>
                 </h1>
                 <p className="hidden lg:block text-muted-foreground max-w-md font-helvetica">
