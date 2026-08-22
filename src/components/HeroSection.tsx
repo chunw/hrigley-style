@@ -15,9 +15,9 @@ const HeroSection = () => {
       </div>
       <div className="cargo-hero-inner">
         <h1 className={`shop-title cargo-hero-title ${lang === "en" ? "gloria-title" : ""}`}>
-          <span>{t.shopTitle.line1}</span>
+          <span className="hero-title-brand">{t.shopTitle.line1}</span>
           <br />
-          <span>{t.shopTitle.line2}</span>
+          <span className="hero-title-brand">{t.shopTitle.line2}</span>
           <br />
           <span className="text-primary">{t.shopTitle.line3}</span>
         </h1>

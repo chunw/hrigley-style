@@ -349,6 +349,13 @@ All colors MUST be HSL.
   display: block;
 }
 
+/* Homepage hero brand lines ("Chun Wang" / "Studio") — white against the dark-mode photo
+   backdrop; light mode has no backdrop image (see .cargo-hero-bg-img above), so it keeps
+   the default .cargo-hero-title primary color instead of going invisible on white. */
+.theme-dark .hero-title-brand {
+  color: #fff;
+}
+
 .cargo-hero-overlay {
   position: absolute;
   inset: 0;
