@@ -9,6 +9,8 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ZoomableImage } from "@/components/ZoomableImage";
 import { toast } from "sonner";
+import { usePageMeta } from "@/hooks/usePageMeta";
+import { buildArtworkJsonLd } from "@/lib/seo";
 
 const INQUIRY_EMAIL = "chunwang.me@gmail.com";
 const MAX_DETAIL_IMAGES = 20;
@@ -22,6 +24,24 @@ const PhotographyDetail = () => {
 
   const work = id ? photographyWorks.find((w) => w.id === id) : undefined;
   const paddedId = id?.padStart(2, "0") ?? "";
+
+  usePageMeta({
+    title: work ? work.title : "Photography",
+    description: work?.description ? work.description.replace(/<[^>]*>/g, " ").trim() : catalogMeta.description.replace(/<[^>]*>/g, " ").trim(),
+    image: work ? `/photography/${paddedId}/main.jpg` : undefined,
+    path: `/photography/${id ?? ""}`,
+    type: "product",
+    jsonLd: work
+      ? buildArtworkJsonLd({
+          title: work.title,
+          medium: work.medium ?? catalogMeta.medium,
+          year: work.year,
+          image: `/photography/${paddedId}/main.jpg`,
+          description: work.description,
+          price: work.price,
+        })
+      : undefined,
+  });
 
   useEffect(() => {
     if (!paddedId) return;

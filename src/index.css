@@ -358,6 +358,11 @@ All colors MUST be HSL.
 
 .hero-title-sub {
   font-size: 0.7em;
+  margin-top: 0.05em;
+}
+
+.hero-title-shop {
+  margin-top: 0.25em;
 }
 
 .theme-dark .cargo-hero-adaptive .cargo-link {

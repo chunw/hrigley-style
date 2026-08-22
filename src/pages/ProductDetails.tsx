@@ -11,6 +11,7 @@ import { getProductCategories, getProductCategoriesZh } from "@/lib/products";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import About from "./About";
 import { ZoomableImage } from "@/components/ZoomableImage";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 const ProductDetails = () => {
   const { t, lang } = useLanguage();
@@ -48,6 +49,30 @@ const ProductDetails = () => {
       img.src = src;
     });
   }, [allImages]);
+
+  usePageMeta({
+    title: product ? (product.title || product.name) : "Product",
+    description: product?.description || product?.detailed_description_html,
+    image: product?.image_url,
+    path: `/product/${id ?? ""}`,
+    type: "product",
+    jsonLd: product
+      ? {
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: product.title || product.name,
+          description: (product.description || "").replace(/<[^>]*>/g, " ").trim() || undefined,
+          image: product.image_url,
+          category: getProductCategories(product).join(", ") || undefined,
+          offers: {
+            "@type": "Offer",
+            price: product.price,
+            priceCurrency: product.currency ?? "USD",
+            availability: product.soldOut ? "https://schema.org/SoldOut" : "https://schema.org/InStock",
+          },
+        }
+      : undefined,
+  });
 
   if (productLoading || imagesLoading) {
     return (

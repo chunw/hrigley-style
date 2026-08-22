@@ -8,6 +8,8 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ZoomableImage } from "@/components/ZoomableImage";
 import { toast } from "sonner";
+import { usePageMeta } from "@/hooks/usePageMeta";
+import { buildArtworkJsonLd } from "@/lib/seo";
 
 const INQUIRY_EMAIL = "chunwang.me@gmail.com";
 const MAX_DETAIL_IMAGES = 20;
@@ -21,6 +23,25 @@ const WatercolorDetail = () => {
 
   const work = id ? getWatercolor(id) : undefined;
   const paddedId = id?.padStart(2, "0") ?? "";
+
+  usePageMeta({
+    title: work ? work.title : "Watercolor",
+    description: work?.description || `${work?.title ?? ""} — ${work?.medium ?? "Watercolor"}, ${work?.year ?? ""}. Original watercolor painting by Chun Wang.`,
+    image: work ? `/watercolors/${paddedId}/main.jpg` : undefined,
+    path: `/watercolors/${id ?? ""}`,
+    type: "product",
+    jsonLd: work
+      ? buildArtworkJsonLd({
+          title: work.title,
+          medium: work.medium ?? "Watercolor",
+          year: work.year,
+          image: `/watercolors/${paddedId}/main.jpg`,
+          description: work.description,
+          price: work.price ?? work.printPrice,
+          soldOut: work.soldOut,
+        })
+      : undefined,
+  });
 
   useEffect(() => {
     if (!paddedId) return;

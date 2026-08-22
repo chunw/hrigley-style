@@ -9,6 +9,9 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ZoomableImage } from "@/components/ZoomableImage";
 import { toast } from "sonner";
+import { usePageMeta } from "@/hooks/usePageMeta";
+import { buildArtworkJsonLd } from "@/lib/seo";
+import { catalogMeta } from "@/lib/21spirit";
 
 const INQUIRY_EMAIL = "chunwang.me@gmail.com";
 const MAX_DETAIL_IMAGES = 20;
@@ -22,6 +25,24 @@ const Spirit21Detail = () => {
 
   const work = id ? spiritWorks.find((w) => w.id === id) : undefined;
   const paddedId = id?.padStart(2, "0") ?? "";
+
+  usePageMeta({
+    title: work ? work.title : "In the Spirit of the 21st Century",
+    description: work?.description ? work.description.replace(/<[^>]*>/g, " ").trim() : catalogMeta.description.replace(/<[^>]*>/g, " ").trim(),
+    image: work ? `/21spirit/${paddedId}/main.jpg` : undefined,
+    path: `/21spirit/${id ?? ""}`,
+    type: "product",
+    jsonLd: work
+      ? buildArtworkJsonLd({
+          title: work.title,
+          medium: work.medium ?? catalogMeta.medium,
+          year: work.year,
+          image: `/21spirit/${paddedId}/main.jpg`,
+          description: work.description || catalogMeta.description,
+          price: work.price,
+        })
+      : undefined,
+  });
 
   useEffect(() => {
     if (!paddedId) return;

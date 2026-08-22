@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { watercolors, seriesList, catalogMeta, type Watercolor } from "@/lib/watercolors";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 
 const HIGHLIGHTED = new Set(["1", "9"]);
