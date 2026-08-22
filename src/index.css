@@ -282,6 +282,13 @@ All colors MUST be HSL.
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* Hidden in light mode — the photo is designed against the always-dark .cargo-hero
+     backdrop above and doesn't suit the light theme; shown only once .theme-dark is on. */
+  display: none;
+}
+
+.theme-dark .cargo-hero-bg-img {
+  display: block;
 }
 
 .cargo-hero-overlay {
