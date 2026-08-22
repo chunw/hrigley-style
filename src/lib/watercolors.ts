@@ -445,7 +445,6 @@ export const watercolors: Watercolor[] = [
     dimensionsZh: "",
     description: "",
     descriptionZh: "",
-    soldOut: true,
   },
 
   {
@@ -511,7 +510,6 @@ export const watercolors: Watercolor[] = [
     dimensionsZh: "",
     description: "",
     descriptionZh: "",
-    soldOut: true,
   },
 
 

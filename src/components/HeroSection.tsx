@@ -1,7 +1,7 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const HeroSection = () => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   return (
     <section className="cargo-hero cargo-hero-adaptive relative">
@@ -14,7 +14,7 @@ const HeroSection = () => {
         <div className="cargo-hero-overlay" />
       </div>
       <div className="cargo-hero-inner">
-        <h1 className="shop-title cargo-hero-title">
+        <h1 className={`shop-title cargo-hero-title ${lang === "en" ? "gloria-title" : ""}`}>
           <span>{t.shopTitle.line1}</span>
           <br />
           <span>{t.shopTitle.line2}</span>
