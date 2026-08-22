@@ -245,7 +245,7 @@ export const watercolors: Watercolor[] = [
     description: `Exhibited in <a href="https://apsarastudio.co.uk/project-space/programme/forms-before-dissolving/" target="_blank">Forms Before Dissolving</a>, Apsara Studio Gallery, London UK.`,
     descriptionZh: `曾在英国伦敦 Apsara Studio Gallery 的<a href="https://apsarastudio.co.uk/project-space/programme/forms-before-dissolving/" target="_blank">《Forms Before Dissolving》</a>展览中展出。`,
     price: 10,
-    paylink: "https://www.paypal.com/ncp/payment/PLACEHOLDER",
+    paylink: PRINT_9X12_PAYLINK,
     printInfo: `Also available as framed print 8×10", $35`,
     printInfoZh: `亦提供20×25厘米装裱印刷品，$35`,
     printPrice: 35,

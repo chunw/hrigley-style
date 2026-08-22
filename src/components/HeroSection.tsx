@@ -7,25 +7,25 @@ const HeroSection = () => {
   const { t } = useLanguage();
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const dragRef = useRef<{ pointerId: number; offsetX: number; offsetY: number } | null>(null);
-  const [dialogPosition, setDialogPosition] = useState(() => ({
-    x: 18 + Math.random() * 62,
-    y: 32 + Math.random() * 26,
-  }));
+  const [dialogPosition, setDialogPosition] = useState({ x: 24, y: 24 });
 
   useEffect(() => {
     const handlePointerMove = (event: PointerEvent) => {
       if (!dragRef.current || !dialogRef.current) return;
 
       const dialog = dialogRef.current;
-      const rect = dialog.parentElement?.getBoundingClientRect();
-      if (!rect) return;
+      const parent = dialog.parentElement;
+      if (!parent) return;
 
-      const nextX = ((event.clientX - rect.left - dragRef.current.offsetX) / rect.width) * 100;
-      const nextY = ((event.clientY - rect.top - dragRef.current.offsetY) / rect.height) * 100;
+      const parentRect = parent.getBoundingClientRect();
+      const dialogRect = dialog.getBoundingClientRect();
+
+      const nextX = event.clientX - parentRect.left - dragRef.current.offsetX;
+      const nextY = event.clientY - parentRect.top - dragRef.current.offsetY;
 
       setDialogPosition({
-        x: clamp(nextX, 12, 88),
-        y: clamp(nextY, 18, 82),
+        x: clamp(nextX, 0, parentRect.width - dialogRect.width),
+        y: clamp(nextY, 0, parentRect.height - dialogRect.height),
       });
     };
 
@@ -42,24 +42,16 @@ const HeroSection = () => {
   }, []);
 
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (!dialogRef.current || !dialogRef.current.parentElement) return;
+    if (!dialogRef.current) return;
+    if ((event.target as HTMLElement).closest("a")) return;
 
-    const rect = dialogRef.current.getBoundingClientRect();
-    const parentRect = dialogRef.current.parentElement.getBoundingClientRect();
+    const dialogRect = dialogRef.current.getBoundingClientRect();
     dragRef.current = {
       pointerId: event.pointerId,
-      offsetX: event.clientX - rect.left,
-      offsetY: event.clientY - rect.top,
+      offsetX: event.clientX - dialogRect.left,
+      offsetY: event.clientY - dialogRect.top,
     };
 
-    const nextX = ((event.clientX - parentRect.left - (rect.width / 2)) / parentRect.width) * 100;
-    const nextY = ((event.clientY - parentRect.top - (rect.height / 2)) / parentRect.height) * 100;
-    setDialogPosition({
-      x: clamp(nextX, 12, 88),
-      y: clamp(nextY, 18, 82),
-    });
-
-    event.preventDefault();
     dialogRef.current.setPointerCapture(event.pointerId);
   };
 
@@ -85,28 +77,36 @@ const HeroSection = () => {
         <p className="font-helvetica cargo-hero-description">
           {t.hero.description}
         </p>
+        
         <p className="font-helvetica cargo-hero-byline">
-          {t.hero.createdExclusivelyBy}{" "}
-          <a href="https://www.chunwang.art/" target="_blank" rel="noreferrer">
+          {/* {t.hero.createdExclusivelyBy}{" "} */}
+          {/* <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
             <span className="text-primary">chun wang</span>
           </a>
-          {t.hero.forImaginativeCollectors}
+          {t.hero.forImaginativeCollectors} */}
         </p>
 
         <nav className="cargo-hero-links" aria-label="hero links">
           <a href="/about" className="cargo-link">{t.index.ctaAbout}</a>
+          <a href="/catalogs" className="cargo-link">{t.index.ctaCatalogs}</a>
         </nav>
         <div
           ref={dialogRef}
           className="hero-dialog"
           role="dialog"
           aria-label="hero message"
-          style={{ left: `${dialogPosition.x}%`, top: `${dialogPosition.y}%` }}
+          style={{ left: `${dialogPosition.x}px`, top: `${dialogPosition.y}px` }}
           onPointerDown={handlePointerDown}
         >
-          <h2 className="hero-dialog-title">Handmade & one of a kind.</h2>
-          <p className="hero-dialog-sub">Ceramics with big feelings!</p>
-          <a className="hero-dialog-btn" href="#shop">Shop</a>
+          <h2 className="hero-dialog-title">{t.hero.dialogTitle}</h2>
+          <p className="hero-dialog-sub font-helvetica">
+            {t.hero.createdExclusivelyBy}{" "}
+            <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
+              <span className="text-primary">chun wang</span>
+            </a>
+            {t.hero.forImaginativeCollectors}
+          </p>
+          <a className="hero-dialog-btn" href="#products">{t.hero.shopCta}</a>
         </div>
       </div>
     </section>

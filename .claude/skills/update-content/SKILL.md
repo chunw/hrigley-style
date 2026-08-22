@@ -55,7 +55,7 @@ description: Guide for updating product listings, watercolor works, and Chinese/
 - `detailed_description_html`: 2–3 short paragraphs in `<p>` tags. Lead with the concept or story, close with a material/practical detail.
 - `description_zh` / `detailed_description_html_zh`: faithful Chinese translation that keeps the same register — literary but not stiff. **`detailed_description_html_zh` must use `<p>` tags** just like the English field — it is rendered via `dangerouslySetInnerHTML` and plain text will have no paragraph styling. Use backtick delimiters if the text contains `"…"` quote marks.
 - `title_zh`: translate the product name naturally (not literally word-for-word).
-- `category_zh`: match the category — 配件 (Accessories), 服饰 (Apparel), 文具 (Stationery), 家居 (Home), 原创艺术 (Original Art).
+- `category_zh`: match the category — 服饰 (Accessories), 服饰 (Apparel), 文具 (Stationery), 家居 (Home), 原创艺术 (Original Art).
 
 **After adding a product, always tell the user:**
 > Drop images into `src/assets/products/<imageFolder>/` — they will auto-load into the carousel. Set `image_url` to whichever file in that folder should be the cover photo.
@@ -113,7 +113,7 @@ image_url: new URL("../assets/products/everyflushnathmat/Fresh Bath Mat 1.png", 
 title_zh: "中文产品名称",
 description_zh: "卡片上显示的简短中文描述。",
 detailed_description_html_zh: "<p>产品详情页的长描述，支持 HTML。</p>",
-category_zh: "配件",
+category_zh: "服饰",
 edition_info_zh: "限量版信息（可选）",
 ```
 

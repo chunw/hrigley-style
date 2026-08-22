@@ -23,6 +23,8 @@ import PhotographyCatalog from "./pages/PhotographyCatalog";
 import PhotographyDetail from "./pages/PhotographyDetail";
 import PhotographyPhotobook from "./pages/PhotographyPhotobook";
 import Catalogs from "./pages/Catalogs";
+import AllItems from "./pages/AllItems";
+import HiddenItems from "./pages/HiddenItems";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +52,8 @@ const App = () => (
             <Route path="/photography/:id" element={<PhotographyDetail />} />
             <Route path="/photography-photobook" element={<PhotographyPhotobook />} />
             <Route path="/catalogs" element={<Catalogs />} />
+            <Route path="/all-items" element={<AllItems />} />
+            <Route path="/hidden-items" element={<HiddenItems />} />
             {/* <Route path="/cart" element={<Cart />} />
             <Route path="/payment-success" element={<PaymentSuccess />} /> */}
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

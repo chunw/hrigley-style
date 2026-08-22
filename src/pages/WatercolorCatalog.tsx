@@ -68,7 +68,7 @@ const WorkCard = ({ work }: { work: Watercolor }) => {
       </Link>
 
       <div className="mt-3">
-        <h3 className="text-sm leading-snug">{work.title}</h3>
+        <h3 className="text-sm leading-snug product-title">{work.title}</h3>
       </div>
     </article>
   );

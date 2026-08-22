@@ -71,7 +71,7 @@ const WorkCard = ({ work }: { work: RemainsWork }) => {
       </Link>
 
       <div className="mt-3">
-        <h3 className="text-sm leading-snug">{title}</h3>
+        <h3 className="text-sm leading-snug product-title">{title}</h3>
         {work.year && (
           <p className="font-mono text-xs text-muted-foreground mt-1">{work.year}</p>
         )}

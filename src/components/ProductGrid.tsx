@@ -15,28 +15,24 @@ interface ProductGridProps {
   matchedCount?: number;
   hideOrderButton?: boolean;
   hideShippingLabel?: boolean;
+  filterMode?: "default" | "all" | "hidden";
 }
 
-const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedCount = 0, hideOrderButton, hideShippingLabel }: ProductGridProps) => {
+const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedCount = 0, hideOrderButton, hideShippingLabel, filterMode = "default" }: ProductGridProps) => {
   const { t, lang } = useLanguage();
   const zh = lang === "zh";
   const [searchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState(() => searchParams.get("category") ?? "ALL");
-  const [showAllItems, setShowAllItems] = useState(false);
-  const [showHiddenOnly, setShowHiddenOnly] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const { data: products, isLoading, error } = useProducts(true);
   const firstMatchedCardRef = useRef<HTMLDivElement | null>(null);
   const normalizedSearchQuery = searchQuery?.trim() || "";
   const hasActiveSearch = normalizedSearchQuery.length > 0;
 
-  const allItemsCount = products?.length ?? 0;
-  const hiddenItemsCount = products?.filter((product) => product.showInStorefront === false).length ?? 0;
-
   // Unique categories (keyed by English value, displayed in current language).
   // A product can belong to multiple categories, so membership is an "includes" check.
   const visibleProducts = products?.filter((product) =>
-    showHiddenOnly ? product.showInStorefront === false : (showAllItems || product.showInStorefront !== false)
+    filterMode === "hidden" ? product.showInStorefront === false : (filterMode === "all" || product.showInStorefront !== false)
   );
   const categories = ["ALL", ...Array.from(new Set(visibleProducts?.flatMap(p => getProductCategories(p)) || []))];
   const categoryCount = (cat: string) => {
@@ -169,35 +165,6 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
                   </button>
                 ))}
               </nav>
-
-              <div className="flex flex-col items-start gap-3 mt-6 pt-6 border-t border-border">
-                <button
-                  onClick={() => {
-                    setShowAllItems((prev) => !prev);
-                    setShowHiddenOnly(false);
-                  }}
-                  className={`font-helvetica text-sm pb-1 border-b-2 lg:border-b-0 lg:border-l-2 lg:pl-3 transition-colors ${
-                    showAllItems
-                      ? "border-primary text-primary"
-                      : "border-transparent text-foreground hover:border-primary hover:text-primary"
-                  }`}
-                >
-                  {t.productGrid.showAllItems} ({allItemsCount})
-                </button>
-                <button
-                  onClick={() => {
-                    setShowHiddenOnly((prev) => !prev);
-                    setShowAllItems(false);
-                  }}
-                  className={`font-helvetica text-sm pb-1 border-b-2 lg:border-b-0 lg:border-l-2 lg:pl-3 transition-colors ${
-                    showHiddenOnly
-                      ? "border-primary text-primary"
-                      : "border-transparent text-foreground hover:border-primary hover:text-primary"
-                  }`}
-                >
-                  {t.productGrid.showHiddenOnly} ({hiddenItemsCount})
-                </button>
-              </div>
             </div>
           </aside>
 

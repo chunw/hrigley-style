@@ -17,14 +17,16 @@ const Index = () => {
       
       <Header />
       <HeroSection />
-      <ProductGrid
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        onMatchCountChange={setMatchedCount}
-        matchedCount={matchedCount}
-        hideOrderButton
-        hideShippingLabel
-      />
+      <section id="products">
+        <ProductGrid
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          onMatchCountChange={setMatchedCount}
+          matchedCount={matchedCount}
+          hideOrderButton
+          hideShippingLabel
+        />
+      </section>
 
 
       {/* <section className="border-t border-border">
@@ -99,28 +101,6 @@ const Index = () => {
               {/* Decorative border */}
               <div className="absolute inset-0 border-4 border-primary translate-x-4 translate-y-4 rounded-lg -z-10"></div>
             </div>
-          </div>
-        </div>
-      </section>
-     
-      <section className="border-t border-border">
-        <div className="group flex items-center justify-between gap-6 px-6 md:px-12 py-10">
-          <div>
-            <h2 className="shop-title text-3xl md:text-5xl leading-none">
-              {lang === "zh" ? "浏览作品系列 →" : "View Art Catalogs →"}
-            </h2>
-          </div>
-          <div className="flex gap-3 shrink-0">
-            {["/watercolors/01/main.jpg", "/photography/02/main.jpg", "/remains/01/main.jpg", "/21spirit/01/main.jpg"].map((src) => (
-              <div key={src} className="w-16 h-16 md:w-24 md:h-24 overflow-hidden border border-border bg-black shrink-0">
-                <img
-                  src={src}
-                  alt=""
-                  className="w-full h-full object-cover opacity-70 transition-all duration-500"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-                />
-              </div>
-            ))}
           </div>
         </div>
       </section>
