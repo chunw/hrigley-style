@@ -20,17 +20,10 @@ const About = () => {
           <div className="cargo-hero-overlay" />
         </div>
         <div className="cargo-hero-inner">
-          <h1 className="shop-title cargo-hero-title">{t.about.title}</h1>
+          <h1 className="shop-title cargo-hero-title !text-white">{t.about.title}</h1>
 
-          <p className="font-helvetica cargo-hero-description">
-            {t.hero.description}
-          </p>
-          <p className="font-helvetica cargo-hero-byline">
-            {t.hero.createdExclusivelyBy}{" "}
-            <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
-              <span className="text-primary">chun wang</span>
-            </a>
-            {t.hero.forImaginativeCollectors}
+          <p className="font-helvetica cargo-hero-description whitespace-pre-line">
+            {t.about.body}
           </p>
 
           <nav className="cargo-hero-links" aria-label="about links">
