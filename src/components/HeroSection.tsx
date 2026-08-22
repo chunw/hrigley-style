@@ -20,7 +20,7 @@ const HeroSection = () => {
     const dialogRect = dialog.getBoundingClientRect();
 
     setDialogPosition({
-      x: 24,
+      x: 24 - 200,
       y: clamp(parentRect.height - dialogRect.height - 24, 0, parentRect.height - dialogRect.height),
     });
     hasPositionedRef.current = true;
