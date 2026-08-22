@@ -190,6 +190,10 @@ All colors MUST be HSL.
     text-transform: none;
   }
 
+  .theme-dark .product-title {
+    color: black;
+  }
+
   @keyframes fade-up-in {
     from {
       opacity: 0;

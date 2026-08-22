@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
@@ -8,6 +8,23 @@ const HeroSection = () => {
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const dragRef = useRef<{ pointerId: number; offsetX: number; offsetY: number } | null>(null);
   const [dialogPosition, setDialogPosition] = useState({ x: 24, y: 24 });
+  const hasPositionedRef = useRef(false);
+
+  useLayoutEffect(() => {
+    if (hasPositionedRef.current) return;
+    const dialog = dialogRef.current;
+    const parent = dialog?.parentElement;
+    if (!dialog || !parent) return;
+
+    const parentRect = parent.getBoundingClientRect();
+    const dialogRect = dialog.getBoundingClientRect();
+
+    setDialogPosition({
+      x: 24,
+      y: clamp(parentRect.height - dialogRect.height - 24, 0, parentRect.height - dialogRect.height),
+    });
+    hasPositionedRef.current = true;
+  }, []);
 
   useEffect(() => {
     const handlePointerMove = (event: PointerEvent) => {
