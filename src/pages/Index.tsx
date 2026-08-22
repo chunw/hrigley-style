@@ -5,7 +5,6 @@ import HeroSection from "@/components/HeroSection";
 import ProductGrid from "@/components/ProductGrid";
 import Footer from "@/components/Footer";
 import { SITE_URL } from "@/lib/constants";
-import About from "./About";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const Index = () => {
@@ -57,13 +56,13 @@ const Index = () => {
                   {t.shopTitle.line1} <br />{t.shopTitle.line2}<br />
                   <span className="text-primary">{t.shopTitle.line3}</span>
                 </h1>
-                <p className="hidden lg:block text-muted-foreground max-w-md handwritten">
-                
+                <p className="hidden lg:block text-muted-foreground max-w-md font-helvetica">
+
                   {t.index.tagline}
                 </p>
-               
+
                 <div className="lg:hidden flex items-start gap-4">
-                  <div className="text-muted-foreground max-w-md handwritten flex-1">
+                  <div className="text-muted-foreground max-w-md font-helvetica flex-1">
                     <p>{t.index.tagline}</p>
                   
                   </div>
@@ -105,10 +104,7 @@ const Index = () => {
       </section>
      
       <section className="border-t border-border">
-        <Link
-          to="/catalogs"
-          className="group flex items-center justify-between gap-6 px-6 md:px-12 py-10 hover:bg-muted/30 transition-colors"
-        >
+        <div className="group flex items-center justify-between gap-6 px-6 md:px-12 py-10">
           <div>
             <h2 className="shop-title text-3xl md:text-5xl leading-none">
               {lang === "zh" ? "浏览作品系列 →" : "View Art Catalogs →"}
@@ -120,17 +116,16 @@ const Index = () => {
                 <img
                   src={src}
                   alt=""
-                  className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                  className="w-full h-full object-cover opacity-70 transition-all duration-500"
                   onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
                 />
               </div>
             ))}
           </div>
-        </Link>
+        </div>
       </section>
 
-        <About /> <Footer />
-      
+      <Footer />
     </div>
   );
 };

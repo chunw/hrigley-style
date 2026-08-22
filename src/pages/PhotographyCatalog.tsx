@@ -221,10 +221,10 @@ const PhotographyCatalog = () => {
           <div className="flex justify-end mb-6">
             <button
               onClick={() => setUniformHeight((v) => !v)}
-              className={`font-mono text-[10px] uppercase tracking-widest px-3 py-1.5 border transition-colors ${
+              className={`font-mono text-[10px] uppercase tracking-widest px-3 py-1.5 transition-colors ${
                 uniformHeight
-                  ? "border-primary text-primary bg-primary/10"
-                  : "border-border text-muted-foreground hover:text-primary hover:border-primary"
+                  ? "text-primary bg-primary/10"
+                  : "text-muted-foreground hover:text-primary"
               }`}
             >
               {uniformHeight ? "View Original Image Height" : "Uniform Height"}

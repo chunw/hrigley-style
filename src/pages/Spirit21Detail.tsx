@@ -91,7 +91,7 @@ const Spirit21Detail = () => {
             type="button"
             onClick={() => prevItem && navigate(prevItem.path)}
             disabled={!prevItem}
-            className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:border-foreground hover:text-foreground transition-colors"
+            className="inline-flex items-center gap-2 px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:text-foreground transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
             {lang === "zh" ? "上一件" : "Previous"}
@@ -100,7 +100,7 @@ const Spirit21Detail = () => {
             type="button"
             onClick={() => nextItem && navigate(nextItem.path)}
             disabled={!nextItem}
-            className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:border-foreground hover:text-foreground transition-colors"
+            className="inline-flex items-center gap-2 px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:text-foreground transition-colors"
           >
             {lang === "zh" ? "下一件" : "Next"}
             <ArrowRight className="h-4 w-4" />
@@ -132,8 +132,8 @@ const Spirit21Detail = () => {
                   <button
                     key={i}
                     onClick={() => setSelectedIndex(i)}
-                    className={`w-24 h-24 flex-shrink-0 overflow-hidden border transition-colors ${
-                      selectedIndex === i ? "border-primary" : "border-border hover:border-muted-foreground"
+                    className={`w-24 h-24 flex-shrink-0 overflow-hidden transition-all ${
+                      selectedIndex === i ? "ring-2 ring-primary" : "opacity-60 hover:opacity-100"
                     }`}
                   >
                     <img src={src} alt={`view ${i + 1}`} className="w-full h-full object-cover" />
@@ -148,7 +148,7 @@ const Spirit21Detail = () => {
               <p className="font-mono text-xs tracking-widest text-muted-foreground uppercase mb-2">
                 In The Spirit of the 21st Century {paddedId}
               </p>
-              <h1 className="shop-title text-4xl leading-none">{title}</h1>
+              <h1 className="shop-title product-title text-4xl leading-none">{title}</h1>
             </div>
 
             {(work.description || work.descriptionZh) && (
@@ -176,7 +176,7 @@ const Spirit21Detail = () => {
               <>
                 <button
                   onClick={handleBuy4x6}
-                  className="handwritten inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
+                  className="sans-label gloria-button-label inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
                 >
                   {work.paylink
                     ? (lang === "zh" ? "多种尺寸可选" : "Various sizes available")

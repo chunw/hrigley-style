@@ -85,10 +85,10 @@ const Cart = () => {
             <h1 className="shop-title text-3xl md:text-4xl mb-6">YOUR CART</h1>
             <div className="space-y-6">
               <p className="handwritten text-lg text-muted-foreground">YOUR CART IS EMPTY</p>
-              <Button 
+              <Button
                 onClick={() => navigate("/")}
                 variant="outline"
-                className="handwritten"
+                className="sans-label"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 CONTINUE SHOPPING
@@ -109,10 +109,10 @@ const Cart = () => {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <h1 className="shop-title text-3xl md:text-4xl">YOUR CART</h1>
-            <Button 
+            <Button
               onClick={() => navigate("/")}
               variant="ghost"
-              className="handwritten"
+              className="sans-label"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               CONTINUE SHOPPING
@@ -127,7 +127,7 @@ const Cart = () => {
                   <CardContent className="p-4">
                     <div className="flex items-center space-x-4">
                       {/* Product Image */}
-                      <div className="w-20 h-20 bg-black rounded overflow-hidden flex-shrink-0">
+                      <div className="w-20 h-20 bg-background rounded overflow-hidden flex-shrink-0">
                         <img
                           src={item.image_url || "/placeholder.svg"}
                           alt={item.title || item.name}
@@ -137,10 +137,10 @@ const Cart = () => {
 
                       {/* Product Info */}
                       <div className="flex-1 min-w-0">
-                        <h3 className="handwritten text-lg font-medium truncate">
+                        <h3 className="handwritten product-title text-lg font-medium truncate">
                           {item.title || item.name}
                         </h3>
-                        <p className="handwritten text-lg text-primary font-bold">
+                        <p className="sans-label text-lg text-primary font-bold">
                           {formatPrice(item.price, item.currency)}
                         </p>
                       </div>
@@ -179,7 +179,7 @@ const Cart = () => {
 
                     {/* Subtotal for this item */}
                     <div className="mt-2 text-right">
-                      <span className="handwritten text-sm text-muted-foreground">
+                      <span className="sans-label text-sm text-muted-foreground">
                         Subtotal: {formatPrice(item.price * item.quantity, item.currency)}
                       </span>
                     </div>
@@ -195,16 +195,16 @@ const Cart = () => {
                   <h2 className="handwritten text-xl font-bold mb-4">ORDER SUMMARY</h2>
                   
                   <div className="space-y-3 mb-6">
-                    <div className="flex justify-between handwritten">
+                    <div className="flex justify-between sans-label">
                       <span>Items ({state.itemCount}):</span>
                       <span>${state.total.toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between handwritten">
+                    <div className="flex justify-between sans-label">
                       <span>Shipping:</span>
                       <span>Calculated at checkout</span>
                     </div>
                     <div className="border-t border-border pt-3">
-                      <div className="flex justify-between handwritten text-lg font-bold">
+                      <div className="flex justify-between sans-label text-lg font-bold">
                         <span>Total:</span>
                         <span>${state.total.toFixed(2)}</span>
                       </div>
@@ -215,7 +215,7 @@ const Cart = () => {
                     <Button 
                       onClick={handleCheckout}
                       disabled={isProcessing}
-                      className="w-full handwritten text-lg font-bold"
+                      className="w-full sans-label text-lg font-bold"
                       variant="outline-pink"
                       size="lg"
                     >
@@ -225,7 +225,7 @@ const Cart = () => {
                     <Button 
                       onClick={clearCart}
                       variant="ghost"
-                      className="w-full handwritten text-sm"
+                      className="w-full sans-label text-sm"
                     >
                       CLEAR CART
                     </Button>

@@ -125,7 +125,7 @@ const Catalogs = () => {
             <button
               type="button"
               onClick={() => setPrintMenuOpen(o => !o)}
-              className="handwritten inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest border border-border px-3 py-2 hover:text-primary hover:border-primary"
+              className="sans-label inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 hover:text-primary"
             >
               <BookOpen className="h-4 w-4" />
               {t.watercolorCatalog.printCatalog}

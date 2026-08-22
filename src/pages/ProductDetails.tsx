@@ -109,7 +109,7 @@ const ProductDetails = () => {
       <main className="container mx-auto px-4 py-2">
         {(prevItem || nextItem) && (
           <div className="flex items-center gap-3 mt-4 mb-8">
-            <span className="font-helvetica text-[10px] uppercase tracking-widest text-muted-foreground/60">
+            <span className="font-helvetica text-[10px] tracking-widest text-muted-foreground/60">
               {lang === "zh" ? (
                 <>
                   查看
@@ -130,7 +130,7 @@ const ProductDetails = () => {
               <button
                 type="button"
                 onClick={() => navigate(prevItem.path)}
-                className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs font-helvetica text-muted-foreground hover:border-foreground hover:text-foreground transition-colors"
+                className="inline-flex items-center gap-2 px-3 py-2 text-xs font-helvetica text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ArrowLeft className="h-4 w-4" />
                 {lang === "zh" ? "上一件" : "Previous"}
@@ -140,7 +140,7 @@ const ProductDetails = () => {
               <button
                 type="button"
                 onClick={() => navigate(nextItem.path)}
-                className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs font-helvetica text-muted-foreground hover:border-foreground hover:text-foreground transition-colors"
+                className="inline-flex items-center gap-2 px-3 py-2 text-xs font-helvetica text-muted-foreground hover:text-foreground transition-colors"
               >
                 {lang === "zh" ? "下一件" : "Next"}
                 <ArrowRight className="h-4 w-4" />
@@ -154,7 +154,7 @@ const ProductDetails = () => {
           <div className="space-y-4">
             <div
               ref={containerRef}
-              className="rounded-lg overflow-hidden bg-black border-2 border-primary/20"
+              className="rounded-lg overflow-hidden bg-background border-2 border-primary/20"
               style={containerHeight ? { height: `${containerHeight}px` } : {}}
             >
               <ZoomableImage
@@ -173,10 +173,10 @@ const ProductDetails = () => {
                   <button
                     key={index}
                     onClick={() => setSelectedImageIndex(index)}
-                    className={`w-24 h-24 flex-shrink-0 overflow-hidden border-2 transition-colors bg-black ${
+                    className={`w-24 h-24 flex-shrink-0 overflow-hidden transition-all bg-background ${
                       selectedImageIndex === index
-                        ? 'border-primary'
-                        : 'border-border hover:border-muted-foreground'
+                        ? 'ring-2 ring-primary'
+                        : 'opacity-60 hover:opacity-100'
                     }`}
                   >
                     <img
@@ -193,14 +193,14 @@ const ProductDetails = () => {
           {/* Product Information */}
           <div className="space-y-6">
             <div>
-              <h1 className="shop-title text-3xl md:text-4xl leading-tight mb-2 mt-4">
+              <h1 className="shop-title product-title text-3xl md:text-4xl leading-tight mb-2 mt-4">
                 {displayTitle}
               </h1>
               {displayCategories.length > 0 && (
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 mt-3">
                   {displayCategories.map((label, index) => (
                     <Link key={label} to={`/?category=${encodeURIComponent(englishCategories[index] ?? "")}`}>
-                      <Badge variant="secondary" className="handwritten text-sm hover:bg-secondary/80 cursor-pointer transition-colors">
+                      <Badge variant="secondary" className="sans-label text-sm hover:bg-secondary/80 cursor-pointer transition-colors">
                         {label}
                       </Badge>
                     </Link>
@@ -209,7 +209,7 @@ const ProductDetails = () => {
               )}
             </div>
 
-            <div className="text-2xl font-bold text-primary handwritten">
+            <div className="text-2xl font-bold text-primary sans-label">
               {formatPrice(product.price)}
             </div>
 
@@ -261,7 +261,7 @@ const ProductDetails = () => {
                   variant="outline-pink"
                   size="lg"
                   onClick={product.soldOut ? undefined : handleOrderNow}
-                  className={`w-full handwritten text-lg font-bold px-8 py-6 ${product.soldOut ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                  className={`w-full sans-label text-lg font-bold px-8 py-6 bg-pink text-white hover:bg-transparent hover:text-pink ${product.soldOut ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                   asChild
                 >
                   <span>

@@ -91,17 +91,17 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
 
   return (
     <Card
-      className={`group hover:shadow-lg transition-shadow duration-200 border-2 cursor-pointer h-full flex flex-col ${
+      className={`group cartoon-card hover:shadow-lg transition-shadow duration-200 border-2 cursor-pointer h-full flex flex-col ${
         isSearchHighlighted ? "border-primary ring-2 ring-primary/30" : "border-border"
       }`}
       onClick={handleCardClick}
     >
       <CardContent className="p-4 flex flex-col flex-1">
-        <div className="relative aspect-square bg-black mb-4 overflow-hidden shrink-0">
+        <div className="relative aspect-square bg-background mb-4 overflow-hidden shrink-0 cartoon-image-wrapper">
           <img
             src={image_url || "/placeholder.svg"}
             alt={name}
-            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
             onError={(e) => {
               console.log('Image failed to load:', image_url);
               e.currentTarget.src = "/placeholder.svg";
@@ -109,16 +109,16 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
             loading="lazy"
           />
           {soldOut && (
-            <div className="absolute top-3 right-3 w-10 h-10 bg-red-600 rounded-full z-10 shadow-lg border-2 border-white/80 flex items-center justify-center">
-              <span className="text-white text-[8px] font-bold uppercase leading-tight text-center">SOLD OUT</span>
+            <div className="absolute top-3 right-3 w-16 h-16 bg-red-600 rounded-full z-10 shadow-lg border-2 border-white/80 flex items-center justify-center p-1">
+              <span className="sans-label text-white text-xs leading-tight text-center">SOLD OUT</span>
             </div>
           )}
         </div>
 
         <div className="flex flex-col flex-1">
           <div className="space-y-2">
-            <p className="text-xs handwritten text-muted-foreground">{displayCategory ? renderHighlightedText(displayCategory) : null}</p>
-            <h3 className="text-lg leading-tight handwritten">{renderHighlightedText(displayTitle)}</h3>
+            <p className="text-xs sans-label text-muted-foreground">{displayCategory ? renderHighlightedText(displayCategory) : null}</p>
+            <h3 className="text-lg leading-tight handwritten product-title">{renderHighlightedText(displayTitle)}</h3>
             {displayDescription && (
               <p className="text-sm font-helvetica text-muted-foreground">{renderDescription(displayDescription)}</p>
             )}
@@ -130,14 +130,14 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
           <div className="mt-auto pt-3 space-y-2">
             {(priceLabel || price > 0) && (
               <>
-                <p className="text-lg font-bold handwritten">
+                <p className="text-lg font-bold sans-label">
                   {renderHighlightedText(priceLabel ?? `${currency === 'gbp' ? '£' : '$'}${price.toFixed(2)}`)}
                 </p>
                 {!hideShippingLabel && <p className="text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>}
                 {!hideOrderButton && paylink && (
                   <Button
                     variant="outline-pink"
-                    className="w-full handwritten"
+                    className="w-full sans-label bg-pink text-white hover:bg-transparent hover:text-pink"
                     size="sm"
                     onClick={handleOrderNow}
                   >

@@ -11,11 +11,11 @@ export const translations = {
       description:
         "What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity.",
       createdExclusivelyBy: "created exclusively by",
-      forImaginativeCollectors: " for the imaginative collectors",
+      forImaginativeCollectors: " in New York City for the imaginative collectors",
     },
     about: {
       title: "About",
-      body: "Based in New York City, Chun Wang Studio Shop started as a collection of observations of the modern society that wouldn't leave us alone until they became physical things. We produce whimsical objects at the nexus of utility and contemporary art, designed for people who want to see the world just a little differently. Feel free to stay as long as your curiosity allows.",
+      body: "What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity.\n\ncreated exclusively by chun wang in New York City for the imaginative collectors",
       artistLabel: "About the Artist",
       backToShop: "Back to Shop",
     },
@@ -25,8 +25,11 @@ export const translations = {
       line3: "SHOP",
     },
     index: {
-      tagline: "Unique works for the imaginative collectors.",
+      tagline: "Unique works for the imaginative collectors",
       catalogsTitle: "Art Catalogs",
+      ctaAbout: "about",
+      ctaInstagram: "follow on instagram",
+      ctaCatalogs: "view art catalogs",
     },
     footer: {
       copyright: "All rights reserved.",
@@ -42,6 +45,7 @@ export const translations = {
       categoryAll: "ALL",
       showAllItems: "Show All Items",
       showHiddenOnly: "Show Hidden Items Only",
+      filters: "Filters",
     },
     productDetails: {
       loading: "Loading...",
@@ -103,7 +107,7 @@ export const translations = {
     },
     about: {
       title: "关于",
-      body: "我们的店铺诞生于纽约，最初是一系列对当代社会的观察。那些念念不忘的想法，最终化为有形之物。这些奇思妙想的实用艺术品，专为那些希望以不同眼光看待世界的人而设计。欢迎停留，只要好奇心还在。",
+      body: "从一点点生活观察，和一点点过度思考开始。想法落地，变成好用、好送、也好对着发呆的小物件。\n\n独家创作 by chun wang，献给富有想象力的收藏者们",
       artistLabel: "关于艺术家",
       backToShop: "返回商店",
     },
@@ -115,6 +119,9 @@ export const translations = {
     index: {
       tagline: "献给富有想象力的收藏者们",
       catalogsTitle: "作品系列",
+      ctaAbout: "关于",
+      ctaInstagram: "关注 Instagram",
+      ctaCatalogs: "查看作品系列",
     },
     footer: {
       copyright: "版权所有。",
@@ -130,6 +137,7 @@ export const translations = {
       categoryAll: "全部",
       showAllItems: "显示全部作品",
       showHiddenOnly: "仅显示隐藏作品",
+      filters: "筛选",
     },
     productDetails: {
       loading: "加载中……",

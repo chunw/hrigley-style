@@ -1,49 +1,49 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { Instagram } from "lucide-react";
+import { Instagram, Sun, Moon } from "lucide-react";
 import { INSTAGRAM_URL } from "@/lib/constants";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { lang, toggleLang, t } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
   const isHomePage = location.pathname === "/";
+  const useGloriaTitle = /^\/(product|watercolors|remains|21spirit|photography)\/[^/]+\/?$/.test(location.pathname)
+    || location.pathname === "/catalogs";
+
+  const controlColor = "text-white";
 
   return (
-    <header className="bg-background">
+    <header className="bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-28">
           <div className="absolute inset-y-0 right-0 inline-flex items-center gap-8 text-sm font-helvetica">
             <button
               type="button"
+              onClick={toggleTheme}
+              aria-label="Toggle dark/light mode"
+              className={`inline-flex items-center justify-center w-8 h-8 transition-colors hover:text-primary ${controlColor}`}
+            >
+              {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+            </button>
+
+            <button
+              type="button"
               onClick={toggleLang}
               aria-label="Toggle language"
-              className={`handwritten transition-colors text-xs border px-2 py-1 ${
-                isHomePage ? "text-white border-white/40 hover:text-primary hover:border-primary" : "text-foreground border-border hover:text-primary hover:border-primary"
-              }`}
+              className={`sans-label transition-colors text-xs px-2 py-1 hover:text-primary ${controlColor}`}
             >
               {lang === "en" ? "中文" : "EN"}
             </button>
-
-            <a
-              href="#about"
-              rel="noopener noreferrer"
-              aria-label="about"
-              className={`handwritten inline-flex items-center gap-1 transition-colors ${
-                isHomePage ? "text-white hover:text-primary" : "text-foreground hover:text-primary"
-              }`}
-            >
-              <span>{t.header.about}</span>
-            </a>
 
             <a
               href={INSTAGRAM_URL}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Follow on Instagram"
-              className={`handwritten inline-flex items-center gap-1 transition-colors ${
-                isHomePage ? "text-foreground hover:text-primary" : "text-foreground hover:text-primary"
-              }`}
+              className={`handwritten inline-flex items-center gap-1 transition-colors hover:text-primary ${controlColor}`}
             >
               <Instagram className="h-4 w-4" />
             </a>
@@ -53,23 +53,16 @@ const Header = () => {
           <div className="flex-shrink-0">
             <h1
               onClick={() => navigate('/')}
-              className={`shop-title text-2xl leading-none cursor-pointer transition-colors ${
+              className={`shop-title text-2xl leading-none cursor-pointer text-white transition-colors ${
                 isHomePage ? "hidden" : "hover:text-primary"
-              }`}
+              } ${useGloriaTitle ? "gloria-title" : ""}`}
             >
               {t.shopTitle.line1}<br />{t.shopTitle.line2}<br />
-              <span className={isHomePage ? "text-white" : "text-primary"}>{t.shopTitle.line3}</span>
+              <span className="text-primary">{t.shopTitle.line3}</span>
             </h1>
           </div>
 
           <div className="flex-1" />
-
-          {/* Navigation */}
-          {/* <nav className="hidden lg:flex space-x-8">
-            <a href="#" className="handwritten text-sm hover:text-primary transition-colors">
-              SHOP
-            </a>
-          </nav> */}
 
           {/* Right - Actions */}
           {/* <div className="flex items-center space-x-4">

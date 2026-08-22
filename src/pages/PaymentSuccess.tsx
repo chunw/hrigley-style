@@ -93,7 +93,7 @@ const PaymentSuccess = () => {
               onClick={() => window.location.href = "https://chunwangshop.com"}
               variant="outline-pink"
               size="lg"
-              className="handwritten"
+              className="sans-label"
             >
               CONTINUE SHOPPING
             </Button>

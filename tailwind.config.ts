@@ -19,9 +19,9 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				'handwritten': ['CJK-Heiti', 'Comic Sans MS', 'cursive'],
-				'helvetica': ['CJK-Heiti', 'Helvetica', 'Arial', 'sans-serif'],
-				'mono': ['CJK-Heiti', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'],
+				'handwritten': ['Aileron', 'Zhuque Fangsong (technical preview)', 'Comic Sans MS', 'cursive'],
+				'helvetica': ['Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica', 'Arial', 'sans-serif'],
+				'mono': ['Aileron', 'Zhuque Fangsong (technical preview)', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

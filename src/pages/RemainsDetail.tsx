@@ -88,7 +88,7 @@ const RemainsDetail = () => {
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12">
         {(prevItem || nextItem) && (
           <div className="flex items-center gap-3 mt-4 mb-10">
-            <span className="font-helvetica text-[10px] uppercase tracking-widest text-muted-foreground/60">
+            <span className="font-helvetica text-[10px] tracking-widest text-muted-foreground/60">
               {lang === "zh" ? (
                 <>
                   查看
@@ -109,7 +109,7 @@ const RemainsDetail = () => {
               <button
                 type="button"
                 onClick={() => navigate(prevItem.path)}
-                className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs font-helvetica text-muted-foreground hover:border-foreground hover:text-foreground transition-colors"
+                className="inline-flex items-center gap-2 px-3 py-2 text-xs font-helvetica text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ArrowLeft className="h-4 w-4" />
                 {lang === "zh" ? "上一件" : "Previous"}
@@ -119,7 +119,7 @@ const RemainsDetail = () => {
               <button
                 type="button"
                 onClick={() => navigate(nextItem.path)}
-                className="inline-flex items-center gap-2 rounded border border-border bg-background px-3 py-2 text-xs font-helvetica text-muted-foreground hover:border-foreground hover:text-foreground transition-colors"
+                className="inline-flex items-center gap-2 px-3 py-2 text-xs font-helvetica text-muted-foreground hover:text-foreground transition-colors"
               >
                 {lang === "zh" ? "下一件" : "Next"}
                 <ArrowRight className="h-4 w-4" />
@@ -153,8 +153,8 @@ const RemainsDetail = () => {
                   <button
                     key={i}
                     onClick={() => setSelectedIndex(i)}
-                    className={`w-24 h-24 flex-shrink-0 overflow-hidden border transition-colors ${
-                      selectedIndex === i ? "border-primary" : "border-border hover:border-muted-foreground"
+                    className={`w-24 h-24 flex-shrink-0 overflow-hidden transition-all ${
+                      selectedIndex === i ? "ring-2 ring-primary" : "opacity-60 hover:opacity-100"
                     }`}
                   >
                     <img src={src} alt={`view ${i + 1}`} className="w-full h-full object-cover" />
@@ -169,7 +169,7 @@ const RemainsDetail = () => {
               <p className="font-mono text-xs tracking-widest text-muted-foreground uppercase mb-2">
                 Remains {paddedId}
               </p>
-              <h1 className="shop-title text-4xl leading-none">{title}</h1>
+              <h1 className="shop-title product-title text-4xl leading-none">{title}</h1>
             </div>
 
             {(work.description || work.descriptionZh) && (
@@ -194,7 +194,7 @@ const RemainsDetail = () => {
               <>
                 <button
                   onClick={handleBuy4x6}
-                  className="handwritten inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
+                  className="sans-label gloria-button-label inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
                 >
                   {t.watercolor.buyNow}
                 </button>

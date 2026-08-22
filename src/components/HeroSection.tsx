@@ -1,53 +1,112 @@
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+
+const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 
 const HeroSection = () => {
   const { t } = useLanguage();
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const dragRef = useRef<{ pointerId: number; offsetX: number; offsetY: number } | null>(null);
+  const [dialogPosition, setDialogPosition] = useState(() => ({
+    x: 18 + Math.random() * 62,
+    y: 32 + Math.random() * 26,
+  }));
+
+  useEffect(() => {
+    const handlePointerMove = (event: PointerEvent) => {
+      if (!dragRef.current || !dialogRef.current) return;
+
+      const dialog = dialogRef.current;
+      const rect = dialog.parentElement?.getBoundingClientRect();
+      if (!rect) return;
+
+      const nextX = ((event.clientX - rect.left - dragRef.current.offsetX) / rect.width) * 100;
+      const nextY = ((event.clientY - rect.top - dragRef.current.offsetY) / rect.height) * 100;
+
+      setDialogPosition({
+        x: clamp(nextX, 12, 88),
+        y: clamp(nextY, 18, 82),
+      });
+    };
+
+    const handlePointerUp = () => {
+      dragRef.current = null;
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+    };
+  }, []);
+
+  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (!dialogRef.current || !dialogRef.current.parentElement) return;
+
+    const rect = dialogRef.current.getBoundingClientRect();
+    const parentRect = dialogRef.current.parentElement.getBoundingClientRect();
+    dragRef.current = {
+      pointerId: event.pointerId,
+      offsetX: event.clientX - rect.left,
+      offsetY: event.clientY - rect.top,
+    };
+
+    const nextX = ((event.clientX - parentRect.left - (rect.width / 2)) / parentRect.width) * 100;
+    const nextY = ((event.clientY - parentRect.top - (rect.height / 2)) / parentRect.height) * 100;
+    setDialogPosition({
+      x: clamp(nextX, 12, 88),
+      y: clamp(nextY, 18, 82),
+    });
+
+    event.preventDefault();
+    dialogRef.current.setPointerCapture(event.pointerId);
+  };
+
   return (
-    <section className="relative bg-background pb-16 lg:pb-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <section className="cargo-hero relative">
+      <div className="cargo-hero-bg" aria-hidden="true">
+        <img
+          src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/af3f4d90-9ec9-4349-93f9-b47c33833106_rwc_0x98x1200x938x1200.gif?h=4a7cdfb5fee81de134dd238b6c03c921"
+          alt=""
+          className="cargo-hero-bg-img"
+        />
+        <div className="cargo-hero-overlay" />
+      </div>
+      <div className="cargo-hero-inner">
+        <h1 className="shop-title cargo-hero-title">
+          <span>{t.shopTitle.line1}</span>
+          <br />
+          <span>{t.shopTitle.line2}</span>
+          <br />
+          <span className="text-primary">{t.shopTitle.line3}</span>
+        </h1>
 
-          <div className="space-y-8 order-2 lg:order-none">
-            <div className="space-y-4">
-              <h1 className="shop-title text-5xl md:text-6xl lg:text-7xl leading-none">
-                <span className="block fade-up-in" style={{ animationDelay: "0ms" }}>{t.shopTitle.line1}</span>
-                <span className="block fade-up-in" style={{ animationDelay: "90ms" }}>{t.shopTitle.line2}</span>
-                <span className="block fade-up-in text-primary" style={{ animationDelay: "180ms" }}>{t.shopTitle.line3}</span>
-              </h1>
-              <div className="fade-up-in" style={{ animationDelay: "300ms" }}>
-                <p className="font-helvetica max-w-md" style={{
-                  opacity: 0.7,
-                  fontSize: '1rem',
-                }}>
-                  {t.hero.description}
-                </p>
-              </div>
-              <p className="text-muted-foreground max-w-md fade-up-in" style={{
-                fontSize: '1rem',
-                animationDelay: "380ms",
-              }}>
-                {t.hero.createdExclusivelyBy}{" "}
-                <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
-                  <span className="text-primary">
-                    chun wang
-                  </span>
-                </a>
-                {t.hero.forImaginativeCollectors}
-              </p>
-            </div>
-          </div>
+        <p className="font-helvetica cargo-hero-description">
+          {t.hero.description}
+        </p>
+        <p className="font-helvetica cargo-hero-byline">
+          {t.hero.createdExclusivelyBy}{" "}
+          <a href="https://www.chunwang.art/" target="_blank" rel="noreferrer">
+            <span className="text-primary">chun wang</span>
+          </a>
+          {t.hero.forImaginativeCollectors}
+        </p>
 
-          <div className="relative fade-up-in order-1 lg:order-none" style={{ animationDelay: "150ms" }}>
-            <div className="block aspect-square lg:aspect-[4/3] rounded-lg overflow-hidden sm:scale-60 md:scale-70 lg:scale-80">
-              <img
-                src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/af3f4d90-9ec9-4349-93f9-b47c33833106_rwc_0x98x1200x938x1200.gif?h=4a7cdfb5fee81de134dd238b6c03c921"
-                alt="CHUN WANG SHOP COVER IMAGE"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            {/* Decorative border */}
-            <div className="hidden lg:block absolute inset-0 border-4 border-primary translate-x-4 translate-y-4 rounded-lg -z-10"></div>
-          </div>
+        <nav className="cargo-hero-links" aria-label="hero links">
+          <a href="/about" className="cargo-link">{t.index.ctaAbout}</a>
+        </nav>
+        <div
+          ref={dialogRef}
+          className="hero-dialog"
+          role="dialog"
+          aria-label="hero message"
+          style={{ left: `${dialogPosition.x}%`, top: `${dialogPosition.y}%` }}
+          onPointerDown={handlePointerDown}
+        >
+          <h2 className="hero-dialog-title">Handmade & one of a kind.</h2>
+          <p className="hero-dialog-sub">Ceramics with big feelings!</p>
+          <a className="hero-dialog-btn" href="#shop">Shop</a>
         </div>
       </div>
     </section>

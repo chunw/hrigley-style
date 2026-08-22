@@ -1,12 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Search } from "lucide-react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 import ProductCard from "./ProductCard";
 import { useProducts, getArtboxPrintCount } from "@/hooks/useProducts";
 import { getProductCategories, getProductCategoriesZh } from "@/lib/products";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 
@@ -26,6 +24,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   const [selectedCategory, setSelectedCategory] = useState(() => searchParams.get("category") ?? "ALL");
   const [showAllItems, setShowAllItems] = useState(false);
   const [showHiddenOnly, setShowHiddenOnly] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const { data: products, isLoading, error } = useProducts(true);
   const firstMatchedCardRef = useRef<HTMLDivElement | null>(null);
   const normalizedSearchQuery = searchQuery?.trim() || "";
@@ -121,15 +120,15 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   return (
     <section id="shop" className="bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-xl mx-auto mb-8">
+        <div className="max-w-xl mx-auto pt-8 mb-8">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               type="text"
-              placeholder={t.productGrid.searchPlaceholder}
+              aria-label={t.productGrid.searchPlaceholder}
               value={searchQuery || ""}
               onChange={(e) => onSearchChange?.(e.target.value)}
-              className="pl-10 handwritten text-sm bg-muted/50 border-border"
+              className="pl-10 sans-label text-sm bg-muted/50 border-border transition-all duration-300 ease-out focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-primary/50 focus-visible:bg-background focus-visible:shadow-[0_8px_24px_-8px_hsl(var(--primary)/0.4)]"
             />
           </div>
           {hasActiveSearch && (
@@ -139,100 +138,96 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
           )}
         </div>
 
-        {/* Category Filter */}
-        <div className="mb-12">
-          <div className="flex flex-wrap gap-4 justify-center">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`handwritten text-sm px-4 py-2 border-2 transition-colors ${
-                  selectedCategory === category
-                    ? "border-primary text-primary bg-primary/10"
-                    : "border-border hover:border-primary hover:text-primary"
-                }`}
-              >
-                {categoryLabel(category)}
-              </button>
-            ))}
-          </div>
-
-          <div className="flex justify-center gap-4 mt-4">
+        <div className="lg:flex lg:items-start lg:gap-10 pb-16">
+          {/* Filters — left sidebar on desktop, collapsible panel on mobile */}
+          <aside className="mb-6 lg:mb-0 lg:w-56 lg:shrink-0 lg:sticky lg:top-24">
             <button
-              onClick={() => {
-                setShowAllItems((prev) => !prev);
-                setShowHiddenOnly(false);
-              }}
-              className={`handwritten text-sm px-4 py-2 border-2 transition-colors ${
-                showAllItems
-                  ? "border-primary text-primary bg-primary/10"
-                  : "border-border hover:border-primary hover:text-primary"
-              }`}
+              type="button"
+              onClick={() => setFiltersOpen((prev) => !prev)}
+              className="sans-label flex w-full items-center justify-between gap-2 border border-border px-4 py-3 text-sm uppercase tracking-widest lg:hidden"
             >
-              {t.productGrid.showAllItems} <span className="font-helvetica">({allItemsCount})</span>
+              <span className="inline-flex items-center gap-2">
+                <SlidersHorizontal className="h-4 w-4" />
+                {t.productGrid.filters}
+              </span>
+              <ChevronDown className={`h-4 w-4 transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
             </button>
-            <button
-              onClick={() => {
-                setShowHiddenOnly((prev) => !prev);
-                setShowAllItems(false);
-              }}
-              className={`handwritten text-sm px-4 py-2 border-2 transition-colors ${
-                showHiddenOnly
-                  ? "border-primary text-primary bg-primary/10"
-                  : "border-border hover:border-primary hover:text-primary"
-              }`}
-            >
-              {t.productGrid.showHiddenOnly} <span className="font-helvetica">({hiddenItemsCount})</span>
-            </button>
-          </div>
-        </div>
 
-        {/* Products Grid */}
-        {hasActiveSearch && sortedFilteredProducts.length === 0 ? (
-          <div className="rounded-lg border-2 border-destructive/40 bg-destructive/5 px-6 py-10 text-center">
-            <p className="handwritten text-lg text-destructive">{t.productGrid.noResults}</p>
-            <p className="font-helvetica text-sm text-muted-foreground mt-2">
-              {t.productGrid.noResultsDetail} "{normalizedSearchQuery}".
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-auto">
-            {sortedFilteredProducts.map((product, index) => (
-              <div key={product.id} ref={index === 0 && hasActiveSearch ? firstMatchedCardRef : null} className="h-full">
-                <ProductCard
-                  {...product}
-                  highlightQuery={normalizedSearchQuery}
-                  isSearchHighlighted={hasActiveSearch}
-                  hideOrderButton={hideOrderButton}
-                  hideShippingLabel={hideShippingLabel}
-                  artboxPrintCount={getArtboxPrintCount(product.id)}
-                />
+            <div className={`${filtersOpen ? "block" : "hidden"} lg:block mt-4 lg:mt-0`}>
+              <nav className="flex flex-col items-start gap-3">
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`font-helvetica text-sm pb-1 border-b-2 lg:border-b-0 lg:border-l-2 lg:pl-3 transition-colors ${
+                      selectedCategory === category
+                        ? "border-primary text-primary"
+                        : "border-transparent text-foreground hover:border-primary hover:text-primary"
+                    }`}
+                  >
+                    {categoryLabel(category)}
+                  </button>
+                ))}
+              </nav>
+
+              <div className="flex flex-col items-start gap-3 mt-6 pt-6 border-t border-border">
+                <button
+                  onClick={() => {
+                    setShowAllItems((prev) => !prev);
+                    setShowHiddenOnly(false);
+                  }}
+                  className={`font-helvetica text-sm pb-1 border-b-2 lg:border-b-0 lg:border-l-2 lg:pl-3 transition-colors ${
+                    showAllItems
+                      ? "border-primary text-primary"
+                      : "border-transparent text-foreground hover:border-primary hover:text-primary"
+                  }`}
+                >
+                  {t.productGrid.showAllItems} ({allItemsCount})
+                </button>
+                <button
+                  onClick={() => {
+                    setShowHiddenOnly((prev) => !prev);
+                    setShowAllItems(false);
+                  }}
+                  className={`font-helvetica text-sm pb-1 border-b-2 lg:border-b-0 lg:border-l-2 lg:pl-3 transition-colors ${
+                    showHiddenOnly
+                      ? "border-primary text-primary"
+                      : "border-transparent text-foreground hover:border-primary hover:text-primary"
+                  }`}
+                >
+                  {t.productGrid.showHiddenOnly} ({hiddenItemsCount})
+                </button>
               </div>
-            ))}
-            {/* <Link to="/watercolor-catalog" className="block">
-              <Card className="group hover:shadow-lg transition-shadow duration-200 border-2 border-border cursor-pointer h-full">
-                <CardContent className="p-4">
-                  <div className="aspect-square bg-black mb-4 overflow-hidden">
-                    <img
-                      src="/watercolors/01/main.jpg"
-                      alt="Visions in Watercolor"
-                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"
+            </div>
+          </aside>
+
+          {/* Products Grid */}
+          <div className="flex-1 min-w-0">
+            {hasActiveSearch && sortedFilteredProducts.length === 0 ? (
+              <div className="rounded-lg border-2 border-destructive/40 bg-destructive/5 px-6 py-10 text-center">
+                <p className="handwritten text-lg text-destructive">{t.productGrid.noResults}</p>
+                <p className="font-helvetica text-sm text-muted-foreground mt-2">
+                  {t.productGrid.noResultsDetail} "{normalizedSearchQuery}".
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6 auto-rows-auto">
+                {sortedFilteredProducts.map((product, index) => (
+                  <div key={product.id} ref={index === 0 && hasActiveSearch ? firstMatchedCardRef : null} className="h-full">
+                    <ProductCard
+                      {...product}
+                      highlightQuery={normalizedSearchQuery}
+                      isSearchHighlighted={hasActiveSearch}
+                      hideOrderButton={hideOrderButton}
+                      hideShippingLabel={hideShippingLabel}
+                      artboxPrintCount={getArtboxPrintCount(product.id)}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <p className="text-xs handwritten text-muted-foreground">Original Works</p>
-                    <h3 className="text-lg leading-tight handwritten">Visions in Watercolor</h3>
-                    <p className="text-sm font-helvetica text-muted-foreground line-clamp-2">Original watercolor paintings — browse the full collection</p>
-                    <Button variant="outline-pink" className="w-full handwritten" size="sm">
-                      <b>View Collection →</b>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link> */}
+                ))}
+              </div>
+            )}
           </div>
-        )}
-
+        </div>
       </div>
     </section>
   );
