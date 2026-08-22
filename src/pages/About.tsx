@@ -1,11 +1,20 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import deliveryGif from "@/assets/delivery.gif";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const About = () => {
   const { t } = useLanguage();
+  const { forceDark } = useTheme();
+
+  useEffect(() => {
+    forceDark(true);
+    return () => forceDark(false);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -38,11 +47,11 @@ const About = () => {
             <p className="handwritten-note-text whitespace-pre-line">
               {t.about.body}
             </p>
-          </div>
 
-          <nav className="cargo-hero-links" aria-label="about links">
-            <Link to="/" className="cargo-link">{t.about.backToShop}</Link>
-          </nav>
+            <nav className="handwritten-note-links" aria-label="about links">
+              <Link to="/" className="handwritten-note-link">{t.about.backToShop}</Link>
+            </nav>
+          </div>
         </div>
       </section>
 

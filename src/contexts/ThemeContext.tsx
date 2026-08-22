@@ -5,6 +5,7 @@ type Theme = "dark" | "light";
 interface ThemeContextValue {
   theme: Theme;
   toggleTheme: () => void;
+  forceDark: (on: boolean) => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
@@ -20,10 +21,14 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       ? "light"
       : "dark";
   });
+  const [forceDarkCount, setForceDarkCount] = useState(0);
 
   useEffect(() => {
-    document.documentElement.classList.toggle(DARK_CLASS, theme === "dark");
-  }, [theme]);
+    document.documentElement.classList.toggle(DARK_CLASS, forceDarkCount > 0 || theme === "dark");
+  }, [theme, forceDarkCount]);
+
+  const forceDark = (on: boolean) =>
+    setForceDarkCount((count) => count + (on ? 1 : -1));
 
   const toggleTheme = () =>
     setTheme((t) => {
@@ -32,7 +37,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       return next;
     });
 
-  return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;
+  return <ThemeContext.Provider value={{ theme, toggleTheme, forceDark }}>{children}</ThemeContext.Provider>;
 };
 
 export const useTheme = () => {
