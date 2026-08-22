@@ -183,7 +183,7 @@ export const watercolors: Watercolor[] = [
     titleZh: "残留 其十",
     series: "I",
     printInCatalog: false,
-    showInStorefront: true,
+    showInStorefront: false,
     year: "2026",
     medium: "Watercolor on paper",
     mediumZh: "纸本水彩",
