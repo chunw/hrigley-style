@@ -83,7 +83,7 @@ const Catalogs = () => {
                 className="absolute bottom-0 left-0 right-0 px-5 pb-5"
                 style={{ zIndex: 10 }}
               >
-                <h2 className="shop-title text-white leading-none w-full text-[clamp(2rem,9vw,7.5rem)] sm:text-[clamp(1.5rem,4.5vw,6rem)]">
+                <h2 className="shop-title gloria-title text-white leading-none w-full text-[clamp(2rem,9vw,7.5rem)] sm:text-[clamp(1.5rem,4.5vw,6rem)]">
                   {label}
                 </h2>
               </div>
