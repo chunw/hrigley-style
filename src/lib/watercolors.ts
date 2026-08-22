@@ -64,6 +64,7 @@ export interface Watercolor {
   price?: number;
   paylink?: string;
   framed?: boolean;
+  soldOut?: boolean;
 }
 
 export const PRINT_9X12_PAYLINK = "https://www.paypal.com/ncp/payment/PHRVNL65LDTX2";
@@ -379,9 +380,9 @@ export const watercolors: Watercolor[] = [
     titleZh: "残留 其九",
     series: "I",
     includeInArtbox: false,
-    printInCatalog: true,
+    printInCatalog: false,
     printInCatalogImage: "1",
-    showInStorefront: true,
+    showInStorefront: false,
     year: "2026",
     medium: "Watercolor on paper",
     mediumZh: "纸本水彩",
@@ -590,6 +591,7 @@ export const watercolors: Watercolor[] = [
     dimensionsZh: "",
     description: "",
     descriptionZh: "",
+    soldOut: true,
   },
   {
     id: "18",
@@ -597,7 +599,7 @@ export const watercolors: Watercolor[] = [
     titleZh: "静物 其十二",
     series: "II",
     printInCatalog: false,
-    showInStorefront: true,
+    showInStorefront: false,
     year: "2025",
     medium: "Watercolor on paper",
     mediumZh: "纸本水彩",
@@ -613,7 +615,7 @@ export const watercolors: Watercolor[] = [
     titleZh: "静物 其十三",
     series: "II",
     printInCatalog: false,
-    showInStorefront: true,
+    showInStorefront: false,
     year: "2025",
     medium: "Watercolor on paper",
     mediumZh: "纸本水彩",

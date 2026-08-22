@@ -65,6 +65,12 @@ const WorkCard = ({ work }: { work: Watercolor }) => {
             style={{ backgroundColor: "rgba(244,114,182,0.8)" }}
           />
         )}
+
+        {work.soldOut && (
+          <div className="absolute top-2 right-2 w-16 h-16 bg-red-600 rounded-full z-10 shadow-lg border-2 border-white/80 flex items-center justify-center p-1">
+            <span className="sans-label text-white text-xs leading-tight text-center">SOLD OUT</span>
+          </div>
+        )}
       </Link>
 
       <div className="mt-3">

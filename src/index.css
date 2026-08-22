@@ -272,6 +272,55 @@ All colors MUST be HSL.
   background: #000;
 }
 
+/* Homepage hero (HeroSection component): unlike the always-dark .cargo-hero default
+   above (used as-is on About), this one follows the site-wide light/dark toggle so the
+   homepage shows a white backdrop in light mode instead of the dark About-style hero. */
+.cargo-hero-adaptive {
+  background: hsl(var(--background));
+}
+
+.theme-dark .cargo-hero-adaptive {
+  background: #000;
+}
+
+.cargo-hero-adaptive .cargo-hero-overlay {
+  background: transparent;
+}
+
+.theme-dark .cargo-hero-adaptive .cargo-hero-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.cargo-hero-adaptive .cargo-hero-description,
+.cargo-hero-adaptive .cargo-hero-byline {
+  color: hsl(var(--muted-foreground));
+  text-shadow: none;
+}
+
+.theme-dark .cargo-hero-adaptive .cargo-hero-description,
+.theme-dark .cargo-hero-adaptive .cargo-hero-byline {
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.cargo-hero-adaptive .cargo-link {
+  text-shadow: none;
+}
+
+.theme-dark .cargo-hero-adaptive .cargo-link {
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* Homepage header (Header component, isHomePage only): follows the light/dark toggle
+   like .cargo-hero-adaptive above, instead of the always-black bar used on other pages. */
+.home-header-adaptive {
+  background: hsl(var(--background));
+}
+
+.theme-dark .home-header-adaptive {
+  background: #000;
+}
+
 .cargo-hero-bg {
   position: absolute;
   inset: 0;

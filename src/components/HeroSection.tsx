@@ -4,7 +4,7 @@ const HeroSection = () => {
   const { t } = useLanguage();
 
   return (
-    <section className="cargo-hero relative">
+    <section className="cargo-hero cargo-hero-adaptive relative">
       <div className="cargo-hero-bg" aria-hidden="true">
         <img
           src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/af3f4d90-9ec9-4349-93f9-b47c33833106_rwc_0x98x1200x938x1200.gif?h=4a7cdfb5fee81de134dd238b6c03c921"
@@ -35,7 +35,7 @@ const HeroSection = () => {
         </p>
 
         <nav className="cargo-hero-links" aria-label="hero links">
-          <a href="/about" className="cargo-link !text-white">{t.index.ctaAbout}</a>
+          <a href="/about" className="cargo-link">{t.index.ctaAbout}</a>
         </nav>
 
         <div className="hero-message-card">

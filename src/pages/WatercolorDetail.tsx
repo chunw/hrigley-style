@@ -202,10 +202,11 @@ const WatercolorDetail = () => {
                     <>
                       <p className="sans-label text-2xl font-bold">${displayPrice}</p>
                       <button
-                        onClick={effectivePaylink ? handleBuyNow : handleInquire}
-                        className="sans-label gloria-button-label inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
+                        onClick={work.soldOut ? undefined : (effectivePaylink ? handleBuyNow : handleInquire)}
+                        disabled={work.soldOut}
+                        className={`sans-label gloria-button-label inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center ${work.soldOut ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                       >
-                        {t.watercolor.buyNow}
+                        {work.soldOut ? t.productDetails.soldOut : t.watercolor.buyNow}
                       </button>
                       <p className="text-xs text-muted-foreground font-mono">
                         {t.watercolor.shippingIncluded}
