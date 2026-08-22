@@ -356,6 +356,10 @@ All colors MUST be HSL.
   color: #fff;
 }
 
+.hero-title-sub {
+  font-size: 0.7em;
+}
+
 .theme-dark .cargo-hero-adaptive .cargo-link {
   color: #fff;
   border-bottom-color: #fff;
