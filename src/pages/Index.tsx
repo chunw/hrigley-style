@@ -54,7 +54,7 @@ const Index = () => {
             {/* Left - Text Content */}
             <div className="space-y-8">
               <div className="space-y-1 lg:space-y-4"> 
-                <h1 className=" shop-title text-4xl md:text-6xl lg:text-7xl leading-none">
+                <h1 className="shop-title gloria-title text-4xl md:text-6xl lg:text-7xl leading-none">
                   {t.shopTitle.line1} <br />{t.shopTitle.line2}<br />
                   <span className="text-primary">{t.shopTitle.line3}</span>
                 </h1>
