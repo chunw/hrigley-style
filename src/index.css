@@ -190,6 +190,12 @@ All colors MUST be HSL.
     text-transform: none;
   }
 
+  /* Category filter labels (product grid sidebar) — Zhuque Fangsong for English, matching
+     product titles, instead of the cursive Gloria Hallelujah used for page/brand titles. */
+  .category-label {
+    font-family: 'Zhuque Fangsong (technical preview)', 'Aileron', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
   .theme-dark .product-title {
     color: black;
   }
@@ -362,6 +368,15 @@ All colors MUST be HSL.
   margin: 0 0 1.6rem 0;
   text-transform: none;
   letter-spacing: 0.02em;
+}
+
+.cargo-hero-subtitle {
+  max-width: 640px;
+  margin: 0 auto 0.75rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.15rem;
+  font-style: italic;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
 .cargo-hero-description {

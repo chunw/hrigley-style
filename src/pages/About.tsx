@@ -20,7 +20,11 @@ const About = () => {
           <div className="cargo-hero-overlay" />
         </div>
         <div className="cargo-hero-inner">
-          <h1 className="shop-title cargo-hero-title !text-white">{t.about.title}</h1>
+          <h1 className="shop-title cargo-hero-title gloria-title !text-white">{t.about.title}</h1>
+
+          <p className="font-helvetica cargo-hero-subtitle">
+            {t.about.subtitle}
+          </p>
 
           <p className="font-helvetica cargo-hero-description whitespace-pre-line">
             {t.about.body}

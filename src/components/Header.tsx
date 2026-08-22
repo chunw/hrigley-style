@@ -12,7 +12,8 @@ const Header = () => {
   const { theme, toggleTheme } = useTheme();
   const isHomePage = location.pathname === "/";
   const useGloriaTitle = /^\/(product|watercolors|remains|21spirit|photography)\/[^/]+\/?$/.test(location.pathname)
-    || location.pathname === "/catalogs";
+    || location.pathname === "/catalogs"
+    || location.pathname === "/about";
 
   const controlColor = isHomePage ? "text-foreground" : "text-white";
 
