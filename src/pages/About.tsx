@@ -48,7 +48,7 @@ const About = () => {
             </p>
 
             <nav className="handwritten-note-links" aria-label="about links">
-              <Link to="/" className="handwritten-note-link">{t.about.backToShop}</Link>
+              <a href="/#products" className="handwritten-note-link">{t.about.backToShop}</a>
             </nav>
           </div>
         </div>

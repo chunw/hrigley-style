@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { translations, type Lang, type Translations } from "@/lib/translations";
 
 interface LanguageContextValue {
@@ -16,7 +16,9 @@ const STORAGE_KEY = "cw-lang";
 const isLang = (value: string | null): value is Lang => value === "en" || value === "zh";
 
 export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const [lang, setLangState] = useState<Lang>(() => {
     const fromUrl = searchParams.get("lang");
@@ -25,17 +27,21 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
     return isLang(saved) ? saved : "en";
   });
 
+  // useSearchParams' setSearchParams drops location.hash, which would break deep links
+  // like /#products — build the next URL from location manually so the hash survives.
+  const setLangParam = (next: Lang) => {
+    const params = new URLSearchParams(location.search);
+    params.set("lang", next);
+    navigate(
+      { pathname: location.pathname, search: params.toString(), hash: location.hash },
+      { replace: true }
+    );
+  };
+
   const setLang = (next: Lang) => {
     localStorage.setItem(STORAGE_KEY, next);
     setLangState(next);
-    setSearchParams(
-      (prev) => {
-        const params = new URLSearchParams(prev);
-        params.set("lang", next);
-        return params;
-      },
-      { replace: true }
-    );
+    setLangParam(next);
   };
 
   const toggleLang = () => setLang(lang === "en" ? "zh" : "en");
@@ -52,14 +58,7 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
   // Keep the URL in sync so the current language is always shareable as a link.
   useEffect(() => {
     if (searchParams.get("lang") !== lang) {
-      setSearchParams(
-        (prev) => {
-          const params = new URLSearchParams(prev);
-          params.set("lang", lang);
-          return params;
-        },
-        { replace: true }
-      );
+      setLangParam(lang);
     }
   }, [lang]);
 
