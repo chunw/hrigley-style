@@ -299,7 +299,7 @@ All colors MUST be HSL.
 }
 
 .cargo-hero-title {
-  font-size: clamp(48px, 12vw, 180px);
+  font-size: clamp(64px, 16vw, 180px);
   line-height: 0.9;
   font-style: italic;
   color: hsl(var(--primary));
