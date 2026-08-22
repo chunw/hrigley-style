@@ -259,8 +259,8 @@ export const watercolors: Watercolor[] = [
      title: "Residuals #5",
     titleZh: "残留 其五",
    series: "I",
-    printInCatalog: true,
-    showInStorefront: true,
+    printInCatalog: false,
+    showInStorefront: false,
     year: "2025",
     medium: "Watercolor on paper",
     mediumZh: "纸本水彩",
@@ -445,6 +445,7 @@ export const watercolors: Watercolor[] = [
     dimensionsZh: "",
     description: "",
     descriptionZh: "",
+    soldOut: true,
   },
 
   {
@@ -510,6 +511,7 @@ export const watercolors: Watercolor[] = [
     dimensionsZh: "",
     description: "",
     descriptionZh: "",
+    soldOut: true,
   },
 
 

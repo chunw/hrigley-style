@@ -155,7 +155,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`font-helvetica text-sm pb-1 border-b-2 lg:border-b-0 lg:border-l-2 lg:pl-3 transition-colors ${
+                    className={`gloria-title text-sm pb-1 border-b-2 lg:border-b-0 lg:border-l-2 lg:pl-3 transition-colors ${
                       selectedCategory === category
                         ? "border-primary text-primary"
                         : "border-transparent text-foreground hover:border-primary hover:text-primary"
