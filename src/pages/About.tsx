@@ -6,7 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const About = () => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { forceDark } = useTheme();
 
   useEffect(() => {
@@ -28,11 +28,15 @@ const About = () => {
           <div className="cargo-hero-overlay" />
         </div>
         <div className="cargo-hero-inner">
-          <h1 className="shop-title cargo-hero-title gloria-title !text-white">{t.about.title}</h1>
+          {lang !== "zh" && (
+            <>
+              <h1 className="shop-title cargo-hero-title gloria-title !text-white">{t.about.title}</h1>
 
-          <p className="font-helvetica cargo-hero-subtitle">
-            {t.about.subtitle}
-          </p>
+              <p className="font-helvetica cargo-hero-subtitle">
+                {t.about.subtitle}
+              </p>
+            </>
+          )}
 
           <div className="about-portrait">
             <img
@@ -43,9 +47,10 @@ const About = () => {
           </div>
 
           <div className="handwritten-note">
-            <p className="handwritten-note-text whitespace-pre-line">
-              {t.about.body}
-            </p>
+            <p
+              className="handwritten-note-text whitespace-pre-line"
+              dangerouslySetInnerHTML={{ __html: t.about.body }}
+            />
 
             <nav className="handwritten-note-links" aria-label="about links">
               <a href="/#products" className="handwritten-note-link">{t.about.backToShop}</a>

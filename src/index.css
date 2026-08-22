@@ -427,6 +427,12 @@ All colors MUST be HSL.
   text-align: left;
 }
 
+.handwritten-note-text a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .cargo-hero-description {
   max-width: 640px;
   margin: 0 auto;
