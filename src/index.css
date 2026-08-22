@@ -372,7 +372,7 @@ All colors MUST be HSL.
 
 .cargo-hero-subtitle {
   max-width: 640px;
-  margin: 0 auto 0.75rem;
+  margin: 0 auto 2rem;
   color: rgba(255, 255, 255, 0.85);
   font-size: 1.15rem;
   font-style: italic;
