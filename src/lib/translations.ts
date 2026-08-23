@@ -58,6 +58,8 @@ export const translations = {
       shippingIncluded: "Shipping included",
       limitedEditionPrefix: "Limited edition of",
       limitedEditionSuffix: "",
+      partOfCollectionPrefix: "Part of the",
+      partOfCollectionSuffix: "collection",
     },
     watercolor: {
       notFound: "Work not found.",
@@ -156,6 +158,8 @@ export const translations = {
       shippingIncluded: "含运费",
       limitedEditionPrefix: "限量版，共",
       limitedEditionSuffix: "件",
+      partOfCollectionPrefix: "属于",
+      partOfCollectionSuffix: "系列",
     },
     watercolor: {
       notFound: "作品未找到。",
