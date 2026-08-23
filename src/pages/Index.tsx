@@ -4,14 +4,30 @@ import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ProductGrid from "@/components/ProductGrid";
 import Footer from "@/components/Footer";
-import { SITE_URL } from "@/lib/constants";
+import { SITE_URL, SHOP_URL, INSTAGRAM_URL } from "@/lib/constants";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 const Index = () => {
   const { lang, t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [matchedCount, setMatchedCount] = useState(0);
   const location = useLocation();
+
+  usePageMeta({
+    title: "Handmade Art, Fine Art Prints & Unique Gifts",
+    description: "Whimsical, one-of-a-kind art and handmade gifts by artist Chun Wang — original paintings, fine art prints, photography, ceramics, and wall art for the home.",
+    path: "/",
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "OnlineStore",
+      name: "Chun Wang Studio Shop",
+      url: SHOP_URL,
+      description: "Handmade, one-of-a-kind art and gifts — original paintings, fine art prints, photography, and ceramics by artist Chun Wang.",
+      founder: { "@type": "Person", name: "Chun Wang", url: SITE_URL },
+      sameAs: [INSTAGRAM_URL, SITE_URL],
+    },
+  });
 
   // The initial page load's native scroll-to-hash happens before the SPA finishes
   // rendering #products, so deep links like /#products need a manual scroll on mount.

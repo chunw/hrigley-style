@@ -3,11 +3,18 @@ import Header from "@/components/Header";
 import ProductGrid from "@/components/ProductGrid";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 const AllItems = () => {
   const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [matchedCount, setMatchedCount] = useState(0);
+
+  usePageMeta({
+    title: "Shop All — Handmade Gifts, Fine Art Prints & Home Goods",
+    description: "Every handmade gift and one-of-a-kind object in the Chun Wang Studio Shop — original paintings, fine art prints, ceramics, and whimsical home goods.",
+    path: "/all-items",
+  });
 
   return (
     <div className="relative min-h-screen bg-background">

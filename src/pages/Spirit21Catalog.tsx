@@ -6,6 +6,7 @@ import { seriesIntro } from "@/lib/constants";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { products } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 const printPacket = products.find((p) => p.id === "spirit-21-fine-art-print-packet");
 
@@ -85,6 +86,15 @@ const WorkCard = ({ work }: { work: SpiritWork }) => {
 
 const Spirit21Catalog = () => {
   const { lang, t } = useLanguage();
+
+  usePageMeta({
+    title: lang === "zh" ? catalogMeta.zh : `${catalogMeta.en} — Mixed-Media Art Prints`,
+    description: lang === "zh"
+      ? catalogMeta.descriptionZh
+      : "In the Spirit of the 21st Century — mixed-media paintings translating research into striking, thought-provoking images. Original art and fine art prints by Chun Wang.",
+    image: "/21spirit/01/main.jpg",
+    path: "/21spirit-catalog",
+  });
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">

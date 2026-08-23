@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { photographyWorks, seriesList, catalogMeta, type PhotographyWork } from "@/lib/photography";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 
 const WorkCard = ({ work, uniformHeight }: { work: PhotographyWork; uniformHeight: boolean }) => {
@@ -148,6 +149,15 @@ const WorkCard = ({ work, uniformHeight }: { work: PhotographyWork; uniformHeigh
 const PhotographyCatalog = () => {
   const { lang, t } = useLanguage();
   const [uniformHeight, setUniformHeight] = useState(true);
+
+  usePageMeta({
+    title: lang === "zh" ? catalogMeta.zh : `${catalogMeta.en} — Fine Art Photography Prints`,
+    description: lang === "zh"
+      ? catalogMeta.descriptionZh
+      : "Inner Wilderness — fine art photography prints exploring solitude, time, and landscape. Original wall art and limited-edition prints by Chun Wang.",
+    image: "/photography/01/main.jpg",
+    path: "/photography-catalog",
+  });
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">

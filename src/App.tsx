@@ -7,6 +7,8 @@ import { CartProvider } from "@/contexts/CartContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import Index from "./pages/Index";
+import Useful from "./pages/Useful";
+import SlightlyUsefulObject from "./pages/SlightlyUsefulObject";
 import ProductDetails from "./pages/ProductDetails";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import Cart from "./pages/Cart";
@@ -39,6 +41,8 @@ const App = () => (
         <Sonner />
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/useful" element={<Useful />} />
+            <Route path="/slightlyusefulobject" element={<SlightlyUsefulObject />} />
             <Route path="/delivery" element={<Delivery />} />
             <Route path="/about" element={<About />} />
             <Route path="/product/:id" element={<ProductDetails />} />

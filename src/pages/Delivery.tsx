@@ -1,6 +1,7 @@
 import deliveryGif from "@/assets/delivery.gif";
 import deliveryJpg from "@/assets/delivery.jpg";
 import deliveryExampleOrderPng from "@/assets/delivery_example order.png";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 // UPDATE WITH REAL DATA BEFORE SENDING
 const customerName = "[CUSTOMER NAME]";
@@ -512,6 +513,13 @@ const deliveryHtml = `<!DOCTYPE html>
 </body></html>`;
 
 const Delivery = () => {
+  usePageMeta({
+    title: "Delivery",
+    description: "Internal shipping notification template.",
+    path: "/delivery",
+    noindex: true,
+  });
+
   return (
     <iframe
       title="Delivery"

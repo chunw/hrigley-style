@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import "./photobook-print.css";
+import { usePageMeta } from "@/hooks/usePageMeta";
+import { catalogMeta } from "@/lib/photography";
 
 // ── Cargo CDN image paths ──────────────────────────────────────────────────────
 const CDN = "https://freight.cargo.site";
@@ -734,6 +736,12 @@ function About() {
 // ── Main page ─────────────────────────────────────────────────────────────────
 export default function PhotographyPhotobook() {
   const [activeSection, setActiveSection] = useState<SectionId>("cover");
+
+  usePageMeta({
+    title: "Visions in Photography",
+    description: catalogMeta.description,
+    path: "/photography-photobook",
+  });
 
   useEffect(() => {
     // Force all images visible and set the PDF document title before the

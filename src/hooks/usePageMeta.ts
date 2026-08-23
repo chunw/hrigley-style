@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { SHOP_URL, SITE_NAME } from "@/lib/constants";
 
+const DEFAULT_OG_IMAGE = "/og-image.jpg";
+
 interface PageMetaOptions {
   /** Page-specific title. Rendered as "{title} — Chun Wang Studio Shop". */
   title: string;
@@ -13,6 +15,8 @@ interface PageMetaOptions {
   type?: "website" | "article" | "product" | "og:image";
   /** One or more JSON-LD objects to embed as <script type="application/ld+json">. */
   jsonLd?: object | object[];
+  /** Keep this page out of search indexes (internal tools, hidden/unlisted catalogs, 404s). */
+  noindex?: boolean;
 }
 
 function stripHtml(html: string): string {
@@ -55,19 +59,21 @@ function upsertLink(rel: string, href: string) {
  * SPA with a single static index.html — without this every route shares the
  * same generic title/description.
  */
-export function usePageMeta({ title, description, image, path, type = "website", jsonLd }: PageMetaOptions) {
+export function usePageMeta({ title, description, image, path, type = "website", jsonLd, noindex = false }: PageMetaOptions) {
   useEffect(() => {
     document.title = `${title} — ${SITE_NAME}`;
 
     const cleanDescription = description ? truncate(stripHtml(description), 160) : undefined;
     if (cleanDescription) upsertMeta("name", "description", cleanDescription);
+    upsertMeta("name", "robots", noindex ? "noindex, nofollow" : "index, follow");
 
     const url = resolveUrl(path);
     upsertMeta("property", "og:title", title);
     if (cleanDescription) upsertMeta("property", "og:description", cleanDescription);
     upsertMeta("property", "og:type", type);
     upsertMeta("property", "og:url", url);
-    if (image) upsertMeta("property", "og:image", resolveUrl(image));
+    upsertMeta("property", "og:image", resolveUrl(image || DEFAULT_OG_IMAGE));
+    upsertMeta("name", "twitter:card", "summary_large_image");
     upsertLink("canonical", url);
 
     let script: HTMLScriptElement | null = null;
@@ -82,5 +88,5 @@ export function usePageMeta({ title, description, image, path, type = "website",
       script?.remove();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title, description, image, path, type, JSON.stringify(jsonLd)]);
+  }, [title, description, image, path, type, JSON.stringify(jsonLd), noindex]);
 }

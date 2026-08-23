@@ -3,11 +3,19 @@ import Header from "@/components/Header";
 import ProductGrid from "@/components/ProductGrid";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 const HiddenItems = () => {
   const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [matchedCount, setMatchedCount] = useState(0);
+
+  usePageMeta({
+    title: "Hidden Items",
+    description: "Unlisted items.",
+    path: "/hidden-items",
+    noindex: true,
+  });
 
   return (
     <div className="relative min-h-screen bg-background">

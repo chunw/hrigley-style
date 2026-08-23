@@ -1,10 +1,20 @@
+import { ReactNode } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-const HeroSection = () => {
+interface HeroSectionProps {
+  titleOverride?: ReactNode;
+  bordered?: boolean;
+  logoSrc?: string;
+  aboutLinkBlack?: boolean;
+  titleBlack?: boolean;
+  yellowBackground?: boolean;
+}
+
+const HeroSection = ({ titleOverride, bordered = false, logoSrc, aboutLinkBlack = false, titleBlack = false, yellowBackground = false }: HeroSectionProps = {}) => {
   const { t, lang } = useLanguage();
 
   return (
-    <section className="cargo-hero cargo-hero-adaptive relative">
+    <section className={`cargo-hero cargo-hero-adaptive relative ${bordered ? "border-[20px] border-red-600" : ""} ${yellowBackground ? "!bg-yellow-400" : ""}`}>
       <div className="cargo-hero-bg" aria-hidden="true">
         <img
           src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/af3f4d90-9ec9-4349-93f9-b47c33833106_rwc_0x98x1200x938x1200.gif?h=4a7cdfb5fee81de134dd238b6c03c921"
@@ -14,10 +24,23 @@ const HeroSection = () => {
         <div className="cargo-hero-overlay" />
       </div>
       <div className="cargo-hero-inner">
-        <h1 className={`shop-title cargo-hero-title ${lang === "en" ? "gloria-title" : ""}`}>
-          <span className="hero-title-brand block">{t.shopTitle.line1}</span>
-          <span className="hero-title-brand hero-title-sub block">{t.shopTitle.line2}</span>
-          <span className="text-primary block hero-title-shop">{t.shopTitle.line3}</span>
+        {logoSrc && (
+          <img
+            src={logoSrc}
+            alt="Slightly Useful Object logo"
+            className="mx-auto mb-6 w-64 h-64 object-contain"
+          />
+        )}
+        <h1 className={`shop-title cargo-hero-title ${lang === "en" ? "gloria-title" : ""} ${titleBlack ? "!text-black" : ""}`}>
+          {titleOverride ? (
+            <span className="hero-title-brand block">{titleOverride}</span>
+          ) : (
+            <>
+              <span className="hero-title-brand block">{t.shopTitle.line1}</span>
+              <span className="hero-title-brand hero-title-sub block">{t.shopTitle.line2}</span>
+              <span className={`block hero-title-shop ${titleBlack ? "" : "text-primary"}`}>{t.shopTitle.line3}</span>
+            </>
+          )}
         </h1>
 
         <p className="font-helvetica cargo-hero-description">
@@ -33,7 +56,7 @@ const HeroSection = () => {
         </p>
 
         <nav className="cargo-hero-links" aria-label="hero links">
-          <a href="/about" className="cargo-link">{t.index.ctaAbout}</a>
+          <a href="/about" className={`cargo-link ${aboutLinkBlack ? "!text-black !border-black" : ""}`}>{t.index.ctaAbout}</a>
         </nav>
 
         <div className="hero-message-card">

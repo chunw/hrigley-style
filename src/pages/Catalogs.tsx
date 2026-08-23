@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { buildCombinedPrintHTML, type PrintTheme } from "@/lib/printCatalog";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 const CATALOGS = [
   {
@@ -32,6 +33,12 @@ const CATALOGS = [
 const Catalogs = () => {
   const { lang, t } = useLanguage();
   const [printMenuOpen, setPrintMenuOpen] = useState(false);
+
+  usePageMeta({
+    title: "Art Catalogs — Fine Art Prints & Wall Art",
+    description: "Browse Chun Wang's fine art catalogs — original watercolor, mixed-media, and photography wall art and prints, from Watercolors, Remains, In the Spirit of the 21st Century, and Photography.",
+    path: "/catalogs",
+  });
 
   const handlePrint = (theme: "light" | "dark") => {
     const blob = new Blob([buildCombinedPrintHTML(window.location.origin, lang, theme)], { type: "text/html" });
@@ -71,7 +78,7 @@ const Catalogs = () => {
               >
                 <img
                   src={images[1]}
-                  alt=""
+                  alt={`${label} fine art print`}
                   className="w-full h-full object-cover opacity-90 group-hover:opacity-70 group-hover:scale-105 transition-all duration-700"
                   onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
                 />
@@ -102,7 +109,7 @@ const Catalogs = () => {
               >
                 <img
                   src={images[0]}
-                  alt=""
+                  alt={`${label} original artwork`}
                   className="w-full h-full object-cover opacity-90 group-hover:opacity-70 group-hover:scale-105 transition-all duration-700"
                   onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
                 />

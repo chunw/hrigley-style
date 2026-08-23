@@ -6,6 +6,7 @@ import { seriesIntro } from "@/lib/constants";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { products } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 const printPacket = products.find((p) => p.id === "remains-fine-art-print-packet");
 
@@ -86,6 +87,15 @@ const WorkCard = ({ work }: { work: RemainsWork }) => {
 
 const RemainsCatalog = () => {
   const { lang, t } = useLanguage();
+
+  usePageMeta({
+    title: lang === "zh" ? catalogMeta.zh : `${catalogMeta.en} — Surreal Mixed-Media Wall Art & Prints`,
+    description: lang === "zh"
+      ? catalogMeta.descriptionZh
+      : "Remains — a humorous, surreal mixed-media series recombining ancient terracotta figures into contemporary life. Original art and fine art prints, perfect as a unique gift.",
+    image: "/remains/01/main.jpg",
+    path: "/remains-catalog",
+  });
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
