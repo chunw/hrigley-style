@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ProductGrid from "@/components/ProductGrid";
+import AboutSection from "@/components/AboutSection";
 import Footer from "@/components/Footer";
 import { SITE_URL } from "@/lib/constants";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -134,6 +135,8 @@ const Useful = () => {
           </div>
         </div>
       </section>
+
+      <AboutSection />
 
       <Footer />
     </div>
