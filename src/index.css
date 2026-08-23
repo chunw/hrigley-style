@@ -365,7 +365,6 @@ All colors MUST be HSL.
    unlike the always-dark .cargo-hero-adaptive homepage hero above. */
 .cargo-hero-theme-aware {
   background: hsl(var(--background));
-  min-height: auto;
   padding-top: 2rem;
 }
 
@@ -580,6 +579,20 @@ All colors MUST be HSL.
 
 .hero-message-card-tight {
   margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  background: hsl(0 0% 100% / 0.9);
+}
+
+.hero-message-card-bottom-wrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2rem;
+  z-index: 1;
+  display: flex;
+  justify-content: flex-start;
+  padding: 0 1rem;
+  padding-left: 14%;
 }
 
 .hero-dialog-title {
@@ -591,6 +604,14 @@ All colors MUST be HSL.
 .hero-dialog-sub {
   margin: 0 0 0.75rem 0;
   color: rgba(17, 17, 17, 0.7);
+}
+
+.hero-etsy-link {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 2;
+  font-size: 0.85rem;
 }
 
 .hero-dialog-btn {

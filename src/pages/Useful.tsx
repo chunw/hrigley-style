@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import { SITE_URL } from "@/lib/constants";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePageMeta } from "@/hooks/usePageMeta";
-import usefulBg from "@/assets/slightlyusefulobject_bg.gif";
+import usefulBg from "@/assets/hands_clay_objects_clean_skin.jpg";
 
 const Useful = () => {
   const { lang, t } = useLanguage();
@@ -18,11 +18,11 @@ const Useful = () => {
   usePageMeta({
     title: "Handmade & One of a Kind",
     description: "All the good stuff created and sold by Chun Wang — original paintings, photography prints, ceramics, and handmade objects.",
-    path: "/useful",
+    path: "/slightlyusefulobject",
   });
 
   // The initial page load's native scroll-to-hash happens before the SPA finishes
-  // rendering #products, so deep links like /useful#products need a manual scroll on mount.
+  // rendering #products, so deep links like /slightlyusefulobject#products need a manual scroll on mount.
   useEffect(() => {
     if (location.hash !== "#products") return;
     document.getElementById("products")?.scrollIntoView();
@@ -40,7 +40,7 @@ const Useful = () => {
           </>
         }
         bordered
-        logoSrc="/1%20logo.jpg"
+        logoSrc="/1%20logo.png"
         titleBlack
         bgImageSrc={usefulBg}
         hideTitle

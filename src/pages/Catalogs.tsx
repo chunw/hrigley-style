@@ -9,7 +9,7 @@ import { usePageMeta } from "@/hooks/usePageMeta";
 
 const CATALOGS = [
   {
-    to: "/useful",
+    to: "/slightlyusefulobject",
     images: [
       new URL("../assets/products/spikedcupcakechoker/choker-worn.webp", import.meta.url).href,
       new URL("../assets/products/spikedcupcakechoker/choker-held.webp", import.meta.url).href,

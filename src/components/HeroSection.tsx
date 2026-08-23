@@ -1,5 +1,55 @@
-import { ReactNode } from "react";
+import { ReactNode, useRef, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+
+const DRAG_THRESHOLD = 4;
+
+// Lets the visitor drag the dialog card around the hero photo. Movement below
+// DRAG_THRESHOLD doesn't count as a drag, so clicking the card's links still works.
+const useDraggable = () => {
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const drag = useRef<{ startX: number; startY: number; origX: number; origY: number; moved: boolean } | null>(null);
+  // Set true right when a drag ends; consumed (and cleared) by the very next click,
+  // so it never lingers to swallow an unrelated later click.
+  const justDragged = useRef(false);
+
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    drag.current = { startX: e.clientX, startY: e.clientY, origX: offset.x, origY: offset.y, moved: false };
+  };
+
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!drag.current) return;
+    const dx = e.clientX - drag.current.startX;
+    const dy = e.clientY - drag.current.startY;
+    if (!drag.current.moved && Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
+    if (!drag.current.moved) {
+      // Capture only once a real drag starts — capturing on every pointerdown would
+      // retarget the resulting click event to this div, breaking the anchor's own clicks.
+      (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
+    }
+    drag.current.moved = true;
+    setOffset({ x: drag.current.origX + dx, y: drag.current.origY + dy });
+  };
+
+  const onPointerUp = () => {
+    justDragged.current = !!drag.current?.moved;
+    drag.current = null;
+  };
+
+  const onClickCapture = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!justDragged.current) return;
+    justDragged.current = false;
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  return {
+    style: { transform: `translate(${offset.x}px, ${offset.y}px)` },
+    onPointerDown,
+    onPointerMove,
+    onPointerUp,
+    onClickCapture,
+  };
+};
 
 interface HeroSectionProps {
   titleOverride?: ReactNode;
@@ -30,6 +80,7 @@ const HeroSection = ({
   hideAboutLink = false,
 }: HeroSectionProps = {}) => {
   const { t, lang } = useLanguage();
+  const draggable = useDraggable();
 
   return (
     <section className={`cargo-hero ${logoSrc ? "cargo-hero-theme-aware" : "cargo-hero-adaptive"} relative ${bordered ? "border-[20px] border-red-600" : ""} ${yellowBackground ? "!bg-yellow-400" : ""}`}>
@@ -44,13 +95,6 @@ const HeroSection = ({
         </div>
       )}
       <div className="cargo-hero-inner">
-        {logoSrc && (
-          <img
-            src={logoSrc}
-            alt="Slightly Useful Object logo"
-            className="mx-auto mb-0 w-96 h-96 object-contain"
-          />
-        )}
         {!hideTitle && (
           <h1 className={`shop-title cargo-hero-title ${lang === "en" ? "gloria-title" : ""} ${titleBlack ? "!text-black" : ""}`}>
             {titleOverride ? (
@@ -83,18 +127,58 @@ const HeroSection = ({
           </nav>
         )}
 
-        <div className={`hero-message-card ${logoSrc ? "hero-message-card-tight" : ""}`}>
-          <h2 className="hero-dialog-title">{t.hero.dialogTitle}</h2>
-          <p className="hero-dialog-sub font-helvetica">
-            {t.hero.createdExclusivelyBy}{" "}
-            <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
-              <span className="text-primary">chun wang</span>
-            </a>
-            {t.hero.forImaginativeCollectors}
-          </p>
-          <a className="hero-dialog-btn" href="#products">{t.hero.shopCta}</a>
-        </div>
+        {!logoSrc && (
+          <div className="hero-message-card">
+            <h2 className="hero-dialog-title">{t.hero.dialogTitle}</h2>
+            <p className="hero-dialog-sub font-helvetica">
+              {t.hero.createdExclusivelyBy}{" "}
+              <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
+                <span className="text-primary">chun wang</span>
+              </a>
+              {t.hero.forImaginativeCollectors}
+            </p>
+            <a className="hero-dialog-btn" href="#products">{t.hero.shopCta}</a>
+          </div>
+        )}
       </div>
+
+      {logoSrc && (
+        <div className="hero-message-card-bottom-wrap">
+          <div
+            className="hero-message-card hero-message-card-tight cursor-grab active:cursor-grabbing touch-none select-none"
+            style={draggable.style}
+            onPointerDown={draggable.onPointerDown}
+            onPointerMove={draggable.onPointerMove}
+            onPointerUp={draggable.onPointerUp}
+            onClickCapture={draggable.onClickCapture}
+          >
+            <img
+              src={logoSrc}
+              alt="Slightly Useful Object logo"
+              draggable={false}
+              className="mx-auto mb-1 w-[336px] h-[336px] object-contain"
+            />
+            <h2 className="hero-dialog-title">{t.hero.dialogTitle}</h2>
+            <p className="hero-dialog-sub font-helvetica">
+              {t.hero.createdExclusivelyBy}{" "}
+              <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
+                <span className="text-primary">chun wang</span>
+              </a>
+              {t.hero.forImaginativeCollectors}
+            </p>
+            <a className="hero-dialog-btn" href="#products">{t.hero.shopCta}</a>
+          </div>
+        </div>
+      )}
+
+      <a
+        href="https://www.etsy.com/shop/SlightlyUsefulObject"
+        target="_blank"
+        rel="noreferrer"
+        className="cargo-link hero-etsy-link"
+      >
+        also on Etsy
+      </a>
     </section>
   );
 };
