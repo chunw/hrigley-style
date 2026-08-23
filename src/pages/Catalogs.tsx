@@ -11,8 +11,8 @@ const CATALOGS = [
   {
     to: "/useful",
     images: [
-      new URL("../assets/products/book/book-covers.jpg", import.meta.url).href,
-      new URL("../assets/products/binder/main.jpg", import.meta.url).href,
+      new URL("../assets/products/spikedcupcakechoker/choker-worn.webp", import.meta.url).href,
+      new URL("../assets/products/spikedcupcakechoker/choker-held.webp", import.meta.url).href,
     ],
     labelKey: "usefulCatalog" as const,
   },
