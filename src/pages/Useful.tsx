@@ -41,6 +41,9 @@ const Useful = () => {
         bordered
         logoSrc="/1%20logo.jpg"
         titleBlack
+        hideBgImage
+        hideTitle
+        hideAboutLink
       />
       <section id="products">
         <ProductGrid

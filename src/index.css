@@ -15,7 +15,7 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 48 45% 95%;
     --foreground: 0 0% 0%;
 
     --card: 0 0% 100%;
@@ -281,42 +281,23 @@ All colors MUST be HSL.
   background: #000;
 }
 
-/* Homepage hero (HeroSection component): unlike the always-dark .cargo-hero default
-   above (used as-is on About), this one follows the site-wide light/dark toggle so the
-   homepage shows a white backdrop in light mode instead of the dark About-style hero. */
+/* Homepage hero (HeroSection component): always styled dark like the About-style
+   .cargo-hero default, regardless of the site-wide light/dark toggle. */
 .cargo-hero-adaptive {
-  background: hsl(var(--background));
-}
-
-.theme-dark .cargo-hero-adaptive {
   background: #000;
 }
 
 .cargo-hero-adaptive .cargo-hero-overlay {
-  background: transparent;
-}
-
-.theme-dark .cargo-hero-adaptive .cargo-hero-overlay {
   background: rgba(0, 0, 0, 0.5);
 }
 
 .cargo-hero-adaptive .cargo-hero-description,
 .cargo-hero-adaptive .cargo-hero-byline {
-  color: hsl(var(--muted-foreground));
-  text-shadow: none;
-}
-
-.theme-dark .cargo-hero-adaptive .cargo-hero-description,
-.theme-dark .cargo-hero-adaptive .cargo-hero-byline {
   color: rgba(255, 255, 255, 0.85);
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
 .cargo-hero-adaptive .cargo-link {
-  text-shadow: none;
-}
-
-.theme-dark .cargo-hero-adaptive .cargo-link {
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
@@ -340,8 +321,9 @@ All colors MUST be HSL.
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Hidden in light mode — the photo is designed against the always-dark .cargo-hero
-     backdrop above and doesn't suit the light theme; shown only once .theme-dark is on. */
+  /* Hidden by default — the photo is designed against a dark backdrop and doesn't suit
+     the light theme; shown once .theme-dark is on, or always on the homepage's hero
+     (see .cargo-hero-adaptive below), which is dark-styled regardless of site theme. */
   display: none;
 }
 
@@ -349,10 +331,13 @@ All colors MUST be HSL.
   display: block;
 }
 
-/* Homepage hero brand lines ("Chun Wang" / "Studio") — white against the dark-mode photo
-   backdrop; light mode has no backdrop image (see .cargo-hero-bg-img above), so it keeps
-   the default .cargo-hero-title primary color instead of going invisible on white. */
-.theme-dark .hero-title-brand {
+.cargo-hero-adaptive .cargo-hero-bg-img {
+  display: block;
+}
+
+/* Homepage hero brand lines ("Chun Wang" / "Studio") — always white, since the homepage
+   hero is dark-styled regardless of the site-wide light/dark toggle. */
+.cargo-hero-adaptive .hero-title-brand {
   color: #fff;
 }
 
@@ -365,9 +350,45 @@ All colors MUST be HSL.
   margin-top: 0.25em;
 }
 
-.theme-dark .cargo-hero-adaptive .cargo-link {
+.cargo-hero-adaptive .cargo-link {
   color: #fff;
   border-bottom-color: #fff;
+}
+
+/* Useful page hero (HeroSection with logoSrc): follows the site-wide light/dark toggle,
+   unlike the always-dark .cargo-hero-adaptive homepage hero above. */
+.cargo-hero-theme-aware {
+  background: hsl(var(--background));
+}
+
+.theme-dark .cargo-hero-theme-aware {
+  background: #000;
+}
+
+.cargo-hero-theme-aware .cargo-hero-description,
+.cargo-hero-theme-aware .cargo-hero-byline {
+  color: hsl(var(--muted-foreground));
+  text-shadow: none;
+}
+
+.theme-dark .cargo-hero-theme-aware .cargo-hero-description,
+.theme-dark .cargo-hero-theme-aware .cargo-hero-byline {
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.cargo-hero-theme-aware .cargo-link {
+  text-shadow: none;
+}
+
+.theme-dark .cargo-hero-theme-aware .cargo-link {
+  color: #fff;
+  border-bottom-color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.theme-dark .cargo-hero-theme-aware .hero-title-brand {
+  color: #fff;
 }
 
 .cargo-hero-overlay {
@@ -547,6 +568,10 @@ All colors MUST be HSL.
   min-width: 260px;
   max-width: 420px;
   margin-top: 4rem;
+}
+
+.hero-message-card-tight {
+  margin-top: 0.5rem;
 }
 
 .hero-dialog-title {

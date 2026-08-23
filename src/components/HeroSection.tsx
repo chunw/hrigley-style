@@ -8,45 +8,62 @@ interface HeroSectionProps {
   aboutLinkBlack?: boolean;
   titleBlack?: boolean;
   yellowBackground?: boolean;
+  hideBgImage?: boolean;
+  hideTitle?: boolean;
+  hideAboutLink?: boolean;
 }
 
-const HeroSection = ({ titleOverride, bordered = false, logoSrc, aboutLinkBlack = false, titleBlack = false, yellowBackground = false }: HeroSectionProps = {}) => {
+const HeroSection = ({
+  titleOverride,
+  bordered = false,
+  logoSrc,
+  aboutLinkBlack = false,
+  titleBlack = false,
+  yellowBackground = false,
+  hideBgImage = false,
+  hideTitle = false,
+  hideAboutLink = false,
+}: HeroSectionProps = {}) => {
   const { t, lang } = useLanguage();
 
   return (
-    <section className={`cargo-hero cargo-hero-adaptive relative ${bordered ? "border-[20px] border-red-600" : ""} ${yellowBackground ? "!bg-yellow-400" : ""}`}>
-      <div className="cargo-hero-bg" aria-hidden="true">
-        <img
-          src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/af3f4d90-9ec9-4349-93f9-b47c33833106_rwc_0x98x1200x938x1200.gif?h=4a7cdfb5fee81de134dd238b6c03c921"
-          alt=""
-          className="cargo-hero-bg-img"
-        />
-        <div className="cargo-hero-overlay" />
-      </div>
+    <section className={`cargo-hero ${logoSrc ? "cargo-hero-theme-aware" : "cargo-hero-adaptive"} relative ${bordered ? "border-[20px] border-red-600" : ""} ${yellowBackground ? "!bg-yellow-400" : ""}`}>
+      {!hideBgImage && (
+        <div className="cargo-hero-bg" aria-hidden="true">
+          <img
+            src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/af3f4d90-9ec9-4349-93f9-b47c33833106_rwc_0x98x1200x938x1200.gif?h=4a7cdfb5fee81de134dd238b6c03c921"
+            alt=""
+            className="cargo-hero-bg-img"
+          />
+          <div className="cargo-hero-overlay" />
+        </div>
+      )}
       <div className="cargo-hero-inner">
         {logoSrc && (
           <img
             src={logoSrc}
             alt="Slightly Useful Object logo"
-            className="mx-auto mb-6 w-96 h-96 object-contain"
+            className="mx-auto mb-0 w-96 h-96 object-contain"
           />
         )}
-        <h1 className={`shop-title cargo-hero-title ${lang === "en" ? "gloria-title" : ""} ${titleBlack ? "!text-black" : ""}`}>
-          {titleOverride ? (
-            <span className="hero-title-brand block">{titleOverride}</span>
-          ) : (
-            <>
-              <span className="hero-title-brand block">{t.shopTitle.line1}</span>
-              <span className="hero-title-brand hero-title-sub block">{t.shopTitle.line2}</span>
-              <span className={`block hero-title-shop ${titleBlack ? "" : "text-primary"}`}>{t.shopTitle.line3}</span>
-            </>
-          )}
-        </h1>
+        {!hideTitle && (
+          <h1 className={`shop-title cargo-hero-title ${lang === "en" ? "gloria-title" : ""} ${titleBlack ? "!text-black" : ""}`}>
+            {titleOverride ? (
+              <span className="hero-title-brand block">{titleOverride}</span>
+            ) : (
+              <>
+                <span className="hero-title-brand block">{t.shopTitle.line1}</span>
+                <span className="hero-title-brand hero-title-sub block">{t.shopTitle.line2}</span>
+                <span className={`block hero-title-shop ${titleBlack ? "" : "text-primary"}`}>{t.shopTitle.line3}</span>
+              </>
+            )}
+          </h1>
+        )}
 
         <p className="font-helvetica cargo-hero-description">
           {t.hero.description}
         </p>
-        
+
         <p className="font-helvetica cargo-hero-byline">
           {/* {t.hero.createdExclusivelyBy}{" "} */}
           {/* <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
@@ -55,11 +72,13 @@ const HeroSection = ({ titleOverride, bordered = false, logoSrc, aboutLinkBlack 
           {t.hero.forImaginativeCollectors} */}
         </p>
 
-        <nav className="cargo-hero-links" aria-label="hero links">
-          <a href="/about" className={`cargo-link ${aboutLinkBlack ? "!text-black !border-black" : ""}`}>{t.index.ctaAbout}</a>
-        </nav>
+        {!hideAboutLink && (
+          <nav className="cargo-hero-links" aria-label="hero links">
+            <a href="/about" className={`cargo-link ${aboutLinkBlack ? "!text-black !border-black" : ""}`}>{t.index.ctaAbout}</a>
+          </nav>
+        )}
 
-        <div className="hero-message-card">
+        <div className={`hero-message-card ${logoSrc ? "hero-message-card-tight" : ""}`}>
           <h2 className="hero-dialog-title">{t.hero.dialogTitle}</h2>
           <p className="hero-dialog-sub font-helvetica">
             {t.hero.createdExclusivelyBy}{" "}

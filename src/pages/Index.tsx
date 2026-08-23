@@ -40,7 +40,7 @@ const Index = () => {
     <div className="relative min-h-screen bg-background">
       
       <Header />
-      <HeroSection />
+      <HeroSection bordered />
       <section id="products">
         <ProductGrid
           searchQuery={searchQuery}
