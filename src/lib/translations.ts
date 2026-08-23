@@ -49,6 +49,8 @@ export const translations = {
       showAllItems: "Show All Items",
       showHiddenOnly: "Show Hidden Items Only",
       filters: "Filters",
+      categoryHeading: "Category",
+      collectionsHeading: "Collections",
     },
     productDetails: {
       loading: "Loading...",
@@ -149,6 +151,8 @@ export const translations = {
       showAllItems: "显示全部作品",
       showHiddenOnly: "仅显示隐藏作品",
       filters: "筛选",
+      categoryHeading: "分类",
+      collectionsHeading: "系列",
     },
     productDetails: {
       loading: "加载中……",

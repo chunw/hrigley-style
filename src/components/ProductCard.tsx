@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { getProductCategories, getProductCategoriesZh } from "@/lib/products";
+import { getProductCategories, getProductCategoriesZh, getProductCollections, getProductCollectionsZh } from "@/lib/products";
 
 interface ProductCardProps {
   id: string;
@@ -14,10 +14,12 @@ interface ProductCardProps {
   price: number;
   currency: string;
   image_url: string | null;
-  category: string | null;
+  category?: string | null;
   category_zh?: string | null;
   categories?: string[];
   categories_zh?: string[];
+  collections?: string[];
+  collections_zh?: string[];
   paylink: string;
   detailPath?: string;
   priceLabel?: string;
@@ -29,7 +31,7 @@ interface ProductCardProps {
   soldOut?: boolean;
 }
 
-const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, priceLabel, currency, image_url, category, category_zh, categories, categories_zh, paylink, detailPath, hideOrderButton, hideShippingLabel, highlightQuery, isSearchHighlighted, artboxPrintCount, soldOut }: ProductCardProps) => {
+const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, priceLabel, currency, image_url, category, category_zh, categories, categories_zh, collections, collections_zh, paylink, detailPath, hideOrderButton, hideShippingLabel, highlightQuery, isSearchHighlighted, artboxPrintCount, soldOut }: ProductCardProps) => {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
 
@@ -39,7 +41,14 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
   const displayCategoryList = zh
     ? getProductCategoriesZh({ category_zh, categories_zh })
     : getProductCategories({ category, categories });
-  const displayCategory = displayCategoryList.length > 0 ? displayCategoryList.join(" · ") : null;
+  // Cards without a functional category (e.g. Slightly Useful Object items) fall back
+  // to showing their collection instead, so the caption line is never empty.
+  const displayCollectionList = zh
+    ? getProductCollectionsZh({ id, collections_zh })
+    : getProductCollections({ id, collections });
+  const displayCategory = displayCategoryList.length > 0
+    ? displayCategoryList.join(" · ")
+    : (displayCollectionList.length > 0 ? displayCollectionList.join(" · ") : null);
 
   const renderHighlightedText = (text: string) => {
     if (!highlightQuery?.trim()) {

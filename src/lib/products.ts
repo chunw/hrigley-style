@@ -33,6 +33,19 @@ export function getProductCategoriesZh(product: { category_zh?: string | null; c
   return product.category_zh ? [product.category_zh] : [];
 }
 
+// A collection tags a product as part of a named creative series (e.g. "21 Spirit",
+// "Slightly Useful Object") rather than a functional category (e.g. "Accessories").
+// Products can belong to zero, one, or several collections. `id` is required (though
+// unused) purely so TS doesn't treat this as an all-optional "weak type" — most product
+// sources don't have a `collections` field at all, which a weak type would reject outright.
+export function getProductCollections(product: { id: unknown; collections?: string[] }): string[] {
+  return product.collections ?? [];
+}
+
+export function getProductCollectionsZh(product: { id: unknown; collections_zh?: string[] }): string[] {
+  return product.collections_zh ?? [];
+}
+
 export const products = [
 
   {
@@ -90,6 +103,8 @@ Dimension: 35 x 35 cm</p>
     printInCatalog: true,
     showInStorefront: true,
     category: "Accessories",
+    collections: ["Remains"],
+    collections_zh: ["遗迹"],
     created_at: new Date().toISOString(),
     paylink: 'https://www.paypal.com/ncp/payment/WFPH39Q2FQJHU'
   },
@@ -148,6 +163,8 @@ One size.</p>
     printInCatalog: true,
     showInStorefront: true,
     category: "Stationery",
+    collections: ["Remains"],
+    collections_zh: ["遗迹"],
     created_at: new Date().toISOString(),
     paylink: 'https://www.paypal.com/ncp/payment/HV7FLGWWJDRYC'
   },
@@ -178,6 +195,8 @@ Dimension: 35 x 35 cm</p>
     printInCatalog: true,
     showInStorefront: true,
     category: "Home Goods",
+    collections: ["Remains"],
+    collections_zh: ["遗迹"],
     created_at: new Date().toISOString(),
     paylink: 'https://www.paypal.com/ncp/payment/RGB545X9XJW6G'
   },
@@ -193,23 +212,51 @@ Dimension: 35 x 35 cm</p>
     category_zh: "原创艺术",
     edition_info_zh: "",
     price: 600,
+    printInCatalog: false,
+    showInStorefront: true,
     currency: "USD",
     description: "Set of 2 original oil paintings. Oil and used smartphone on canvas.",
     detailed_description_html: `<p><i>Black Mirror</i> — Oil and Smartphone on canvas.<br>
 Large: 12″ × 36″ &nbsp;|&nbsp; Small: 9″ × 12″<br>
 Set of 2 original paintings.</p>`.trim(),
-    dimensions: `Large: 12″ × 36″ · Small: 9″ × 12″`,
-    dimensions_zh: `大幅：12″ × 36″ · 小幅：9″ × 12″`,
+    // dimensions: `Large: 12″ × 36″ · Small: 9″ × 12″`,
+    // dimensions_zh: `大幅：12″ × 36″ · 小幅：9″ × 12″`,
     edition_info: null,
     edition_size: null,
     alt_text: "Black Mirrors — set of 2 original paintings",
     image_url: new URL("../assets/products/blackmirrors/Black Mirror 4.jpg", import.meta.url).href,
     is_active: true,
-    printInCatalog: false,
-    showInStorefront: false,
     category: "Original Art",
     created_at: new Date().toISOString(),
-    paylink: ""
+    paylink: "https://www.paypal.com/ncp/links/2XJEQW5UZ3NRU"
+  },
+
+  {
+    id: "residuals-4-original",
+    title: "Residuals #4",
+    name: "Residuals #4",
+    title_zh: "残留 其四",
+    description_zh: "《残留》系列原作，纸本水彩，已装裱。",
+    detailed_description_html_zh: `<p>《残留》系列的原作——纸本水彩，已装裱，随时可挂。</p>`,
+    category_zh: "原创艺术",
+    categories_zh: ["原创艺术", FRAMED_ART_CATEGORY_ZH],
+    edition_info_zh: "",
+    price: 100,
+    currency: "USD",
+    description: "Original watercolor from the Residuals series, framed and ready to hang.",
+    detailed_description_html: `<p>The original watercolor behind <i>Residuals #4</i> — watercolor on paper, framed and ready to hang.</p>`,
+    dimensions: "",
+    edition_info: null,
+    edition_size: null,
+    alt_text: "Residuals #4 — original watercolor, framed",
+    image_url: "/watercolors/07/main.jpg",
+    is_active: true,
+    printInCatalog: false,
+    showInStorefront: true,
+    category: "Original Art",
+    categories: ["Original Art", FRAMED_ART_CATEGORY],
+    created_at: new Date().toISOString(),
+    paylink: "https://www.paypal.com/ncp/payment/T259S58429CAL"
   },
 
   {
@@ -537,6 +584,8 @@ Set of 2 original paintings.</p>`.trim(),
     printInCatalog: false,
     showInStorefront: true,
     category: "Fine Art Prints",
+    collections: ["Remains"],
+    collections_zh: ["遗迹"],
     created_at: new Date().toISOString(),
     paylink: ""
   },
@@ -576,7 +625,7 @@ Set of 2 original paintings.</p>`.trim(),
     title_zh: "尖钉蛋糕挂坠项圈",
     description_zh: "一枚甜品挂坠，垂在满是尖钉的项圈上——甜蜜里带着警告。",
     detailed_description_html_zh: `<p>粘土甜品，手工捏塑出白色奶油的纹理，缀满小小的红色浆果，垂坠在一条布满银色尖钉的链条上。</p><p>不锈钢链条，可调节延长链，聚合物粘土挂坠。颈围尺寸可调节。</p>`,
-    category_zh: "有点用的东西",
+    collections_zh: ["有点用的东西"],
     edition_info_zh: "",
     price: 40,
     currency: "USD",
@@ -590,7 +639,7 @@ Set of 2 original paintings.</p>`.trim(),
     is_active: true,
     printInCatalog: false,
     showInStorefront: true,
-    category: "Slightly Useful Object",
+    collections: ["Slightly Useful Object"],
     created_at: new Date().toISOString(),
     paylink: ""
   },
@@ -603,7 +652,7 @@ Set of 2 original paintings.</p>`.trim(),
     title_zh: "煎蛋培根早餐磁贴",
     description_zh: "一片培根、一颗煎蛋",
     detailed_description_html_zh: `<p> </p><p>背面装有磁铁，可贴在冰箱、白板或任何金属表面，用来固定照片、便签或购物清单。</p>`,
-    category_zh: "有点用的东西",
+    collections_zh: ["有点用的东西"],
     edition_info_zh: "",
     price: 15,
     currency: "USD",
@@ -617,7 +666,7 @@ Set of 2 original paintings.</p>`.trim(),
     is_active: true,
     printInCatalog: false,
     showInStorefront: true,
-    category: "Slightly Useful Object",
+    collections: ["Slightly Useful Object"],
     created_at: new Date().toISOString(),
     paylink: ""
   },
@@ -630,7 +679,7 @@ Set of 2 original paintings.</p>`.trim(),
     title_zh: "草莓奶油蛋糕挂坠",
     description_zh: "一块奶油蛋糕挂坠，顶着一颗鲜红草莓。甜而不腻，随身携带。",
     detailed_description_html_zh: `<p>一枚手工雕塑的迷你甜品挂坠。</p><p>顶部装有金属链圈，可挂在项链、钥匙圈或包袋上。</p>`,
-    category_zh: "有点用的东西",
+    collections_zh: ["有点用的东西"],
     edition_info_zh: "",
     price: 28,
     currency: "USD",
@@ -644,7 +693,7 @@ Set of 2 original paintings.</p>`.trim(),
     is_active: true,
     printInCatalog: false,
     showInStorefront: true,
-    category: "Slightly Useful Object",
+    collections: ["Slightly Useful Object"],
     created_at: new Date().toISOString(),
     paylink: ""
   },
@@ -657,7 +706,7 @@ Set of 2 original paintings.</p>`.trim(),
     title_zh: "岩石项链",
     description_zh: "一枚粘土岩石挂坠，缀满糖果色小宝石，垂坠在链条上。",
     detailed_description_html_zh: `<p>一枚手工雕塑的粘土挂坠，形似淡紫色矿石，缀满彩色糖果般的小颗粒——一半矿石，一半糖果。</p><p>垂坠在可调节长度的项链上，非常轻便。</p>`,
-    category_zh: "有点用的东西",
+    collections_zh: ["有点用的东西"],
     edition_info_zh: "",
     price: 38,
     currency: "USD",
@@ -671,7 +720,7 @@ Set of 2 original paintings.</p>`.trim(),
     is_active: true,
     printInCatalog: false,
     showInStorefront: true,
-    category: "Slightly Useful Object",
+    collections: ["Slightly Useful Object"],
     created_at: new Date().toISOString(),
     paylink: ""
   },
@@ -684,7 +733,7 @@ Set of 2 original paintings.</p>`.trim(),
     title_zh: "蛋糕磁贴三件套",
     description_zh: "三块迷你蛋糕磁贴，紫、粉、黄各一块，缀满糖果色小颗粒。",
     detailed_description_html_zh: `<p>一组三枚手工雕塑的迷你蛋糕磁贴：淡紫、粉红与柠檬黄各一块，表面点缀着彩色糖粒与巧克力碎屑，像刚从蛋糕店橱窗里切下来的一样。</p><p>背面装有磁铁，可贴在冰箱、白板或任何金属表面，用来固定照片、便签或购物清单。三件一组。</p>`,
-    category_zh: "有点用的东西",
+    collections_zh: ["有点用的东西"],
     edition_info_zh: "",
     price: 15,
     currency: "USD",
@@ -698,7 +747,7 @@ Set of 2 original paintings.</p>`.trim(),
     is_active: true,
     printInCatalog: false,
     showInStorefront: true,
-    category: "Slightly Useful Object",
+    collections: ["Slightly Useful Object"],
     created_at: new Date().toISOString(),
     paylink: ""
   },

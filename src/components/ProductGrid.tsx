@@ -3,10 +3,15 @@ import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import ProductCard from "./ProductCard";
 import { useProducts, getArtboxPrintCount } from "@/hooks/useProducts";
-import { getProductCategories, getProductCategoriesZh } from "@/lib/products";
+import { getProductCategories, getProductCategoriesZh, getProductCollections, getProductCollectionsZh } from "@/lib/products";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+
+// Fixed display order for the Collections sidebar section — deliberately curated
+// rather than derived from product array order. Anything not listed here falls in
+// after these, in whatever order it's first encountered.
+const COLLECTION_ORDER = ["Slightly Useful Object", "Remains"];
 
 interface ProductGridProps {
   searchQuery?: string;
@@ -28,36 +33,58 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   const [filtersOpen, setFiltersOpen] = useState(false);
   const { data: products, isLoading, error } = useProducts(true);
   const firstMatchedCardRef = useRef<HTMLDivElement | null>(null);
+  const gridTopRef = useRef<HTMLDivElement | null>(null);
+
+  const handleFilterSelect = (value: string) => {
+    setSelectedCategory(value);
+    gridTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
   const normalizedSearchQuery = searchQuery?.trim() || "";
   const hasActiveSearch = normalizedSearchQuery.length > 0;
 
-  // Unique categories (keyed by English value, displayed in current language).
-  // A product can belong to multiple categories, so membership is an "includes" check.
+  // A product's filter tags are its categories (functional type, e.g. "Accessories")
+  // plus its collections (named series, e.g. "21 Spirit"). Both are "includes" checks
+  // since a product can belong to several of either, and they share one selection state
+  // since their label strings live in separate namespaces.
   const visibleProducts = products?.filter((product) => {
     const storefrontMatch = filterMode === "hidden" ? product.showInStorefront === false : (filterMode === "all" || product.showInStorefront !== false);
-    const lockedCategoryMatch = !lockedCategory || getProductCategories(product).includes(lockedCategory);
+    const lockedCategoryMatch = !lockedCategory || getProductCategories(product).includes(lockedCategory) || getProductCollections(product).includes(lockedCategory);
     return storefrontMatch && lockedCategoryMatch;
   });
   const categories = ["ALL", ...Array.from(new Set(visibleProducts?.flatMap(p => getProductCategories(p)) || []))];
-  const categoryCount = (cat: string) => {
-    if (cat === "ALL") return visibleProducts?.length ?? 0;
-    return visibleProducts?.filter(p => getProductCategories(p).includes(cat)).length ?? 0;
+  const collections = Array.from(new Set(visibleProducts?.flatMap(p => getProductCollections(p)) || [])).sort((a, b) => {
+    const indexA = COLLECTION_ORDER.indexOf(a);
+    const indexB = COLLECTION_ORDER.indexOf(b);
+    if (indexA === -1 && indexB === -1) return 0;
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    return indexA - indexB;
+  });
+  const tagCount = (tag: string, getTags: (p: typeof visibleProducts[number]) => string[]) => {
+    if (tag === "ALL") return visibleProducts?.length ?? 0;
+    return visibleProducts?.filter(p => getTags(p).includes(tag)).length ?? 0;
   };
-  const categoryLabel = (cat: string) => {
-    const count = categoryCount(cat);
+  const tagLabel = (
+    tag: string,
+    getTags: (p: typeof visibleProducts[number]) => string[],
+    getTagsZh: (p: typeof visibleProducts[number]) => string[],
+    count: number,
+  ) => {
     const label = (() => {
-      if (cat === "ALL") return t.productGrid.categoryAll;
+      if (tag === "ALL") return t.productGrid.categoryAll;
       if (zh) {
         for (const product of visibleProducts || []) {
-          const index = getProductCategories(product).indexOf(cat);
-          if (index !== -1) return getProductCategoriesZh(product)[index] || cat;
+          const index = getTags(product).indexOf(tag);
+          if (index !== -1) return getTagsZh(product)[index] || tag;
         }
-        return cat;
+        return tag;
       }
-      return cat;
+      return tag;
     })();
     return <>{label} <span className="font-helvetica">({count})</span></>;
   };
+  const categoryLabel = (cat: string) => tagLabel(cat, getProductCategories, getProductCategoriesZh, tagCount(cat, getProductCategories));
+  const collectionLabel = (col: string) => tagLabel(col, getProductCollections, getProductCollectionsZh, tagCount(col, getProductCollections));
 
   const buildProductSearchText = (product: Record<string, unknown>) => {
     return Object.values(product)
@@ -67,7 +94,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   };
 
   const filteredProducts = visibleProducts?.filter(product => {
-    const categoryMatch = selectedCategory === "ALL" || getProductCategories(product).includes(selectedCategory);
+    const categoryMatch = selectedCategory === "ALL" || getProductCategories(product).includes(selectedCategory) || getProductCollections(product).includes(selectedCategory);
     const searchText = buildProductSearchText(product as Record<string, unknown>);
     const searchMatch = !normalizedSearchQuery || searchText.includes(normalizedSearchQuery.toLowerCase());
     return categoryMatch && searchMatch;
@@ -120,7 +147,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   return (
     <section id="shop" className="bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-xl mx-auto pt-8 mb-8">
+        <div ref={gridTopRef} className="max-w-xl mx-auto pt-8 mb-8">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -154,12 +181,17 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
                 <ChevronDown className={`h-4 w-4 transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
               </button>
 
-              <div className={`${filtersOpen ? "block" : "hidden"} lg:block mt-4 lg:mt-0`}>
+              <div className={`${filtersOpen ? "block" : "hidden"} lg:block mt-4 lg:mt-0 space-y-6`}>
                 <nav className="flex flex-col items-start gap-3">
+                  {collections.length > 0 && (
+                    <p className="sans-label text-xs uppercase tracking-widest text-muted-foreground">
+                      {t.productGrid.categoryHeading}
+                    </p>
+                  )}
                   {categories.map((category) => (
                     <button
                       key={category}
-                      onClick={() => setSelectedCategory(category)}
+                      onClick={() => handleFilterSelect(category)}
                       className={`category-label text-sm pb-1 border-b-2 lg:border-b-0 lg:border-l-2 lg:pl-3 transition-colors ${
                         selectedCategory === category
                           ? "border-primary text-primary"
@@ -170,6 +202,27 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
                     </button>
                   ))}
                 </nav>
+
+                {collections.length > 0 && (
+                  <nav className="flex flex-col items-start gap-3">
+                    <p className="sans-label text-xs uppercase tracking-widest text-muted-foreground">
+                      {t.productGrid.collectionsHeading}
+                    </p>
+                    {collections.map((collection) => (
+                      <button
+                        key={collection}
+                        onClick={() => handleFilterSelect(collection)}
+                        className={`category-label text-sm pb-1 border-b-2 lg:border-b-0 lg:border-l-2 lg:pl-3 transition-colors ${
+                          selectedCategory === collection
+                            ? "border-primary text-primary"
+                            : "border-transparent text-foreground hover:border-primary hover:text-primary"
+                        }`}
+                      >
+                        {collectionLabel(collection)}
+                      </button>
+                    ))}
+                  </nav>
+                )}
               </div>
             </aside>
           )}

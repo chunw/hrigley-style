@@ -7,9 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useProductDetails, useProductImages } from "@/hooks/useProductDetails";
 import { shopOrderNavigableItems, getArtboxPrintCount } from "@/hooks/useProducts";
-import { getProductCategories, getProductCategoriesZh } from "@/lib/products";
+import { getProductCategories, getProductCategoriesZh, getProductCollections, getProductCollectionsZh } from "@/lib/products";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import About from "./About";
 import { ZoomableImage } from "@/components/ZoomableImage";
 import { usePageMeta } from "@/hooks/usePageMeta";
 
@@ -121,6 +120,8 @@ const ProductDetails = () => {
   const displayTitle = (zh && product.title_zh) ? product.title_zh : (product.title || product.name);
   const englishCategories = getProductCategories(product);
   const displayCategories = zh ? getProductCategoriesZh(product) : englishCategories;
+  const englishCollections = getProductCollections(product);
+  const displayCollections = zh ? getProductCollectionsZh(product) : englishCollections;
   const displayDescription = (zh && product.description_zh) ? product.description_zh : product.description;
   const displayDetailedHtml = (zh && product.detailed_description_html_zh) ? product.detailed_description_html_zh : product.detailed_description_html;
   const displayEditionInfo = (zh && product.edition_info_zh) ? product.edition_info_zh : product.edition_info;
@@ -204,7 +205,7 @@ const ProductDetails = () => {
               <h1 className="shop-title product-title text-3xl md:text-4xl leading-tight mb-2 mt-4">
                 {displayTitle}
               </h1>
-              {displayCategories.length > 0 && (
+              {(displayCategories.length > 0 || displayCollections.length > 0) && (
                 <div className="flex flex-wrap gap-2 mt-3">
                   {displayCategories.map((label, index) => (
                     <Link key={label} to={`/?category=${encodeURIComponent(englishCategories[index] ?? "")}`}>
@@ -213,10 +214,17 @@ const ProductDetails = () => {
                       </Badge>
                     </Link>
                   ))}
+                  {displayCollections.map((label, index) => (
+                    <Link key={label} to={`/?category=${encodeURIComponent(englishCollections[index] ?? "")}`}>
+                      <Badge variant="outline" className="sans-label text-sm hover:bg-secondary/80 cursor-pointer transition-colors">
+                        {label}
+                      </Badge>
+                    </Link>
+                  ))}
                 </div>
               )}
 
-              {englishCategories.includes("Slightly Useful Object") && (
+              {englishCollections.includes("Slightly Useful Object") && (
                 <p className="text-sm text-muted-foreground font-helvetica mt-3">
                   {t.productDetails.partOfCollectionPrefix}{" "}
                   <Link to="/slightlyusefulobject" className="text-primary font-semibold hover:underline">
@@ -296,7 +304,6 @@ const ProductDetails = () => {
         </div>
       </main>
 
-      <About />
       <Footer />
     </div>
   );

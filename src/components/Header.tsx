@@ -24,15 +24,18 @@ const Header = () => {
           <div className="absolute inset-y-0 right-0 inline-flex items-center gap-8 text-sm font-helvetica">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link
-                  to="/catalogs"
-                  aria-label={t.index.ctaCatalogs}
-                  className={`inline-flex items-center justify-center w-8 h-8 transition-colors hover:text-primary ${controlColor}`}
+                <button
+                  type="button"
+                  onClick={toggleLang}
+                  aria-label="Toggle language"
+                  className={`sans-label transition-colors text-xs px-2 py-1 hover:text-primary ${controlColor}`}
                 >
-                  <BookOpen className="h-4 w-4" />
-                </Link>
+                  {lang === "en" ? "中文" : "EN"}
+                </button>
               </TooltipTrigger>
-              <TooltipContent>{t.index.ctaCatalogs}</TooltipContent>
+              <TooltipContent>
+                {lang === "en" ? "Switch to Chinese" : "Switch to English"}
+              </TooltipContent>
             </Tooltip>
 
             <Tooltip>
@@ -53,18 +56,28 @@ const Header = () => {
 
             <Tooltip>
               <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  onClick={toggleLang}
-                  aria-label="Toggle language"
-                  className={`sans-label transition-colors text-xs px-2 py-1 hover:text-primary ${controlColor}`}
+                <Link
+                  to="/about"
+                  aria-label={t.index.ctaAbout}
+                  className={`inline-flex items-center justify-center w-8 h-8 text-base transition-colors hover:text-primary ${controlColor}`}
                 >
-                  {lang === "en" ? "中文" : "EN"}
-                </button>
+                  👋
+                </Link>
               </TooltipTrigger>
-              <TooltipContent>
-                {lang === "en" ? "Switch to Chinese" : "Switch to English"}
-              </TooltipContent>
+              <TooltipContent>{t.index.ctaAbout}</TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  to="/catalogs"
+                  aria-label={t.index.ctaCatalogs}
+                  className={`inline-flex items-center justify-center w-8 h-8 transition-colors hover:text-primary ${controlColor}`}
+                >
+                  <BookOpen className="h-4 w-4" />
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent>{t.index.ctaCatalogs}</TooltipContent>
             </Tooltip>
 
             <Tooltip>

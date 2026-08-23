@@ -65,6 +65,9 @@ export interface Watercolor {
   paylink?: string;
   framed?: boolean;
   soldOut?: boolean;
+  // When set, the detail page shows one "Various options available" button
+  // linking here instead of a single price — e.g. print vs. framed original.
+  multiOptionsPaylink?: string;
 }
 
 export const PRINT_9X12_PAYLINK = "https://www.paypal.com/ncp/payment/PHRVNL65LDTX2";
@@ -334,8 +337,9 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "",
-    descriptionZh: "",
+    description: `Available as original art (framed) or as 9×12" fine art matte paper print.`,
+    descriptionZh: "可选原作（已装裱）或 9×12 英寸艺术微喷哑光纸印刷版。",
+    multiOptionsPaylink: "https://www.paypal.com/ncp/payment/T259S58429CAL",
   },
 
 {

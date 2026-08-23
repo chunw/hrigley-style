@@ -1,14 +1,22 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import deliveryGif from "@/assets/delivery.gif";
+import aboutPhoto1 from "@/assets/about/about-1.jpg";
+import aboutPhoto3 from "@/assets/about/about-3.jpg";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { usePageMeta } from "@/hooks/usePageMeta";
 
+const aboutPhotos = [
+  { src: aboutPhoto1, caption: "Vending at Popup Gallery, Hotel Alameda High Line, NYC, July 2026" },
+  { src: aboutPhoto3, caption: "Studio Collection, July 2026" },
+];
+
 const About = () => {
   const { t, lang } = useLanguage();
   const { forceDark } = useTheme();
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   usePageMeta({
     title: t.about.title,
@@ -20,6 +28,15 @@ const About = () => {
     forceDark(true);
     return () => forceDark(false);
   }, []);
+
+  useEffect(() => {
+    if (expandedIndex === null) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setExpandedIndex(null);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [expandedIndex]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -63,8 +80,55 @@ const About = () => {
               <a href="/#products" className="handwritten-note-link">{t.about.backToShop}</a>
             </nav>
           </div>
+
+          <div className="about-gallery">
+            {aboutPhotos.map((photo, index) => (
+              <button
+                type="button"
+                className="about-gallery-item"
+                key={photo.src}
+                onClick={() => setExpandedIndex(index)}
+                aria-label={`Expand photo: ${photo.caption}`}
+              >
+                <img
+                  src={photo.src}
+                  alt={photo.caption}
+                  className="about-gallery-img"
+                  loading="lazy"
+                />
+              </button>
+            ))}
+          </div>
         </div>
       </section>
+
+      {expandedIndex !== null && (
+        <div
+          className="about-lightbox"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setExpandedIndex(null)}
+        >
+          <button
+            type="button"
+            className="about-lightbox-close"
+            onClick={() => setExpandedIndex(null)}
+            aria-label="Close"
+          >
+            &times;
+          </button>
+          <figure className="about-lightbox-figure" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={aboutPhotos[expandedIndex].src}
+              alt={aboutPhotos[expandedIndex].caption}
+              className="about-lightbox-img"
+            />
+            <figcaption className="about-lightbox-caption">
+              {aboutPhotos[expandedIndex].caption}
+            </figcaption>
+          </figure>
+        </div>
+      )}
 
       <Footer />
     </div>

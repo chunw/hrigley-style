@@ -103,6 +103,11 @@ const WatercolorDetail = () => {
     window.open(effectivePaylink, "_blank");
   };
 
+  const handleBuyOriginal = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (work?.multiOptionsPaylink) window.open(work.multiOptionsPaylink, "_blank");
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
@@ -199,27 +204,41 @@ const WatercolorDetail = () => {
             </div>
 
             <div className="border-t border-border pt-8 space-y-4">
-              {(() => {
-                const displayPrice = work.price ?? work.printPrice ?? 10;
-                if (displayPrice != null) {
-                  return (
-                    <>
-                      <p className="sans-label text-2xl font-bold">${displayPrice}</p>
-                      <button
-                        onClick={work.soldOut ? undefined : (effectivePaylink ? handleBuyNow : handleInquire)}
-                        disabled={work.soldOut}
-                        className={`sans-label gloria-button-label inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center ${work.soldOut ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-                      >
-                        {work.soldOut ? t.productDetails.soldOut : t.watercolor.buyNow}
-                      </button>
-                      <p className="text-xs text-muted-foreground font-mono">
-                        {t.watercolor.shippingIncluded}
-                      </p>
-                    </>
-                  );
-                }
-                return null;
-              })()}
+              {work.multiOptionsPaylink ? (
+                <>
+                  <button
+                    onClick={handleBuyOriginal}
+                    className="sans-label gloria-button-label inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center cursor-pointer"
+                  >
+                    {lang === "zh" ? "多种选择可选" : "Various options available"}
+                  </button>
+                  <p className="text-xs text-muted-foreground font-mono">
+                    {t.watercolor.shippingIncluded}
+                  </p>
+                </>
+              ) : (
+                (() => {
+                  const displayPrice = work.price ?? work.printPrice ?? 10;
+                  if (displayPrice != null) {
+                    return (
+                      <>
+                        <p className="sans-label text-2xl font-bold">${displayPrice}</p>
+                        <button
+                          onClick={work.soldOut ? undefined : (effectivePaylink ? handleBuyNow : handleInquire)}
+                          disabled={work.soldOut}
+                          className={`sans-label gloria-button-label inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center ${work.soldOut ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                        >
+                          {work.soldOut ? t.productDetails.soldOut : t.watercolor.buyNow}
+                        </button>
+                        <p className="text-xs text-muted-foreground font-mono">
+                          {t.watercolor.shippingIncluded}
+                        </p>
+                      </>
+                    );
+                  }
+                  return null;
+                })()
+              )}
             </div>
           </div>
         </div>
