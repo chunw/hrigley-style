@@ -32,7 +32,12 @@ const Useful = () => {
 
       <Header />
       <HeroSection
-        titleOverride={<>Slightly<br />Useful Object</>}
+        titleOverride={
+          <>
+            <span className="block">Slightly</span>
+            <span className="hero-title-sub block">Useful Object</span>
+          </>
+        }
         bordered
         logoSrc="/1%20logo.jpg"
         titleBlack
