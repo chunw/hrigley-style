@@ -9,9 +9,13 @@ interface HeroSectionProps {
   titleBlack?: boolean;
   yellowBackground?: boolean;
   hideBgImage?: boolean;
+  bgImageSrc?: string;
   hideTitle?: boolean;
   hideAboutLink?: boolean;
 }
+
+const DEFAULT_BG_IMAGE =
+  "https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/af3f4d90-9ec9-4349-93f9-b47c33833106_rwc_0x98x1200x938x1200.gif?h=4a7cdfb5fee81de134dd238b6c03c921";
 
 const HeroSection = ({
   titleOverride,
@@ -21,6 +25,7 @@ const HeroSection = ({
   titleBlack = false,
   yellowBackground = false,
   hideBgImage = false,
+  bgImageSrc = DEFAULT_BG_IMAGE,
   hideTitle = false,
   hideAboutLink = false,
 }: HeroSectionProps = {}) => {
@@ -31,7 +36,7 @@ const HeroSection = ({
       {!hideBgImage && (
         <div className="cargo-hero-bg" aria-hidden="true">
           <img
-            src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/af3f4d90-9ec9-4349-93f9-b47c33833106_rwc_0x98x1200x938x1200.gif?h=4a7cdfb5fee81de134dd238b6c03c921"
+            src={bgImageSrc}
             alt=""
             className="cargo-hero-bg-img"
           />

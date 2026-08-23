@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import { SITE_URL } from "@/lib/constants";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import usefulBg from "@/assets/slightlyusefulobject_bg.gif";
 
 const Useful = () => {
   const { lang, t } = useLanguage();
@@ -41,7 +42,7 @@ const Useful = () => {
         bordered
         logoSrc="/1%20logo.jpg"
         titleBlack
-        hideBgImage
+        bgImageSrc={usefulBg}
         hideTitle
         hideAboutLink
       />

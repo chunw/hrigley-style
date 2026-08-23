@@ -62,9 +62,11 @@ description: Guide for updating product listings, watercolor works, and Chinese/
 
 **Cover photo selection rule (when setting `image_url`):**
 Always check `src/assets/products/<imageFolder>/` BEFORE writing the product entry.
-1. If the folder exists and has `main.jpg` → use it.
-2. If the folder exists but no `main.jpg` → use the first file alphabetically.
+1. If the folder exists and has a file named `main.*` (any extension — `main.jpg`, `main.png`, `main.webp`, etc.) → always use that file as `image_url`, regardless of what other images are in the folder.
+2. If the folder exists but has no `main.*` file → use the first file alphabetically.
 3. If the folder does not exist → leave `image_url: ""` and tell the user to create the folder and add images.
+
+This rule also applies retroactively: if a `main.*` file is added to (or already exists in) a product's folder, `image_url` should point to it even if it currently points elsewhere — check for `main.*` whenever touching a product's images, not just when adding a new product.
 
 The cover image is always shown first in the product detail slider — this is enforced automatically by the `productImages` sort in `src/lib/products.ts`.
 
