@@ -155,10 +155,28 @@ export const watercolors: Watercolor[] = [
 
   // 残留
 
-  {
+  
+
+{
+    id: "24",
+     title: "Residuals #24",
+    titleZh: "残留 其二十四",
+    series: "I",
+    printInCatalog: false,
+    showInStorefront: false,
+    year: "2026",
+    medium: "Watercolor on paper",
+    mediumZh: "纸本水彩",
+    dimensions: "",
+    dimensionsZh: "",
+    description: "",
+    descriptionZh: "",
+    framed: true,
+  },
+{
     id: "5",
-    title: "Residuals #8",
-    titleZh: "残留 其八",
+    title: "Residuals #5",
+    titleZh: "残留 其五",
     series: "I",
     includeInArtbox: false,
     printInCatalog: true,
@@ -176,28 +194,10 @@ export const watercolors: Watercolor[] = [
     paylink: PRINT_FRAMED_PAYLINK,
     framed: true,
   },
-
-{
-    id: "24",
-     title: "Residuals #10",
-    titleZh: "残留 其十",
-    series: "I",
-    printInCatalog: false,
-    showInStorefront: false,
-    year: "2026",
-    medium: "Watercolor on paper",
-    mediumZh: "纸本水彩",
-    dimensions: "",
-    dimensionsZh: "",
-    description: "",
-    descriptionZh: "",
-    framed: true,
-  },
-
   {
     id: "25",
-     title: "Residuals #8",
-    titleZh: "残留 其八",
+     title: "Residuals #25",
+    titleZh: "残留 其二十五",
     series: "I",
     includeInArtbox: false,
     printInCatalog: false,
@@ -217,8 +217,8 @@ export const watercolors: Watercolor[] = [
   },
   {
     id: "6",
- title: "Residuals #9",
-    titleZh: "残留 其九",
+ title: "Residuals #6",
+    titleZh: "残留 其六",
     series: "I",
     includeInArtbox: false,
     printInCatalog: true,
@@ -400,7 +400,7 @@ export const watercolors: Watercolor[] = [
     titleZh: "静物 其十四",
     series: "II",
     printInCatalog: false,
-    showInStorefront: true,
+    showInStorefront: false,
     year: "2026",
     medium: "Watercolor on paper",
     mediumZh: "纸本水彩",
@@ -449,10 +449,10 @@ export const watercolors: Watercolor[] = [
 
   {
     id: "20",
-    title: "Still Things #14",
+    title: "Still Things",
     titleZh: "静物 其十四",
     series: "II",
-    printInCatalog: true,
+    printInCatalog: false,
     showInStorefront: false,
     year: "2025",
     medium: "Watercolor on paper",
