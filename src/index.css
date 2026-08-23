@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap');
 @import '@fontsource/aileron/400.css';
 @import '@fontsource/aileron/700.css';
-/* 朱雀仿宋 (Zhuque Fangsong) — free, SIL OFL-licensed Fangsong webfont, CJK-only via its own
-   per-character unicode-range slices, served from ZeoSeven's FontsAPI CDN. */
-@import url('https://fontsapi.zeoseven.com/7/main/result.css');
+/* 朱雀仿宋 (Zhuque Fangsong) — free, SIL OFL-licensed Fangsong webfont covering both CJK and
+   Latin via its own per-character unicode-range slices, served from ZeoSeven's FontsAPI CDN.
+   Loaded from index.html via a <link>, not @import here — see the comment there. */
 
 @tailwind base;
 @tailwind components;

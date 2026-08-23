@@ -23,6 +23,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Load the handwritten font used in CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+    <!-- 朱雀仿宋 (Zhuque Fangsong) webfont. Loaded via <link referrerpolicy="no-referrer"> rather than
+         a CSS @import: the CDN (fontsapi.zeoseven.com) 204s requests carrying a localhost/private-IP
+         Referer, which silently killed this font (and its English-text fallback everywhere it's
+         used) on local dev while working fine on the production domain. -->
+    <link href="https://fontsapi.zeoseven.com/7/main/result.css" rel="stylesheet" referrerpolicy="no-referrer">
 
     <meta property="og:site_name" content="Chun Wang Studio Shop" />
     <meta property="og:title" content="Chun Wang Studio Shop — Handmade Art, Fine Art Prints & Unique Gifts" />
