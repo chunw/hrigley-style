@@ -16,13 +16,15 @@ interface ProductGridProps {
   hideOrderButton?: boolean;
   hideShippingLabel?: boolean;
   filterMode?: "default" | "all" | "hidden";
+  /** Restrict this grid to a single category (e.g. a dedicated series page) and hide the category filter sidebar. */
+  lockedCategory?: string;
 }
 
-const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedCount = 0, hideOrderButton, hideShippingLabel, filterMode = "default" }: ProductGridProps) => {
+const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedCount = 0, hideOrderButton, hideShippingLabel, filterMode = "default", lockedCategory }: ProductGridProps) => {
   const { t, lang } = useLanguage();
   const zh = lang === "zh";
   const [searchParams] = useSearchParams();
-  const [selectedCategory, setSelectedCategory] = useState(() => searchParams.get("category") ?? "ALL");
+  const [selectedCategory, setSelectedCategory] = useState(() => lockedCategory ?? searchParams.get("category") ?? "ALL");
   const [filtersOpen, setFiltersOpen] = useState(false);
   const { data: products, isLoading, error } = useProducts(true);
   const firstMatchedCardRef = useRef<HTMLDivElement | null>(null);
@@ -31,9 +33,11 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
 
   // Unique categories (keyed by English value, displayed in current language).
   // A product can belong to multiple categories, so membership is an "includes" check.
-  const visibleProducts = products?.filter((product) =>
-    filterMode === "hidden" ? product.showInStorefront === false : (filterMode === "all" || product.showInStorefront !== false)
-  );
+  const visibleProducts = products?.filter((product) => {
+    const storefrontMatch = filterMode === "hidden" ? product.showInStorefront === false : (filterMode === "all" || product.showInStorefront !== false);
+    const lockedCategoryMatch = !lockedCategory || getProductCategories(product).includes(lockedCategory);
+    return storefrontMatch && lockedCategoryMatch;
+  });
   const categories = ["ALL", ...Array.from(new Set(visibleProducts?.flatMap(p => getProductCategories(p)) || []))];
   const categoryCount = (cat: string) => {
     if (cat === "ALL") return visibleProducts?.length ?? 0;
@@ -136,37 +140,39 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
 
         <div className="lg:flex lg:items-start lg:gap-10 pb-16">
           {/* Filters — left sidebar on desktop, collapsible panel on mobile */}
-          <aside className="mb-6 lg:mb-0 lg:w-56 lg:shrink-0 lg:sticky lg:top-24">
-            <button
-              type="button"
-              onClick={() => setFiltersOpen((prev) => !prev)}
-              className="sans-label flex w-full items-center justify-between gap-2 border border-border px-4 py-3 text-sm uppercase tracking-widest lg:hidden"
-            >
-              <span className="inline-flex items-center gap-2">
-                <SlidersHorizontal className="h-4 w-4" />
-                {t.productGrid.filters}
-              </span>
-              <ChevronDown className={`h-4 w-4 transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
-            </button>
+          {!lockedCategory && (
+            <aside className="mb-6 lg:mb-0 lg:w-56 lg:shrink-0 lg:sticky lg:top-24">
+              <button
+                type="button"
+                onClick={() => setFiltersOpen((prev) => !prev)}
+                className="sans-label flex w-full items-center justify-between gap-2 border border-border px-4 py-3 text-sm uppercase tracking-widest lg:hidden"
+              >
+                <span className="inline-flex items-center gap-2">
+                  <SlidersHorizontal className="h-4 w-4" />
+                  {t.productGrid.filters}
+                </span>
+                <ChevronDown className={`h-4 w-4 transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
+              </button>
 
-            <div className={`${filtersOpen ? "block" : "hidden"} lg:block mt-4 lg:mt-0`}>
-              <nav className="flex flex-col items-start gap-3">
-                {categories.map((category) => (
-                  <button
-                    key={category}
-                    onClick={() => setSelectedCategory(category)}
-                    className={`category-label text-sm pb-1 border-b-2 lg:border-b-0 lg:border-l-2 lg:pl-3 transition-colors ${
-                      selectedCategory === category
-                        ? "border-primary text-primary"
-                        : "border-transparent text-foreground hover:border-primary hover:text-primary"
-                    }`}
-                  >
-                    {categoryLabel(category)}
-                  </button>
-                ))}
-              </nav>
-            </div>
-          </aside>
+              <div className={`${filtersOpen ? "block" : "hidden"} lg:block mt-4 lg:mt-0`}>
+                <nav className="flex flex-col items-start gap-3">
+                  {categories.map((category) => (
+                    <button
+                      key={category}
+                      onClick={() => setSelectedCategory(category)}
+                      className={`category-label text-sm pb-1 border-b-2 lg:border-b-0 lg:border-l-2 lg:pl-3 transition-colors ${
+                        selectedCategory === category
+                          ? "border-primary text-primary"
+                          : "border-transparent text-foreground hover:border-primary hover:text-primary"
+                      }`}
+                    >
+                      {categoryLabel(category)}
+                    </button>
+                  ))}
+                </nav>
+              </div>
+            </aside>
+          )}
 
           {/* Products Grid */}
           <div className="flex-1 min-w-0">

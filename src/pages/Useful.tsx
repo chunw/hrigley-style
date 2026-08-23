@@ -53,6 +53,7 @@ const Useful = () => {
           matchedCount={matchedCount}
           hideOrderButton
           hideShippingLabel
+          lockedCategory="Slightly Useful Object"
         />
       </section>
 
