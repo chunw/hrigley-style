@@ -331,6 +331,12 @@ All colors MUST be HSL.
   display: block;
 }
 
+/* Useful page hero (.cargo-hero-theme-aware): shown in both themes, unlike the
+   generic theme-aware default above — this hero's photo reads fine on light too. */
+.cargo-hero-theme-aware .cargo-hero-bg-img {
+  display: block;
+}
+
 .cargo-hero-adaptive .cargo-hero-bg-img {
   display: block;
 }
