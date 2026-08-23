@@ -28,7 +28,7 @@ const HeroSection = ({ titleOverride, bordered = false, logoSrc, aboutLinkBlack 
           <img
             src={logoSrc}
             alt="Slightly Useful Object logo"
-            className="mx-auto mb-6 w-[32rem] h-[32rem] object-contain"
+            className="mx-auto mb-6 w-96 h-96 object-contain"
           />
         )}
         <h1 className={`shop-title cargo-hero-title ${lang === "en" ? "gloria-title" : ""} ${titleBlack ? "!text-black" : ""}`}>
