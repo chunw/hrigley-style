@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Instagram, Sun, Moon, BookOpen } from "lucide-react";
+import { Instagram, Sun, Moon, BookOpen, User } from "lucide-react";
 import { INSTAGRAM_URL } from "@/lib/constants";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -60,9 +60,9 @@ const Header = () => {
                 <Link
                   to="/about"
                   aria-label={t.index.ctaAbout}
-                  className={`inline-flex items-center justify-center w-8 h-8 text-base transition-colors hover:text-primary ${controlColor}`}
+                  className={`inline-flex items-center justify-center w-8 h-8 transition-colors hover:text-primary ${controlColor}`}
                 >
-                  👋
+                  <User className="h-4 w-4" />
                 </Link>
               </TooltipTrigger>
               <TooltipContent>{t.index.ctaAbout}</TooltipContent>

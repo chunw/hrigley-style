@@ -148,7 +148,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   return (
     <section id="shop" className="bg-background">
       <div className={`max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 ${lockedCategory ? "xl:px-24" : ""}`}>
-        <div ref={gridTopRef} className="max-w-xl mx-auto pt-8 mb-8">
+        <div ref={gridTopRef} className="max-w-xl mx-auto pt-12 mb-12">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -166,7 +166,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
           )}
         </div>
 
-        <div className="lg:flex lg:items-start lg:gap-10 pb-16">
+        <div className="lg:flex lg:items-start lg:gap-14 pb-20 lg:pb-28">
           {/* Filters — left sidebar on desktop, collapsible panel on mobile */}
           {!lockedCategory && (
             <aside className="mb-6 lg:mb-0 lg:w-56 lg:shrink-0 lg:sticky lg:top-24">
@@ -242,7 +242,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
                 </p>
               </div>
             ) : (
-              <div className={`grid grid-cols-2 gap-6 auto-rows-auto ${lockedCategory ? "sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"}`}>
+              <div className={`grid grid-cols-2 gap-6 sm:gap-8 lg:gap-10 auto-rows-auto ${lockedCategory ? "sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"}`}>
                 {sortedFilteredProducts.map((product, index) => (
                   <div key={product.id} ref={index === 0 && hasActiveSearch ? firstMatchedCardRef : null} className="h-full">
                     <ProductCard

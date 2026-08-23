@@ -105,8 +105,8 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
       }`}
       onClick={handleCardClick}
     >
-      <CardContent className="p-4 flex flex-col flex-1">
-        <div className="relative aspect-square bg-background mb-4 overflow-hidden shrink-0 cartoon-image-wrapper">
+      <CardContent className="p-5 sm:p-6 flex flex-col flex-1">
+        <div className="relative aspect-square bg-background mb-5 sm:mb-6 overflow-hidden shrink-0 cartoon-image-wrapper">
           <img
             src={image_url || "/placeholder.svg"}
             alt={name}
@@ -125,7 +125,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
         </div>
 
         <div className="flex flex-col flex-1">
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <p className="text-xs sans-label text-muted-foreground">{displayCategory ? renderHighlightedText(displayCategory) : null}</p>
             <h3 className="text-lg leading-tight handwritten product-title">{renderHighlightedText(displayTitle)}</h3>
             {displayDescription && (
@@ -136,7 +136,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
             )}
           </div>
 
-          <div className="mt-auto pt-3 space-y-2">
+          <div className="mt-auto pt-4 space-y-2.5">
             {(priceLabel || price > 0) && (
               <>
                 <p className="text-lg font-bold sans-label text-black">
