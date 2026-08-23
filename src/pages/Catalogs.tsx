@@ -9,6 +9,14 @@ import { usePageMeta } from "@/hooks/usePageMeta";
 
 const CATALOGS = [
   {
+    to: "/useful",
+    images: [
+      new URL("../assets/products/book/book-covers.jpg", import.meta.url).href,
+      new URL("../assets/products/binder/main.jpg", import.meta.url).href,
+    ],
+    labelKey: "usefulCatalog" as const,
+  },
+  {
     to: "/watercolor-catalog",
     images: ["/watercolors/01/main.jpg", "/watercolors/02/main.jpg"],
     labelKey: "watercolorCatalog" as const,

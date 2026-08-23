@@ -93,6 +93,9 @@ export const translations = {
       works: "works",
       categoryLabel: "In The Spirit of the 21st Century · 21世纪精神",
     },
+    usefulCatalog: {
+      subtitle: "Slightly Useful Object",
+    },
   },
   zh: {
     header: {
@@ -186,6 +189,9 @@ export const translations = {
       subtitle: "21世纪精神",
       works: "件作品",
       categoryLabel: "In The Spirit of the 21st Century · 21世纪精神",
+    },
+    usefulCatalog: {
+      subtitle: "小有用的物件",
     },
   },
 } as const;
