@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ProductCard from "./ProductCard";
 import { useProducts, getArtboxPrintCount } from "@/hooks/useProducts";
 import { getProductCategories, getProductCategoriesZh, getProductCollections, getProductCollectionsZh } from "@/lib/products";
@@ -29,6 +29,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   const { t, lang } = useLanguage();
   const zh = lang === "zh";
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState(() => lockedCategory ?? searchParams.get("category") ?? "ALL");
   const [filtersOpen, setFiltersOpen] = useState(false);
   const { data: products, isLoading, error } = useProducts(true);
@@ -146,7 +147,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
 
   return (
     <section id="shop" className="bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className={`max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 ${lockedCategory ? "xl:px-24" : ""}`}>
         <div ref={gridTopRef} className="max-w-xl mx-auto pt-8 mb-8">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -211,7 +212,11 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
                     {collections.map((collection) => (
                       <button
                         key={collection}
-                        onClick={() => handleFilterSelect(collection)}
+                        onClick={() =>
+                          collection === "Slightly Useful Object"
+                            ? navigate("/slightlyusefulobject")
+                            : handleFilterSelect(collection)
+                        }
                         className={`category-label text-sm pb-1 border-b-2 lg:border-b-0 lg:border-l-2 lg:pl-3 transition-colors ${
                           selectedCategory === collection
                             ? "border-primary text-primary"
@@ -237,7 +242,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6 auto-rows-auto">
+              <div className={`grid grid-cols-2 gap-6 auto-rows-auto ${lockedCategory ? "sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"}`}>
                 {sortedFilteredProducts.map((product, index) => (
                   <div key={product.id} ref={index === 0 && hasActiveSearch ? firstMatchedCardRef : null} className="h-full">
                     <ProductCard

@@ -667,6 +667,7 @@ All colors MUST be HSL.
   margin-top: 0.5rem;
   padding-top: 0.5rem;
   background: hsl(0 0% 100% / 0.9);
+  max-width: 320px;
 }
 
 .hero-message-card-bottom-wrap {
@@ -678,7 +679,7 @@ All colors MUST be HSL.
   display: flex;
   justify-content: flex-start;
   padding: 0 1rem;
-  padding-left: 14%;
+  padding-left: 5%;
 }
 
 .hero-dialog-title {
@@ -690,14 +691,6 @@ All colors MUST be HSL.
 .hero-dialog-sub {
   margin: 0 0 0.75rem 0;
   color: rgba(17, 17, 17, 0.7);
-}
-
-.hero-etsy-link {
-  position: absolute;
-  right: 1.25rem;
-  bottom: 1.25rem;
-  z-index: 2;
-  font-size: 0.85rem;
 }
 
 .hero-dialog-btn {

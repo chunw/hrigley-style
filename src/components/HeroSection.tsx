@@ -156,7 +156,7 @@ const HeroSection = ({
               src={logoSrc}
               alt="Slightly Useful Object logo"
               draggable={false}
-              className="mx-auto mb-1 w-[336px] h-[336px] object-contain"
+              className="mx-auto mb-1 w-[180px] h-[180px] sm:w-[220px] sm:h-[220px] object-contain"
             />
             <h2 className="hero-dialog-title">{t.hero.dialogTitle}</h2>
             <p className="hero-dialog-sub font-helvetica">
@@ -170,15 +170,6 @@ const HeroSection = ({
           </div>
         </div>
       )}
-
-      <a
-        href="https://www.etsy.com/shop/SlightlyUsefulObject"
-        target="_blank"
-        rel="noreferrer"
-        className="cargo-link hero-etsy-link"
-      >
-        also on Etsy
-      </a>
     </section>
   );
 };
