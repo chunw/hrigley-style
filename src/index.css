@@ -359,6 +359,8 @@ All colors MUST be HSL.
    unlike the always-dark .cargo-hero-adaptive homepage hero above. */
 .cargo-hero-theme-aware {
   background: hsl(var(--background));
+  min-height: auto;
+  padding-top: 2rem;
 }
 
 .theme-dark .cargo-hero-theme-aware {
