@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Instrument+Serif&display=swap');
 @import '@fontsource/aileron/400.css';
 @import '@fontsource/aileron/700.css';
 /* 朱雀仿宋 (Zhuque Fangsong) — free, SIL OFL-licensed Fangsong webfont covering both CJK and
@@ -188,6 +188,12 @@ All colors MUST be HSL.
   .product-title {
     font-family: 'Zhuque Fangsong (technical preview)', 'Aileron', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     text-transform: none;
+  }
+
+  /* Slightly Useful Object page only — product titles in Instrument Serif instead of the
+     site-wide Zhuque Fangsong, tried as a more premium-feeling display face for this page. */
+  .useful-page .product-title {
+    font-family: '"Instrument Serif"', 'Zhuque Fangsong (technical preview)', Georgia, serif;
   }
 
   /* Category filter labels (product grid sidebar) — Aileron for English, matching other

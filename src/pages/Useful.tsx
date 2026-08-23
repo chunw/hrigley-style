@@ -32,7 +32,7 @@ const Useful = () => {
   }, [location.hash]);
 
   return (
-    <div className="relative min-h-screen bg-background">
+    <div className="useful-page relative min-h-screen bg-background">
 
       <Header />
       <HeroSection
