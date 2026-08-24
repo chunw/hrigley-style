@@ -22,7 +22,7 @@ const Footer = () => {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={label}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-foreground hover:text-background"
+                className="flex h-9 w-9 items-center justify-center rounded-full text-foreground transition-colors hover:bg-foreground hover:text-background"
               >
                 <Icon className="h-3.5 w-3.5" />
               </a>
