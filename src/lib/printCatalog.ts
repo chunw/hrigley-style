@@ -587,7 +587,7 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
     }
     .vendor-item {
       display: grid;
-      grid-template-columns: 140px 1fr;
+      grid-template-columns: 380px 1fr;
       gap: 14px;
       padding: 12px 0;
       border-top: 1px solid ${border};
@@ -595,8 +595,8 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
       break-inside: avoid;
     }
     .vendor-image-wrap {
-      width: 140px;
-      height: 140px;
+      width: 380px;
+      height: 380px;
       background: ${panel};
       border: 1px solid ${border};
       overflow: hidden;
