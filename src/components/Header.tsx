@@ -60,13 +60,13 @@ const Header = () => {
               <TooltipTrigger asChild>
                 <Link
                   to="/catalogs"
-                  aria-label={t.index.ctaCatalogs}
+                  aria-label="art catalogs"
                   className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
                 >
-                  {t.index.ctaCatalogs}
+                  art catalogs
                 </Link>
               </TooltipTrigger>
-              <TooltipContent>{t.index.ctaCatalogs}</TooltipContent>
+              <TooltipContent>art catalogs</TooltipContent>
             </Tooltip>
 
             {/* Removed link to /all-items per request */}
