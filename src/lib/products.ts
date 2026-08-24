@@ -284,7 +284,7 @@ Set of 2 original paintings.</p>`.trim(),
     categories: ["Jewelry", "Accessories"],
     categories_zh: ["首饰", "服饰"],
     created_at: new Date().toISOString(),
-    paylink: ""
+    paylink: "mailto:chunwang.me@gmail.com"
   },
   {
     id: "custom-logo-stamp",
@@ -615,7 +615,7 @@ Set of 2 original paintings.</p>`.trim(),
     showInStorefront: true,
     category: "Fine Art Prints",
     created_at: new Date().toISOString(),
-    paylink: ""
+    paylink: "https://www.paypal.com/ncp/payment/59VBZ7ZPA6T7G"
   },
 
   {

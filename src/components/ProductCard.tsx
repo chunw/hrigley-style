@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { toast } from "sonner";
 import { getProductCategories, getProductCategoriesZh, getProductCollections, getProductCollectionsZh } from "@/lib/products";
 
 interface ProductCardProps {
@@ -29,6 +30,7 @@ interface ProductCardProps {
   isSearchHighlighted?: boolean;
   artboxPrintCount?: number;
   soldOut?: boolean;
+  is_active?: boolean;
 }
 
 const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, priceLabel, currency, image_url, category, category_zh, categories, categories_zh, collections, collections_zh, paylink, detailPath, hideOrderButton, hideShippingLabel, highlightQuery, isSearchHighlighted, artboxPrintCount, soldOut }: ProductCardProps) => {
@@ -87,6 +89,8 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
   };
 
   const handleOrderNow = (e: React.MouseEvent) => {
+    const INQUIRY_EMAIL = "chunwang.me@gmail.com";
+
     if (typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('event', 'click_paypal_link', {
         'event_category': 'ecommerce',
@@ -95,7 +99,21 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
       });
     }
     e.stopPropagation();
-    window.open(paylink, '_blank');
+    if (paylink) {
+      window.open(paylink, '_blank');
+      return;
+    }
+
+    // fallback to opening a mailto and copying email
+    try {
+      navigator.clipboard?.writeText(INQUIRY_EMAIL).then(() => {
+        toast('Email copied to clipboard', { description: INQUIRY_EMAIL });
+      }).catch(() => {});
+    } catch (err) {}
+
+    const subject = encodeURIComponent(`Order inquiry: ${title || name}`);
+    const body = encodeURIComponent(`Hello,%0D%0A%0D%0AI would like to order: ${title || name} (id: ${id}).%0D%0A%0D%0APlease advise the next steps.%0D%0A%0D%0AThanks.`);
+    window.location.href = `mailto:${INQUIRY_EMAIL}?subject=${subject}&body=${body}`;
   };
 
   return (
@@ -144,7 +162,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
                   {renderHighlightedText(priceLabel ?? `${currency === 'gbp' ? '£' : '$'}${price.toFixed(2)}`)}
                 </p>
                 {!hideShippingLabel && <p className="text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>}
-                {!hideOrderButton && paylink && (
+                {!hideOrderButton && (paylink || is_active) && (
                   <Button
                     variant="outline-pink"
                     className="order-now-button w-full rounded-none text-xs transition-colors"

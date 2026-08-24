@@ -408,6 +408,274 @@ function productPage(
     </div>`;
 }
 
+function normalizePrintAsset(origin: string, asset: string | undefined | null): string {
+  if (!asset) return "";
+  if (/^https?:\/\//.test(asset) || asset.startsWith("data:")) return asset;
+  return `${origin}${asset.startsWith("/") ? "" : "/"}${asset}`;
+}
+
+function vendorProductEntry(product: {
+  id: string;
+  title: string;
+  title_zh?: string | null;
+  description?: string | null;
+  description_zh?: string | null;
+  dimensions?: string | null;
+  dimensions_zh?: string | null;
+  price?: number | null;
+  currency?: string | null;
+  category?: string | null;
+  category_zh?: string | null;
+  image_url?: string | null;
+}, isZh: boolean, origin: string): string {
+  const title = isZh ? (product.title_zh ?? product.title) : product.title;
+  const description = isZh ? (product.description_zh ?? product.description) : product.description;
+  const dimensions = isZh ? (product.dimensions_zh ?? product.dimensions) : product.dimensions;
+  const category = isZh ? (product.category_zh ?? product.category ?? "Product") : (product.category ?? "Product");
+  const image = normalizePrintAsset(origin, product.image_url);
+  const priceText = product.price != null ? `${product.currency ?? "USD"} $${product.price}` : "Price available on request";
+
+  return `
+    <article class="vendor-item">
+      <div class="vendor-image-wrap">
+        <img src="${image}" alt="${title}" onerror="this.style.display='none'" />
+      </div>
+      <div class="vendor-copy">
+        <div class="vendor-topline">${category}</div>
+        <h3>${title}</h3>
+        <div class="vendor-price">${priceText}</div>
+        ${dimensions ? `<div class="vendor-dimensions">${dimensions}</div>` : ""}
+        ${description ? `<p>${description}</p>` : ""}
+      </div>
+    </article>
+  `;
+}
+
+export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme: PrintTheme = "light"): string {
+  const isDark = theme === "dark";
+  const isZh = lang === "zh";
+  const bg = isDark ? "#0b0b0b" : "#ffffff";
+  const fg = isDark ? "#ece6dc" : "#111111";
+  const muted = isDark ? "#aaa08a" : "#666666";
+  const panel = isDark ? "#121212" : "#f6f3ee";
+  const border = isDark ? "#2d2d2d" : "#ded7ce";
+  const accent = isDark ? "#d8c8a8" : "#8c6d4d";
+
+  const vendorProducts = [
+    ...products.filter((product) => product.showInStorefront !== false).map((product) => ({
+      id: product.id,
+      title: product.title,
+      title_zh: product.title_zh,
+      description: product.description,
+      description_zh: product.description_zh,
+      dimensions: product.dimensions,
+      dimensions_zh: product.dimensions_zh,
+      price: product.price,
+      currency: product.currency,
+      category: product.category,
+      category_zh: product.category_zh,
+      image_url: product.image_url,
+    })),
+    ...photographyWorks.filter((work) => work.showInStorefront !== false).map((work) => ({
+      id: `photography-${work.id}`,
+      title: work.title,
+      title_zh: work.titleZh,
+      description: work.description,
+      description_zh: work.descriptionZh,
+      dimensions: work.dimensions,
+      dimensions_zh: work.dimensionsZh,
+      price: work.printPrice ?? 10,
+      currency: "USD",
+      category: "Fine Art Prints",
+      category_zh: "版画",
+      image_url: normalizePrintAsset(origin, `/photography/${work.id.padStart(2, "0")}/main.jpg`),
+    })),
+    ...remainsWorks.filter((work) => work.showInStorefront !== false).map((work) => ({
+      id: `remains-${work.id}`,
+      title: work.title,
+      title_zh: work.titleZh,
+      description: work.description,
+      description_zh: work.descriptionZh,
+      dimensions: work.dimensions,
+      dimensions_zh: work.dimensionsZh,
+      price: work.price ?? 4,
+      currency: "USD",
+      category: "Fine Art Prints",
+      category_zh: "版画",
+      image_url: normalizePrintAsset(origin, `/remains/${work.id.padStart(2, "0")}/main.jpg`),
+    })),
+    ...spiritWorks.filter((work) => work.showInStorefront !== false).map((work) => ({
+      id: `spirit-${work.id}`,
+      title: work.title,
+      title_zh: work.titleZh,
+      description: work.description,
+      description_zh: work.descriptionZh,
+      dimensions: work.dimensions,
+      dimensions_zh: work.dimensionsZh,
+      price: work.price ?? 4,
+      currency: "USD",
+      category: "Fine Art Prints",
+      category_zh: "版画",
+      image_url: normalizePrintAsset(origin, `/21spirit/${work.id.padStart(2, "0")}/main.jpg`),
+    })),
+    ...watercolors.filter((work) => work.showInStorefront !== false).map((work) => ({
+      id: `watercolor-${work.id}`,
+      title: work.title,
+      title_zh: work.titleZh,
+      description: work.description,
+      description_zh: work.descriptionZh,
+      dimensions: work.dimensions,
+      dimensions_zh: work.dimensionsZh,
+      price: work.price ?? work.printPrice ?? 10,
+      currency: "USD",
+      category: work.series === "III" ? "Cards" : "Fine Art Prints",
+      category_zh: work.series === "III" ? "卡片" : "版画",
+      image_url: normalizePrintAsset(origin, `/watercolors/${work.id.padStart(2, "0")}/main.jpg`),
+    })),
+  ];
+
+  const coverTitle = isZh ? "店铺产品目录" : "Shop Product Catalog";
+  const coverSubtitle = isZh ? "Chun Wang Studio Shop" : "Chun Wang Studio Shop";
+  const footerText = isZh ? `更新于 ${new Date().getFullYear()} · 材料与价格如图为准` : `Updated ${new Date().getFullYear()} · Pricing and availability subject to change`;
+
+  const content = vendorProducts.map((product) => vendorProductEntry(product, isZh, origin)).join("");
+
+  return `<!DOCTYPE html>
+<html lang="${lang}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${coverTitle}</title>
+  <style>
+    @page { size: A4 portrait; margin: 16mm; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: ${bg}; color: ${fg}; font-family: "Avenir Next", "Helvetica Neue", Arial, sans-serif; }
+    body { padding: 18px; }
+    .page { max-width: 100%; }
+    .cover {
+      border: 1px solid ${border};
+      background: ${panel};
+      padding: 28px 24px 20px;
+      margin-bottom: 18px;
+    }
+    .cover-topline {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: ${muted};
+      margin-bottom: 18px;
+    }
+    .cover-title {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 34px;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      margin: 0 0 10px;
+      color: ${fg};
+    }
+    .cover-subtitle {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: ${muted};
+    }
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .vendor-item {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 14px;
+      padding: 12px 0;
+      border-top: 1px solid ${border};
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .vendor-image-wrap {
+      width: 140px;
+      height: 140px;
+      background: ${panel};
+      border: 1px solid ${border};
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .vendor-image-wrap img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .vendor-copy h3 {
+      font-size: 18px;
+      line-height: 1.2;
+      margin: 0 0 8px;
+      font-weight: 500;
+      color: ${fg};
+    }
+    .vendor-topline {
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: ${accent};
+      margin-bottom: 6px;
+    }
+    .vendor-price {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: ${muted};
+      margin-bottom: 6px;
+    }
+    .vendor-dimensions {
+      font-size: 11px;
+      color: ${muted};
+      margin-bottom: 8px;
+    }
+    .vendor-copy p {
+      font-size: 11px;
+      line-height: 1.6;
+      margin: 0;
+      color: ${muted};
+      max-width: 58ch;
+    }
+    .footer {
+      margin-top: 14px;
+      border-top: 1px solid ${border};
+      padding-top: 10px;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: ${muted};
+    }
+    @media print {
+      body { margin: 0; }
+      .page { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="cover">
+      <div class="cover-topline">${isZh ? "Chun Wang Studio Shop" : "Chun Wang Studio Shop"}</div>
+      <h1 class="cover-title">${coverTitle}</h1>
+      <div class="cover-subtitle">${coverSubtitle}</div>
+    </header>
+
+    <main class="catalog-grid">
+      ${content}
+    </main>
+
+    <div class="footer">${footerText}</div>
+  </div>
+  <script>window.onload = function() { setTimeout(function() { window.print(); }, 250); };</script>
+</body>
+</html>`;
+}
+
 function bioSpread(): string {
   const enBio = artistBioHTML("en");
   const zhBio = artistBioHTML("zh");

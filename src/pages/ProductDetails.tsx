@@ -10,6 +10,7 @@ import { shopOrderNavigableItems, getArtboxPrintCount } from "@/hooks/useProduct
 import { getProductCategories, getProductCategoriesZh, getProductCollections, getProductCollectionsZh } from "@/lib/products";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { ZoomableImage } from "@/components/ZoomableImage";
+import { toast } from "sonner";
 import { usePageMeta } from "@/hooks/usePageMeta";
 
 const ProductDetails = () => {
@@ -79,6 +80,8 @@ const ProductDetails = () => {
 
   const formatPrice = (price: number) => `$${price.toLocaleString()}`;
 
+  const INQUIRY_EMAIL = "chunwang.me@gmail.com";
+
   const handleOrderNow = (e: React.MouseEvent) => {
     if (typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('event', 'click_paypal_link', {
@@ -88,7 +91,25 @@ const ProductDetails = () => {
       });
     }
     e.stopPropagation();
-    window.open(product.paylink, '_blank');
+
+    if (product.paylink) {
+      window.open(product.paylink, '_blank');
+      return;
+    }
+
+    // Fallback: open mail client and copy contact email to clipboard
+    const subject = encodeURIComponent(`Order inquiry: ${product.title || product.name}`);
+    const body = encodeURIComponent(`Hello,%0D%0A%0D%0AI would like to order: ${product.title || product.name} (product id: ${product.id}).%0D%0A%0D%0APlease advise the next steps.%0D%0A%0D%0AThanks.`);
+    try {
+      navigator.clipboard?.writeText(INQUIRY_EMAIL).then(() => {
+        toast('Email copied to clipboard', { description: INQUIRY_EMAIL });
+      }).catch(() => {
+        // ignore clipboard errors
+      });
+    } catch (err) {
+      // ignore
+    }
+    window.location.href = `mailto:${INQUIRY_EMAIL}?subject=${subject}&body=${body}`;
   };
 
   // Pick the right language field, fall back to English if Chinese not filled in
@@ -259,7 +280,7 @@ const ProductDetails = () => {
               </div>
             )}
 
-            {product.paylink && (
+            {(product.paylink || product.is_active) && (
               <div className="pt-4">
                 <Button
                   variant="outline-pink"

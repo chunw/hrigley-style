@@ -153,6 +153,7 @@ const Spirit21Catalog = () => {
               category={printPacket.category}
               category_zh={printPacket.category_zh}
               paylink={printPacket.paylink}
+              is_active={printPacket.is_active}
             />
           </section>
         )}

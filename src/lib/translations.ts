@@ -77,6 +77,7 @@ export const translations = {
       subtitle: "Visions in Watercolor",
       works: "works",
       printCatalog: "Print Complete Catalog",
+      printVendorCatalog: "Print Vendor Catalog",
       noteLabel: "NOTE",
       noteText: "Watercolor remains a pursuit of materiality — especially now",
       artistStatement: "Artist Statement",
@@ -178,7 +179,8 @@ export const translations = {
     watercolorCatalog: {
       subtitle: "水彩视界",
       works: "件作品",
-      printCatalog: "打印目录",
+      printCatalog: "打印完整目录",
+      printVendorCatalog: "打印店铺目录",
       noteLabel: "注",
       noteText: "水彩依然是对物质性的追寻——尤其是在当下",
       artistStatement: "艺术家自述",

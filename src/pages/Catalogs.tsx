@@ -4,7 +4,7 @@ import { BookOpen } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { buildCombinedPrintHTML, type PrintTheme } from "@/lib/printCatalog";
+import { buildCombinedPrintHTML, buildVendorCatalogHTML, type PrintTheme } from "@/lib/printCatalog";
 import { usePageMeta } from "@/hooks/usePageMeta";
 
 const CATALOGS = [
@@ -48,8 +48,11 @@ const Catalogs = () => {
     path: "/catalogs",
   });
 
-  const handlePrint = (theme: "light" | "dark") => {
-    const blob = new Blob([buildCombinedPrintHTML(window.location.origin, lang, theme)], { type: "text/html" });
+  const handlePrint = (theme: "light" | "dark", mode: "combined" | "vendor") => {
+    const html = mode === "vendor"
+      ? buildVendorCatalogHTML(window.location.origin, lang, theme)
+      : buildCombinedPrintHTML(window.location.origin, lang, theme);
+    const blob = new Blob([html], { type: "text/html" });
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");
     setPrintMenuOpen(false);
@@ -143,16 +146,34 @@ const Catalogs = () => {
               {t.watercolorCatalog.printCatalog}
             </button>
             {printMenuOpen && (
-              <div className="absolute right-0 bottom-full mb-1 z-20 border border-border bg-background min-w-[120px]">
+              <div className="absolute right-0 bottom-full mb-1 z-20 border border-border bg-background min-w-[220px]">
+                <div className="border-b border-border px-3 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                  {t.watercolorCatalog.printCatalog}
+                </div>
                 {(["light", "dark"] as const).map(theme => (
                   <button
-                    key={theme}
+                    key={`combined-${theme}`}
                     type="button"
-                    onClick={() => handlePrint(theme)}
+                    onClick={() => handlePrint(theme, "combined")}
+                    className="w-full flex items-center gap-2 px-3 py-2 font-mono text-xs hover:bg-muted transition-colors text-foreground border-b border-border last:border-b-0"
+                  >
+                    <span className={`inline-block w-3 h-3 border border-current ${theme === "dark" ? "bg-foreground" : ""}`} />
+                    {theme === "light" ? "Light" : "Dark"} · complete
+                  </button>
+                ))}
+
+                <div className="border-t border-border px-3 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                  {t.watercolorCatalog.printVendorCatalog}
+                </div>
+                {(["light", "dark"] as const).map(theme => (
+                  <button
+                    key={`vendor-${theme}`}
+                    type="button"
+                    onClick={() => handlePrint(theme, "vendor")}
                     className="w-full flex items-center gap-2 px-3 py-2 font-mono text-xs hover:bg-muted transition-colors text-foreground"
                   >
                     <span className={`inline-block w-3 h-3 border border-current ${theme === "dark" ? "bg-foreground" : ""}`} />
-                    {theme === "light" ? "Light" : "Dark"}
+                    {theme === "light" ? "Light" : "Dark"} · vendor
                   </button>
                 ))}
               </div>
