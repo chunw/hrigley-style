@@ -89,16 +89,18 @@ const Header = () => {
 
           {/* Left - Logo */}
           <div className="flex-shrink-0">
-            <div className="shop-title instrument-title text-2xl leading-none transition-colors header-shop-scale">
-              <Link to="/" className="block cursor-pointer text-white">
-                {t.shopTitle.line1}
-                <br />
-                {t.shopTitle.line2}
-              </Link>
-              <Link to="/all-items" className="block text-primary hover:underline">
-                {t.shopTitle.line3}
-              </Link>
-            </div>
+            {!location.pathname.startsWith("/catalogs") && (
+              <div className="shop-title instrument-title text-2xl leading-none transition-colors header-shop-scale">
+                <Link to="/" className="block cursor-pointer text-white">
+                  {t.shopTitle.line1}
+                  <br />
+                  {t.shopTitle.line2}
+                </Link>
+                <Link to="/all-items" className="block text-primary hover:underline">
+                  {t.shopTitle.line3}
+                </Link>
+              </div>
+            )}
           </div>
 
           <div className="flex-1" />

@@ -130,9 +130,6 @@ const Catalogs = () => {
       {/* Print catalog */}
       <section className="border-t border-border py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            {t.index.catalogsTitle}
-          </p>
           <div className="relative">
             {printMenuOpen && (
               <div className="fixed inset-0 z-10" onClick={() => setPrintMenuOpen(false)} />
