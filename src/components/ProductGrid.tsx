@@ -148,7 +148,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   return (
     <section id="shop" className="bg-background">
       <div className={`max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 ${lockedCategory ? "xl:px-24" : ""}`}>
-        <div ref={gridTopRef} className="max-w-xl mx-auto pt-12 mb-12">
+        <div ref={gridTopRef} className="max-w-xl mx-auto pt-16 mb-16">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -156,7 +156,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
               aria-label={t.productGrid.searchPlaceholder}
               value={searchQuery || ""}
               onChange={(e) => onSearchChange?.(e.target.value)}
-              className="pl-10 sans-label text-sm bg-muted/50 border-border transition-all duration-300 ease-out focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-primary/50 focus-visible:bg-background focus-visible:shadow-[0_8px_24px_-8px_hsl(var(--primary)/0.4)]"
+              className="pl-10 rounded-none font-helvetica text-sm bg-transparent border-x-0 border-t-0 border-b border-border transition-colors duration-300 ease-out focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-foreground"
             />
           </div>
           {hasActiveSearch && (
@@ -173,7 +173,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
               <button
                 type="button"
                 onClick={() => setFiltersOpen((prev) => !prev)}
-                className="sans-label flex w-full items-center justify-between gap-2 border border-border px-4 py-3 text-sm uppercase tracking-widest lg:hidden"
+                className="font-helvetica flex w-full items-center justify-between gap-2 border border-border px-4 py-3 text-xs uppercase tracking-[0.15em] lg:hidden"
               >
                 <span className="inline-flex items-center gap-2">
                   <SlidersHorizontal className="h-4 w-4" />
@@ -182,10 +182,10 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
                 <ChevronDown className={`h-4 w-4 transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
               </button>
 
-              <div className={`${filtersOpen ? "block" : "hidden"} lg:block mt-4 lg:mt-0 space-y-6`}>
+              <div className={`${filtersOpen ? "block" : "hidden"} lg:block mt-4 lg:mt-0 space-y-8`}>
                 <nav className="flex flex-col items-start gap-3">
                   {collections.length > 0 && (
-                    <p className="sans-label text-xs uppercase tracking-widest text-muted-foreground">
+                    <p className="font-helvetica text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
                       {t.productGrid.categoryHeading}
                     </p>
                   )}
@@ -193,10 +193,10 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
                     <button
                       key={category}
                       onClick={() => handleFilterSelect(category)}
-                      className={`category-label text-sm pb-1 border-b-2 lg:border-b-0 lg:border-l-2 lg:pl-3 transition-colors ${
+                      className={`category-label text-sm pb-1 border-b lg:border-b-0 lg:border-l lg:pl-3 transition-colors ${
                         selectedCategory === category
-                          ? "border-primary text-primary"
-                          : "border-transparent text-foreground hover:border-primary hover:text-primary"
+                          ? "border-foreground text-foreground"
+                          : "border-transparent text-muted-foreground hover:border-foreground hover:text-foreground"
                       }`}
                     >
                       {categoryLabel(category)}
@@ -206,7 +206,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
 
                 {collections.length > 0 && (
                   <nav className="flex flex-col items-start gap-3">
-                    <p className="sans-label text-xs uppercase tracking-widest text-muted-foreground">
+                    <p className="font-helvetica text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
                       {t.productGrid.collectionsHeading}
                     </p>
                     {collections.map((collection) => (
@@ -217,10 +217,10 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
                             ? navigate("/slightlyusefulobject")
                             : handleFilterSelect(collection)
                         }
-                        className={`category-label text-sm pb-1 border-b-2 lg:border-b-0 lg:border-l-2 lg:pl-3 transition-colors ${
+                        className={`category-label text-sm pb-1 border-b lg:border-b-0 lg:border-l lg:pl-3 transition-colors ${
                           selectedCategory === collection
-                            ? "border-primary text-primary"
-                            : "border-transparent text-foreground hover:border-primary hover:text-primary"
+                            ? "border-foreground text-foreground"
+                            : "border-transparent text-muted-foreground hover:border-foreground hover:text-foreground"
                         }`}
                       >
                         {collectionLabel(collection)}
@@ -235,14 +235,14 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
           {/* Products Grid */}
           <div className="flex-1 min-w-0">
             {hasActiveSearch && sortedFilteredProducts.length === 0 ? (
-              <div className="rounded-lg border-2 border-destructive/40 bg-destructive/5 px-6 py-10 text-center">
-                <p className="handwritten text-lg text-destructive">{t.productGrid.noResults}</p>
+              <div className="border border-destructive/40 bg-destructive/5 px-6 py-10 text-center">
+                <p className="font-helvetica text-lg text-destructive">{t.productGrid.noResults}</p>
                 <p className="font-helvetica text-sm text-muted-foreground mt-2">
                   {t.productGrid.noResultsDetail} "{normalizedSearchQuery}".
                 </p>
               </div>
             ) : (
-              <div className={`grid grid-cols-2 gap-6 sm:gap-8 lg:gap-10 auto-rows-auto ${lockedCategory ? "sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"}`}>
+              <div className={`grid grid-cols-2 gap-x-6 gap-y-14 sm:gap-x-10 sm:gap-y-16 lg:gap-x-12 lg:gap-y-20 auto-rows-auto ${lockedCategory ? "sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"}`}>
                 {sortedFilteredProducts.map((product, index) => (
                   <div key={product.id} ref={index === 0 && hasActiveSearch ? firstMatchedCardRef : null} className="h-full">
                     <ProductCard

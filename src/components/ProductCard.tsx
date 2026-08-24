@@ -100,17 +100,17 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
 
   return (
     <Card
-      className={`group cartoon-card hover:shadow-lg transition-shadow duration-200 border-2 cursor-pointer h-full flex flex-col ${
-        isSearchHighlighted ? "border-primary ring-2 ring-primary/30" : "border-border"
+      className={`group border-0 rounded-none bg-transparent shadow-none cursor-pointer h-full flex flex-col ${
+        isSearchHighlighted ? "ring-1 ring-foreground/50" : ""
       }`}
       onClick={handleCardClick}
     >
-      <CardContent className="p-5 sm:p-6 flex flex-col flex-1">
-        <div className="relative aspect-square bg-background mb-5 sm:mb-6 overflow-hidden shrink-0 cartoon-image-wrapper">
+      <CardContent className="p-0 flex flex-col flex-1">
+        <div className="relative aspect-square mb-5 sm:mb-6 overflow-hidden shrink-0">
           <img
             src={image_url || "/placeholder.svg"}
             alt={name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+            className="w-full h-full object-contain transition-transform duration-500 ease-out group-hover:scale-[1.03]"
             onError={(e) => {
               console.log('Image failed to load:', image_url);
               e.currentTarget.src = "/placeholder.svg";
@@ -118,16 +118,17 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
             loading="lazy"
           />
           {soldOut && (
-            <div className="absolute top-3 right-3 w-16 h-16 bg-red-600 rounded-full z-10 shadow-lg border-2 border-white/80 flex items-center justify-center p-1">
-              <span className="sans-label text-white text-xs leading-tight text-center">SOLD OUT</span>
+            <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5 bg-background/90 px-2 py-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-600 shrink-0" />
+              <span className="font-helvetica text-[10px] uppercase tracking-[0.15em] text-foreground">Sold Out</span>
             </div>
           )}
         </div>
 
         <div className="flex flex-col flex-1">
-          <div className="space-y-2.5">
-            <p className="text-xs sans-label text-muted-foreground">{displayCategory ? renderHighlightedText(displayCategory) : null}</p>
-            <h3 className="text-lg leading-tight handwritten product-title">{renderHighlightedText(displayTitle)}</h3>
+          <div className="space-y-2">
+            <p className="text-[11px] font-helvetica uppercase tracking-[0.15em] text-muted-foreground">{displayCategory ? renderHighlightedText(displayCategory) : null}</p>
+            <h3 className="text-base leading-tight product-title text-foreground">{renderHighlightedText(displayTitle)}</h3>
             {displayDescription && (
               <p className="text-sm font-helvetica text-muted-foreground">{renderDescription(displayDescription)}</p>
             )}
@@ -139,18 +140,18 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
           <div className="mt-auto pt-4 space-y-2.5">
             {(priceLabel || price > 0) && (
               <>
-                <p className="text-lg font-bold sans-label text-black">
+                <p className="text-sm font-helvetica tracking-wide text-foreground">
                   {renderHighlightedText(priceLabel ?? `${currency === 'gbp' ? '£' : '$'}${price.toFixed(2)}`)}
                 </p>
                 {!hideShippingLabel && <p className="text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>}
                 {!hideOrderButton && paylink && (
                   <Button
-                    variant="outline-pink"
-                    className="w-full sans-label bg-pink text-white hover:bg-transparent hover:text-pink"
+                    variant="outline"
+                    className="w-full rounded-none border border-foreground bg-transparent text-foreground font-helvetica text-xs uppercase tracking-[0.15em] hover:bg-foreground hover:text-background transition-colors"
                     size="sm"
                     onClick={handleOrderNow}
                   >
-                    <b>{t.productDetails.orderNow}</b>
+                    {t.productDetails.orderNow}
                   </Button>
                 )}
               </>

@@ -127,19 +127,6 @@ const HeroSection = ({
           </nav>
         )}
 
-        {!logoSrc && (
-          <div className="hero-message-card">
-            <h2 className="hero-dialog-title">{t.hero.dialogTitle}</h2>
-            <p className="hero-dialog-sub font-helvetica">
-              {t.hero.createdExclusivelyBy}{" "}
-              <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
-                <span className="text-primary">chun wang</span>
-              </a>
-              {t.hero.forImaginativeCollectors}
-            </p>
-            <a className="hero-dialog-btn" href="#products">{t.hero.shopCta}</a>
-          </div>
-        )}
       </div>
 
       {logoSrc && (

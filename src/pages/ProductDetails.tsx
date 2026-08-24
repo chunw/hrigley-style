@@ -1,4 +1,3 @@
-import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -17,37 +16,13 @@ const ProductDetails = () => {
   const zh = lang === "zh";
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [containerHeight, setContainerHeight] = useState<number | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-
   const { data: product, isLoading: productLoading, error: productError } = useProductDetails(id!);
   const { data: images, isLoading: imagesLoading } = useProductImages(id!);
 
-  // Compute allImages before early returns so the useEffect below is never conditional
   const rawImages = (images && images.length > 0)
     ? images
     : product ? [{ image_url: product.image_url, alt_text: product.name || product.title }] : [];
   const allImages = rawImages.filter(img => img && img.image_url);
-
-  // Measure all images and lock container to the tallest one so layout never jumps
-  useEffect(() => {
-    const urls = allImages.map(img => img.image_url).filter(Boolean);
-    if (!urls.length || !containerRef.current) return;
-    const containerWidth = containerRef.current.offsetWidth;
-    let remaining = urls.length;
-    let maxHeight = 0;
-    urls.forEach(src => {
-      const img = new window.Image();
-      img.onload = () => {
-        const h = (img.naturalHeight / img.naturalWidth) * containerWidth;
-        if (h > maxHeight) maxHeight = h;
-        if (--remaining === 0) setContainerHeight(Math.min(maxHeight, 500));
-      };
-      img.onerror = () => { if (--remaining === 0 && maxHeight > 0) setContainerHeight(maxHeight); };
-      img.src = src;
-    });
-  }, [allImages]);
 
   usePageMeta({
     title: product ? (product.title || product.name) : "Product",
@@ -91,8 +66,6 @@ const ProductDetails = () => {
       </div>
     );
   }
-
-  const currentImage = allImages[selectedImageIndex] || allImages[0];
 
   const currentShopIndex = shopOrderNavigableItems.findIndex(
     (item) => item.type === "product" && item.id === id
@@ -161,62 +134,37 @@ const ProductDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           {/* Image Gallery */}
           <div className="space-y-4">
-            <div
-              ref={containerRef}
-              className="rounded-lg overflow-hidden bg-background border-2 border-primary/20"
-              style={containerHeight ? { height: `${containerHeight}px` } : {}}
-            >
-              <ZoomableImage
-                src={currentImage?.image_url || "/placeholder.svg"}
-                alt={product.name}
-                imgClassName="w-full h-full object-contain block"
-                images={allImages.map((img) => img.image_url)}
-                startIndex={selectedImageIndex}
-                onNavigate={setSelectedImageIndex}
-              />
-            </div>
-
-            {allImages.length > 1 && (
-              <div className="flex gap-2 flex-wrap">
-                {allImages.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImageIndex(index)}
-                    className={`w-24 h-24 flex-shrink-0 overflow-hidden transition-all bg-background ${
-                      selectedImageIndex === index
-                        ? 'ring-2 ring-primary'
-                        : 'opacity-60 hover:opacity-100'
-                    }`}
-                  >
-                    <img
-                      src={image.image_url || "/placeholder.svg"}
-                      alt={`${product.name} view ${index + 1}`}
-                      className="w-full h-full object-contain"
-                    />
-                  </button>
-                ))}
+            {allImages.map((image, index) => (
+              <div key={index} className="overflow-hidden bg-[#f7f6f3]">
+                <ZoomableImage
+                  src={image.image_url || "/placeholder.svg"}
+                  alt={`${product.name} view ${index + 1}`}
+                  imgClassName="w-full h-auto object-contain block"
+                  images={allImages.map((img) => img.image_url)}
+                  startIndex={index}
+                />
               </div>
-            )}
+            ))}
           </div>
 
           {/* Product Information */}
           <div className="space-y-6">
             <div>
-              <h1 className="shop-title product-title text-3xl md:text-4xl leading-tight mb-2 mt-4">
+              <h1 className="product-title text-3xl md:text-4xl leading-tight mb-2 mt-4 text-foreground">
                 {displayTitle}
               </h1>
               {(displayCategories.length > 0 || displayCollections.length > 0) && (
                 <div className="flex flex-wrap gap-2 mt-3">
                   {displayCategories.map((label, index) => (
                     <Link key={label} to={`/?category=${encodeURIComponent(englishCategories[index] ?? "")}`}>
-                      <Badge variant="secondary" className="sans-label text-sm hover:bg-secondary/80 cursor-pointer transition-colors">
+                      <Badge variant="outline" className="rounded-none font-helvetica text-[11px] uppercase tracking-[0.1em] border-foreground/30 text-muted-foreground hover:border-foreground hover:text-foreground cursor-pointer transition-colors">
                         {label}
                       </Badge>
                     </Link>
                   ))}
                   {displayCollections.map((label, index) => (
                     <Link key={label} to={`/?category=${encodeURIComponent(englishCollections[index] ?? "")}`}>
-                      <Badge variant="outline" className="sans-label text-sm hover:bg-secondary/80 cursor-pointer transition-colors">
+                      <Badge variant="outline" className="rounded-none font-helvetica text-[11px] uppercase tracking-[0.1em] border-foreground/30 text-muted-foreground hover:border-foreground hover:text-foreground cursor-pointer transition-colors">
                         {label}
                       </Badge>
                     </Link>
@@ -227,7 +175,7 @@ const ProductDetails = () => {
               {englishCollections.includes("Slightly Useful Object") && (
                 <p className="text-sm text-muted-foreground font-helvetica mt-3">
                   {t.productDetails.partOfCollectionPrefix}{" "}
-                  <Link to="/slightlyusefulobject" className="text-primary font-semibold hover:underline">
+                  <Link to="/slightlyusefulobject" className="text-foreground font-semibold hover:underline">
                     {zh ? "有点用的东西" : "Slightly Useful Object"}
                   </Link>{" "}
                   {t.productDetails.partOfCollectionSuffix}
@@ -235,7 +183,7 @@ const ProductDetails = () => {
               )}
             </div>
 
-            <div className="text-2xl font-bold text-primary sans-label">
+            <div className="text-xl font-helvetica tracking-wide text-foreground">
               {formatPrice(product.price)}
             </div>
 
@@ -253,7 +201,7 @@ const ProductDetails = () => {
 
             {displayDetailedHtml && (
               <div className="space-y-2">
-                <h3 className="handwritten text-base">{t.productDetails.details}</h3>
+                <h3 className="font-helvetica text-[11px] uppercase tracking-[0.15em] text-muted-foreground">{t.productDetails.details}</h3>
                 <div
                   className="text-muted-foreground font-helvetica whitespace-pre-wrap product-details-html"
                   dangerouslySetInnerHTML={{ __html: displayDetailedHtml }}
@@ -284,10 +232,10 @@ const ProductDetails = () => {
             {product.paylink && (
               <div className="pt-4">
                 <Button
-                  variant="outline-pink"
+                  variant="outline"
                   size="lg"
                   onClick={product.soldOut ? undefined : handleOrderNow}
-                  className={`w-full sans-label text-lg font-bold px-8 py-6 bg-pink text-white hover:bg-transparent hover:text-pink ${product.soldOut ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                  className={`w-full rounded-none border border-foreground bg-transparent text-foreground font-helvetica text-sm uppercase tracking-[0.15em] px-8 py-6 hover:bg-foreground hover:text-background transition-colors ${product.soldOut ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                   asChild
                 >
                   <span>

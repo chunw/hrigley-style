@@ -175,6 +175,13 @@ All colors MUST be HSL.
     font-family: 'Gloria Hallelujah', 'Zhuque Fangsong (technical preview)', 'Comic Sans MS', cursive;
   }
 
+  .footer-wordmark {
+    font-family: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.09em;
+    line-height: 0.72;
+  }
+
   /* Purchase buttons use the handwritten style, while other utility buttons keep the Aileron label. */
   .gloria-button-label {
     font-family: 'Gloria Hallelujah', 'Comic Sans MS', 'Bradley Hand', 'Marker Felt', 'Chalkboard SE', cursive;

@@ -11,8 +11,8 @@ const AllItems = () => {
   const [matchedCount, setMatchedCount] = useState(0);
 
   usePageMeta({
-    title: "Shop All — Handmade Gifts, Fine Art Prints & Home Goods",
-    description: "Every handmade gift and one-of-a-kind object in the Chun Wang Studio Shop — original paintings, fine art prints, ceramics, and whimsical home goods.",
+    title: "Shop All — Handmade Jewelry, Home Decor & Fine Art Prints",
+    description: "Every handmade gift and one-of-a-kind object in the Chun Wang Studio Shop — handmade jewelry, sculptural home decor, original paintings, fine art prints, and more.",
     path: "/all-items",
   });
 

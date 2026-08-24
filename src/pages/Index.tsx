@@ -15,15 +15,15 @@ const Index = () => {
   const location = useLocation();
 
   usePageMeta({
-    title: "Handmade Art, Fine Art Prints & Unique Gifts",
-    description: "Whimsical, one-of-a-kind art and handmade gifts by artist Chun Wang — original paintings, fine art prints, photography, ceramics, and wall art for the home.",
+    title: "Handmade Jewelry, Home Decor & Fine Art Prints",
+    description: "Whimsical, one-of-a-kind home decor and handmade jewelry by artist Chun Wang — sculptural planters, clay pendants and charms, original paintings, fine art prints, and wall art for the home.",
     path: "/",
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "OnlineStore",
       name: "Chun Wang Studio Shop",
       url: SHOP_URL,
-      description: "Handmade, one-of-a-kind art and gifts — original paintings, fine art prints, photography, and ceramics by artist Chun Wang.",
+      description: "Handmade, one-of-a-kind home decor and jewelry — sculptural planters, clay pendants and charms, original paintings, fine art prints, and photography by artist Chun Wang.",
       founder: { "@type": "Person", name: "Chun Wang", url: SITE_URL },
       sameAs: [INSTAGRAM_URL, SITE_URL],
     },
