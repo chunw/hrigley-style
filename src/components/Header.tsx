@@ -85,15 +85,18 @@ const Header = () => {
 
           {/* Left - Logo */}
           <div className="flex-shrink-0">
-            <h1
-              onClick={() => navigate('/')}
-              className={`shop-title text-2xl leading-none cursor-pointer text-white transition-colors ${
-                isHomePage ? "hidden" : "hover:text-primary"
-              } ${useGloriaTitle ? "gloria-title" : ""}`}
-            >
-              {t.shopTitle.line1}<br />{t.shopTitle.line2}<br />
-              <span className="text-primary">{t.shopTitle.line3}</span>
-            </h1>
+            {isHomePage ? null : (
+              <div className={`shop-title text-2xl leading-none transition-colors ${useGloriaTitle ? "gloria-title" : ""}`}>
+                <Link to="/" className={`block cursor-pointer text-white ${useGloriaTitle ? "" : "hover:text-primary"}`}>
+                  {t.shopTitle.line1}
+                  <br />
+                  {t.shopTitle.line2}
+                </Link>
+                <Link to="/all-items" className="block text-primary hover:underline">
+                  {t.shopTitle.line3}
+                </Link>
+              </div>
+            )}
           </div>
 
           <div className="flex-1" />
