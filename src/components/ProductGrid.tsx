@@ -248,7 +248,6 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
                     <ProductCard
                       {...product}
                       highlightQuery={normalizedSearchQuery}
-                      isSearchHighlighted={hasActiveSearch}
                       hideOrderButton={hideOrderButton}
                       hideShippingLabel={hideShippingLabel}
                       artboxPrintCount={getArtboxPrintCount(product.id)}

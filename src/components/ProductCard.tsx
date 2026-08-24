@@ -27,13 +27,12 @@ interface ProductCardProps {
   hideOrderButton?: boolean;
   hideShippingLabel?: boolean;
   highlightQuery?: string;
-  isSearchHighlighted?: boolean;
   artboxPrintCount?: number;
   soldOut?: boolean;
   is_active?: boolean;
 }
 
-const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, priceLabel, currency, image_url, category, category_zh, categories, categories_zh, collections, collections_zh, paylink, detailPath, hideOrderButton, hideShippingLabel, highlightQuery, isSearchHighlighted, artboxPrintCount, soldOut }: ProductCardProps) => {
+const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, priceLabel, currency, image_url, category, category_zh, categories, categories_zh, collections, collections_zh, paylink, detailPath, hideOrderButton, hideShippingLabel, highlightQuery, artboxPrintCount, soldOut }: ProductCardProps) => {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
 
@@ -118,9 +117,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
 
   return (
     <Card
-      className={`group border-0 rounded-none bg-transparent shadow-none cursor-pointer h-full flex flex-col ${
-        isSearchHighlighted ? "ring-1 ring-foreground/50" : ""
-      }`}
+      className="group border-0 rounded-none bg-transparent shadow-none cursor-pointer h-full flex flex-col"
       onClick={handleCardClick}
     >
       <CardContent className="p-0 flex flex-col flex-1">
