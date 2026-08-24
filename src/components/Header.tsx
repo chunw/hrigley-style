@@ -22,7 +22,7 @@ const Header = () => {
     <header className={`bg-black ${isHomePage ? "home-header-adaptive" : ""}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-28">
-          <div className="absolute inset-y-0 right-0 inline-flex items-center gap-8 text-sm font-helvetica">
+          <div className="absolute inset-y-0 right-0 inline-flex items-center gap-8 text-sm fangsong-nav">
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
@@ -31,11 +31,15 @@ const Header = () => {
                   aria-label="Toggle dark/light mode"
                   className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
                 >
-                  {theme === "light" ? "Dark" : "Light"}
+                  {theme === "light" ? (
+                    <Moon className={`h-4 w-4 ${controlColor}`} />
+                  ) : (
+                    <Sun className={`h-4 w-4 ${controlColor}`} />
+                  )}
                 </button>
               </TooltipTrigger>
               <TooltipContent>
-                {theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+                {theme === "light" ? "switch to dark mode" : "switch to light mode"}
               </TooltipContent>
             </Tooltip>
 
@@ -74,7 +78,7 @@ const Header = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Follow on Instagram"
-                  className={`handwritten transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
+                  className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
                 >
                   {t.index.ctaInstagram}
                 </a>
@@ -85,7 +89,7 @@ const Header = () => {
 
           {/* Left - Logo */}
           <div className="flex-shrink-0">
-            <div className="shop-title gloria-title text-2xl leading-none transition-colors">
+            <div className="shop-title instrument-title text-2xl leading-none transition-colors">
               <Link to="/" className="block cursor-pointer text-white">
                 {t.shopTitle.line1}
                 <br />

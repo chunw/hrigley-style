@@ -190,6 +190,31 @@ All colors MUST be HSL.
     line-height: 0.72;
   }
 
+  /* Instrument Serif title variant used for the main shop header */
+  .instrument-title {
+    font-family: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 0.9;
+  }
+
+  /* Grotesque display title (preferred) */
+  .grotesque-title {
+    font-family: 'grotesque-medium-pro', 'Aileron', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 0.9;
+    text-transform: uppercase;
+  }
+
+  /* Fangsong (display) for nav links and UI titles */
+  .fangsong-nav {
+    font-family: 'Zhuque Fangsong (technical preview)', 'Gloria Hallelujah', 'Aileron', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
   /* Purchase buttons use the handwritten style, while other utility buttons keep the Aileron label. */
   .gloria-button-label {
     font-family: 'Gloria Hallelujah', 'Comic Sans MS', 'Bradley Hand', 'Marker Felt', 'Chalkboard SE', cursive;
