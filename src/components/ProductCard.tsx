@@ -133,8 +133,8 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
             loading="lazy"
           />
           {soldOut && (
-            <div className="absolute top-3 left-3 z-10 bg-red-600 px-2 py-1">
-              <span className="font-helvetica text-[10px] uppercase tracking-[0.15em] text-white">Sold Out</span>
+            <div className="absolute top-3 left-3 z-10 w-16 h-16 bg-red-600 rounded-full shadow-lg border-2 border-white/80 flex items-center justify-center p-1">
+              <span className="font-helvetica text-[10px] uppercase tracking-[0.15em] text-white text-center leading-tight">Sold Out</span>
             </div>
           )}
         </div>
