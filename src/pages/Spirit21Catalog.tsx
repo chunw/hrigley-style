@@ -104,7 +104,7 @@ const Spirit21Catalog = () => {
 
         <div className="relative z-10 mb-6">
           <Link to="/catalogs" className="font-helvetica text-xs text-muted-foreground hover:text-foreground transition-colors">
-            ← Back to Art Catalogs
+            ← Back to Catalogs
           </Link>
         </div>
 

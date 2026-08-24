@@ -43,8 +43,8 @@ const Catalogs = () => {
   const [printMenuOpen, setPrintMenuOpen] = useState(false);
 
   usePageMeta({
-    title: "Art Catalogs — Fine Art Prints & Wall Art",
-    description: "Browse Chun Wang's fine art catalogs — original watercolor, mixed-media, and photography wall art and prints, from Watercolors, Remains, In the Spirit of the 21st Century, and Photography.",
+    title: "Catalogs — Fine Art Prints & Wall Art",
+    description: "Browse Chun Wang's fine Catalogs — original watercolor, mixed-media, and photography wall art and prints, from Watercolors, Remains, In the Spirit of the 21st Century, and Photography.",
     path: "/catalogs",
   });
 

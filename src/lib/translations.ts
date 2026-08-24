@@ -29,10 +29,10 @@ export const translations = {
     },
     index: {
       tagline: "Unique works for the imaginative collectors",
-      catalogsTitle: "Art Catalogs",
+      catalogsTitle: "Catalogs",
       ctaAbout: "about",
       ctaInstagram: "follow on instagram",
-      ctaCatalogs: "view art catalogs",
+      ctaCatalogs: "view Catalogs",
     },
     footer: {
       copyright: "All rights reserved.",

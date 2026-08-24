@@ -74,13 +74,13 @@ const Header = () => {
               <TooltipTrigger asChild>
                 <Link
                   to="/catalogs"
-                  aria-label="art catalogs"
+                  aria-label="Catalogs"
                   className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
                 >
-                  art catalogs
+                  Catalogs
                 </Link>
               </TooltipTrigger>
-              <TooltipContent>art catalogs</TooltipContent>
+              <TooltipContent>Catalogs</TooltipContent>
             </Tooltip>
 
             {/* Removed link to /all-items per request */}
@@ -148,7 +148,7 @@ const Header = () => {
                   </button>
 
                   <Link to="/about" className={`text-sm p-2 ${controlColor}`}>{t.index.ctaAbout}</Link>
-                  <Link to="/catalogs" className={`text-sm p-2 ${controlColor}`}>art catalogs</Link>
+                  <Link to="/catalogs" className={`text-sm p-2 ${controlColor}`}>Catalogs</Link>
                   <a
                     href={INSTAGRAM_URL}
                     target="_blank"
