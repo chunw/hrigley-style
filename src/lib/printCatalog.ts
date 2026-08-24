@@ -4,6 +4,7 @@ import { remainsWorks, catalogMeta as remainsMeta, type RemainsWork } from "./re
 import { spiritWorks, catalogMeta as spiritMeta, type SpiritWork } from "./21spirit";
 import { photographyWorks, catalogMeta as photographyMeta, type PhotographyWork } from "./photography";
 import { products, productImages } from "./products";
+import { translations } from "./translations";
 
 function getCSS(isDark: boolean): string {
   const bg = isDark ? "#0a0a0a" : "#fff";
@@ -545,6 +546,12 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
   const coverTitle = isZh ? "店铺产品目录" : "Shop Product Catalog";
   const footerText = isZh ? `更新于 ${new Date().getFullYear()} · 材料与价格如图为准` : `Updated ${new Date().getFullYear()} · Pricing and availability subject to change`;
 
+  const about = translations[lang].about;
+  const aboutHtml = about.body
+    .split("\n\n")
+    .map((paragraph) => `<p>${paragraph}</p>`)
+    .join("");
+
   const content = vendorProducts.map((product) => vendorProductEntry(product, isZh, origin)).join("");
 
   return `<!DOCTYPE html>
@@ -579,6 +586,24 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
       letter-spacing: -0.04em;
       margin: 0 0 10px;
       color: ${fg};
+    }
+    .cover-about {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid ${border};
+    }
+    .cover-about p {
+      font-size: 11px;
+      line-height: 1.6;
+      color: ${muted};
+      margin: 0 0 8px;
+      max-width: 62ch;
+    }
+    .cover-about p:last-child {
+      margin-bottom: 0;
+    }
+    .cover-about a {
+      color: ${accent};
     }
     .catalog-grid {
       display: grid;
@@ -676,6 +701,7 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
     <header class="cover">
       <div class="cover-topline">${isZh ? "Chun Wang Studio Shop" : "Chun Wang Studio Shop"}</div>
       <h1 class="cover-title">${coverTitle}</h1>
+      <div class="cover-about">${aboutHtml}</div>
     </header>
 
     <main class="catalog-grid">
