@@ -225,7 +225,7 @@ All colors MUST be HSL.
 
   /* Scale the header shop title block by 1.5x for emphasis */
   .header-shop-scale {
-    transform: scale(1.5);
+    transform: scale(0.9);
     transform-origin: left center;
   }
 

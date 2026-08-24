@@ -90,15 +90,13 @@ const Header = () => {
           {/* Left - Logo */}
           <div className="flex-shrink-0">
             {!location.pathname.startsWith("/catalogs") && (
-              <div className="shop-title instrument-title text-2xl leading-none transition-colors header-shop-scale">
+              <div className="shop-title gloria-title text-2xl leading-none transition-colors header-shop-scale">
                 <Link to="/" className={`block cursor-pointer ${theme === "light" ? "text-black" : "text-white"}`}>
                   {t.shopTitle.line1}
                   <br />
                   {t.shopTitle.line2}
                 </Link>
-                <Link to="/all-items" className="block text-primary hover:underline">
-                  {t.shopTitle.line3}
-                </Link>
+                <span className="block text-primary">{t.shopTitle.line3}</span>
               </div>
             )}
           </div>
