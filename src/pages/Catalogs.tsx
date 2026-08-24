@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { BookOpen } from "lucide-react";
+import { ArrowLeft, BookOpen } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -61,6 +61,18 @@ const Catalogs = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+
+      <div className="border-t border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <Link
+            to="/"
+            className="sans-label inline-flex items-center gap-2 text-xs uppercase tracking-widest transition-colors hover:text-primary"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Chun Wang Studio Shop
+          </Link>
+        </div>
+      </div>
 
       <section className="grid grid-cols-1 sm:grid-cols-2 border-t border-border">
         {CATALOGS.map(({ to, images, labelKey }, index) => {
