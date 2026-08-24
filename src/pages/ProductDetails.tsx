@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -23,6 +24,7 @@ const ProductDetails = () => {
     ? images
     : product ? [{ image_url: product.image_url, alt_text: product.name || product.title }] : [];
   const allImages = rawImages.filter(img => img && img.image_url);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   usePageMeta({
     title: product ? (product.title || product.name) : "Product",
@@ -131,20 +133,48 @@ const ProductDetails = () => {
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 mb-16 items-start">
           {/* Image Gallery */}
-          <div className="space-y-4">
-            {allImages.map((image, index) => (
-              <div key={index} className="overflow-hidden bg-[#f7f6f3]">
+          <div className="flex gap-3 lg:gap-4 items-start">
+            {allImages.length > 1 && (
+              <div className="flex max-h-[70vh] w-20 shrink-0 flex-col gap-2 overflow-y-auto pr-1">
+                {allImages.map((image, index) => (
+                  <button
+                    key={`${image.image_url}-${index}`}
+                    type="button"
+                    onClick={() => setSelectedIndex(index)}
+                    className={`w-full overflow-hidden border transition-all ${
+                      selectedIndex === index
+                        ? "border-foreground opacity-100"
+                        : "border-transparent opacity-60 hover:opacity-100"
+                    }`}
+                  >
+                    <img
+                      src={image.image_url || "/placeholder.svg"}
+                      alt={`${product.name} thumbnail ${index + 1}`}
+                      className="h-20 w-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <div className="flex-1 overflow-hidden bg-[#f7f6f3]">
+              {allImages.length > 0 ? (
                 <ZoomableImage
-                  src={image.image_url || "/placeholder.svg"}
-                  alt={`${product.name} view ${index + 1}`}
+                  src={allImages[selectedIndex]?.image_url || "/placeholder.svg"}
+                  alt={`${product.name} view ${selectedIndex + 1}`}
                   imgClassName="w-full h-auto object-contain block"
                   images={allImages.map((img) => img.image_url)}
-                  startIndex={index}
+                  startIndex={selectedIndex}
+                  onNavigate={setSelectedIndex}
                 />
-              </div>
-            ))}
+              ) : (
+                <div className="aspect-[4/5] bg-[#f7f6f3] flex items-center justify-center text-xs uppercase tracking-[0.2em] text-muted-foreground/60">
+                  No image
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Product Information */}

@@ -106,7 +106,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
       onClick={handleCardClick}
     >
       <CardContent className="p-0 flex flex-col flex-1">
-        <div className="relative aspect-square mb-5 sm:mb-6 overflow-hidden shrink-0">
+        <div className="relative aspect-square mb-5 sm:mb-6 overflow-hidden shrink-0 bg-[#f7f6f3] p-6 flex items-center justify-center">
           <img
             src={image_url || "/placeholder.svg"}
             alt={name}

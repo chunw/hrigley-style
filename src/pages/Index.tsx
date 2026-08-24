@@ -40,7 +40,6 @@ const Index = () => {
     <div className="relative min-h-screen bg-background">
       
       <Header />
-      <HeroSection />
       <section id="products">
         <ProductGrid
           searchQuery={searchQuery}
@@ -72,62 +71,9 @@ const Index = () => {
         </div>
       </section> */}
 
-      <section className=" relative bg-background py-16 lg:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left - Text Content */}
-            <div className="space-y-8">
-              <div className="space-y-1 lg:space-y-4"> 
-                <h1 className="shop-title gloria-title text-4xl md:text-6xl lg:text-7xl leading-none">
-                  {t.shopTitle.line1} <br />{t.shopTitle.line2}<br />
-                  <span className="text-primary">{t.shopTitle.line3}</span>
-                </h1>
-                <p className="hidden lg:block text-muted-foreground max-w-md font-helvetica">
+      {/* Removed shop title/tagline section per request */}
 
-                  {t.index.tagline}
-                </p>
-
-                <div className="lg:hidden flex items-start gap-4">
-                  <div className="text-muted-foreground max-w-md font-helvetica flex-1">
-                    <p className="font-helvetica">{t.index.tagline}</p>
-                  
-                  </div>
-                  <a
-                    href={SITE_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block rounded-lg overflow-hidden shrink-0 w-40 h-40"
-                  >
-                    <img
-                      src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/bcfb5ed3-e3df-489e-ba87-518d4adccdd0_rw_1200.png?h=3e84d177c91ced5bbf3cede876150ae5"
-                      alt="chun wang shop cover image"
-                      className="w-full h-full object-cover"
-                    />
-                  </a>
-                </div>
-              </div> 
-            </div>
-
-            {/* Right - Image */}
-            <div className="hidden lg:block relative">
-              <a
-                href={SITE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center aspect-square lg:aspect-[4/3] rounded-lg overflow-hidden scale-80"
-              >
-                <img 
-                  src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/bcfb5ed3-e3df-489e-ba87-518d4adccdd0_rw_1200.png?h=3e84d177c91ced5bbf3cede876150ae5"
-                  alt="chun wang shop cover image"
-                  className="w-3/4 h-3/4 object-cover"
-                />
-              </a> 
-              {/* Decorative border */}
-              <div className="absolute inset-0 border-4 border-primary translate-x-4 translate-y-4 rounded-lg -z-10"></div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HeroSection />
 
       <Footer />
     </div>
