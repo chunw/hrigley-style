@@ -242,7 +242,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
                 </p>
               </div>
             ) : (
-              <div className={`grid grid-cols-2 gap-x-6 gap-y-14 sm:gap-x-10 sm:gap-y-16 lg:gap-x-12 lg:gap-y-20 auto-rows-auto ${lockedCategory ? "sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"}`}>
+              <div className={`grid grid-cols-1 gap-x-6 gap-y-14 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-16 lg:gap-x-12 lg:gap-y-20 auto-rows-auto ${lockedCategory ? "lg:grid-cols-3 xl:grid-cols-3" : "lg:grid-cols-2 xl:grid-cols-3"}`}>
                 {sortedFilteredProducts.map((product, index) => (
                   <div key={product.id} ref={index === 0 && hasActiveSearch ? firstMatchedCardRef : null} className="h-full">
                     <ProductCard

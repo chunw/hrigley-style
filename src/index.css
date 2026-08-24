@@ -378,6 +378,32 @@ All colors MUST be HSL.
   background: #000;
 }
 
+.header-brand-link,
+.header-brand-link:visited,
+.header-brand-link:hover,
+.header-brand-link:focus,
+.header-brand-link:active {
+  color: hsl(var(--foreground));
+}
+
+/* Dark-mode override: make brand text white when the page is in dark theme */
+.theme-dark .header-brand-link,
+.theme-dark .header-brand-link:visited,
+.theme-dark .header-brand-link:hover,
+.theme-dark .header-brand-link:focus,
+.theme-dark .header-brand-link:active {
+  color: #fff;
+}
+
+/* Keep explicit rule for home adaptive header (explicitly uses foreground var) */
+.home-header-adaptive .header-brand-link,
+.home-header-adaptive .header-brand-link:visited,
+.home-header-adaptive .header-brand-link:hover,
+.home-header-adaptive .header-brand-link:focus,
+.home-header-adaptive .header-brand-link:active {
+  color: hsl(var(--foreground));
+}
+
 .cargo-hero-bg {
   position: absolute;
   inset: 0;
@@ -674,7 +700,7 @@ All colors MUST be HSL.
 }
 
 .hero-dialog-title {
-  font-size: 1.25rem;
+  font-size: 0.5rem;
   margin: 0 0 0.25rem 0;
   font-weight: 700;
 }
@@ -682,6 +708,7 @@ All colors MUST be HSL.
 .hero-dialog-sub {
   margin: 0 0 0.75rem 0;
   color: rgba(17, 17, 17, 0.7);
+  font-size: 0.45rem;
 }
 
 .hero-dialog-btn {
