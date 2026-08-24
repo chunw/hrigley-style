@@ -488,10 +488,10 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
       id: `photography-${work.id}`,
       title: work.title,
       title_zh: work.titleZh,
-      description: work.description,
-      description_zh: work.descriptionZh,
-      dimensions: work.dimensions,
-      dimensions_zh: work.dimensionsZh,
+      description: work.description || photographyMeta.description,
+      description_zh: work.descriptionZh || photographyMeta.descriptionZh,
+      dimensions: work.dimensions || work.printInfo,
+      dimensions_zh: work.dimensionsZh || work.printInfoZh,
       price: work.printPrice ?? 10,
       currency: "USD",
       category: "Fine Art Prints",
@@ -502,8 +502,8 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
       id: `remains-${work.id}`,
       title: work.title,
       title_zh: work.titleZh,
-      description: work.description,
-      description_zh: work.descriptionZh,
+      description: work.description || remainsMeta.description,
+      description_zh: work.descriptionZh || remainsMeta.descriptionZh,
       dimensions: work.dimensions,
       dimensions_zh: work.dimensionsZh,
       price: work.price ?? 4,
@@ -516,8 +516,8 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
       id: `spirit-${work.id}`,
       title: work.title,
       title_zh: work.titleZh,
-      description: work.description,
-      description_zh: work.descriptionZh,
+      description: work.description || spiritMeta.description,
+      description_zh: work.descriptionZh || spiritMeta.descriptionZh,
       dimensions: work.dimensions,
       dimensions_zh: work.dimensionsZh,
       price: work.price ?? 4,
@@ -530,10 +530,10 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
       id: `watercolor-${work.id}`,
       title: work.title,
       title_zh: work.titleZh,
-      description: work.description,
-      description_zh: work.descriptionZh,
-      dimensions: work.dimensions,
-      dimensions_zh: work.dimensionsZh,
+      description: work.description || watercolorMeta.description,
+      description_zh: work.descriptionZh || watercolorMeta.descriptionZh,
+      dimensions: work.dimensions || work.printInfo,
+      dimensions_zh: work.dimensionsZh || work.printInfoZh,
       price: work.price ?? work.printPrice ?? 10,
       currency: "USD",
       category: work.series === "III" ? "Cards" : "Fine Art Prints",
@@ -543,7 +543,6 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
   ];
 
   const coverTitle = isZh ? "店铺产品目录" : "Shop Product Catalog";
-  const coverSubtitle = isZh ? "Chun Wang Studio Shop" : "Chun Wang Studio Shop";
   const footerText = isZh ? `更新于 ${new Date().getFullYear()} · 材料与价格如图为准` : `Updated ${new Date().getFullYear()} · Pricing and availability subject to change`;
 
   const content = vendorProducts.map((product) => vendorProductEntry(product, isZh, origin)).join("");
@@ -580,12 +579,6 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
       letter-spacing: -0.04em;
       margin: 0 0 10px;
       color: ${fg};
-    }
-    .cover-subtitle {
-      font-size: 12px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: ${muted};
     }
     .catalog-grid {
       display: grid;
@@ -683,7 +676,6 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
     <header class="cover">
       <div class="cover-topline">${isZh ? "Chun Wang Studio Shop" : "Chun Wang Studio Shop"}</div>
       <h1 class="cover-title">${coverTitle}</h1>
-      <div class="cover-subtitle">${coverSubtitle}</div>
     </header>
 
     <main class="catalog-grid">

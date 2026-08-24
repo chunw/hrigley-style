@@ -52,7 +52,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
     const lockedCategoryMatch = !lockedCategory || getProductCategories(product).includes(lockedCategory) || getProductCollections(product).includes(lockedCategory);
     return storefrontMatch && lockedCategoryMatch;
   });
-  const categories = ["ALL", ...Array.from(new Set(visibleProducts?.flatMap(p => getProductCategories(p)) || []))];
+  const categories = ["ALL", ...Array.from(new Set(visibleProducts?.flatMap(p => getProductCategories(p)) || [])).sort((a, b) => a.localeCompare(b))];
   const collections = Array.from(new Set(visibleProducts?.flatMap(p => getProductCollections(p)) || [])).sort((a, b) => {
     const indexA = COLLECTION_ORDER.indexOf(a);
     const indexB = COLLECTION_ORDER.indexOf(b);
