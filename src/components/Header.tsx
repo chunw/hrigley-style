@@ -1,9 +1,9 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Instagram, Sun, Moon, BookOpen, User } from "lucide-react";
-import { INSTAGRAM_URL } from "@/lib/constants";
+import { Sun, Moon, BookOpen, User } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { INSTAGRAM_URL } from "@/lib/constants";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -27,27 +27,11 @@ const Header = () => {
               <TooltipTrigger asChild>
                 <button
                   type="button"
-                  onClick={toggleLang}
-                  aria-label="Toggle language"
-                  className={`sans-label transition-colors text-xs px-2 py-1 hover:text-primary ${controlColor}`}
-                >
-                  {lang === "en" ? "中文" : "EN"}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>
-                {lang === "en" ? "Switch to Chinese" : "Switch to English"}
-              </TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
                   onClick={toggleTheme}
                   aria-label="Toggle dark/light mode"
-                  className={`inline-flex items-center justify-center w-8 h-8 transition-colors hover:text-primary ${controlColor}`}
+                  className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
                 >
-                  {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                  {theme === "light" ? "Dark" : "Light"}
                 </button>
               </TooltipTrigger>
               <TooltipContent>
@@ -60,9 +44,9 @@ const Header = () => {
                 <Link
                   to="/about"
                   aria-label={t.index.ctaAbout}
-                  className={`inline-flex items-center justify-center w-8 h-8 transition-colors hover:text-primary ${controlColor}`}
+                  className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
                 >
-                  <User className="h-4 w-4" />
+                  {t.index.ctaAbout}
                 </Link>
               </TooltipTrigger>
               <TooltipContent>{t.index.ctaAbout}</TooltipContent>
@@ -73,9 +57,9 @@ const Header = () => {
                 <Link
                   to="/catalogs"
                   aria-label={t.index.ctaCatalogs}
-                  className={`inline-flex items-center justify-center w-8 h-8 transition-colors hover:text-primary ${controlColor}`}
+                  className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
                 >
-                  <BookOpen className="h-4 w-4" />
+                  {t.index.ctaCatalogs}
                 </Link>
               </TooltipTrigger>
               <TooltipContent>{t.index.ctaCatalogs}</TooltipContent>
@@ -88,9 +72,9 @@ const Header = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Follow on Instagram"
-                  className={`handwritten inline-flex items-center gap-1 transition-colors hover:text-primary ${controlColor}`}
+                  className={`handwritten transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
                 >
-                  <Instagram className="h-4 w-4" />
+                  {t.index.ctaInstagram}
                 </a>
               </TooltipTrigger>
               <TooltipContent>{t.index.ctaInstagram}</TooltipContent>

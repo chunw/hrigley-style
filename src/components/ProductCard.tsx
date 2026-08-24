@@ -146,8 +146,8 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
                 {!hideShippingLabel && <p className="text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>}
                 {!hideOrderButton && paylink && (
                   <Button
-                    variant="outline"
-                    className="w-full rounded-none border border-foreground bg-transparent text-foreground font-helvetica text-xs uppercase tracking-[0.15em] hover:bg-foreground hover:text-background transition-colors"
+                    variant="outline-pink"
+                    className="order-now-button w-full rounded-none text-xs transition-colors"
                     size="sm"
                     onClick={handleOrderNow}
                   >

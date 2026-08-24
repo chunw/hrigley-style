@@ -158,6 +158,14 @@ All colors MUST be HSL.
     letter-spacing: 0.05em;
   }
 
+  /* Standard button labels should render in the display Fangsong face instead of the default
+     Aileron UI sans. */
+  button,
+  input[type="button"],
+  input[type="submit"] {
+    font-family: 'Zhuque Fangsong (technical preview)', 'Aileron', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
   /* Titles — the one place English renders in 朱雀仿宋/Zhuque Fangsong instead of Aileron */
   .shop-title {
     font-family: 'Zhuque Fangsong (technical preview)', 'Gloria Hallelujah', 'Comic Sans MS';
@@ -195,6 +203,13 @@ All colors MUST be HSL.
   .product-title {
     font-family: 'Zhuque Fangsong (technical preview)', 'Aileron', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     text-transform: none;
+  }
+
+  /* "Order now" CTAs use the same Fangsong display treatment as the product titles. */
+  .order-now-button {
+    font-family: 'Zhuque Fangsong (technical preview)', 'Aileron', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-transform: none;
+    letter-spacing: 0.04em;
   }
 
   /* Slightly Useful Object page only — product titles in Instrument Serif instead of the

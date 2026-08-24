@@ -262,10 +262,10 @@ const ProductDetails = () => {
             {product.paylink && (
               <div className="pt-4">
                 <Button
-                  variant="outline"
+                  variant="outline-pink"
                   size="lg"
                   onClick={product.soldOut ? undefined : handleOrderNow}
-                  className={`w-full rounded-none border border-foreground bg-transparent text-foreground font-helvetica text-sm uppercase tracking-[0.15em] px-8 py-6 hover:bg-foreground hover:text-background transition-colors ${product.soldOut ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                  className={`order-now-button w-full rounded-none text-sm px-8 py-6 transition-colors ${product.soldOut ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                   asChild
                 >
                   <span>
