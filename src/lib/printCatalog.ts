@@ -420,6 +420,8 @@ function vendorProductEntry(product: {
   title_zh?: string | null;
   description?: string | null;
   description_zh?: string | null;
+  detailed_description_html?: string | null;
+  detailed_description_html_zh?: string | null;
   dimensions?: string | null;
   dimensions_zh?: string | null;
   price?: number | null;
@@ -430,6 +432,9 @@ function vendorProductEntry(product: {
 }, isZh: boolean, origin: string): string {
   const title = isZh ? (product.title_zh ?? product.title) : product.title;
   const description = isZh ? (product.description_zh ?? product.description) : product.description;
+  const longDescription = isZh
+    ? (product.detailed_description_html_zh ?? product.detailed_description_html)
+    : product.detailed_description_html;
   const dimensions = isZh ? (product.dimensions_zh ?? product.dimensions) : product.dimensions;
   const category = isZh ? (product.category_zh ?? product.category ?? "Product") : (product.category ?? "Product");
   const image = normalizePrintAsset(origin, product.image_url);
@@ -446,6 +451,7 @@ function vendorProductEntry(product: {
         <div class="vendor-price">${priceText}</div>
         ${dimensions ? `<div class="vendor-dimensions">${dimensions}</div>` : ""}
         ${description ? `<p>${description}</p>` : ""}
+        ${longDescription && longDescription !== description ? `<div class="vendor-long-description">${longDescription}</div>` : ""}
       </div>
     </article>
   `;
@@ -468,6 +474,8 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
       title_zh: product.title_zh,
       description: product.description,
       description_zh: product.description_zh,
+      detailed_description_html: product.detailed_description_html,
+      detailed_description_html_zh: product.detailed_description_html_zh,
       dimensions: product.dimensions,
       dimensions_zh: product.dimensions_zh,
       price: product.price,
@@ -641,6 +649,19 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
       margin: 0;
       color: ${muted};
       max-width: 58ch;
+    }
+    .vendor-long-description {
+      font-size: 11px;
+      line-height: 1.6;
+      margin-top: 6px;
+      color: ${muted};
+      max-width: 58ch;
+    }
+    .vendor-long-description p {
+      margin: 0 0 6px;
+    }
+    .vendor-long-description p:last-child {
+      margin-bottom: 0;
     }
     .footer {
       margin-top: 14px;

@@ -29,7 +29,7 @@ const Footer = () => {
             ))}
           </div>
 
-          <div className="text-left text-[0.5rem] uppercase tracking-[0.18em] text-foreground/70 sm:text-center lg:text-right">
+          <div className="text-center text-[0.5rem] uppercase tracking-[0.18em] text-foreground/70">
             <div>© Chun Wang Studio Shop 2026</div>
             <div>All rights reserved.</div>
             <div className="mt-1 normal-case">Designed & shipped from New York City. Ships worldwide.</div>
