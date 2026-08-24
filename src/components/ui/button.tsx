@@ -15,7 +15,7 @@ const buttonVariants = cva(
         outline:
           "bg-background hover:bg-accent hover:text-accent-foreground",
         "outline-pink":
-          "bg-transparent text-pink hover:bg-pink hover:text-white",
+          "bg-pink text-black hover:bg-pink/90",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
