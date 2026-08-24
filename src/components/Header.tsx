@@ -77,10 +77,10 @@ const Header = () => {
                   aria-label="Catalogs"
                   className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
                 >
-                  Catalogs
+                  View Catalog
                 </Link>
               </TooltipTrigger>
-              <TooltipContent>Catalogs</TooltipContent>
+              <TooltipContent>Catalog</TooltipContent>
             </Tooltip>
 
             {/* Removed link to /all-items per request */}
