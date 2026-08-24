@@ -65,18 +65,7 @@ const Header = () => {
               <TooltipContent>{t.index.ctaCatalogs}</TooltipContent>
             </Tooltip>
 
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  to="/all-items"
-                  aria-label="Chun Wang Studio Shop"
-                  className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
-                >
-                  Chun Wang Studio Shop
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent>Chun Wang Studio Shop</TooltipContent>
-            </Tooltip>
+            {/* Removed link to /all-items per request */}
 
             <Tooltip>
               <TooltipTrigger asChild>
