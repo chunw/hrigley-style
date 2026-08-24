@@ -85,8 +85,8 @@ const Header = () => {
 
           {/* Left - Logo */}
           <div className="flex-shrink-0">
-            <div className={`shop-title text-2xl leading-none transition-colors ${useGloriaTitle ? "gloria-title" : ""}`}>
-              <Link to="/" className={`block cursor-pointer text-white ${useGloriaTitle ? "" : "hover:text-primary"}`}>
+            <div className="shop-title gloria-title text-2xl leading-none transition-colors">
+              <Link to="/" className="block cursor-pointer text-white">
                 {t.shopTitle.line1}
                 <br />
                 {t.shopTitle.line2}
