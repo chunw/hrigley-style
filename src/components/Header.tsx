@@ -21,7 +21,7 @@ const Header = () => {
   return (
     <header className={`bg-black ${isHomePage ? "home-header-adaptive" : ""}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between h-28">
+        <div className="relative flex items-center justify-between h-28 pt-6">
           <div className="absolute inset-y-0 right-0 inline-flex items-center gap-8 text-sm fangsong-nav">
             <Tooltip>
               <TooltipTrigger asChild>
@@ -89,7 +89,7 @@ const Header = () => {
 
           {/* Left - Logo */}
           <div className="flex-shrink-0">
-            <div className="shop-title instrument-title text-2xl leading-none transition-colors">
+            <div className="shop-title instrument-title text-2xl leading-none transition-colors header-shop-scale">
               <Link to="/" className="block cursor-pointer text-white">
                 {t.shopTitle.line1}
                 <br />

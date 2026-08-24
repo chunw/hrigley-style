@@ -215,6 +215,20 @@ All colors MUST be HSL.
     text-transform: uppercase;
   }
 
+  /* Fangsong for large catalog/title headings */
+  .fangsong-title {
+    font-family: 'Zhuque Fangsong (technical preview)', 'Zhuque Fangsong', 'Gloria Hallelujah', serif;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: none;
+  }
+
+  /* Scale the header shop title block by 1.5x for emphasis */
+  .header-shop-scale {
+    transform: scale(1.5);
+    transform-origin: left center;
+  }
+
   /* Purchase buttons use the handwritten style, while other utility buttons keep the Aileron label. */
   .gloria-button-label {
     font-family: 'Gloria Hallelujah', 'Comic Sans MS', 'Bradley Hand', 'Marker Felt', 'Chalkboard SE', cursive;
