@@ -1,4 +1,5 @@
 import deliveryGif from "@/assets/delivery.gif";
+import chunPortrait from "@/assets/chun.jpg";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const AboutSection = () => {
@@ -27,7 +28,7 @@ const AboutSection = () => {
 
         <div className="about-portrait">
           <img
-            src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/bcfb5ed3-e3df-489e-ba87-518d4adccdd0_rw_1200.png?h=3e84d177c91ced5bbf3cede876150ae5"
+            src={chunPortrait}
             alt="Chun Wang"
             className="about-portrait-img"
           />

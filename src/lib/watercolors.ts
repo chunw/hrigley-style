@@ -98,7 +98,7 @@ export const watercolors: Watercolor[] = [
     description: "",
     descriptionZh: "",
     printInfo: `4×6" print on matte fine art paper`,
-    printInfoZh: "10×15厘米哑光艺术纸印刷品",
+    printInfoZh: "10×15厘米哑光艺术微喷",
     price: 4,
   },
   {
@@ -116,7 +116,7 @@ export const watercolors: Watercolor[] = [
     description: "",
     descriptionZh: "",
     printInfo: `4×6" print on matte fine art paper`,
-    printInfoZh: "10×15厘米哑光艺术纸印刷品",
+    printInfoZh: "10×15厘米哑光艺术微喷",
     price: 4,
   },
   {
@@ -134,7 +134,7 @@ export const watercolors: Watercolor[] = [
     description: "",
     descriptionZh: "",
     printInfo: `4×6" print on matte fine art paper`,
-    printInfoZh: "10×15厘米哑光艺术纸印刷品",
+    printInfoZh: "10×15厘米哑光艺术微喷",
     price: 4,
   },
   {
@@ -152,7 +152,7 @@ export const watercolors: Watercolor[] = [
     description: "",
     descriptionZh: "",
     printInfo: `4×6" print on matte fine art paper`,
-    printInfoZh: "10×15厘米哑光艺术纸印刷品",
+    printInfoZh: "10×15厘米哑光艺术微喷",
     price: 4,
   },
 
@@ -666,17 +666,17 @@ export const watercolors: Watercolor[] = [
 
   // Cards
 
-  { id: "29", title: "Chun Wang Studio Card #02", titleZh: "王淳工作室卡片 #02", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术纸印刷品", printPrice: 4 },
-  { id: "30", title: "Chun Wang Studio Card #03", titleZh: "王淳工作室卡片 #03", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术纸印刷品", printPrice: 4 },
-  { id: "31", title: "Chun Wang Studio Card #04", titleZh: "王淳工作室卡片 #04", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术纸印刷品", printPrice: 4 },
-  { id: "32", title: "Chun Wang Studio Card #05", titleZh: "王淳工作室卡片 #05", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术纸印刷品", printPrice: 4 },
-  { id: "33", title: "Chun Wang Studio Card #06", titleZh: "王淳工作室卡片 #06", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术纸印刷品", printPrice: 4 },
-  { id: "34", title: "Chun Wang Studio Card #07", titleZh: "王淳工作室卡片 #07", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术纸印刷品", printPrice: 4 },
-  { id: "35", title: "Chun Wang Studio Card #08", titleZh: "王淳工作室卡片 #08", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术纸印刷品", printPrice: 4 },
-  { id: "36", title: "Chun Wang Studio Card #09", titleZh: "王淳工作室卡片 #09", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术纸印刷品", printPrice: 4 },
-  { id: "37", title: "Chun Wang Studio Card #10", titleZh: "王淳工作室卡片 #10", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术纸印刷品", printPrice: 4 },
-  { id: "38", title: "Chun Wang Studio Card #11", titleZh: "王淳工作室卡片 #11", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术纸印刷品", printPrice: 4 },
-  { id: "39", title: "Chun Wang Studio Card #12", titleZh: "王淳工作室卡片 #12", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术纸印刷品", printPrice: 4 },
+  { id: "29", title: "Chun Wang Studio Card #02", titleZh: "王淳工作室卡片 #02", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术微喷", printPrice: 4 },
+  { id: "30", title: "Chun Wang Studio Card #03", titleZh: "王淳工作室卡片 #03", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术微喷", printPrice: 4 },
+  { id: "31", title: "Chun Wang Studio Card #04", titleZh: "王淳工作室卡片 #04", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术微喷", printPrice: 4 },
+  { id: "32", title: "Chun Wang Studio Card #05", titleZh: "王淳工作室卡片 #05", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术微喷", printPrice: 4 },
+  { id: "33", title: "Chun Wang Studio Card #06", titleZh: "王淳工作室卡片 #06", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术微喷", printPrice: 4 },
+  { id: "34", title: "Chun Wang Studio Card #07", titleZh: "王淳工作室卡片 #07", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术微喷", printPrice: 4 },
+  { id: "35", title: "Chun Wang Studio Card #08", titleZh: "王淳工作室卡片 #08", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术微喷", printPrice: 4 },
+  { id: "36", title: "Chun Wang Studio Card #09", titleZh: "王淳工作室卡片 #09", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术微喷", printPrice: 4 },
+  { id: "37", title: "Chun Wang Studio Card #10", titleZh: "王淳工作室卡片 #10", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术微喷", printPrice: 4 },
+  { id: "38", title: "Chun Wang Studio Card #11", titleZh: "王淳工作室卡片 #11", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术微喷", printPrice: 4 },
+  { id: "39", title: "Chun Wang Studio Card #12", titleZh: "王淳工作室卡片 #12", series: "III", showInStorefront: false, year: "2026", printInfo: `4×6" print on matte fine art paper`, printInfoZh: "10×15厘米哑光艺术微喷", printPrice: 4 },
   ];
 
 export function getWatercolor(id: string): Watercolor | undefined {

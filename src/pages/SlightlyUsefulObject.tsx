@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { SITE_URL } from "@/lib/constants";
 import { useLanguage } from "@/contexts/LanguageContext";
+import chunPortrait from "@/assets/chun.jpg";
 
 const HERO_TITLE = {
   line1: "Slightly",
@@ -79,7 +80,7 @@ const SlightlyUsefulObject = () => {
                     className="block rounded-lg overflow-hidden shrink-0 w-40 h-40"
                   >
                     <img
-                      src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/bcfb5ed3-e3df-489e-ba87-518d4adccdd0_rw_1200.png?h=3e84d177c91ced5bbf3cede876150ae5"
+                      src={chunPortrait}
                       alt="chun wang shop cover image"
                       className="w-full h-full object-cover"
                     />
@@ -97,7 +98,7 @@ const SlightlyUsefulObject = () => {
                 className="flex items-center justify-center aspect-square lg:aspect-[4/3] rounded-lg overflow-hidden scale-80"
               >
                 <img
-                  src="https://cdn.myportfolio.com/28e70582c8bd2069899fb42e60980ce2/bcfb5ed3-e3df-489e-ba87-518d4adccdd0_rw_1200.png?h=3e84d177c91ced5bbf3cede876150ae5"
+                  src={chunPortrait}
                   alt="chun wang shop cover image"
                   className="w-3/4 h-3/4 object-cover"
                 />
