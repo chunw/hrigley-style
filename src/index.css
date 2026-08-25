@@ -207,10 +207,10 @@ All colors MUST be HSL.
     text-transform: uppercase;
   }
 
-  /* Fangsong (display) for nav links and UI titles */
+  /* Site navigation bar links */
   .fangsong-nav {
-    font-family: 'Zhuque Fangsong (technical preview)', 'Gloria Hallelujah', 'Aileron', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 700;
+    font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 400;
     letter-spacing: 0.06em;
     text-transform: uppercase;
   }
@@ -312,7 +312,7 @@ All colors MUST be HSL.
   }
 
   .description-html a:hover {
-    text-decoration: underline;
+    text-decoration: none;
   }
 
   /* Make common interactive elements show pointer cursor */
@@ -574,7 +574,7 @@ All colors MUST be HSL.
 }
 
 .handwritten-note-text {
-  font-family: 'Zhuque Fangsong (technical preview)', 'Gloria Hallelujah', 'Comic Sans MS', cursive;
+  font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 1.1rem;
   line-height: 1.7;
   color: #2b2b2b;
@@ -584,8 +584,7 @@ All colors MUST be HSL.
 
 .handwritten-note-text a {
   color: hsl(var(--primary));
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  text-decoration: none;
 }
 
 .cargo-hero-description {

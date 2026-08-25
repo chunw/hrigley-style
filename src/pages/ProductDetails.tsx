@@ -226,7 +226,7 @@ const ProductDetails = () => {
               {englishCollections.includes("Slightly Useful Object") && (
                 <p className="text-sm text-muted-foreground font-helvetica mt-3">
                   {t.productDetails.partOfCollectionPrefix}{" "}
-                  <Link to="/slightlyusefulobject" className="text-foreground font-semibold hover:underline">
+                  <Link to="/slightlyusefulobject" className="text-foreground font-semibold">
                     {zh ? "有点用的东西" : "Slightly Useful Object"}
                   </Link>{" "}
                   {t.productDetails.partOfCollectionSuffix}
