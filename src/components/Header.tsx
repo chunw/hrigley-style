@@ -148,7 +148,7 @@ const Header = () => {
                   </button>
 
                   <Link to="/about" className={`text-sm p-2 ${controlColor}`}>{t.index.ctaAbout}</Link>
-                  <Link to="/catalogs" className={`text-sm p-2 ${controlColor}`}>Catalogs</Link>
+                  <Link to="/catalogs" className={`text-sm p-2 ${controlColor}`}>catalog</Link>
                   <a
                     href={INSTAGRAM_URL}
                     target="_blank"
