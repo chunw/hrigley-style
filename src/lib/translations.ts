@@ -123,7 +123,7 @@ export const translations = {
     about: {
       title: "关于",
       subtitle: "手工制作，独一无二。",
-      body: "<em>Chun Wang Studio Shop 是艺术家<a href=\"https://chunwang.art\" target=\"_blank\" rel=\"noopener noreferrer\">王淳</a>的创作，工作室位于纽约。</em>\n\n我的创作游走于陶瓷、绘画、摄影，以及功能性艺术物件之间。\n\n一切始于那些微小古怪的日常小事——我总是忍不住多看一眼、多想一层——最终变成了那些奇趣的手工物件：可以用、可以送人，也可以静静摆在那里，供你生出一点存在主义式的好奇。\n\n每一件作品都独一无二，由我亲手在纽约工作室设计制作，全球发货。",
+      body: "<em>Chun Wang Studio Shop 是艺术家<a href=\"https://chunwang.art\" target=\"_blank\" rel=\"noopener noreferrer\">王淳</a>的创作衍生品商店。</em>\n\n我的创作游走于陶瓷、绘画、摄影，以及功能性艺术物件之间。\n\n一切始于那些微小古怪的日常小事——我总是忍不住多看一眼、多想一层——最终变成了那些奇趣的手工物件：可以用、可以送人，也可以静静摆在那里，供你生出一点存在主义式的好奇。\n\n每一件作品都独一无二，由我亲手在纽约工作室设计制作，全球发货。",
       artistLabel: "关于艺术家",
       backToShop: "返回商店",
     },
