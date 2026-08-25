@@ -18,7 +18,7 @@ export const translations = {
     about: {
       title: "About",
       subtitle: "Handmade & one of a kind.",
-      body: "What started as bespoke observations and a bit of overthinking turned into whimsical objects and images you can use, gift, or just stare at in existential curiosity.\n\nI'm <a href=\"https://chunwang.art\" target=\"_blank\" rel=\"noopener noreferrer\">Chun</a>, an artist in New York City working between ceramics, painting, photography, and functional objects. I follow small, weird, everyday moments and turn them into something you can hold.\n\nEverything is created exclusively by me in my NYC studio.",
+      body: "Chun Wang Studio Shop is the work of <a href=\"https://chunwang.art\" target=\"_blank\" rel=\"noopener noreferrer\">Chun Wang</a>, an artist based in New York City working across ceramics, painting, photography, and functional objects.\n\nEverything starts from small, weird, everyday observations — a bit of bespoke noticing and a bit of overthinking — that get turned into whimsical, handmade pieces you can use, gift, or just sit with in quiet curiosity.\n\nEach item is one of a kind, designed and made exclusively by me in my NYC studio. Ships worldwide.",
       artistLabel: "About the Artist",
       backToShop: "Back to Shop",
     },
