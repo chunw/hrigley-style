@@ -415,302 +415,430 @@ function normalizePrintAsset(origin: string, asset: string | undefined | null): 
   return `${origin}${asset.startsWith("/") ? "" : "/"}${asset}`;
 }
 
-function vendorProductEntry(product: {
-  id: string;
+function vcCrosshair(color: string): string {
+  return `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+    <circle cx="8" cy="8" r="6" stroke="${color}" stroke-width="1"/>
+    <line x1="8" y1="0.5" x2="8" y2="3.5" stroke="${color}" stroke-width="1"/>
+    <line x1="8" y1="12.5" x2="8" y2="15.5" stroke="${color}" stroke-width="1"/>
+    <line x1="0.5" y1="8" x2="3.5" y2="8" stroke="${color}" stroke-width="1"/>
+    <line x1="12.5" y1="8" x2="15.5" y2="8" stroke="${color}" stroke-width="1"/>
+  </svg>`;
+}
+
+function vcEyebrow(line1: string, line2: string): string {
+  return `<div class="vc-eyebrow">${line1}<br/>${line2}</div>`;
+}
+
+function vcTagTop(text: string): string {
+  return `<div class="vc-tag-top">${text}</div>`;
+}
+
+function vcFooter(tagText: string, page: number, total: number, muted: string): string {
+  return `
+    <div class="vc-footer-tag">${tagText}</div>
+    <div class="vc-footer-page">${String(page).padStart(2, "0")} / ${String(total).padStart(2, "0")} ${vcCrosshair(muted)}</div>`;
+}
+
+function vcEmptyPage(side: "left" | "right"): string {
+  return `<div class="vc-page vc-page-${side}"></div>`;
+}
+
+interface VendorItem {
   title: string;
-  title_zh?: string | null;
   description?: string | null;
-  description_zh?: string | null;
-  detailed_description_html?: string | null;
-  detailed_description_html_zh?: string | null;
   dimensions?: string | null;
-  dimensions_zh?: string | null;
   price?: number | null;
   currency?: string | null;
-  category?: string | null;
-  category_zh?: string | null;
-  image_url?: string | null;
-}, isZh: boolean, origin: string): string {
-  const title = isZh ? (product.title_zh ?? product.title) : product.title;
-  const description = isZh ? (product.description_zh ?? product.description) : product.description;
-  const longDescription = isZh
-    ? (product.detailed_description_html_zh ?? product.detailed_description_html)
-    : product.detailed_description_html;
-  const dimensions = isZh ? (product.dimensions_zh ?? product.dimensions) : product.dimensions;
-  const category = isZh ? (product.category_zh ?? product.category ?? "Product") : (product.category ?? "Product");
-  const image = normalizePrintAsset(origin, product.image_url);
-  const priceText = product.price != null ? `${product.currency ?? "USD"} $${product.price}` : "Price available on request";
+  category: string;
+  image_url: string;
+}
+
+function vcCoverSpread(
+  isZh: boolean,
+  intro: string,
+  heroImage: string,
+  itemCount: number,
+  page: number,
+  total: number,
+  muted: string,
+): string {
+  const left = `
+    <div class="vc-page vc-page-left">
+      ${vcEyebrow(isZh ? "王淳工作室" : "CHUN WANG STUDIO", isZh ? "商店目录" : "SHOP CATALOG")}
+      ${vcTagTop(isZh ? `#共 ${itemCount} 件` : `#ITEMS ${itemCount}`)}
+      <div class="vc-cover-body">
+        <div class="vc-cover-intro">${intro}</div>
+        <div class="vc-cover-title">${isZh ? "商店<br/>目录" : "SHOP<br/>CATALOG"}</div>
+        <div class="vc-cover-sub">${isZh ? "精选作品与商品" : "CURATED WORKS & PRODUCTS"}</div>
+      </div>
+      ${vcFooter(isZh ? "商店 | 目录" : "SHOP | CATALOG", page, total, muted)}
+    </div>`;
+  const right = `
+    <div class="vc-page vc-page-right">
+      ${vcTagTop(isZh ? "#精选" : "#FEATURED")}
+      <div class="vc-prod-image-wrap" style="margin-top:70px;">
+        <div class="vc-prod-image-block"></div>
+        <img src="${heroImage}" alt="" onerror="this.style.visibility='hidden'" />
+      </div>
+      ${vcFooter(isZh ? "商店 | 精选" : "SHOP | FEATURED", page + 1, total, muted)}
+    </div>`;
+  return spread(left, right);
+}
+
+function vcCategoryDividerSpread(
+  category: string,
+  items: VendorItem[],
+  isZh: boolean,
+  catIndex: number,
+  page: number,
+  total: number,
+  muted: string,
+): string {
+  const mosaic = items.slice(0, 4);
+  const left = `
+    <div class="vc-page vc-page-left">
+      ${vcEyebrow(isZh ? "王淳工作室" : "CHUN WANG STUDIO", isZh ? "商店目录" : "SHOP CATALOG")}
+      ${vcTagTop(`#${String(catIndex).padStart(2, "0")}`)}
+      <div class="vc-mosaic">
+        ${mosaic.map((it, i) => `<img src="${it.image_url}" style="${i === 0 ? "grid-column:1/3;" : ""}" alt="" onerror="this.style.visibility='hidden'" />`).join("")}
+      </div>
+      ${vcFooter(isZh ? "商店 | 分类" : "SHOP | CATEGORY", page, total, muted)}
+    </div>`;
+  const right = `
+    <div class="vc-page vc-page-right">
+      ${vcTagTop(isZh ? `${items.length} 件` : `${items.length} ITEMS`)}
+      <div class="vc-cover-body">
+        <div class="vc-div-num">${String(catIndex).padStart(2, "0")}</div>
+        <div class="vc-cover-title" style="font-size:44px;">${category}</div>
+        <div class="vc-cover-sub">${isZh ? "商店目录" : "SHOP CATALOG"}</div>
+      </div>
+      ${vcFooter(`${isZh ? "商店" : "SHOP"} | ${category}`, page + 1, total, muted)}
+    </div>`;
+  return spread(left, right);
+}
+
+function vcProductPage(
+  item: VendorItem,
+  side: "left" | "right",
+  index: number,
+  isZh: boolean,
+  page: number,
+  total: number,
+  muted: string,
+): string {
+  const priceText = item.price != null ? `${item.currency ?? "USD"} $${item.price}` : (isZh ? "询价" : "Price on request");
+  return `
+    <div class="vc-page vc-page-${side}">
+      ${vcEyebrow(isZh ? "王淳工作室" : "CHUN WANG STUDIO", isZh ? "商店目录" : "SHOP CATALOG")}
+      ${vcTagTop(`#${String(index).padStart(2, "0")}`)}
+      <div class="vc-prod-head">
+        <div class="vc-prod-num">${String(index).padStart(2, "0")}/</div>
+        <div class="vc-prod-title">${item.title}</div>
+        <div class="vc-prod-category">${item.category}</div>
+      </div>
+      <div class="vc-prod-image-wrap">
+        <div class="vc-prod-image-block"></div>
+        <img src="${item.image_url}" alt="${item.title}" onerror="this.style.visibility='hidden'" />
+      </div>
+      <div class="vc-prod-price">${priceText}</div>
+      ${item.dimensions ? `<div class="vc-prod-dimensions">${item.dimensions}</div>` : ""}
+      ${item.description ? `<div class="vc-prod-desc">${item.description}</div>` : ""}
+      ${vcFooter(`${isZh ? "商店" : "SHOP"} | ${item.category}`, page, total, muted)}
+    </div>`;
+}
+
+function getVendorCSS(isDark: boolean): string {
+  const bg = isDark ? "#0b0b0b" : "#ffffff";
+  const fg = isDark ? "#f3efe8" : "#111111";
+  const muted = isDark ? "#8f887a" : "#767066";
+  const divider = isDark ? "#262626" : "#e5e1da";
+  const accentBlock = isDark ? "#1c1c1c" : "#f2efe9";
 
   return `
-    <article class="vendor-item">
-      <div class="vendor-image-wrap">
-        <img src="${image}" alt="${title}" onerror="this.style.display='none'" />
-      </div>
-      <div class="vendor-copy">
-        <div class="vendor-topline">${category}</div>
-        <h3>${title}</h3>
-        <div class="vendor-price">${priceText}</div>
-        ${dimensions ? `<div class="vendor-dimensions">${dimensions}</div>` : ""}
-        ${description ? `<p>${description}</p>` : ""}
-        ${longDescription && longDescription !== description ? `<div class="vendor-long-description">${longDescription}</div>` : ""}
-      </div>
-    </article>
-  `;
-}
+  @page { size: landscape; margin: 0; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: ${bg};
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .spread {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    page-break-after: always;
+    break-after: page;
+  }
+  .spread:last-child { page-break-after: avoid; break-after: avoid; }
+  .vc-page {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 46px 40px 76px;
+    background: ${bg};
+    color: ${fg};
+    font-family: 'Aileron', 'Helvetica Neue', Arial, sans-serif;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .vc-page-left { border-right: 1px solid ${divider}; }
+  .vc-eyebrow {
+    position: absolute;
+    top: 40px; left: 40px;
+    font-size: 8px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: ${muted};
+    line-height: 1.7;
+  }
+  .vc-tag-top {
+    position: absolute;
+    top: 40px; right: 40px;
+    font-size: 8px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: ${muted};
+    text-align: right;
+  }
+  .vc-footer-tag {
+    position: absolute;
+    bottom: 34px; left: 40px;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border: 1px solid ${fg};
+    color: ${fg};
+  }
+  .vc-footer-page {
+    position: absolute;
+    bottom: 34px; right: 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: ${muted};
+  }
+  .vc-cover-body { margin-top: auto; }
+  .vc-cover-intro {
+    font-size: 10px;
+    line-height: 1.7;
+    color: ${muted};
+    max-width: 280px;
+    margin-bottom: 30px;
+  }
+  .vc-cover-title {
+    font-size: 60px;
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .vc-cover-sub {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: ${muted};
+  }
+  .vc-div-num {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 800;
+    border: 1px solid ${fg};
+    padding: 3px 9px;
+    margin-bottom: 16px;
+  }
+  .vc-mosaic {
+    margin-top: 70px;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 6px;
+    min-height: 0;
+  }
+  .vc-mosaic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    background: ${accentBlock};
+  }
+  .vc-prod-head { margin-top: 70px; margin-bottom: 20px; }
+  .vc-prod-num {
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .vc-prod-title {
+    font-size: 19px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .vc-prod-category {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: ${muted};
+  }
+  .vc-prod-image-wrap {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+  .vc-prod-image-block {
+    position: absolute;
+    width: 78%;
+    height: 78%;
+    left: 8%;
+    top: 6%;
+    background: ${accentBlock};
+    z-index: 0;
+  }
+  .vc-prod-image-wrap img {
+    position: relative;
+    z-index: 1;
+    max-width: 88%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .vc-prod-price {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .vc-prod-dimensions {
+    font-size: 9px;
+    color: ${muted};
+    margin-bottom: 8px;
+  }
+  .vc-prod-desc {
+    font-size: 9px;
+    line-height: 1.6;
+    color: ${muted};
+    max-width: 300px;
+  }
+`;}
 
 export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme: PrintTheme = "light"): string {
   const isDark = theme === "dark";
   const isZh = lang === "zh";
-  const bg = isDark ? "#0b0b0b" : "#ffffff";
-  const fg = isDark ? "#ece6dc" : "#111111";
-  const muted = isDark ? "#aaa08a" : "#666666";
-  const panel = isDark ? "#121212" : "#f6f3ee";
-  const border = isDark ? "#2d2d2d" : "#ded7ce";
-  const accent = isDark ? "#d8c8a8" : "#8c6d4d";
+  const muted = isDark ? "#8f887a" : "#767066";
 
-  const vendorProducts = [
+  const rawItems: VendorItem[] = [
     ...products.filter((product) => product.showInStorefront !== false).map((product) => ({
-      id: product.id,
-      title: product.title,
-      title_zh: product.title_zh,
-      description: product.description,
-      description_zh: product.description_zh,
-      detailed_description_html: product.detailed_description_html,
-      detailed_description_html_zh: product.detailed_description_html_zh,
-      dimensions: product.dimensions,
-      dimensions_zh: product.dimensions_zh,
+      title: isZh ? (product.title_zh ?? product.title) : product.title,
+      description: isZh ? (product.description_zh ?? product.description) : product.description,
+      dimensions: isZh ? (product.dimensions_zh ?? product.dimensions) : product.dimensions,
       price: product.price,
       currency: product.currency,
-      category: product.category,
-      category_zh: product.category_zh,
-      image_url: product.image_url,
+      category: isZh ? (product.category_zh ?? product.category ?? "Product") : (product.category ?? "Product"),
+      image_url: normalizePrintAsset(origin, product.image_url),
     })),
     ...photographyWorks.filter((work) => work.showInStorefront !== false).map((work) => ({
-      id: `photography-${work.id}`,
-      title: work.title,
-      title_zh: work.titleZh,
-      description: work.description || photographyMeta.description,
-      description_zh: work.descriptionZh || photographyMeta.descriptionZh,
-      dimensions: work.dimensions || work.printInfo,
-      dimensions_zh: work.dimensionsZh || work.printInfoZh,
+      title: isZh ? (work.titleZh ?? work.title) : work.title,
+      description: isZh ? (work.descriptionZh || photographyMeta.descriptionZh) : (work.description || photographyMeta.description),
+      dimensions: isZh ? (work.dimensionsZh || work.printInfoZh) : (work.dimensions || work.printInfo),
       price: work.printPrice ?? 10,
       currency: "USD",
-      category: "Fine Art Prints",
-      category_zh: "版画",
+      category: isZh ? "版画" : "Fine Art Prints",
       image_url: normalizePrintAsset(origin, `/photography/${work.id.padStart(2, "0")}/main.jpg`),
     })),
     ...remainsWorks.filter((work) => work.showInStorefront !== false).map((work) => ({
-      id: `remains-${work.id}`,
-      title: work.title,
-      title_zh: work.titleZh,
-      description: work.description || remainsMeta.description,
-      description_zh: work.descriptionZh || remainsMeta.descriptionZh,
-      dimensions: work.dimensions,
-      dimensions_zh: work.dimensionsZh,
+      title: isZh ? (work.titleZh ?? work.title) : work.title,
+      description: isZh ? (work.descriptionZh || remainsMeta.descriptionZh) : (work.description || remainsMeta.description),
+      dimensions: isZh ? work.dimensionsZh : work.dimensions,
       price: work.price ?? 4,
       currency: "USD",
-      category: "Fine Art Prints",
-      category_zh: "版画",
+      category: isZh ? "版画" : "Fine Art Prints",
       image_url: normalizePrintAsset(origin, `/remains/${work.id.padStart(2, "0")}/main.jpg`),
     })),
     ...spiritWorks.filter((work) => work.showInStorefront !== false).map((work) => ({
-      id: `spirit-${work.id}`,
-      title: work.title,
-      title_zh: work.titleZh,
-      description: work.description || spiritMeta.description,
-      description_zh: work.descriptionZh || spiritMeta.descriptionZh,
-      dimensions: work.dimensions,
-      dimensions_zh: work.dimensionsZh,
+      title: isZh ? (work.titleZh ?? work.title) : work.title,
+      description: isZh ? (work.descriptionZh || spiritMeta.descriptionZh) : (work.description || spiritMeta.description),
+      dimensions: isZh ? work.dimensionsZh : work.dimensions,
       price: work.price ?? 4,
       currency: "USD",
-      category: "Fine Art Prints",
-      category_zh: "版画",
+      category: isZh ? "版画" : "Fine Art Prints",
       image_url: normalizePrintAsset(origin, `/21spirit/${work.id.padStart(2, "0")}/main.jpg`),
     })),
     ...watercolors.filter((work) => work.showInStorefront !== false).map((work) => ({
-      id: `watercolor-${work.id}`,
-      title: work.title,
-      title_zh: work.titleZh,
-      description: work.description || watercolorMeta.description,
-      description_zh: work.descriptionZh || watercolorMeta.descriptionZh,
-      dimensions: work.dimensions || work.printInfo,
-      dimensions_zh: work.dimensionsZh || work.printInfoZh,
+      title: isZh ? (work.titleZh ?? work.title) : work.title,
+      description: isZh ? (work.descriptionZh || watercolorMeta.descriptionZh) : (work.description || watercolorMeta.description),
+      dimensions: isZh ? (work.dimensionsZh || work.printInfoZh) : (work.dimensions || work.printInfo),
       price: work.price ?? work.printPrice ?? 10,
       currency: "USD",
-      category: work.series === "III" ? "Cards" : "Fine Art Prints",
-      category_zh: work.series === "III" ? "卡片" : "版画",
+      category: work.series === "III" ? (isZh ? "卡片" : "Cards") : (isZh ? "版画" : "Fine Art Prints"),
       image_url: normalizePrintAsset(origin, `/watercolors/${work.id.padStart(2, "0")}/main.jpg`),
     })),
   ];
 
-  const coverTitle = isZh ? "店铺产品目录" : "Shop Product Catalog";
-  const footerText = isZh ? `更新于 ${new Date().getFullYear()} · 材料与价格如图为准` : `Updated ${new Date().getFullYear()} · Pricing and availability subject to change`;
+  const groups: { category: string; items: VendorItem[] }[] = [];
+  for (const item of rawItems) {
+    let group = groups.find((g) => g.category === item.category);
+    if (!group) {
+      group = { category: item.category, items: [] };
+      groups.push(group);
+    }
+    group.items.push(item);
+  }
+
+  let totalPages = 2;
+  for (const group of groups) {
+    totalPages += 2 + Math.ceil(group.items.length / 2) * 2;
+  }
 
   const about = translations[lang].about;
-  const aboutHtml = about.body
-    .split("\n\n")
-    .map((paragraph) => `<p>${paragraph}</p>`)
-    .join("");
+  const intro = `<p>${about.body.split("\n\n")[0]}</p>`;
+  const heroImage = rawItems[0]?.image_url ?? "";
 
-  const content = vendorProducts.map((product) => vendorProductEntry(product, isZh, origin)).join("");
+  let pageCounter = 1;
+  const coverHtml = vcCoverSpread(isZh, intro, heroImage, rawItems.length, pageCounter, totalPages, muted);
+  pageCounter += 2;
+
+  let sectionsHtml = "";
+  groups.forEach((group, groupIndex) => {
+    sectionsHtml += vcCategoryDividerSpread(group.category, group.items, isZh, groupIndex + 1, pageCounter, totalPages, muted);
+    pageCounter += 2;
+    for (let i = 0; i < group.items.length; i += 2) {
+      const left = vcProductPage(group.items[i], "left", i + 1, isZh, pageCounter, totalPages, muted);
+      const rightItem = group.items[i + 1];
+      const right = rightItem
+        ? vcProductPage(rightItem, "right", i + 2, isZh, pageCounter + 1, totalPages, muted)
+        : vcEmptyPage("right");
+      sectionsHtml += spread(left, right);
+      pageCounter += 2;
+    }
+  });
+
+  const coverTitle = isZh ? "店铺产品目录" : "Shop Product Catalog";
+  const now = new Date();
+  const dateStamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
 
   return `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${coverTitle}</title>
-  <style>
-    @page { size: A4 portrait; margin: 16mm; }
-    * { box-sizing: border-box; }
-    html, body { margin: 0; background: ${bg}; color: ${fg}; font-family: "Avenir Next", "Helvetica Neue", Arial, sans-serif; }
-    body { padding: 18px; }
-    .page { max-width: 100%; }
-    .cover {
-      border: 1px solid ${border};
-      background: ${panel};
-      padding: 28px 24px 20px;
-      margin-bottom: 18px;
-    }
-    .cover-topline {
-      font-size: 10px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: ${muted};
-      margin-bottom: 18px;
-    }
-    .cover-title {
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: 34px;
-      line-height: 1.05;
-      letter-spacing: -0.04em;
-      margin: 0 0 10px;
-      color: ${fg};
-    }
-    .cover-about {
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid ${border};
-    }
-    .cover-about p {
-      font-size: 11px;
-      line-height: 1.6;
-      color: ${muted};
-      margin: 0 0 8px;
-      max-width: 62ch;
-    }
-    .cover-about p:last-child {
-      margin-bottom: 0;
-    }
-    .cover-about a {
-      color: ${accent};
-    }
-    .catalog-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-    }
-    .vendor-item {
-      display: grid;
-      grid-template-columns: 380px 1fr;
-      gap: 14px;
-      padding: 12px 0;
-      border-top: 1px solid ${border};
-      page-break-inside: avoid;
-      break-inside: avoid;
-    }
-    .vendor-image-wrap {
-      width: 380px;
-      height: 380px;
-      background: ${panel};
-      border: 1px solid ${border};
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .vendor-image-wrap img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .vendor-copy h3 {
-      font-size: 18px;
-      line-height: 1.2;
-      margin: 0 0 8px;
-      font-weight: 500;
-      color: ${fg};
-    }
-    .vendor-topline {
-      font-size: 9px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: ${accent};
-      margin-bottom: 6px;
-    }
-    .vendor-price {
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: ${muted};
-      margin-bottom: 6px;
-    }
-    .vendor-dimensions {
-      font-size: 11px;
-      color: ${muted};
-      margin-bottom: 8px;
-    }
-    .vendor-copy p {
-      font-size: 11px;
-      line-height: 1.6;
-      margin: 0;
-      color: ${muted};
-      max-width: 58ch;
-    }
-    .vendor-long-description {
-      font-size: 11px;
-      line-height: 1.6;
-      margin-top: 6px;
-      color: ${muted};
-      max-width: 58ch;
-    }
-    .vendor-long-description p {
-      margin: 0 0 6px;
-    }
-    .vendor-long-description p:last-child {
-      margin-bottom: 0;
-    }
-    .footer {
-      margin-top: 14px;
-      border-top: 1px solid ${border};
-      padding-top: 10px;
-      font-size: 9px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: ${muted};
-    }
-    @media print {
-      body { margin: 0; }
-      .page { width: 100%; }
-    }
-  </style>
+  <title>${coverTitle} ${dateStamp}</title>
+  <style>${getVendorCSS(isDark)}</style>
 </head>
 <body>
-  <div class="page">
-    <header class="cover">
-      <div class="cover-topline">${isZh ? "Chun Wang Studio Shop" : "Chun Wang Studio Shop"}</div>
-      <h1 class="cover-title">${coverTitle}</h1>
-      <div class="cover-about">${aboutHtml}</div>
-    </header>
-
-    <main class="catalog-grid">
-      ${content}
-    </main>
-
-    <div class="footer">${footerText}</div>
-  </div>
-  <script>window.onload = function() { setTimeout(function() { window.print(); }, 250); };</script>
+  ${coverHtml}
+  ${sectionsHtml}
+  <script>window.onload = function() { setTimeout(function() { window.print(); }, 300); };<\/script>
 </body>
 </html>`;
 }
