@@ -2,7 +2,7 @@ import { useCallback, useRef, useState, type CSSProperties } from "react";
 
 // How large a thumbnail is allowed to grow, and how much viewport edge to
 // always leave clear (so the expanded image never touches the screen edge).
-const MAX_SCALE = 2;
+const MAX_SCALE = 1.5;
 const VIEWPORT_MARGIN = 24;
 
 const supportsHover = () =>

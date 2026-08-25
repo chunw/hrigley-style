@@ -13,7 +13,7 @@ import {
   DrawerClose,
 } from "@/components/ui/drawer";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { INSTAGRAM_URL, SHOP_URL } from "@/lib/constants";
+import { INSTAGRAM_URL } from "@/lib/constants";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -190,14 +190,9 @@ const Header = () => {
                   <br />
                   {t.shopTitle.line2}
                 </Link>
-                <a
-                  href={SHOP_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-primary cursor-pointer"
-                >
+                <Link to="/" className="block text-primary cursor-pointer">
                   {t.shopTitle.line3}
-                </a>
+                </Link>
               </div>
             )}
           </div>
