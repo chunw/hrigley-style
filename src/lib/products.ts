@@ -205,7 +205,7 @@ One size.</p>
     title: "Black Mirrors",
     name: "Black Mirrors",
     title_zh: "黑镜",
-    description_zh: "两幅原创油画。黑镜——油彩与智能手机，布面。",
+    description_zh: "一组原创油画，布面。",
     detailed_description_html_zh: `<p><i>黑镜</i>——油彩与智能手机，布面。我们每天盯着屏幕，屏幕也在打量我们。这两幅画将这种对视定格在画布上：一大一小，一个姿态，两种尺度。</p><p>大幅：12″ × 36″ &nbsp;|&nbsp; 小幅：9″ × 12″<br>共两幅，原创画作。</p>`,
     category_zh: "原创艺术",
     edition_info_zh: "",
