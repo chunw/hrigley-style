@@ -1,17 +1,30 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { Store } from "lucide-react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ProductGrid from "@/components/ProductGrid";
 import AboutSection from "@/components/AboutSection";
 import Footer from "@/components/Footer";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { buildVendorCatalogHTML } from "@/lib/printCatalog";
 import usefulBg from "@/assets/hands_clay_objects_clean_skin.jpg";
 
 const Useful = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [matchedCount, setMatchedCount] = useState(0);
+  const [printMenuOpen, setPrintMenuOpen] = useState(false);
   const location = useLocation();
+  const { t, lang } = useLanguage();
+
+  const handlePrint = (theme: "light" | "dark") => {
+    const html = buildVendorCatalogHTML(window.location.origin, lang, theme);
+    const blob = new Blob([html], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
+    setPrintMenuOpen(false);
+  };
 
   usePageMeta({
     title: "Handmade & One of a Kind",
@@ -49,6 +62,39 @@ const Useful = () => {
         hideTitle
         hideAboutLink
       />
+      <div className="border-t border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-end">
+          <div className="relative">
+            {printMenuOpen && (
+              <div className="fixed inset-0 z-10" onClick={() => setPrintMenuOpen(false)} />
+            )}
+            <button
+              type="button"
+              onClick={() => setPrintMenuOpen((open) => !open)}
+              className="sans-label font-normal inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 hover:text-primary"
+            >
+              <Store className="h-4 w-4" />
+              {t.watercolorCatalog.printVendorCatalog}
+            </button>
+            {printMenuOpen && (
+              <div className="absolute right-0 top-full mt-1 z-20 border border-border bg-background min-w-[160px]">
+                {(["light", "dark"] as const).map((theme) => (
+                  <button
+                    key={theme}
+                    type="button"
+                    onClick={() => handlePrint(theme)}
+                    className="w-full flex items-center gap-2 px-3 py-2 font-mono text-xs hover:bg-muted transition-colors text-foreground border-b border-border last:border-b-0"
+                  >
+                    <span className={`inline-block w-3 h-3 border border-current ${theme === "dark" ? "bg-foreground" : ""}`} />
+                    {theme === "light" ? "Light" : "Dark"}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
       <section id="products">
         <ProductGrid
           searchQuery={searchQuery}

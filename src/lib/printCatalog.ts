@@ -403,13 +403,13 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
   const muted = isDark ? "#8f887a" : "#767066";
   const brand = vcBrand(isZh, "vendor");
 
-  const priceLine = (price: number | null | undefined, currency: string | null | undefined): string =>
-    price != null ? `${currency ?? "USD"} $${price}` : (isZh ? "询价" : "Price on request");
+  const priceLine = (price: number | null | undefined, currency: string | null | undefined, label?: string): string =>
+    label ? `${currency ?? "USD"} ${label}` : price != null ? `${currency ?? "USD"} $${price}` : (isZh ? "询价" : "Price on request");
 
   const rawItems: CatalogItem[] = [
     ...products.filter((product) => product.showInStorefront !== false).map((product) => ({
       title: isZh ? (product.title_zh ?? product.title) : product.title,
-      metaLine: priceLine(product.price, product.currency),
+      metaLine: priceLine(product.price, product.currency, product.priceLabel),
       description: isZh ? (product.description_zh ?? product.description) : product.description,
       dimensions: isZh ? (product.dimensions_zh ?? product.dimensions) : product.dimensions,
       category: isZh ? (product.category_zh ?? product.category ?? "Product") : (product.category ?? "Product"),
@@ -417,7 +417,7 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
     })),
     ...photographyWorks.filter((work) => work.showInStorefront !== false).map((work) => ({
       title: isZh ? (work.titleZh ?? work.title) : work.title,
-      metaLine: priceLine(work.printPrice ?? 10, "USD"),
+      metaLine: priceLine(work.printPrice ?? 10, "USD", work.printPrice && work.printPrice12x18 ? `$${work.printPrice} / $${work.printPrice12x18}` : undefined),
       description: isZh ? (work.descriptionZh || photographyMeta.descriptionZh) : (work.description || photographyMeta.description),
       dimensions: isZh ? (work.dimensionsZh || work.printInfoZh) : (work.dimensions || work.printInfo),
       category: isZh ? "版画" : "Fine Art Prints",
@@ -433,7 +433,7 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
     })),
     ...spiritWorks.filter((work) => work.showInStorefront !== false).map((work) => ({
       title: isZh ? (work.titleZh ?? work.title) : work.title,
-      metaLine: priceLine(work.price ?? 4, "USD"),
+      metaLine: priceLine(work.price ?? 4, "USD", work.priceLabel),
       description: isZh ? (work.descriptionZh || spiritMeta.descriptionZh) : (work.description || spiritMeta.description),
       dimensions: isZh ? work.dimensionsZh : work.dimensions,
       category: isZh ? "版画" : "Fine Art Prints",
@@ -441,7 +441,7 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
     })),
     ...watercolors.filter((work) => work.showInStorefront !== false).map((work) => ({
       title: isZh ? (work.titleZh ?? work.title) : work.title,
-      metaLine: priceLine(work.price ?? work.printPrice ?? 10, "USD"),
+      metaLine: priceLine(work.price ?? work.printPrice ?? 10, "USD", work.priceLabel),
       description: isZh ? (work.descriptionZh || watercolorMeta.descriptionZh) : (work.description || watercolorMeta.description),
       dimensions: isZh ? (work.dimensionsZh || work.printInfoZh) : (work.dimensions || work.printInfo),
       category: work.series === "III" ? (isZh ? "卡片" : "Cards") : (isZh ? "版画" : "Fine Art Prints"),

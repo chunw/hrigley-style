@@ -60,8 +60,16 @@ export interface Watercolor {
   descriptionZh?: string;
   printInfo?: string;
   printInfoZh?: string;
+  // Full override for the "Available as ..." line on the detail page, used
+  // when the piece's availability doesn't fit that template (e.g. original
+  // art for sale rather than a print).
+  availabilityText?: string;
+  availabilityTextZh?: string;
   printPrice?: number;
   price?: number;
+  // Shown instead of `price` on the product grid / vendor catalog when a piece
+  // has more than one price (e.g. print vs. framed original) — e.g. "$10 / $35".
+  priceLabel?: string;
   paylink?: string;
   framed?: boolean;
   soldOut?: boolean;
@@ -214,6 +222,8 @@ export const watercolors: Watercolor[] = [
     descriptionZh: "",
     printInfo: `5×7" framed print, white frame, matted to 4×6"`,
     printInfoZh: "13×18厘米装裱印刷品，白色画框，10×15厘米裱装",
+    availabilityText: `original art is available, framed, white frame, 5×7"`,
+    availabilityTextZh: "原作现售，已装裱，白色画框，13×18厘米",
     price: 25,
     paylink: PRINT_FRAMED_PAYLINK,
     framed: true,
@@ -249,6 +259,7 @@ export const watercolors: Watercolor[] = [
     description: `Exhibited in <a href="https://apsarastudio.co.uk/project-space/programme/forms-before-dissolving/" target="_blank">Forms Before Dissolving</a>, Apsara Studio Gallery, London UK.`,
     descriptionZh: `曾在英国伦敦 Apsara Studio Gallery 的<a href="https://apsarastudio.co.uk/project-space/programme/forms-before-dissolving/" target="_blank">《Forms Before Dissolving》</a>展览中展出。`,
     price: 10,
+    priceLabel: "$10 / $35",
     paylink: PRINT_9X12_PAYLINK,
     printInfo: `Also available as framed print 8×10", $35`,
     printInfoZh: `亦提供20×25厘米装裱印刷品，$35`,
@@ -339,6 +350,7 @@ export const watercolors: Watercolor[] = [
     dimensionsZh: "",
     description: `Available as original art (framed) or as 9×12" fine art matte paper print.`,
     descriptionZh: "可选原作（已装裱）或 9×12 英寸艺术微喷哑光纸印刷版。",
+    priceLabel: "$10 / $35",
     multiOptionsPaylink: "https://www.paypal.com/ncp/payment/T259S58429CAL",
   },
 
