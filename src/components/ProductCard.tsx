@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "sonner";
 import { getProductCategories, getProductCategoriesZh, getProductCollections, getProductCollectionsZh } from "@/lib/products";
+import { useImageHoverExpand } from "@/hooks/useImageHoverExpand";
 
 interface ProductCardProps {
   id: string;
@@ -32,9 +33,10 @@ interface ProductCardProps {
   is_active?: boolean;
 }
 
-const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, priceLabel, currency, image_url, category, category_zh, categories, categories_zh, collections, collections_zh, paylink, detailPath, hideOrderButton, hideShippingLabel, highlightQuery, artboxPrintCount, soldOut }: ProductCardProps) => {
+const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, priceLabel, currency, image_url, category, category_zh, categories, categories_zh, collections, collections_zh, paylink, detailPath, hideOrderButton, hideShippingLabel, highlightQuery, artboxPrintCount, soldOut, is_active }: ProductCardProps) => {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
+  const { imgRef, imgStyle, hoverHandlers, wrapperHoverClassName } = useImageHoverExpand("contain");
 
   const zh = lang === "zh";
   const displayTitle = (zh && title_zh) ? title_zh : (title || name);
@@ -121,11 +123,16 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
       onClick={handleCardClick}
     >
       <CardContent className="p-0 flex flex-col flex-1">
-        <div className="relative aspect-square mb-4 sm:mb-6 overflow-hidden shrink-0 bg-[#f7f6f3] p-3 sm:p-6 flex items-center justify-center">
+        <div
+          className={`relative aspect-square mb-4 sm:mb-6 overflow-hidden shrink-0 bg-[#f7f6f3] p-3 sm:p-6 flex items-center justify-center ${wrapperHoverClassName}`}
+          {...hoverHandlers}
+        >
           <img
+            ref={imgRef}
             src={image_url || "/placeholder.svg"}
             alt={name}
-            className="w-full h-full object-contain transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+            className="w-full h-full object-contain"
+            style={imgStyle}
             onError={(e) => {
               console.log('Image failed to load:', image_url);
               e.currentTarget.src = "/placeholder.svg";

@@ -7,6 +7,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { products } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { useImageHoverExpand } from "@/hooks/useImageHoverExpand";
 
 const printPacket = products.find((p) => p.id === "remains-fine-art-print-packet");
 
@@ -29,6 +30,7 @@ const WorkCard = ({ work }: { work: RemainsWork }) => {
   const { lang } = useLanguage();
   const padded = work.id.padStart(2, "0");
   const title = lang === "zh" ? (work.titleZh ?? work.title) : work.title;
+  const { imgRef, imgStyle, hoverHandlers, wrapperHoverClassName } = useImageHoverExpand("cover");
 
   return (
     <article>
@@ -38,11 +40,12 @@ const WorkCard = ({ work }: { work: RemainsWork }) => {
 
       <Link
         to={`/remains/${work.id}`}
-        className="block relative overflow-hidden border border-border"
+        className={`block relative overflow-hidden border border-border ${wrapperHoverClassName}`}
         style={{
           aspectRatio: "8.5/11",
           backgroundColor: "#111",
         }}
+        {...hoverHandlers}
       >
         <div className="absolute inset-0 flex items-center justify-center">
           <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/40">
@@ -51,6 +54,7 @@ const WorkCard = ({ work }: { work: RemainsWork }) => {
         </div>
 
         <img
+          ref={imgRef}
           src={`/remains/${padded}/main.jpg`}
           alt={work.title}
           style={{
@@ -60,7 +64,8 @@ const WorkCard = ({ work }: { work: RemainsWork }) => {
             height: "100%",
             objectFit: "cover",
             opacity: 0,
-            transition: "opacity 0.2s",
+            ...imgStyle,
+            transition: `opacity 0.2s, ${imgStyle.transition}`,
           }}
           onLoad={(e) => {
             (e.target as HTMLImageElement).style.opacity = "1";

@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import { watercolors, seriesList, catalogMeta, type Watercolor } from "@/lib/watercolors";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { useImageHoverExpand } from "@/hooks/useImageHoverExpand";
 
 
 const HIGHLIGHTED = new Set(["1", "9"]);
@@ -13,6 +14,7 @@ const WorkCard = ({ work }: { work: Watercolor }) => {
   const padded = work.id.padStart(2, "0");
   const highlighted = HIGHLIGHTED.has(work.id);
   const series = seriesList.find((s) => s.id === work.series);
+  const { imgRef, imgStyle, hoverHandlers, wrapperHoverClassName } = useImageHoverExpand("cover");
 
   return (
     <article>
@@ -27,12 +29,13 @@ const WorkCard = ({ work }: { work: Watercolor }) => {
         to={`/watercolors/${work.id}`}
         className={`block relative overflow-hidden ${
           highlighted ? "border-2" : "border border-border"
-        }`}
+        } ${wrapperHoverClassName}`}
         style={{
           aspectRatio: "8.5/11",
           backgroundColor: "#111",
           borderColor: highlighted ? "rgba(244,114,182,0.7)" : undefined,
         }}
+        {...hoverHandlers}
       >
         <div className="absolute inset-0 flex items-center justify-center">
           <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/40">
@@ -41,6 +44,7 @@ const WorkCard = ({ work }: { work: Watercolor }) => {
         </div>
 
         <img
+          ref={imgRef}
           src={`/watercolors/${padded}/main.jpg`}
           alt={work.title}
           style={{
@@ -50,7 +54,8 @@ const WorkCard = ({ work }: { work: Watercolor }) => {
             height: "100%",
             objectFit: "cover",
             opacity: 0,
-            transition: "opacity 0.2s",
+            ...imgStyle,
+            transition: `opacity 0.2s, ${imgStyle.transition}`,
           }}
           onLoad={(e) => {
             (e.target as HTMLImageElement).style.opacity = "1";

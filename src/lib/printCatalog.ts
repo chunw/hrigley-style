@@ -46,19 +46,43 @@ function vcEmptyPage(side: "left" | "right"): string {
   return `<div class="vc-page vc-page-${side}"></div>`;
 }
 
-interface VendorItem {
+interface CatalogItem {
   title: string;
+  metaLine?: string | null;
   description?: string | null;
   dimensions?: string | null;
-  price?: number | null;
-  currency?: string | null;
   category: string;
   image_url: string;
 }
 
+interface CatalogBrand {
+  eyebrow1: string;
+  eyebrow2: string;
+  footerWord: string;
+}
+
+function vcBrand(isZh: boolean, kind: "vendor" | "combined"): CatalogBrand {
+  const studio = isZh ? "王淳工作室" : "CHUN WANG STUDIO";
+  if (kind === "vendor") {
+    return {
+      eyebrow1: studio,
+      eyebrow2: isZh ? "商店目录" : "SHOP CATALOG",
+      footerWord: isZh ? "商店" : "SHOP",
+    };
+  }
+  return {
+    eyebrow1: studio,
+    eyebrow2: isZh ? "完整目录" : "COMPLETE CATALOG",
+    footerWord: isZh ? "目录" : "CATALOG",
+  };
+}
+
 function vcCoverSpread(
+  brand: CatalogBrand,
   isZh: boolean,
   intro: string,
+  titleHtml: string,
+  subtitleText: string,
   heroImage: string,
   itemCount: number,
   page: number,
@@ -67,14 +91,14 @@ function vcCoverSpread(
 ): string {
   const left = `
     <div class="vc-page vc-page-left">
-      ${vcEyebrow(isZh ? "王淳工作室" : "CHUN WANG STUDIO", isZh ? "商店目录" : "SHOP CATALOG")}
+      ${vcEyebrow(brand.eyebrow1, brand.eyebrow2)}
       ${vcTagTop(isZh ? `#共 ${itemCount} 件` : `#ITEMS ${itemCount}`)}
       <div class="vc-cover-body">
         <div class="vc-cover-intro">${intro}</div>
-        <div class="vc-cover-title">${isZh ? "商店<br/>目录" : "SHOP<br/>CATALOG"}</div>
-        <div class="vc-cover-sub">${isZh ? "精选作品与商品" : "CURATED WORKS & PRODUCTS"}</div>
+        <div class="vc-cover-title">${titleHtml}</div>
+        <div class="vc-cover-sub">${subtitleText}</div>
       </div>
-      ${vcFooter(isZh ? "商店 | 目录" : "SHOP | CATALOG", page, total, muted)}
+      ${vcFooter(`${brand.footerWord} | ${isZh ? "封面" : "COVER"}`, page, total, muted)}
     </div>`;
   const right = `
     <div class="vc-page vc-page-right">
@@ -83,14 +107,15 @@ function vcCoverSpread(
         <div class="vc-prod-image-block"></div>
         <img src="${heroImage}" alt="" onerror="this.style.visibility='hidden'" />
       </div>
-      ${vcFooter(isZh ? "商店 | 精选" : "SHOP | FEATURED", page + 1, total, muted)}
+      ${vcFooter(`${brand.footerWord} | ${isZh ? "精选" : "FEATURED"}`, page + 1, total, muted)}
     </div>`;
   return spread(left, right);
 }
 
 function vcCategoryDividerSpread(
+  brand: CatalogBrand,
   category: string,
-  items: VendorItem[],
+  items: CatalogItem[],
   isZh: boolean,
   catIndex: number,
   page: number,
@@ -106,12 +131,12 @@ function vcCategoryDividerSpread(
   };
   const left = `
     <div class="vc-page vc-page-left">
-      ${vcEyebrow(isZh ? "王淳工作室" : "CHUN WANG STUDIO", isZh ? "商店目录" : "SHOP CATALOG")}
+      ${vcEyebrow(brand.eyebrow1, brand.eyebrow2)}
       ${vcTagTop(`#${String(catIndex).padStart(2, "0")}`)}
       <div class="vc-mosaic">
         ${mosaic.map((it, i) => `<img src="${it.image_url}" style="${mosaicStyle(mosaic.length, i)}" alt="" onerror="this.style.visibility='hidden'" />`).join("")}
       </div>
-      ${vcFooter(isZh ? "商店 | 分类" : "SHOP | CATEGORY", page, total, muted)}
+      ${vcFooter(`${brand.footerWord} | ${isZh ? "分类" : "CATEGORY"}`, page, total, muted)}
     </div>`;
   const right = `
     <div class="vc-page vc-page-right">
@@ -119,26 +144,25 @@ function vcCategoryDividerSpread(
       <div class="vc-cover-body">
         <div class="vc-div-num">${String(catIndex).padStart(2, "0")}</div>
         <div class="vc-cover-title" style="font-size:44px;">${category}</div>
-        <div class="vc-cover-sub">${isZh ? "商店目录" : "SHOP CATALOG"}</div>
+        <div class="vc-cover-sub">${brand.eyebrow2}</div>
       </div>
-      ${vcFooter(`${isZh ? "商店" : "SHOP"} | ${category}`, page + 1, total, muted)}
+      ${vcFooter(`${brand.footerWord} | ${category}`, page + 1, total, muted)}
     </div>`;
   return spread(left, right);
 }
 
 function vcProductPage(
-  item: VendorItem,
+  brand: CatalogBrand,
+  item: CatalogItem,
   side: "left" | "right",
   index: number,
-  isZh: boolean,
   page: number,
   total: number,
   muted: string,
 ): string {
-  const priceText = item.price != null ? `${item.currency ?? "USD"} $${item.price}` : (isZh ? "询价" : "Price on request");
   return `
     <div class="vc-page vc-page-${side}">
-      ${vcEyebrow(isZh ? "王淳工作室" : "CHUN WANG STUDIO", isZh ? "商店目录" : "SHOP CATALOG")}
+      ${vcEyebrow(brand.eyebrow1, brand.eyebrow2)}
       ${vcTagTop(`#${String(index).padStart(2, "0")}`)}
       <div class="vc-prod-head">
         <div class="vc-prod-num">${String(index).padStart(2, "0")}/</div>
@@ -149,14 +173,41 @@ function vcProductPage(
         <div class="vc-prod-image-block"></div>
         <img src="${item.image_url}" alt="${item.title}" onerror="this.style.visibility='hidden'" />
       </div>
-      <div class="vc-prod-price">${priceText}</div>
+      ${item.metaLine ? `<div class="vc-prod-price">${item.metaLine}</div>` : ""}
       ${item.dimensions ? `<div class="vc-prod-dimensions">${item.dimensions}</div>` : ""}
       ${item.description ? `<div class="vc-prod-desc">${item.description}</div>` : ""}
-      ${vcFooter(`${isZh ? "商店" : "SHOP"} | ${item.category}`, page, total, muted)}
+      ${vcFooter(`${brand.footerWord} | ${item.category}`, page, total, muted)}
     </div>`;
 }
 
-function getVendorCSS(isDark: boolean): string {
+function vcBioSpread(brand: CatalogBrand, page: number, total: number, muted: string): string {
+  const enBio = artistBioHTML("en");
+  const zhBio = artistBioHTML("zh");
+  const left = `
+    <div class="vc-page vc-page-left">
+      ${vcEyebrow(brand.eyebrow1, brand.eyebrow2)}
+      ${vcTagTop("#关于")}
+      <div class="vc-cover-body">
+        <div class="vc-cover-sub" style="margin-bottom:14px;">关于艺术家</div>
+        <div class="vc-cover-title" style="font-size:36px;margin-bottom:20px;">王淳</div>
+        <div class="vc-prod-desc" style="max-width:340px;font-size:10px;line-height:1.8;">${zhBio}</div>
+      </div>
+      ${vcFooter(`${brand.footerWord} | 关于`, page, total, muted)}
+    </div>`;
+  const right = `
+    <div class="vc-page vc-page-right">
+      ${vcTagTop("#ABOUT")}
+      <div class="vc-cover-body">
+        <div class="vc-cover-sub" style="margin-bottom:14px;">About the Artist</div>
+        <div class="vc-cover-title" style="font-size:36px;margin-bottom:20px;">Chun Wang</div>
+        <div class="vc-prod-desc" style="max-width:340px;font-size:10px;line-height:1.8;">${enBio}</div>
+      </div>
+      ${vcFooter(`${brand.footerWord} | ABOUT`, page + 1, total, muted)}
+    </div>`;
+  return spread(left, right);
+}
+
+function getCatalogCSS(isDark: boolean): string {
   const bg = isDark ? "#0b0b0b" : "#ffffff";
   const fg = isDark ? "#f3efe8" : "#111111";
   const muted = isDark ? "#8f887a" : "#767066";
@@ -350,56 +401,55 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
   const isDark = theme === "dark";
   const isZh = lang === "zh";
   const muted = isDark ? "#8f887a" : "#767066";
+  const brand = vcBrand(isZh, "vendor");
 
-  const rawItems: VendorItem[] = [
+  const priceLine = (price: number | null | undefined, currency: string | null | undefined): string =>
+    price != null ? `${currency ?? "USD"} $${price}` : (isZh ? "询价" : "Price on request");
+
+  const rawItems: CatalogItem[] = [
     ...products.filter((product) => product.showInStorefront !== false).map((product) => ({
       title: isZh ? (product.title_zh ?? product.title) : product.title,
+      metaLine: priceLine(product.price, product.currency),
       description: isZh ? (product.description_zh ?? product.description) : product.description,
       dimensions: isZh ? (product.dimensions_zh ?? product.dimensions) : product.dimensions,
-      price: product.price,
-      currency: product.currency,
       category: isZh ? (product.category_zh ?? product.category ?? "Product") : (product.category ?? "Product"),
       image_url: normalizePrintAsset(origin, product.image_url),
     })),
     ...photographyWorks.filter((work) => work.showInStorefront !== false).map((work) => ({
       title: isZh ? (work.titleZh ?? work.title) : work.title,
+      metaLine: priceLine(work.printPrice ?? 10, "USD"),
       description: isZh ? (work.descriptionZh || photographyMeta.descriptionZh) : (work.description || photographyMeta.description),
       dimensions: isZh ? (work.dimensionsZh || work.printInfoZh) : (work.dimensions || work.printInfo),
-      price: work.printPrice ?? 10,
-      currency: "USD",
       category: isZh ? "版画" : "Fine Art Prints",
       image_url: normalizePrintAsset(origin, `/photography/${work.id.padStart(2, "0")}/main.jpg`),
     })),
     ...remainsWorks.filter((work) => work.showInStorefront !== false).map((work) => ({
       title: isZh ? (work.titleZh ?? work.title) : work.title,
+      metaLine: priceLine(work.price ?? 4, "USD"),
       description: isZh ? (work.descriptionZh || remainsMeta.descriptionZh) : (work.description || remainsMeta.description),
       dimensions: isZh ? work.dimensionsZh : work.dimensions,
-      price: work.price ?? 4,
-      currency: "USD",
       category: isZh ? "版画" : "Fine Art Prints",
       image_url: normalizePrintAsset(origin, `/remains/${work.id.padStart(2, "0")}/main.jpg`),
     })),
     ...spiritWorks.filter((work) => work.showInStorefront !== false).map((work) => ({
       title: isZh ? (work.titleZh ?? work.title) : work.title,
+      metaLine: priceLine(work.price ?? 4, "USD"),
       description: isZh ? (work.descriptionZh || spiritMeta.descriptionZh) : (work.description || spiritMeta.description),
       dimensions: isZh ? work.dimensionsZh : work.dimensions,
-      price: work.price ?? 4,
-      currency: "USD",
       category: isZh ? "版画" : "Fine Art Prints",
       image_url: normalizePrintAsset(origin, `/21spirit/${work.id.padStart(2, "0")}/main.jpg`),
     })),
     ...watercolors.filter((work) => work.showInStorefront !== false).map((work) => ({
       title: isZh ? (work.titleZh ?? work.title) : work.title,
+      metaLine: priceLine(work.price ?? work.printPrice ?? 10, "USD"),
       description: isZh ? (work.descriptionZh || watercolorMeta.descriptionZh) : (work.description || watercolorMeta.description),
       dimensions: isZh ? (work.dimensionsZh || work.printInfoZh) : (work.dimensions || work.printInfo),
-      price: work.price ?? work.printPrice ?? 10,
-      currency: "USD",
       category: work.series === "III" ? (isZh ? "卡片" : "Cards") : (isZh ? "版画" : "Fine Art Prints"),
       image_url: normalizePrintAsset(origin, `/watercolors/${work.id.padStart(2, "0")}/main.jpg`),
     })),
   ];
 
-  const groups: { category: string; items: VendorItem[] }[] = [];
+  const groups: { category: string; items: CatalogItem[] }[] = [];
   for (const item of rawItems) {
     let group = groups.find((g) => g.category === item.category);
     if (!group) {
@@ -419,18 +469,29 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
   const heroImage = rawItems[0]?.image_url ?? "";
 
   let pageCounter = 1;
-  const coverHtml = vcCoverSpread(isZh, intro, heroImage, rawItems.length, pageCounter, totalPages, muted);
+  const coverHtml = vcCoverSpread(
+    brand,
+    isZh,
+    intro,
+    isZh ? "商店<br/>目录" : "SHOP<br/>CATALOG",
+    isZh ? "精选作品与商品" : "CURATED WORKS & PRODUCTS",
+    heroImage,
+    rawItems.length,
+    pageCounter,
+    totalPages,
+    muted,
+  );
   pageCounter += 2;
 
   let sectionsHtml = "";
   groups.forEach((group, groupIndex) => {
-    sectionsHtml += vcCategoryDividerSpread(group.category, group.items, isZh, groupIndex + 1, pageCounter, totalPages, muted);
+    sectionsHtml += vcCategoryDividerSpread(brand, group.category, group.items, isZh, groupIndex + 1, pageCounter, totalPages, muted);
     pageCounter += 2;
     for (let i = 0; i < group.items.length; i += 2) {
-      const left = vcProductPage(group.items[i], "left", i + 1, isZh, pageCounter, totalPages, muted);
+      const left = vcProductPage(brand, group.items[i], "left", i + 1, pageCounter, totalPages, muted);
       const rightItem = group.items[i + 1];
       const right = rightItem
-        ? vcProductPage(rightItem, "right", i + 2, isZh, pageCounter + 1, totalPages, muted)
+        ? vcProductPage(brand, rightItem, "right", i + 2, pageCounter + 1, totalPages, muted)
         : vcEmptyPage("right");
       sectionsHtml += spread(left, right);
       pageCounter += 2;
@@ -446,7 +507,7 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
 <head>
   <meta charset="UTF-8" />
   <title>${coverTitle} ${dateStamp}</title>
-  <style>${getVendorCSS(isDark)}</style>
+  <style>${getCatalogCSS(isDark)}</style>
 </head>
 <body>
   ${coverHtml}
@@ -456,44 +517,11 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
 </html>`;
 }
 
-function bioSpread(): string {
-  const enBio = artistBioHTML("en");
-  const zhBio = artistBioHTML("zh");
-
-  const left = `
-    <div class="page page-left bio-page">
-      <div class="bio-label">关于艺术家</div>
-      <div class="bio-name">王淳</div>
-      <div class="bio-text">${zhBio}</div>
-    </div>`;
-
-  const right = `
-    <div class="page page-right bio-page">
-      <div class="bio-label">About the Artist</div>
-      <div class="bio-name">Chun Wang</div>
-      <div class="bio-text">${enBio}</div>
-    </div>`;
-
-  return spread(left, right);
-}
-
-function pairSpreads<T>(
-  items: T[],
-  renderPage: (item: T, side: "left" | "right") => string,
-): string {
-  const spreads: string[] = [];
-  for (let i = 0; i < items.length; i += 2) {
-    const left = renderPage(items[i], "left");
-    const right = items[i + 1] ? renderPage(items[i + 1], "right") : emptyPage("right");
-    spreads.push(spread(left, right));
-  }
-  return spreads.join("\n");
-}
-
 export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme: PrintTheme = "light"): string {
   const isDark = theme === "dark";
   const isZh = lang === "zh";
-  const css = getCSS(isDark);
+  const muted = isDark ? "#8f887a" : "#767066";
+  const brand = vcBrand(isZh, "combined");
 
   const printableWatercolors = watercolors.filter((w) => w.printInCatalog !== false);
   const printableRemains = remainsWorks.filter((w) => w.printInCatalog !== false);
@@ -501,137 +529,130 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
   const printablePhotography = photographyWorks.filter((w) => w.printInCatalog !== false);
   const printableProducts = products.filter((p) => p.printInCatalog !== false);
 
-  const totalArt = printableWatercolors.length + printableRemains.length + printableSpirit.length + printablePhotography.length;
+  const artMetaLine = (year: string, medium?: string | null): string => `${year}${medium ? ` · ${medium}` : ""}`;
 
-  // Master cover
-  const masterCover = sectionCoverSpread(
-    "Complete Catalog",
-    "目录",
-    "",
-    "",
-    [
-      { label: watercolorMeta.en, name: `${printableWatercolors.length} works` },
-      { label: remainsMeta.en, name: `${printableRemains.length} works` },
-      { label: spiritMeta.en, name: `${printableSpirit.length} works` },
-      { label: photographyMeta.en, name: `${printablePhotography.length} works` },
-      { label: "Shop", name: `${printableProducts.length} items` },
-    ],
-    [
-      { label: watercolorMeta.zh, name: `${printableWatercolors.length} 件` },
-      { label: remainsMeta.zh, name: `${printableRemains.length} 件` },
-      { label: spiritMeta.zh, name: `${printableSpirit.length} 件` },
-      { label: photographyMeta.zh, name: `${printablePhotography.length} 件` },
-      { label: "商店", name: `${printableProducts.length} 件` },
-    ],
-    totalArt,
+  const watercolorItems: CatalogItem[] = printableWatercolors.map((work) => {
+    const padded = work.id.padStart(2, "0");
+    const medium = isZh
+      ? (work.mediumZh || watercolorMeta.mediumZh || watercolorMeta.medium)
+      : (work.medium || watercolorMeta.medium);
+    return {
+      title: isZh ? (work.titleZh ?? work.title) : work.title,
+      metaLine: artMetaLine(work.year, medium),
+      dimensions: isZh ? (work.dimensionsZh ?? work.dimensions) : work.dimensions,
+      description: isZh ? (work.descriptionZh ?? work.description) : work.description,
+      category: isZh ? watercolorMeta.zh : watercolorMeta.en,
+      image_url: normalizePrintAsset(origin, `/watercolors/${padded}/${work.printInCatalogImage ?? "main"}.jpg`),
+    };
+  });
+
+  const remainsItems: CatalogItem[] = printableRemains.map((work) => {
+    const padded = work.id.padStart(2, "0");
+    const medium = isZh
+      ? (work.mediumZh || remainsMeta.mediumZh || remainsMeta.medium)
+      : (work.medium || remainsMeta.medium);
+    return {
+      title: isZh ? (work.titleZh ?? work.title) : work.title,
+      metaLine: artMetaLine(work.year, medium),
+      dimensions: isZh ? (work.dimensionsZh ?? work.dimensions) : work.dimensions,
+      description: isZh ? (work.descriptionZh ?? work.description) : work.description,
+      category: isZh ? remainsMeta.zh : remainsMeta.en,
+      image_url: normalizePrintAsset(origin, `/remains/${padded}/${work.printInCatalogImage ?? "main"}.jpg`),
+    };
+  });
+
+  const spiritItems: CatalogItem[] = printableSpirit.map((work) => {
+    const padded = work.id.padStart(2, "0");
+    const medium = isZh
+      ? (work.mediumZh || spiritMeta.mediumZh || spiritMeta.medium)
+      : (work.medium || spiritMeta.medium);
+    return {
+      title: isZh ? (work.titleZh ?? work.title) : work.title,
+      metaLine: artMetaLine(work.year, medium),
+      dimensions: isZh ? (work.dimensionsZh ?? work.dimensions) : work.dimensions,
+      description: isZh ? (work.descriptionZh ?? work.description) : work.description,
+      category: isZh ? spiritMeta.zh : spiritMeta.en,
+      image_url: normalizePrintAsset(origin, `/21spirit/${padded}/${work.printInCatalogImage ?? "main"}.jpg`),
+    };
+  });
+
+  const photographyItems: CatalogItem[] = printablePhotography.map((work) => {
+    const padded = work.id.padStart(2, "0");
+    const medium = isZh
+      ? (work.mediumZh || photographyMeta.mediumZh || photographyMeta.medium)
+      : (work.medium || photographyMeta.medium);
+    return {
+      title: isZh ? (work.titleZh ?? work.title) : work.title,
+      metaLine: artMetaLine(work.year, medium),
+      dimensions: isZh ? (work.dimensionsZh ?? work.dimensions) : work.dimensions,
+      description: isZh ? (work.descriptionZh ?? work.description) : work.description,
+      category: isZh ? photographyMeta.zh : photographyMeta.en,
+      image_url: normalizePrintAsset(origin, `/photography/${padded}/${work.printInCatalogImage ?? "main"}.jpg`),
+    };
+  });
+
+  const shopItems: CatalogItem[] = printableProducts.map((p) => {
+    const imgs = productImages.filter((img) => img.product_id === p.id);
+    const imgSrc = imgs.length > 0 ? imgs[0].image_url : p.image_url;
+    return {
+      title: isZh ? (p.title_zh ?? p.title) : p.title,
+      dimensions: isZh ? (p.dimensions_zh ?? p.dimensions) : p.dimensions,
+      description: isZh ? (p.description_zh ?? p.description) : p.description,
+      category: isZh ? "商店" : "Shop",
+      image_url: normalizePrintAsset(origin, imgSrc),
+    };
+  });
+
+  const sections: { category: string; items: CatalogItem[] }[] = [
+    { category: isZh ? spiritMeta.zh : spiritMeta.en, items: spiritItems },
+    { category: isZh ? remainsMeta.zh : remainsMeta.en, items: remainsItems },
+    { category: isZh ? watercolorMeta.zh : watercolorMeta.en, items: watercolorItems },
+    { category: isZh ? photographyMeta.zh : photographyMeta.en, items: photographyItems },
+    { category: isZh ? "商店" : "Shop", items: shopItems },
+  ];
+
+  const totalItems = sections.reduce((sum, s) => sum + s.items.length, 0);
+
+  let totalPages = 4; // master cover (2) + bio spread (2)
+  for (const section of sections) {
+    totalPages += 2 + Math.ceil(section.items.length / 2) * 2;
+  }
+
+  const bioIntro = `<p>${artistBioSegments[lang].intro.split("<br><br>")[0]}</p>`;
+  const heroImage = watercolorItems[0]?.image_url || spiritItems[0]?.image_url || remainsItems[0]?.image_url || photographyItems[0]?.image_url || "";
+
+  let pageCounter = 1;
+  const coverHtml = vcCoverSpread(
+    brand,
     isZh,
+    bioIntro,
+    isZh ? "完整<br/>目录" : "COMPLETE<br/>CATALOG",
+    isZh ? "绘画 · 摄影 · 器物" : "PAINTINGS · PHOTOGRAPHY · OBJECTS",
+    heroImage,
+    totalItems,
+    pageCounter,
+    totalPages,
+    muted,
   );
+  pageCounter += 2;
 
-  // Watercolors section
-  const watercolorCover = sectionCoverSpread(
-    watercolorMeta.en,
-    watercolorMeta.zh,
-    watercolorMeta.medium,
-    watercolorMeta.mediumZh,
-    seriesList.map((s) => ({
-      name: s.englishName,
-      sub: s.subtitle,
-      desc: s.description,
-    })),
-    seriesList.map((s) => ({
-      name: s.chineseName,
-      sub: s.subtitleZh ?? s.subtitle,
-      desc: s.descriptionZh ?? s.description,
-    })),
-    printableWatercolors.length,
-    isZh,
-    watercolorMeta.description,
-    watercolorMeta.descriptionZh,
-  );
-  const watercolorSpreads = pairSpreads(
-    printableWatercolors,
-    (w, side) => watercolorPage(w, side, origin, isZh),
-  );
+  const bioHtml = vcBioSpread(brand, pageCounter, totalPages, muted);
+  pageCounter += 2;
 
-  // Remains section
-  const remainsCover = sectionCoverSpread(
-    remainsMeta.en,
-    remainsMeta.zh,
-    remainsMeta.medium,
-    remainsMeta.mediumZh,
-    [{ name: remainsMeta.en, sub: `Works 1–${printableRemains.length}` }],
-    [{ name: remainsMeta.zh, sub: `第1–${printableRemains.length}件` }],
-    printableRemains.length,
-    isZh,
-    remainsMeta.description,
-    remainsMeta.descriptionZh,
-  );
-  const remainsSpreads = pairSpreads(
-    printableRemains,
-    (w, side) => remainsPage(w, side, origin, isZh),
-  );
-
-  // 21 Spirit section
-  const spiritCover = sectionCoverSpread(
-    spiritMeta.en,
-    spiritMeta.zh,
-    spiritMeta.medium,
-    spiritMeta.mediumZh,
-    [{ name: spiritMeta.en, sub: `Works 1–${printableSpirit.length}` }],
-    [{ name: spiritMeta.zh, sub: `第1–${printableSpirit.length}件` }],
-    printableSpirit.length,
-    isZh,
-    spiritMeta.description,
-    spiritMeta.descriptionZh,
-  );
-  const spiritSpreads = pairSpreads(
-    printableSpirit,
-    (w, side) => spiritPage(w, side, origin, isZh),
-  );
-
-  // Photography section
-  const photographyCover = sectionCoverSpread(
-    photographyMeta.en,
-    photographyMeta.zh,
-    photographyMeta.medium,
-    photographyMeta.mediumZh,
-    [{ label: "Photography Works", name: photographyMeta.en, sub: `Works 1–${printablePhotography.length}` }],
-    [{ label: "摄影作品", name: photographyMeta.zh, sub: `第1–${printablePhotography.length}件` }],
-    printablePhotography.length,
-    isZh,
-    photographyMeta.description,
-    photographyMeta.descriptionZh,
-  );
-  const photographySpreads = pairSpreads(
-    printablePhotography,
-    (w, side) => photographyPage(w, side, origin, isZh),
-  );
-
-  // Shop section
-  const shopCover = `
-    <div class="spread">
-      <div class="page page-left cover-left">
-        <div class="cover-series-list">
-          ${printableProducts.map((p) => `
-            <div class="cover-series-item">
-              <span class="cs-name">${isZh ? (p.title_zh ?? p.title) : p.title}</span>
-            </div>
-          `).join("")}
-          <div class="cover-count">${isZh ? `${printableProducts.length} 件商品` : `${printableProducts.length} item${printableProducts.length !== 1 ? "s" : ""}`}</div>
-        </div>
-      </div>
-      <div class="page page-right cover-right">
-        <div class="cover-body">
-          <div class="cover-title">Chun Wang</div>
-          <div class="cover-subtitle">${isZh ? "商店" : "Shop"}</div>
-          <div class="cover-year">${isZh ? `chunwangshop.com · ${new Date().getFullYear()}` : `chunwangshop.com · ${new Date().getFullYear()}`}</div>
-        </div>
-      </div>
-    </div>`;
-  const shopSpreads = pairSpreads(
-    printableProducts,
-    (p, side) => productPage(p, side, isZh),
-  );
+  let sectionsHtml = "";
+  sections.forEach((section, sectionIndex) => {
+    sectionsHtml += vcCategoryDividerSpread(brand, section.category, section.items, isZh, sectionIndex + 1, pageCounter, totalPages, muted);
+    pageCounter += 2;
+    for (let i = 0; i < section.items.length; i += 2) {
+      const left = vcProductPage(brand, section.items[i], "left", i + 1, pageCounter, totalPages, muted);
+      const rightItem = section.items[i + 1];
+      const right = rightItem
+        ? vcProductPage(brand, rightItem, "right", i + 2, pageCounter + 1, totalPages, muted)
+        : vcEmptyPage("right");
+      sectionsHtml += spread(left, right);
+      pageCounter += 2;
+    }
+  });
 
   const now = new Date();
   const dateStamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
@@ -641,21 +662,12 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
 <head>
   <meta charset="UTF-8" />
   <title>Chun Wang Complete Catalog ${dateStamp} ${lang.toUpperCase()}</title>
-  <style>${css}</style>
+  <style>${getCatalogCSS(isDark)}</style>
 </head>
 <body>
-  ${masterCover}
-  ${bioSpread()}
-  ${spiritCover}
-  ${spiritSpreads}
-  ${remainsCover}
-  ${remainsSpreads}
-  ${watercolorCover}
-  ${watercolorSpreads}
-  ${photographyCover}
-  ${photographySpreads}
-  ${shopCover}
-  ${shopSpreads}
+  ${coverHtml}
+  ${bioHtml}
+  ${sectionsHtml}
   <script>window.onload = function() { setTimeout(function() { window.print(); }, 300); };<\/script>
 </body>
 </html>`;

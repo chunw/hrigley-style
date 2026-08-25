@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import { photographyWorks, seriesList, catalogMeta, type PhotographyWork } from "@/lib/photography";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { useImageHoverExpand } from "@/hooks/useImageHoverExpand";
 
 
 const WorkCard = ({ work, uniformHeight }: { work: PhotographyWork; uniformHeight: boolean }) => {
@@ -16,6 +17,7 @@ const WorkCard = ({ work, uniformHeight }: { work: PhotographyWork; uniformHeigh
 
   const [objPos, setObjPos] = useState(work.cropPosition ?? { x: 50, y: 50 });
   const containerRef = useRef<HTMLDivElement>(null);
+  const { imgRef, imgStyle, hoverHandlers, wrapperHoverClassName } = useImageHoverExpand(uniformHeight ? "cover" : "contain");
   const drag = useRef<{
     active: boolean;
     startX: number;
@@ -90,7 +92,7 @@ const WorkCard = ({ work, uniformHeight }: { work: PhotographyWork; uniformHeigh
 
       <div
         ref={containerRef}
-        className="block relative border border-border overflow-hidden"
+        className={`block relative border border-border overflow-hidden ${wrapperHoverClassName}`}
         style={{
           backgroundColor: "#111",
           minHeight: "2rem",
@@ -98,8 +100,10 @@ const WorkCard = ({ work, uniformHeight }: { work: PhotographyWork; uniformHeigh
         }}
         onMouseDown={handleMouseDown}
         onClick={handleClick}
+        {...hoverHandlers}
       >
         <img
+          ref={imgRef}
           src={`/photography/${padded}/main.jpg`}
           alt={work.title}
           draggable={false}
@@ -110,8 +114,9 @@ const WorkCard = ({ work, uniformHeight }: { work: PhotographyWork; uniformHeigh
             objectFit: uniformHeight ? "cover" : undefined,
             objectPosition: uniformHeight ? `${objPos.x}% ${objPos.y}%` : undefined,
             opacity: 0,
-            transition: "opacity 0.2s",
             userSelect: "none",
+            ...imgStyle,
+            transition: `opacity 0.2s, ${imgStyle.transition}`,
           }}
           onLoad={(e) => {
             (e.target as HTMLImageElement).style.opacity = "1";
