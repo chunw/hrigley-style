@@ -18,7 +18,7 @@ export const translations = {
     about: {
       title: "About",
       subtitle: "Handmade & one of a kind.",
-      body: "Chun Wang Studio Shop is the work of <a href=\"https://chunwang.art\" target=\"_blank\" rel=\"noopener noreferrer\">Chun Wang</a>, an artist based in New York City working across ceramics, painting, photography, and functional objects.\n\nEverything starts from small, weird, everyday observations — a bit of bespoke noticing and a bit of overthinking — that get turned into whimsical, handmade pieces you can use, gift, or just sit with in quiet curiosity.\n\nEach item is one of a kind, designed and made exclusively by me in my NYC studio. Ships worldwide.",
+      body: "<em>Chun Wang Studio Shop is the work of artist <a href=\"https://chunwang.art\" target=\"_blank\" rel=\"noopener noreferrer\">Chun Wang</a>, based in New York City.</em>\n\nI work across ceramics, painting, photography, and functional art objects.\n\nEverything starts from small, weird, everyday things I can't help but notice and overthink, then turned into whimsical, handmade pieces you can use, gift, or just sit with in existential curiosity.\n\nEach piece is one of a kind, designed and made by hand in my NYC studio. Ships worldwide.",
       artistLabel: "About the Artist",
       backToShop: "Back to Shop",
     },
@@ -33,6 +33,7 @@ export const translations = {
       ctaAbout: "about",
       ctaInstagram: "follow on instagram",
       ctaCatalogs: "view Catalogs",
+      ctaCatalog: "catalog",
     },
     footer: {
       copyright: "All rights reserved.",
@@ -122,7 +123,7 @@ export const translations = {
     about: {
       title: "关于",
       subtitle: "手工制作，独一无二。",
-      body: "Chun Wang Studio Shop 由艺术家<a href=\"https://chunwang.art\" target=\"_blank\" rel=\"noopener noreferrer\">王淳</a>创立，工作室位于纽约，创作游走于陶瓷、绘画、摄影与实用器物之间。\n\n一切始于生活里琐碎又古怪的日常观察，加上一点点过度思考，慢慢变成了那些可以用、可以送人、也可以对着发呆的奇趣手工物件。\n\n每一件作品都独一无二，由我本人在纽约工作室独立设计制作，全球发货。",
+      body: "<em>Chun Wang Studio Shop 是艺术家<a href=\"https://chunwang.art\" target=\"_blank\" rel=\"noopener noreferrer\">王淳</a>的创作，工作室位于纽约。</em>\n\n我的创作游走于陶瓷、绘画、摄影，以及功能性艺术物件之间。\n\n一切始于那些微小古怪的日常小事——我总是忍不住多看一眼、多想一层——最终变成了那些奇趣的手工物件：可以用、可以送人，也可以静静摆在那里，供你生出一点存在主义式的好奇。\n\n每一件作品都独一无二，由我亲手在纽约工作室设计制作，全球发货。",
       artistLabel: "关于艺术家",
       backToShop: "返回商店",
     },
@@ -137,6 +138,7 @@ export const translations = {
       ctaAbout: "关于",
       ctaInstagram: "关注 Instagram",
       ctaCatalogs: "查看作品系列",
+      ctaCatalog: "作品目录",
     },
     footer: {
       copyright: "版权所有。",
