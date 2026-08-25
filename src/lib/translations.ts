@@ -77,7 +77,7 @@ export const translations = {
       subtitle: "Visions in Watercolor",
       works: "works",
       printCatalog: "Print Complete Catalog",
-      printVendorCatalog: "Print Vendor Catalog",
+      printVendorCatalog: "Print Shop Catalog",
       noteLabel: "NOTE",
       noteText: "Watercolor remains a pursuit of materiality — especially now",
       artistStatement: "Artist Statement",

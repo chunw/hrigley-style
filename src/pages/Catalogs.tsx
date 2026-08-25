@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, BookOpen } from "lucide-react";
+import { ArrowLeft, BookOpen, Store } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -40,7 +40,7 @@ const CATALOGS = [
 
 const Catalogs = () => {
   const { lang, t } = useLanguage();
-  const [printMenuOpen, setPrintMenuOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState<"art" | "shop" | null>(null);
 
   usePageMeta({
     title: "Catalogs — Fine Art Prints & Wall Art",
@@ -55,7 +55,7 @@ const Catalogs = () => {
     const blob = new Blob([html], { type: "text/html" });
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");
-    setPrintMenuOpen(false);
+    setOpenMenu(null);
   };
 
   return (
@@ -63,14 +63,74 @@ const Catalogs = () => {
       <Header />
 
       <div className="border-t border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <Link
             to="/"
-            className="sans-label inline-flex items-center gap-2 text-xs uppercase tracking-widest transition-colors hover:text-primary"
+            className="sans-label font-normal inline-flex items-center gap-2 text-xs uppercase tracking-widest transition-colors hover:text-primary"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             Chun Wang Studio Shop
           </Link>
+
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              {openMenu === "shop" && (
+                <div className="fixed inset-0 z-10" onClick={() => setOpenMenu(null)} />
+              )}
+              <button
+                type="button"
+                onClick={() => setOpenMenu(m => (m === "shop" ? null : "shop"))}
+                className="sans-label font-normal inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 hover:text-primary"
+              >
+                <Store className="h-4 w-4" />
+                {t.watercolorCatalog.printVendorCatalog}
+              </button>
+              {openMenu === "shop" && (
+                <div className="absolute right-0 top-full mt-1 z-20 border border-border bg-background min-w-[160px]">
+                  {(["light", "dark"] as const).map(theme => (
+                    <button
+                      key={`vendor-${theme}`}
+                      type="button"
+                      onClick={() => handlePrint(theme, "vendor")}
+                      className="w-full flex items-center gap-2 px-3 py-2 font-mono text-xs hover:bg-muted transition-colors text-foreground border-b border-border last:border-b-0"
+                    >
+                      <span className={`inline-block w-3 h-3 border border-current ${theme === "dark" ? "bg-foreground" : ""}`} />
+                      {theme === "light" ? "Light" : "Dark"}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="relative">
+              {openMenu === "art" && (
+                <div className="fixed inset-0 z-10" onClick={() => setOpenMenu(null)} />
+              )}
+              <button
+                type="button"
+                onClick={() => setOpenMenu(m => (m === "art" ? null : "art"))}
+                className="sans-label font-normal inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 hover:text-primary"
+              >
+                <BookOpen className="h-4 w-4" />
+                {t.watercolorCatalog.printCatalog}
+              </button>
+              {openMenu === "art" && (
+                <div className="absolute right-0 top-full mt-1 z-20 border border-border bg-background min-w-[160px]">
+                  {(["light", "dark"] as const).map(theme => (
+                    <button
+                      key={`combined-${theme}`}
+                      type="button"
+                      onClick={() => handlePrint(theme, "combined")}
+                      className="w-full flex items-center gap-2 px-3 py-2 font-mono text-xs hover:bg-muted transition-colors text-foreground border-b border-border last:border-b-0"
+                    >
+                      <span className={`inline-block w-3 h-3 border border-current ${theme === "dark" ? "bg-foreground" : ""}`} />
+                      {theme === "light" ? "Light" : "Dark"}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -140,58 +200,6 @@ const Catalogs = () => {
             </Link>
           );
         })}
-      </section>
-
-      {/* Print catalog */}
-      <section className="border-t border-border py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <div className="relative">
-            {printMenuOpen && (
-              <div className="fixed inset-0 z-10" onClick={() => setPrintMenuOpen(false)} />
-            )}
-            <button
-              type="button"
-              onClick={() => setPrintMenuOpen(o => !o)}
-              className="sans-label inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 hover:text-primary"
-            >
-              <BookOpen className="h-4 w-4" />
-              {t.watercolorCatalog.printCatalog}
-            </button>
-            {printMenuOpen && (
-              <div className="absolute right-0 bottom-full mb-1 z-20 border border-border bg-background min-w-[220px]">
-                <div className="border-b border-border px-3 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                  {t.watercolorCatalog.printCatalog}
-                </div>
-                {(["light", "dark"] as const).map(theme => (
-                  <button
-                    key={`combined-${theme}`}
-                    type="button"
-                    onClick={() => handlePrint(theme, "combined")}
-                    className="w-full flex items-center gap-2 px-3 py-2 font-mono text-xs hover:bg-muted transition-colors text-foreground border-b border-border last:border-b-0"
-                  >
-                    <span className={`inline-block w-3 h-3 border border-current ${theme === "dark" ? "bg-foreground" : ""}`} />
-                    {theme === "light" ? "Light" : "Dark"} · complete
-                  </button>
-                ))}
-
-                <div className="border-t border-border px-3 py-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                  {t.watercolorCatalog.printVendorCatalog}
-                </div>
-                {(["light", "dark"] as const).map(theme => (
-                  <button
-                    key={`vendor-${theme}`}
-                    type="button"
-                    onClick={() => handlePrint(theme, "vendor")}
-                    className="w-full flex items-center gap-2 px-3 py-2 font-mono text-xs hover:bg-muted transition-colors text-foreground"
-                  >
-                    <span className={`inline-block w-3 h-3 border border-current ${theme === "dark" ? "bg-foreground" : ""}`} />
-                    {theme === "light" ? "Light" : "Dark"} · vendor
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
       </section>
 
       <Footer />
