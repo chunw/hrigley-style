@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { remainsWorks, catalogMeta, type RemainsWork } from "@/lib/remains";
-import { seriesIntro } from "@/lib/constants";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { products } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
@@ -10,21 +9,6 @@ import { usePageMeta } from "@/hooks/usePageMeta";
 import { useImageHoverExpand } from "@/hooks/useImageHoverExpand";
 
 const printPacket = products.find((p) => p.id === "remains-fine-art-print-packet");
-
-function renderInlineMarkdown(text: string) {
-  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g);
-  return parts.map((part, i) => {
-    if (part.startsWith("**") && part.endsWith("**")) {
-      return <strong key={i}>{part.slice(2, -2)}</strong>;
-    }
-    if (part.startsWith("*") && part.endsWith("*")) {
-      return <em key={i}>{part.slice(1, -1)}</em>;
-    }
-    return part;
-  });
-}
-
-
 
 const WorkCard = ({ work }: { work: RemainsWork }) => {
   const { lang } = useLanguage();
@@ -133,15 +117,6 @@ const RemainsCatalog = () => {
           </div>
         </header>
 
-        {/* Series intro */}
-        <div className="mt-8 max-w-prose space-y-4 text-sm text-muted-foreground">
-          {(lang === "zh" ? seriesIntro.zh : seriesIntro.en)
-            .split("\n\n")
-            .map((para, i) => (
-              <p key={i}>{renderInlineMarkdown(para)}</p>
-            ))}
-        </div>
-
         {/* Print packet */}
         {printPacket && (
           <section className="mt-12 max-w-xs">
@@ -158,6 +133,7 @@ const RemainsCatalog = () => {
               category={printPacket.category}
               category_zh={printPacket.category_zh}
               paylink={printPacket.paylink}
+              is_active={printPacket.is_active}
             />
           </section>
         )}

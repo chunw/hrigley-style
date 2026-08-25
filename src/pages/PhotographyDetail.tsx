@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { photographyWorks, catalogMeta } from "@/lib/photography";
 import { PRINT_9X12_PAYLINK } from "@/lib/watercolors";
-import { shopOrderNavigableItems, photographyCatalogNavigableItems } from "@/hooks/useProducts";
+import { shopOrderNavigableItems } from "@/hooks/useProducts";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ZoomableImage } from "@/components/ZoomableImage";
@@ -94,13 +94,6 @@ const PhotographyDetail = () => {
       ? shopOrderNavigableItems[shopIndex + 1]
       : undefined;
 
-  const catalogIndex = photographyCatalogNavigableItems.findIndex((item) => item.id === work.id);
-  const catalogPrevItem = catalogIndex > 0 ? photographyCatalogNavigableItems[catalogIndex - 1] : undefined;
-  const catalogNextItem =
-    catalogIndex >= 0 && catalogIndex < photographyCatalogNavigableItems.length - 1
-      ? photographyCatalogNavigableItems[catalogIndex + 1]
-      : undefined;
-
   const paylink9x12 = work?.paylink ?? PRINT_9X12_PAYLINK;
   const paylink12x18 = work?.paylink12x18 ?? null;
 
@@ -140,53 +133,31 @@ const PhotographyDetail = () => {
               </div>
             )}
 
-            {(catalogPrevItem || catalogNextItem) && (
-              <div className="flex items-center gap-3 ml-auto">
-                <span className="font-helvetica text-[10px] uppercase tracking-widest text-muted-foreground/60">
-                  {lang === "zh" ? (
-                    <>
-                      查看目录：
-                      <Link
-                        to="/photography-catalog"
-                        className="italic normal-case text-pink hover:text-pink/80 transition-colors"
-                      >
-                        {catalogMeta.zh}
-                      </Link>
-                    </>
-                  ) : (
-                    <>
-                      View in Catalog:{" "}
-                      <Link
-                        to="/photography-catalog"
-                        className="italic normal-case text-pink hover:text-pink/80 transition-colors"
-                      >
-                        {catalogMeta.en}
-                      </Link>
-                    </>
-                  )}
-                </span>
-                {catalogPrevItem && (
-                  <button
-                    type="button"
-                    onClick={() => navigate(catalogPrevItem.path)}
-                    className="inline-flex items-center gap-2 px-3 py-2 text-xs font-helvetica text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    <ArrowLeft className="h-4 w-4" />
-                    {lang === "zh" ? "上一件" : "Previous"}
-                  </button>
+            <div className="flex items-center gap-3 ml-auto">
+              <span className="font-helvetica text-[10px] uppercase tracking-widest text-muted-foreground/60">
+                {lang === "zh" ? (
+                  <>
+                    查看目录：
+                    <Link
+                      to="/photography-catalog"
+                      className="italic normal-case text-pink hover:text-pink/80 transition-colors"
+                    >
+                      {catalogMeta.zh}
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    View in Catalog:{" "}
+                    <Link
+                      to="/photography-catalog"
+                      className="italic normal-case text-pink hover:text-pink/80 transition-colors"
+                    >
+                      {catalogMeta.en}
+                    </Link>
+                  </>
                 )}
-                {catalogNextItem && (
-                  <button
-                    type="button"
-                    onClick={() => navigate(catalogNextItem.path)}
-                    className="inline-flex items-center gap-2 px-3 py-2 text-xs font-helvetica text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {lang === "zh" ? "下一件" : "Next"}
-                    <ArrowRight className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
-            )}
+              </span>
+            </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">

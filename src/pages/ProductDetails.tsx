@@ -180,7 +180,7 @@ const ProductDetails = () => {
               </div>
             )}
 
-            <div className="flex-1 overflow-hidden bg-[#f7f6f3]">
+            <div className="flex-1 bg-[#f7f6f3]">
               {allImages.length > 0 ? (
                 <ZoomableImage
                   src={allImages[selectedIndex]?.image_url || "/placeholder.svg"}

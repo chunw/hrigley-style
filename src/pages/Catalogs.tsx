@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { buildCombinedPrintHTML, buildVendorCatalogHTML, type PrintTheme } from "@/lib/printCatalog";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { useImageHoverExpand } from "@/hooks/useImageHoverExpand";
 
 const CATALOGS = [
   {
@@ -37,6 +38,88 @@ const CATALOGS = [
     labelKey: "photographyCatalog" as const,
   },
 ];
+
+const CatalogTile = ({
+  to,
+  images,
+  label,
+  isLeftColumn,
+}: {
+  to: string;
+  images: string[];
+  label: string;
+  isLeftColumn: boolean;
+}) => {
+  const rightImage = useImageHoverExpand("cover");
+  const leftImage = useImageHoverExpand("cover");
+
+  return (
+    <Link
+      to={to}
+      className={`group relative block bg-black border-b border-border overflow-hidden aspect-video ${
+        isLeftColumn ? "sm:border-r" : ""
+      }`}
+      style={{ maxHeight: "85vh", minHeight: "300px" }}
+      onMouseEnter={() => { rightImage.hoverHandlers.onMouseEnter(); leftImage.hoverHandlers.onMouseEnter(); }}
+      onMouseLeave={() => { rightImage.hoverHandlers.onMouseLeave(); leftImage.hoverHandlers.onMouseLeave(); }}
+    >
+      {/* ── Layer 1 (back): RIGHT image — BEHIND the title text ── */}
+      <div
+        className="absolute top-0 right-0 overflow-hidden"
+        style={{
+          width: "38%",
+          height: "50%",
+          zIndex: 5,
+          // soft right and bottom edges — organic, not rigid
+          maskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
+        }}
+      >
+        <img
+          ref={rightImage.imgRef}
+          src={images[1]}
+          alt={`${label} fine art print`}
+          className="w-full h-full object-cover opacity-90 group-hover:opacity-70 transition-opacity duration-700"
+          style={rightImage.imgStyle}
+          onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+        />
+      </div>
+
+      {/* ── Layer 2 (middle): TITLE — in front of right image, behind left image ── */}
+      {/* spans the full row width */}
+      <div
+        className="absolute bottom-0 left-0 right-0 px-5 pb-5"
+        style={{ zIndex: 10 }}
+      >
+        <h2 className="shop-title gloria-title text-white leading-none w-full text-[clamp(2rem,9vw,7.5rem)] sm:text-[clamp(1.5rem,4.5vw,6rem)]">
+          {label}
+        </h2>
+      </div>
+
+      {/* ── Layer 3 (front): LEFT image — ON TOP of the title, rests on the text ── */}
+      {/* natural gap on the right side; bottom mask lets title peek through */}
+      <div
+        className="absolute top-0 left-0 overflow-hidden"
+        style={{
+          width: "37%",
+          height: "68%",
+          zIndex: 20,
+          maskImage: "linear-gradient(to bottom, black 60%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, black 60%, transparent 100%)",
+        }}
+      >
+        <img
+          ref={leftImage.imgRef}
+          src={images[0]}
+          alt={`${label} original artwork`}
+          className="w-full h-full object-cover opacity-90 group-hover:opacity-70 transition-opacity duration-700"
+          style={leftImage.imgStyle}
+          onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+        />
+      </div>
+    </Link>
+  );
+};
 
 const Catalogs = () => {
   const { lang, t } = useLanguage();
@@ -135,71 +218,15 @@ const Catalogs = () => {
       </div>
 
       <section className="grid grid-cols-1 sm:grid-cols-2 border-t border-border">
-        {CATALOGS.map(({ to, images, labelKey }, index) => {
-          const label = t[labelKey].subtitle;
-          const isLeftColumn = index % 2 === 0;
-          return (
-            <Link
-              key={to}
-              to={to}
-              className={`group relative block bg-black border-b border-border overflow-hidden aspect-video ${
-                isLeftColumn ? "sm:border-r" : ""
-              }`}
-              style={{ maxHeight: "85vh", minHeight: "300px" }}
-            >
-              {/* ── Layer 1 (back): RIGHT image — BEHIND the title text ── */}
-              <div
-                className="absolute top-0 right-0 overflow-hidden"
-                style={{
-                  width: "38%",
-                  height: "50%",
-                  zIndex: 5,
-                  // soft right and bottom edges — organic, not rigid
-                  maskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
-                  WebkitMaskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
-                }}
-              >
-                <img
-                  src={images[1]}
-                  alt={`${label} fine art print`}
-                  className="w-full h-full object-cover opacity-90 group-hover:opacity-70 group-hover:scale-105 transition-all duration-700"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-                />
-              </div>
-
-              {/* ── Layer 2 (middle): TITLE — in front of right image, behind left image ── */}
-              {/* spans the full row width */}
-              <div
-                className="absolute bottom-0 left-0 right-0 px-5 pb-5"
-                style={{ zIndex: 10 }}
-              >
-                <h2 className="shop-title gloria-title text-white leading-none w-full text-[clamp(2rem,9vw,7.5rem)] sm:text-[clamp(1.5rem,4.5vw,6rem)]">
-                  {label}
-                </h2>
-              </div>
-
-              {/* ── Layer 3 (front): LEFT image — ON TOP of the title, rests on the text ── */}
-              {/* natural gap on the right side; bottom mask lets title peek through */}
-              <div
-                className="absolute top-0 left-0 overflow-hidden"
-                style={{
-                  width: "37%",
-                  height: "68%",
-                  zIndex: 20,
-                  maskImage: "linear-gradient(to bottom, black 60%, transparent 100%)",
-                  WebkitMaskImage: "linear-gradient(to bottom, black 60%, transparent 100%)",
-                }}
-              >
-                <img
-                  src={images[0]}
-                  alt={`${label} original artwork`}
-                  className="w-full h-full object-cover opacity-90 group-hover:opacity-70 group-hover:scale-105 transition-all duration-700"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-                />
-              </div>
-            </Link>
-          );
-        })}
+        {CATALOGS.map(({ to, images, labelKey }, index) => (
+          <CatalogTile
+            key={to}
+            to={to}
+            images={images}
+            label={t[labelKey].subtitle}
+            isLeftColumn={index % 2 === 0}
+          />
+        ))}
       </section>
 
       <Footer />

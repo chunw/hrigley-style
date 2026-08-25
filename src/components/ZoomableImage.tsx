@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
+import { useImageHoverExpand } from "@/hooks/useImageHoverExpand";
 
 interface Props {
   src: string;
@@ -21,6 +22,7 @@ export const ZoomableImage = ({
   const [open, setOpen] = useState(false);
   const [natural, setNatural] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(startIndex);
+  const { imgRef, imgStyle, hoverHandlers, wrapperHoverClassName } = useImageHoverExpand("contain");
 
   const allImages = images ?? [src];
   const hasMultiple = allImages.length > 1;
@@ -62,10 +64,11 @@ export const ZoomableImage = ({
   return (
     <>
       <div
-        className="relative group cursor-zoom-in h-full"
+        className={`relative group cursor-zoom-in h-full ${wrapperHoverClassName}`}
         onClick={() => { setLightboxIndex(startIndex); setOpen(true); }}
+        {...hoverHandlers}
       >
-        <img src={src} alt={alt} className={imgClassName} />
+        <img ref={imgRef} src={src} alt={alt} className={imgClassName} style={imgStyle} />
         <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
           <div className="bg-black/60 rounded p-1">
             <ZoomIn size={14} className="text-white/80" />

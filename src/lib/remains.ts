@@ -3,8 +3,8 @@ export const catalogMeta = {
   zh: "遗迹",
   medium: "Mixed Media",
   mediumZh: "综合媒材",
-  description: `<p>The Remains series borrows its visual grammar from museum-collected figurines such as terracotta soldiers, grave goods, archaeological clay forms from different civilizations and historical periods, and drops them without explanation into the theater of contemporary daily life: the office, the quarterly review, the performance metric.</p><p>Where In the Spirit of the 21st Century makes its critique directly and earnestly, Remains makes the same critique sideways, through deadpan absurdity. The implication runs in both directions: from a sufficient distance, corporate daily life looks very much like every other civilization's daily life; and the past, brought close, looks surreal.</p>`,
-  descriptionZh: `<p>《遗迹》系列从博物馆馆藏人俑中借取视觉语法——陶俑兵马、随葬器物、来自不同文明与历史时期的考古陶土形态——将它们不加解释地投入当代日常生活的剧场：办公室、季度述职、绩效指标。</p><p>《21世纪精神》以直接而认真的方式展开批评，而《遗迹》则从侧面以冷面荒诞完成同样的批评。这种隐喻双向延伸：从足够远的距离望去，企业日常生活与其他所有文明的日常生活并无二致；而当过去被拉近，它便显得超现实。</p>`,
+  description: `<p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank">2024 London International Creative Competition (LICC) Official Selection · Create/Art</a>. The Remains series borrows its visual grammar from museum-collected figurines such as terracotta soldiers, grave goods, archaeological clay forms from different civilizations and historical periods, and drops them without explanation into the theater of contemporary daily life: the office, the quarterly review, the performance metric.</p>`,
+  descriptionZh: `<p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank">2024年伦敦国际创意大赛（LICC）官方入选 · 艺术创作类</a>。《遗迹》系列从博物馆馆藏人俑中借取视觉语法——陶俑兵马、随葬器物、来自不同文明与历史时期的考古陶土形态——将它们不加解释地投入当代日常生活的剧场：办公室、季度述职、绩效指标。</p>`,
 };
 
 export interface RemainsWork {
