@@ -2,7 +2,7 @@ import { useCallback, useRef, useState, type CSSProperties } from "react";
 
 // How large a thumbnail is allowed to grow, and how much viewport edge to
 // always leave clear (so the expanded image never touches the screen edge).
-const MAX_SCALE = 2.5;
+const MAX_SCALE = 2;
 const VIEWPORT_MARGIN = 24;
 
 const supportsHover = () =>
@@ -22,6 +22,8 @@ export function useImageHoverExpand(objectFit: "cover" | "contain" = "cover") {
   const [hovered, setHovered] = useState(false);
   const [scale, setScale] = useState(1);
 
+  const [origin, setOrigin] = useState("50% 50%");
+
   const onMouseEnter = useCallback(() => {
     if (!supportsHover()) return;
     const img = imgRef.current;
@@ -34,13 +36,25 @@ export function useImageHoverExpand(objectFit: "cover" | "contain" = "cover") {
           ? Math.min(widthRatio, heightRatio)
           : Math.max(widthRatio, heightRatio);
 
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const maxHalfW = Math.min(centerX, window.innerWidth - centerX) - VIEWPORT_MARGIN;
-        const maxHalfH = Math.min(centerY, window.innerHeight - centerY) - VIEWPORT_MARGIN;
-        const viewportScale = Math.min((maxHalfW * 2) / rect.width, (maxHalfH * 2) / rect.height);
+        // Bias the growth toward whichever side of the viewport has more
+        // room, so a card sitting flush against the left/top edge still
+        // gets to expand — instead of being capped by a symmetric,
+        // center-anchored margin it can't actually use on the tight side.
+        const originXPct = rect.left < window.innerWidth / 3 ? 0 : rect.right > (window.innerWidth * 2) / 3 ? 100 : 50;
+        const originYPct = rect.top < window.innerHeight / 3 ? 0 : rect.bottom > (window.innerHeight * 2) / 3 ? 100 : 50;
+        setOrigin(`${originXPct}% ${originYPct}%`);
 
-        setScale(Math.max(1, Math.min(nativeScale, MAX_SCALE, viewportScale)));
+        const roomFor = (pct: number, start: number, end: number, size: number, viewportSize: number) => {
+          if (pct === 0) return (viewportSize - start - VIEWPORT_MARGIN) / size;
+          if (pct === 100) return (end - VIEWPORT_MARGIN) / size;
+          const roomBefore = start - VIEWPORT_MARGIN;
+          const roomAfter = viewportSize - end - VIEWPORT_MARGIN;
+          return 1 + (2 * Math.min(roomBefore, roomAfter)) / size;
+        };
+        const viewportScaleW = roomFor(originXPct, rect.left, rect.right, rect.width, window.innerWidth);
+        const viewportScaleH = roomFor(originYPct, rect.top, rect.bottom, rect.height, window.innerHeight);
+
+        setScale(Math.max(1, Math.min(nativeScale, MAX_SCALE, viewportScaleW, viewportScaleH)));
       }
     }
     setHovered(true);
@@ -50,6 +64,7 @@ export function useImageHoverExpand(objectFit: "cover" | "contain" = "cover") {
 
   const imgStyle: CSSProperties = {
     transform: hovered ? `scale(${scale})` : undefined,
+    transformOrigin: origin,
     transition: "transform 350ms cubic-bezier(0.22, 1, 0.36, 1)",
     willChange: "transform",
   };
