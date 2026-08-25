@@ -14,7 +14,7 @@ const WorkCard = ({ work }: { work: RemainsWork }) => {
   const { lang } = useLanguage();
   const padded = work.id.padStart(2, "0");
   const title = lang === "zh" ? (work.titleZh ?? work.title) : work.title;
-  const { imgRef, imgStyle, hoverHandlers, wrapperHoverClassName } = useImageHoverExpand("cover");
+  const { imgRef, imgStyle, hoverHandlers, wrapperHoverClassName } = useImageHoverExpand("contain");
 
   return (
     <article>
@@ -46,7 +46,7 @@ const WorkCard = ({ work }: { work: RemainsWork }) => {
             inset: 0,
             width: "100%",
             height: "100%",
-            objectFit: "cover",
+            objectFit: "contain",
             opacity: 0,
             ...imgStyle,
             transition: `opacity 0.2s, ${imgStyle.transition}`,

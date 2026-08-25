@@ -174,13 +174,13 @@ One size.</p>
     title: "Every flush is a new beginning Bath mat",
     name: "Every flush is a new beginning Bath mat",
     title_zh: "每次冲水都是新的开始 浴室地垫",
-    description_zh: "为日常通勤者和潮流引领者打造的企业超现实主义托特包。",
+    description_zh: "每次冲水都是新的开始。",
     detailed_description_html_zh: `<p>《遗迹》系列曾入选2024年伦敦国际创意大赛(LICC) 艺术创作组别。它诞生于一种淡淡的荒诞感：在研究那些古代陶俑时，我被它们那种亲切、笨拙又风趣的样子吸引。它们看起来不像什么伟大的纪念碑，倒像是一个个人在"无所事事"的瞬间被定格，很具有耐人寻味的想象空间，因此正合适放在当代无聊的办公室场景里。</p>`,
     category_zh: "家居",
     edition_info_zh: "",
     price: 30,
     currency: "USD",
-    description: "Corporate Surrealism for the daily commuter and the trendsetter alike.",
+    description: "Every flush is a new beginning.",
     detailed_description_html: `
   <p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank" rel="noreferrer">Official Selection</a> for 2024 London International Creative Competition (LICC) in Create/Art category, <i>Remains</i> was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions, making them perfect companions for the mundane modern office.</p>
     `.trim(),
