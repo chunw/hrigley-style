@@ -9,8 +9,8 @@ const Footer = () => {
   return (
     <footer className="border-t border-border bg-background text-foreground">
       <div className="mx-auto max-w-[1600px] px-4 py-5 sm:px-5 lg:px-7">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col items-center gap-5 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center">
+          <div className="flex items-center gap-2 lg:justify-self-start">
             {socialLinks.map(({ href, label, icon: Icon }) => (
               <a
                 key={label}
@@ -30,15 +30,6 @@ const Footer = () => {
             <div>All rights reserved.</div>
             <div className="mt-1 normal-case">Designed & shipped from New York City. Ships worldwide.</div>
           </div>
-
-          <button
-            type="button"
-            aria-label="Back to top"
-            onClick={scrollToTop}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-foreground text-background transition-transform duration-200 hover:scale-105"
-          >
-            <ArrowUp className="h-4 w-4" />
-          </button>
         </div>
       </div>
     </footer>

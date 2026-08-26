@@ -116,7 +116,7 @@ export const translations = {
       description: "",
       // "从一点点生活观察，和一点点过度思考开始。想法落地，变成好用、好送、也好对着发呆的小物件。",
       createdExclusivelyBy: "独家创作 by",
-      forImaginativeCollectors: "，献给富有想象力的收藏者们",
+      forImaginativeCollectors: "",
       dialogTitle: "手工制作，独一无二。",
       shopCta: "查看系列",
     },
