@@ -1,5 +1,6 @@
 import { remainsWorks } from "./remains";
 import { spiritWorks } from "./21spirit";
+import { watercolors } from "./watercolors";
 
 // Auto-discovers all images in each product's imageFolder at build time.
 // To add images to a product, just drop files into src/assets/products/<imageFolder>/.
@@ -13,6 +14,9 @@ const _allProductImages = import.meta.glob(
 const PRINT_PACKET_SERIES_IMAGES: Record<string, string[]> = {
   "remains-fine-art-print-packet": remainsWorks.map((w) => `/remains/${w.id.padStart(2, "0")}/main.jpg`),
   "spirit-21-fine-art-print-packet": spiritWorks.map((w) => `/21spirit/${w.id.padStart(2, "0")}/main.jpg`),
+  "notes-from-the-road-postcard-packet": watercolors
+    .filter((w) => w.series === "IV")
+    .map((w) => `/watercolors/${w.id.padStart(2, "0")}/main.jpg`),
 }
 
 // Reference these when tagging a product as framed, to keep the name consistent.
@@ -615,6 +619,34 @@ Set of 2 original paintings.</p>`.trim(),
     category: "Fine Art Prints",
     created_at: new Date().toISOString(),
     paylink: "https://www.paypal.com/ncp/payment/59VBZ7ZPA6T7G"
+  },
+
+  {
+    id: "notes-from-the-road-postcard-packet",
+    imageFolder: "notes-postcard-packet",
+    title: "Notes from the Road Postcard Packet",
+    name: "Notes from the Road Postcard Packet",
+    title_zh: "《行旅拾记》明信片套装",
+    description_zh: "一套《行旅拾记》明信片——途中随手画下的小小观察，寄给别人，或者留给自己。",
+    detailed_description_html_zh: `<p><i>行旅拾记</i>是一组在途中完成的水彩速记——车窗边、路旁小桌、一个途经却未曾真正抵达的地方。每一幅都是旅途中间某处撕下的一页。</p><p>本套装收录多张精选画面，印制成明信片，背面留白可书写与邮寄。适合寄给远方的人，或者留在自己的桌上。</p>`,
+    category_zh: "文具",
+    edition_info_zh: "",
+    price: 12,
+    currency: "USD",
+    description: "A packet of postcards from the road — small watercolor observations, ready to mail or keep.",
+    detailed_description_html: `<p><i>Notes from the Road</i> is a set of small watercolor observations made in transit — a window seat, a corner table, a place passed through and not quite arrived at. Each piece is a page torn from somewhere in between.</p><p>This packet gathers a selection of images from the series, printed as postcards with a blank, writable back. Send them, or keep them for yourself.</p>`,
+    dimensions: `Set of 4 postcards, 4×6"`,
+    dimensions_zh: "4张一套，4×6英寸",
+    edition_info: null,
+    edition_size: null,
+    alt_text: "Notes from the Road Postcard Packet",
+    image_url: new URL("../assets/products/notes-postcard-packet/main.jpg", import.meta.url).href,
+    is_active: true,
+    printInCatalog: false,
+    showInStorefront: true,
+    category: "Stationery",
+    created_at: new Date().toISOString(),
+    paylink: ""
   },
 
   {

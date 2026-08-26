@@ -316,11 +316,7 @@ All colors MUST be HSL.
     text-decoration: none;
   }
 
-  /* Make common interactive elements show a custom cake cursor instead of the
-     default pointer, matching the site's cutout-cake motif. Includes
-     .cursor-pointer (the Tailwind utility) since several clickable elements
-     — e.g. the whole ProductCard, including its product-title — are plain
-     divs with an onClick handler rather than a real <a>/<button>. */
+  /* Make common interactive elements show pointer cursor */
   a,
   button,
   input[type="button"],
@@ -330,7 +326,7 @@ All colors MUST be HSL.
   label[for],
   .clickable,
   .cursor-pointer {
-    cursor: url('./assets/cutout_cake_cursor.png') 4 4, pointer !important;
+    cursor: pointer !important;
   }
 }
 
@@ -784,15 +780,47 @@ All colors MUST be HSL.
 
   .hero-message-card-bottom-wrap {
     position: static;
-    padding: 0 0.5rem;
+    padding: 0;
     margin-top: 1.5rem;
     justify-content: center;
   }
 
+  /* Dialog card matches the framed photo's width exactly and swaps its black border
+     for the same red frame as the photo above it. */
   .hero-message-card-tight {
     width: 100%;
-    max-width: 380px;
-    margin: 0 auto;
+    max-width: none;
+    margin: 0;
+  }
+
+  .hero-message-card {
+    border: 6px solid #dc2626;
+    border-radius: 16px;
+    padding: 1.5rem 1.25rem;
+  }
+
+  /* Text block gets its own black border (matching the reference), separate from the
+     card's outer red frame; the sculpture breaks out of *this* box's bottom edge. */
+  .hero-dialog-textbox {
+    position: relative;
+    border: 4px solid #111;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-top: 1.25rem;
+    background: #fff;
+  }
+
+  .hero-dialog-textbox .hero-dialog-sculpture {
+    right: 22%;
+    bottom: -30%;
+    width: 22%;
+    max-width: 90px;
+  }
+
+  .hero-message-card-tight > img {
+    width: 380px;
+    height: 380px;
+    max-width: 100%;
   }
 }
 
