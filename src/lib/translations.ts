@@ -20,7 +20,7 @@ export const translations = {
       subtitle: "Handmade & one of a kind.",
       body: "<em>Chun Wang Studio Shop is the work of artist <a href=\"https://chunwang.art\" target=\"_blank\" rel=\"noopener noreferrer\">Chun Wang</a>, based in New York City.</em>\n\nI work across ceramics, painting, photography, and functional art objects.\n\nEverything starts from small, weird, everyday things I can't help but notice and overthink, then turned into whimsical, handmade pieces you can use, gift, or just sit with in existential curiosity.\n\nEach piece is one of a kind, designed and made by hand in my NYC studio. Ships worldwide.",
       artistLabel: "About the Artist",
-      backToShop: "Back to Shop",
+      backToShop: "Back to main Shop",
     },
     shopTitle: {
       line1: "Chun Wang",

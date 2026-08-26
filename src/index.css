@@ -669,12 +669,12 @@ All colors MUST be HSL.
    with light-on-light or dark-mode-inverted text when the toggle changes. */
 .hero-message-card {
   display: inline-block;
-  background: hsl(0 0% 100% / 0.95);
+  background: hsl(0 0% 100% / 0.97);
   color: #111;
-  border: 4px solid #111;
-  padding: 1.75rem 2rem 4rem;
-  border-radius: 0;
-  box-shadow: none;
+  border: 1px solid rgba(17, 17, 17, 0.14);
+  padding: 2.25rem 2.5rem 1.75rem;
+  border-radius: 2px;
+  box-shadow: 0 30px 60px -18px rgba(0, 0, 0, 0.22), 0 2px 10px rgba(0, 0, 0, 0.06);
   text-align: left;
   min-width: 260px;
   max-width: 420px;
@@ -694,6 +694,15 @@ All colors MUST be HSL.
   height: auto;
   filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.25));
   pointer-events: none;
+}
+
+@media (min-width: 640px) {
+  .hero-dialog-sculpture {
+    right: 14%;
+    bottom: 5%;
+    width: 21.6%;
+    max-width: 84px;
+  }
 }
 
 .hero-message-card-tight {
@@ -716,36 +725,44 @@ All colors MUST be HSL.
 }
 
 .hero-dialog-title {
-  font-size: 1.1rem;
-  margin: 0 0 0.25rem 0;
-  font-weight: 700;
+  font-family: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.4rem;
+  margin: 0 0 0.4rem 0;
+  font-weight: 400;
+  letter-spacing: 0.01em;
 }
 
 .hero-dialog-sub {
-  margin: 0 0 0.75rem 0;
-  color: rgba(17, 17, 17, 0.7);
-  font-size: 0.9rem;
+  margin: 0 0 1.25rem 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(17, 17, 17, 0.12);
+  color: rgba(17, 17, 17, 0.62);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 .hero-dialog-btn {
   display: inline-block;
-  padding: 0.65rem 1.75rem;
-  border-radius: 999px;
-  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 0;
+  border: 1px solid hsl(var(--primary));
   text-decoration: none;
-  color: #fff;
+  color: #111;
   font-weight: 500;
-  font-size: 0.9rem;
-  letter-spacing: 0.04em;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  background: hsl(var(--primary));
-  box-shadow: 0 6px 16px hsl(var(--primary) / 0.4);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  background: transparent;
+  box-shadow: none;
+  transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .hero-dialog-btn:hover {
-  transform: translateY(-1px) scale(1.03);
-  box-shadow: 0 8px 20px hsl(var(--primary) / 0.5);
+  background: hsl(var(--primary));
+  color: #111;
+  box-shadow: 0 8px 20px hsl(var(--primary) / 0.35);
 }
 
 /* Frame for HeroSection's `bordered` prop. */
@@ -804,18 +821,19 @@ All colors MUST be HSL.
   }
 
   .hero-message-card {
-    border: 6px solid #dc2626;
-    border-radius: 16px;
-    padding: 0.75rem 1.25rem;
+    border: 1px solid rgba(17, 17, 17, 0.14);
+    border-radius: 4px;
+    box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.2);
+    padding: 1rem 1.25rem;
     min-width: 0;
   }
 
-  /* Text block gets its own black border (matching the reference), separate from the
-     card's outer red frame; the sculpture breaks out of *this* box's bottom edge. */
+  /* Text block gets its own hairline border, separate from the card's outer frame; the
+     sculpture breaks out of *this* box's bottom edge. */
   .hero-dialog-textbox {
     position: relative;
-    border: 4px solid #111;
-    border-radius: 12px;
+    border: 1px solid rgba(17, 17, 17, 0.14);
+    border-radius: 4px;
     padding: 1.25rem 1.5rem;
     margin-top: 1.25rem;
     background: #fff;
