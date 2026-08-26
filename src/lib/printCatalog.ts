@@ -42,10 +42,6 @@ function vcFooter(tagText: string, page: number, total: number, muted: string): 
     <div class="vc-footer-page">${String(page).padStart(2, "0")} / ${String(total).padStart(2, "0")} ${vcCrosshair(muted)}</div>`;
 }
 
-function vcEmptyPage(side: "left" | "right"): string {
-  return `<div class="vc-page vc-page-${side}"></div>`;
-}
-
 interface CatalogItem {
   title: string;
   metaLine?: string | null;
@@ -437,7 +433,7 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
 
   let totalPages = 2;
   for (const group of groups) {
-    totalPages += 2 + Math.ceil(group.items.length / 2) * 2;
+    totalPages += 1 + group.items.length;
   }
 
   const about = translations[lang].about;
@@ -461,16 +457,20 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
 
   let sectionsHtml = "";
   groups.forEach((group, groupIndex) => {
-    sectionsHtml += vcCategoryDividerSpread(brand, group.category, group.items, isZh, groupIndex + 1, pageCounter, totalPages, muted);
-    pageCounter += 2;
+    sectionsHtml += vcCategoryDividerPage(brand, group.category, group.items, isZh, groupIndex + 1, pageCounter, totalPages, muted);
+    pageCounter += 1;
     for (let i = 0; i < group.items.length; i += 2) {
-      const left = vcProductPage(brand, group.items[i], "left", i + 1, pageCounter, totalPages, muted);
       const rightItem = group.items[i + 1];
-      const right = rightItem
-        ? vcProductPage(brand, rightItem, "right", i + 2, pageCounter + 1, totalPages, muted)
-        : vcEmptyPage("right");
-      sectionsHtml += spread(left, right);
-      pageCounter += 2;
+      if (rightItem) {
+        const left = vcProductPage(brand, group.items[i], "left", i + 1, pageCounter, totalPages, muted);
+        const right = vcProductPage(brand, rightItem, "right", i + 2, pageCounter + 1, totalPages, muted);
+        sectionsHtml += spread(left, right);
+        pageCounter += 2;
+      } else {
+        const solo = vcProductPage(brand, group.items[i], "right", i + 1, pageCounter, totalPages, muted);
+        sectionsHtml += spread(solo, "");
+        pageCounter += 1;
+      }
     }
   });
 
@@ -590,7 +590,7 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
 
   let totalPages = 4; // master cover (2) + bio spread (2)
   for (const section of sections) {
-    totalPages += 2 + Math.ceil(section.items.length / 2) * 2;
+    totalPages += 1 + section.items.length;
   }
 
   const bioIntro = `<p>${artistBioSegments[lang].intro.split("<br><br>")[0]}</p>`;
@@ -616,16 +616,20 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
 
   let sectionsHtml = "";
   sections.forEach((section, sectionIndex) => {
-    sectionsHtml += vcCategoryDividerSpread(brand, section.category, section.items, isZh, sectionIndex + 1, pageCounter, totalPages, muted);
-    pageCounter += 2;
+    sectionsHtml += vcCategoryDividerPage(brand, section.category, section.items, isZh, sectionIndex + 1, pageCounter, totalPages, muted);
+    pageCounter += 1;
     for (let i = 0; i < section.items.length; i += 2) {
-      const left = vcProductPage(brand, section.items[i], "left", i + 1, pageCounter, totalPages, muted);
       const rightItem = section.items[i + 1];
-      const right = rightItem
-        ? vcProductPage(brand, rightItem, "right", i + 2, pageCounter + 1, totalPages, muted)
-        : vcEmptyPage("right");
-      sectionsHtml += spread(left, right);
-      pageCounter += 2;
+      if (rightItem) {
+        const left = vcProductPage(brand, section.items[i], "left", i + 1, pageCounter, totalPages, muted);
+        const right = vcProductPage(brand, rightItem, "right", i + 2, pageCounter + 1, totalPages, muted);
+        sectionsHtml += spread(left, right);
+        pageCounter += 2;
+      } else {
+        const solo = vcProductPage(brand, section.items[i], "right", i + 1, pageCounter, totalPages, muted);
+        sectionsHtml += spread(solo, "");
+        pageCounter += 1;
+      }
     }
   });
 
