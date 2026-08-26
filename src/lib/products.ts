@@ -675,7 +675,7 @@ Set of 2 original paintings.</p>`.trim(),
     category: "Jewelry",
     collections: ["Slightly Useful Object"],
     created_at: new Date().toISOString(),
-    paylink: ""
+    paylink: "https://www.paypal.com/ncp/payment/5P3KQYVLS4BWA"
   },
 
   {
@@ -704,7 +704,7 @@ Set of 2 original paintings.</p>`.trim(),
     category: "Home Decor",
     collections: ["Slightly Useful Object"],
     created_at: new Date().toISOString(),
-    paylink: ""
+    paylink: "https://www.paypal.com/ncp/payment/9S6TYCMUV7UR2"
   },
 
   {
@@ -718,7 +718,7 @@ Set of 2 original paintings.</p>`.trim(),
     category_zh: "首饰",
     collections_zh: ["小用之物"],
     edition_info_zh: "",
-    price: 30,
+    price: 38,
     currency: "USD",
     description: "A hand-sculpted miniature strawberry shortcake that will never go bad and looks good enough to bite (please don't).",
     detailed_description_html: `<p>A hand-sculpted miniature strawberry shortcake that will never go bad and looks good enough to bite (please don't).</p><p>It comes with an eyepin already installed and ready to dangle from your necklace, keyring, bag, or anywhere that needs emergency dessert energy.</p>`,
@@ -733,7 +733,7 @@ Set of 2 original paintings.</p>`.trim(),
     category: "Jewelry",
     collections: ["Slightly Useful Object"],
     created_at: new Date().toISOString(),
-    paylink: ""
+    paylink: "https://www.paypal.com/ncp/payment/28A4RZTAX6HMN"
   },
 
   {
@@ -762,7 +762,7 @@ Set of 2 original paintings.</p>`.trim(),
     category: "Jewelry",
     collections: ["Slightly Useful Object"],
     created_at: new Date().toISOString(),
-    paylink: ""
+    paylink: "https://www.paypal.com/ncp/payment/MA66A66KT6VE4"
   },
 
   {
@@ -791,7 +791,7 @@ Set of 2 original paintings.</p>`.trim(),
     category: "Home Decor",
     collections: ["Slightly Useful Object"],
     created_at: new Date().toISOString(),
-    paylink: ""
+    paylink: "https://www.paypal.com/ncp/payment/FLW42X2DEFGR2"
   },
 ];
 
