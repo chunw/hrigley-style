@@ -672,7 +672,7 @@ All colors MUST be HSL.
   background: hsl(0 0% 100% / 0.95);
   color: #111;
   border: 4px solid #111;
-  padding: 1.75rem 2rem 5.5rem;
+  padding: 1.75rem 2rem 4rem;
   border-radius: 0;
   box-shadow: none;
   text-align: left;
@@ -689,8 +689,8 @@ All colors MUST be HSL.
   position: absolute;
   right: 10%;
   bottom: 8%;
-  width: 28%;
-  max-width: 110px;
+  width: 36%;
+  max-width: 140px;
   height: auto;
   filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.25));
   pointer-events: none;
@@ -795,10 +795,10 @@ All colors MUST be HSL.
     justify-content: center;
   }
 
-  /* Dialog card sits at 60% of the framed photo's width and swaps its black border
+  /* Dialog card sits at 75% of the framed photo's width and swaps its black border
      for the same red frame as the photo above it. */
   .hero-message-card-tight {
-    width: 60%;
+    width: 75%;
     max-width: none;
     margin: 0;
   }
@@ -824,8 +824,8 @@ All colors MUST be HSL.
   .hero-dialog-textbox .hero-dialog-sculpture {
     right: 22%;
     bottom: -30%;
-    width: 22%;
-    max-width: 90px;
+    width: 28%;
+    max-width: 115px;
   }
 
   .hero-message-card-tight > img {
