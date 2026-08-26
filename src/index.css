@@ -676,7 +676,7 @@ All colors MUST be HSL.
   background: hsl(0 0% 100% / 0.95);
   color: #111;
   border: 4px solid #111;
-  padding: 1.75rem 2rem;
+  padding: 1.75rem 2rem 5.5rem;
   border-radius: 0;
   box-shadow: none;
   text-align: left;
@@ -687,14 +687,14 @@ All colors MUST be HSL.
   overflow: visible;
 }
 
-/* Decorative clay sculpture sitting inside the dialog card, roughly level with the Shop
-   button. */
+/* Decorative clay sculpture sitting inside the dialog card, in the reserved space below
+   the Shop button so it never collides with the text. */
 .hero-dialog-sculpture {
   position: absolute;
-  right: 8%;
-  bottom: 6%;
-  width: 30%;
-  max-width: 120px;
+  right: 10%;
+  bottom: 8%;
+  width: 28%;
+  max-width: 110px;
   height: auto;
   filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.25));
   pointer-events: none;
