@@ -743,41 +743,61 @@ All colors MUST be HSL.
   box-shadow: 0 8px 20px hsl(var(--primary) / 0.35);
 }
 
-/* Above the mobile breakpoint the dialog card sits directly over the hero photo (which
-   already carries a dark scrim via .cargo-hero-overlay), so it drops its own background/
-   border/shadow and the copy switches to light text with a soft shadow for legibility. */
+/* The dialog card sits directly over the hero photo (which carries a dark scrim via
+   .cargo-hero-overlay) at every width, so it drops its own background/border/shadow and
+   the copy renders as light text with a soft shadow for legibility. */
+.hero-message-card {
+  background: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+}
+
+.hero-message-card-tight {
+  background: transparent;
+}
+
+.hero-dialog-title {
+  color: #fff;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+}
+
+.hero-dialog-sub {
+  color: rgba(255, 255, 255, 0.78);
+  border-top-color: rgba(255, 255, 255, 0.35);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
+}
+
+.hero-dialog-btn {
+  border-color: #fff;
+  color: #fff;
+}
+
+.hero-dialog-btn:hover {
+  background: #fff;
+  color: #111;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+/* Small brand badge in the corner of the hero photo, independent of the bottom text
+   overlay so it never competes with the subject in the middle of the frame. */
+.hero-logo-badge {
+  position: absolute;
+  top: 1.25rem;
+  left: 5%;
+  z-index: 1;
+  width: 84px;
+  height: 84px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
+}
+
 @media (min-width: 640px) {
-  .hero-message-card {
-    background: transparent;
-    border: none;
-    padding: 0;
-    box-shadow: none;
-  }
-
-  .hero-message-card-tight {
-    background: transparent;
-  }
-
-  .hero-dialog-title {
-    color: #fff;
-    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
-  }
-
-  .hero-dialog-sub {
-    color: rgba(255, 255, 255, 0.78);
-    border-top-color: rgba(255, 255, 255, 0.35);
-    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
-  }
-
-  .hero-dialog-btn {
-    border-color: #fff;
-    color: #fff;
-  }
-
-  .hero-dialog-btn:hover {
-    background: #fff;
-    color: #111;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  .hero-logo-badge {
+    top: 2rem;
+    left: 2rem;
+    width: 120px;
+    height: 120px;
   }
 }
 
@@ -786,35 +806,16 @@ All colors MUST be HSL.
   border: 20px solid #dc2626;
 }
 
-/* Mobile layout for the "Slightly Useful Object" hero (HeroSection with logoSrc): at
-   narrow widths the floating dialog card overlapped the photo's subject (hands/jewelry),
-   so below `sm` the photo becomes a contained, framed image and the card sits in normal
-   flow beneath it instead of floating on top of it. */
+/* Mobile layout for the "Slightly Useful Object" hero (HeroSection with logoSrc): the
+   text overlay runs edge to edge over the photo instead of floating as a narrow card, and
+   the thick outer frame backs off since it reads heavy at this width. */
 @media (max-width: 639px) {
   .cargo-hero-theme-aware.cargo-hero {
-    min-height: 0;
-    display: block;
-    padding: 1.5rem 1rem;
+    padding: 1.5rem 1rem 2.5rem;
   }
 
   .cargo-hero-framed.cargo-hero {
     border: 0;
-  }
-
-  .cargo-hero-theme-aware .cargo-hero-bg {
-    position: relative;
-    inset: auto;
-    aspect-ratio: 4 / 5;
-    border-radius: 16px;
-    overflow: hidden;
-  }
-
-  .cargo-hero-framed .cargo-hero-bg {
-    border: 6px solid #dc2626;
-  }
-
-  .cargo-hero-theme-aware .cargo-hero-overlay {
-    display: none;
   }
 
   .cargo-hero-theme-aware .cargo-hero-inner {
@@ -822,40 +823,14 @@ All colors MUST be HSL.
   }
 
   .hero-message-card-bottom-wrap {
-    position: static;
-    padding: 0;
-    margin-top: 1.5rem;
-    justify-content: center;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
   }
 
   .hero-message-card-tight {
     width: 100%;
     max-width: none;
     margin: 0;
-  }
-
-  .hero-message-card {
-    border: 1px solid rgba(17, 17, 17, 0.14);
-    border-radius: 4px;
-    box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.2);
-    padding: 1rem 1.25rem;
-    min-width: 0;
-  }
-
-  /* Text block gets its own hairline border, separate from the card's outer frame. */
-  .hero-dialog-textbox {
-    position: relative;
-    border: 1px solid rgba(17, 17, 17, 0.14);
-    border-radius: 4px;
-    padding: 1.25rem 1.5rem;
-    margin-top: 1.25rem;
-    background: #fff;
-  }
-
-  .hero-message-card-tight > img {
-    width: 380px;
-    height: 380px;
-    max-width: 100%;
   }
 }
 
