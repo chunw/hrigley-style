@@ -48,7 +48,7 @@ const SlightlyUsefulObject = () => {
               <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
                 <span className="text-primary">chun wang</span>
               </a>
-              {t.hero.forImaginativeCollectors}
+              {lang === "zh" ? "" : " in New York City"}
             </p>
             <a className="hero-dialog-btn" href="#products">{t.hero.shopCta}</a>
           </div>

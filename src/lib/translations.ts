@@ -28,7 +28,7 @@ export const translations = {
       line3: "SHOP",
     },
     index: {
-      tagline: "Unique works for the imaginative collectors",
+      tagline: "Unique works",
       catalogsTitle: "Catalogs",
       ctaAbout: "about",
       ctaInstagram: "follow on instagram",
@@ -133,7 +133,7 @@ export const translations = {
       line3: "商店",
     },
     index: {
-      tagline: "献给富有想象力的收藏者们",
+      tagline: "独特之作",
       catalogsTitle: "作品系列",
       ctaAbout: "关于",
       ctaInstagram: "关注 Instagram",
