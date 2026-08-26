@@ -316,7 +316,11 @@ All colors MUST be HSL.
     text-decoration: none;
   }
 
-  /* Make common interactive elements show pointer cursor */
+  /* Make common interactive elements show a custom cake cursor instead of the
+     default pointer, matching the site's cutout-cake motif. Includes
+     .cursor-pointer (the Tailwind utility) since several clickable elements
+     — e.g. the whole ProductCard, including its product-title — are plain
+     divs with an onClick handler rather than a real <a>/<button>. */
   a,
   button,
   input[type="button"],
@@ -324,8 +328,9 @@ All colors MUST be HSL.
   input[type="reset"],
   [role="button"],
   label[for],
-  .clickable {
-    cursor: pointer !important;
+  .clickable,
+  .cursor-pointer {
+    cursor: url('./assets/cutout_cake_cursor.png') 4 4, pointer !important;
   }
 }
 
@@ -682,13 +687,14 @@ All colors MUST be HSL.
   overflow: visible;
 }
 
-/* Decorative clay sculpture breaking out of the dialog card's bottom-right corner. */
+/* Decorative clay sculpture sitting inside the dialog card, roughly level with the Shop
+   button. */
 .hero-dialog-sculpture {
   position: absolute;
-  right: -16%;
-  bottom: -20%;
-  width: 34%;
-  max-width: 140px;
+  right: 8%;
+  bottom: 6%;
+  width: 30%;
+  max-width: 120px;
   height: auto;
   filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.25));
   pointer-events: none;

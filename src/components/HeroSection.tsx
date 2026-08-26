@@ -1,6 +1,6 @@
 import { ReactNode, useRef, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import cutoutCake from "@/assets/cutout_cake.png";
+import cutoutCake from "@/assets/cutout_cake_trimmed.png";
 
 const DRAG_THRESHOLD = 4;
 
