@@ -785,7 +785,7 @@ All colors MUST be HSL.
 .hero-logo-below {
   margin-top: 2rem;
   margin-bottom: 0.5rem;
-  width: clamp(9rem, 26vw, 19rem);
+  width: clamp(14rem, 34vw, 27rem);
   height: auto;
   object-fit: contain;
 }
