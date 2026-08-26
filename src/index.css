@@ -779,21 +779,15 @@ All colors MUST be HSL.
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 
-/* Brand mark sits in normal flow below the hero photo, centered on the page background. */
+/* Brand mark sits in normal flow below the hero photo, centered on the page background.
+   Fluid width (like .cargo-hero-title above) instead of a fixed size, height auto so the
+   image keeps its own aspect ratio. */
 .hero-logo-below {
   margin-top: 2rem;
   margin-bottom: 0.5rem;
-  width: 140px;
-  height: 140px;
+  width: clamp(9rem, 26vw, 19rem);
+  height: auto;
   object-fit: contain;
-}
-
-@media (min-width: 640px) {
-  .hero-logo-below {
-    margin-top: 2.5rem;
-    width: 170px;
-    height: 170px;
-  }
 }
 
 /* Frame for HeroSection's `bordered` prop. */
