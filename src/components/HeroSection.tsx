@@ -83,7 +83,7 @@ const HeroSection = ({
   const draggable = useDraggable();
 
   return (
-    <section className={`cargo-hero ${logoSrc ? "cargo-hero-theme-aware" : "cargo-hero-adaptive"} relative ${bordered ? "border-[20px] border-red-600" : ""} ${yellowBackground ? "!bg-yellow-400" : ""}`}>
+    <section className={`cargo-hero ${logoSrc ? "cargo-hero-theme-aware" : "cargo-hero-adaptive"} relative ${bordered ? "cargo-hero-framed" : ""} ${yellowBackground ? "!bg-yellow-400" : ""}`}>
       {!hideBgImage && (
         <div className="cargo-hero-bg" aria-hidden="true">
           <img
