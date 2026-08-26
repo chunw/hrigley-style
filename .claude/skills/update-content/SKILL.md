@@ -164,7 +164,7 @@ zh: {
   },
   productDetails: {
     orderNow: "立即购买",
-    shippingIncluded: "含运费和税费",
+    shippingIncluded: "已包含运费和税费",
     details: "详情",
     // ...
   },
