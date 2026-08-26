@@ -804,7 +804,7 @@ All colors MUST be HSL.
   }
 
   .cargo-hero-framed.cargo-hero {
-    border-width: 8px;
+    border-width: 4px;
   }
 
   .cargo-hero-theme-aware .cargo-hero-inner {
