@@ -55,13 +55,13 @@ export const products = [
     name: "Chun Wang Paintings 2019–2026",
     title_zh: "Chun Wang绘画集 2019–2026",
     description_zh: "需要那种当代生活鲜少容许的凝视。",
-    detailed_description_html_zh: `<p>收录了跨越七年的绘画作品，从水彩到综合媒材，涵盖四个系列的作品：《残留》、《静物》、《遗迹》、《21世纪精神》。</p>`,
+    detailed_description_html_zh: `<p>收录了跨越七年的绘画作品，从水彩到综合媒材，涵盖四个系列的作品：<a href="/watercolor-catalog" target="_blank" rel="noreferrer">《残留》</a>、<a href="/watercolor-catalog" target="_blank" rel="noreferrer">《静物》</a>、<a href="/remains-catalog" target="_blank" rel="noreferrer">《遗迹》</a>、<a href="/21spirit-catalog" target="_blank" rel="noreferrer">《21世纪精神》</a>。</p>`,
     category_zh: "书籍",
     edition_info_zh: "",
     price: 40,
     currency: "USD",
     description: "Collects paintings spanning seven years, demanding the kind of looking that contemporary life rarely permits.",
-    detailed_description_html: `<p><i>Chun Wang Paintings 2019–2026</i> collects paintings spanning seven years — from watercolour to mixed media, across four series: <i>Residuals</i>, <i>Still Life</i>, <i>Remains</i>, and <i>Spirit of the 21st Century</i>.</p>`,
+    detailed_description_html: `<p><i>Chun Wang Paintings 2019–2026</i> collects paintings spanning seven years — from watercolour to mixed media, across four series: <i><a href="/watercolor-catalog" target="_blank" rel="noreferrer">Residuals</a></i>, <i><a href="/watercolor-catalog" target="_blank" rel="noreferrer">Still Life</a></i>, <i><a href="/remains-catalog" target="_blank" rel="noreferrer">Remains</a></i>, and <i><a href="/21spirit-catalog" target="_blank" rel="noreferrer">Spirit of the 21st Century</a></i>.</p>`,
     dimensions: `Full color, 40 pages. 6 × 6 inches. Softcover, sleek and lightweight. Soft touch matte finish, velvety to the hand.`,
     dimensions_zh: `全彩印刷，40页，15 × 15厘米。平装本，轻巧灵便，覆哑膜软触感封面。`,
     edition_info: null,
@@ -115,14 +115,14 @@ Dimension: 35 x 35 cm</p>
     name: "The Meeting has begun Tee (Unisex, Oversized)",
     title_zh: "《遗迹》中性宽松T恤",
     description_zh: "我们没什么可贡献的。",
-    detailed_description_html_zh: `<p>《遗迹》系列曾入选2024年伦敦国际创意大赛(LICC) 艺术创作组别。它诞生于一种淡淡的荒诞感：在研究那些古代陶俑时，我被它们那种亲切、笨拙又风趣的样子吸引。它们看起来不像什么伟大的纪念碑，倒像是一个个人在"无所事事"的瞬间被定格，很具有耐人寻味的想象空间，因此正合适放在当代无聊的办公室场景里。<br>这款T恤采用优质棉质面料制成，穿着舒适，适合日常穿着。<br>均码</p>`,
+    detailed_description_html_zh: `<p><a href="/remains-catalog">《遗迹》系列</a>曾入选2024年伦敦国际创意大赛(LICC) 艺术创作组别。它诞生于一种淡淡的荒诞感：在研究那些古代陶俑时，我被它们那种亲切、笨拙又风趣的样子吸引。它们看起来不像什么伟大的纪念碑，倒像是一个个人在"无所事事"的瞬间被定格，很具有耐人寻味的想象空间，因此正合适放在当代无聊的办公室场景里。<br>这款T恤采用优质棉质面料制成，穿着舒适，适合日常穿着。<br>均码</p>`,
     category_zh: "服饰",
     edition_info_zh: "",
     price: 35,
     currency: "USD",
     description: "We have nothing to contribute to",
     detailed_description_html: `
-  <p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank" rel="noreferrer">Official Selection</a> for 2024 London International Creative Competition (LICC) in Create/Art category, <i>Remains</i> was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions, making them perfect companions for the mundane modern office. <br>
+  <p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank" rel="noreferrer">Official Selection</a> for 2024 London International Creative Competition (LICC) in Create/Art category, <i><a href="/remains-catalog">Remains</a></i> was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions, making them perfect companions for the mundane modern office. <br>
 This unisex oversized t-shirt is crafted from soft, premium cotton for everyday comfort. <br>
 One size.</p>
     `.trim(),

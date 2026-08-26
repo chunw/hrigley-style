@@ -1,5 +1,6 @@
 import { ReactNode, useRef, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import cutoutCake from "@/assets/cutout_cake.png";
 
 const DRAG_THRESHOLD = 4;
 
@@ -154,6 +155,7 @@ const HeroSection = ({
               {t.hero.forImaginativeCollectors}
             </p>
             <a className="hero-dialog-btn" href="#products">{t.hero.shopCta}</a>
+            <img src={cutoutCake} alt="" aria-hidden="true" className="hero-dialog-sculpture" draggable={false} />
           </div>
         </div>
       )}
