@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Store } from "lucide-react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
@@ -63,7 +63,13 @@ const Useful = () => {
         hideAboutLink
       />
       <div className="border-t border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-end">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+          <Link
+            to="/"
+            className="sans-label font-normal inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 hover:text-primary"
+          >
+            ← {t.about.backToShop}
+          </Link>
           <div className="relative">
             {printMenuOpen && (
               <div className="fixed inset-0 z-10" onClick={() => setPrintMenuOpen(false)} />
