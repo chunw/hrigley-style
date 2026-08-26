@@ -698,7 +698,7 @@ All colors MUST be HSL.
 
 .hero-message-card-tight {
   margin-top: 0.5rem;
-  padding-top: 1rem;
+  padding-top: 0.5rem;
   background: hsl(0 0% 100% / 0.9);
   max-width: 320px;
 }
@@ -806,7 +806,7 @@ All colors MUST be HSL.
   .hero-message-card {
     border: 6px solid #dc2626;
     border-radius: 16px;
-    padding: 1.5rem 1.25rem;
+    padding: 0.75rem 1.25rem;
     min-width: 0;
   }
 
