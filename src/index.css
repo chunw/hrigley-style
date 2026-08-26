@@ -717,7 +717,7 @@ All colors MUST be HSL.
   color: rgba(17, 17, 17, 0.62);
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-style: italic;
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   line-height: 1.5;
 }
 
@@ -797,14 +797,14 @@ All colors MUST be HSL.
 
 /* Mobile layout for the "Slightly Useful Object" hero (HeroSection with logoSrc): the
    text overlay runs edge to edge over the photo instead of floating as a narrow card, and
-   the thick outer frame backs off since it reads heavy at this width. */
+   the thick outer frame thins out since the full 20px width reads heavy at this size. */
 @media (max-width: 639px) {
   .cargo-hero-theme-aware.cargo-hero {
     padding: 1.5rem 1rem 2.5rem;
   }
 
   .cargo-hero-framed.cargo-hero {
-    border: 0;
+    border-width: 8px;
   }
 
   .cargo-hero-theme-aware .cargo-hero-inner {

@@ -221,10 +221,17 @@ function getCatalogCSS(isDark: boolean): string {
     background: ${bg};
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
+  /* Fixed landscape page size (US Letter @ 96dpi) instead of 100vw/100vh, so the
+     catalog lays out the same two-page spread on a narrow mobile viewport as it does
+     on desktop, rather than squeezing into a tall, narrow strip. */
   .spread {
-    width: 100vw;
-    height: 100vh;
+    width: 1056px;
+    height: 816px;
+    flex: none;
     display: flex;
     page-break-after: always;
     break-after: page;
