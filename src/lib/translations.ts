@@ -133,7 +133,7 @@ export const translations = {
       line3: "商店",
     },
     index: {
-      tagline: "独特之作",
+      tagline: "匠心手作",
       catalogsTitle: "作品系列",
       ctaAbout: "关于",
       ctaInstagram: "关注 Instagram",

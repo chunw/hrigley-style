@@ -1,4 +1,4 @@
-import { ArrowUp, Instagram, Linkedin } from "lucide-react";
+import { Instagram, Linkedin } from "lucide-react";
 
 const socialLinks = [
   { href: "https://www.instagram.com/chunwang.art/", label: "Instagram", icon: Instagram },
@@ -6,10 +6,6 @@ const socialLinks = [
 ];
 
 const Footer = () => {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   return (
     <footer className="border-t border-border bg-background text-foreground">
       <div className="mx-auto max-w-[1600px] px-4 py-5 sm:px-5 lg:px-7">

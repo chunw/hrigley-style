@@ -4,7 +4,6 @@ import { Store } from "lucide-react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ProductGrid from "@/components/ProductGrid";
-import AboutSection from "@/components/AboutSection";
 import Footer from "@/components/Footer";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -134,8 +133,6 @@ const Useful = () => {
           </Link>
         </div>
       </section> */}
-
-      <AboutSection />
 
       <Footer />
     </div>
