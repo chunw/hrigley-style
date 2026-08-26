@@ -189,7 +189,7 @@ const Header = () => {
                 <img
                   src="/1%20logo.png"
                   alt="Slightly Useful Object"
-                  className="h-36 w-auto object-contain"
+                  className="h-28 w-auto object-contain"
                 />
               </Link>
             ) : (
