@@ -13,7 +13,7 @@ export const translations = {
       createdExclusivelyBy: "created exclusively by",
       forImaginativeCollectors: " in New York City for the imaginative collectors",
       dialogTitle: "Handmade & one of a kind.",
-      shopCta: "Shop",
+      shopCta: "View Collection",
     },
     about: {
       title: "About",
@@ -118,7 +118,7 @@ export const translations = {
       createdExclusivelyBy: "独家创作 by",
       forImaginativeCollectors: "，献给富有想象力的收藏者们",
       dialogTitle: "手工制作，独一无二。",
-      shopCta: "购买",
+      shopCta: "查看系列",
     },
     about: {
       title: "关于",

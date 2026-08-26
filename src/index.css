@@ -683,28 +683,6 @@ All colors MUST be HSL.
   overflow: visible;
 }
 
-/* Decorative clay sculpture sitting inside the dialog card, in the reserved space below
-   the Shop button so it never collides with the text. */
-.hero-dialog-sculpture {
-  position: absolute;
-  right: 10%;
-  bottom: 8%;
-  width: 36%;
-  max-width: 140px;
-  height: auto;
-  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.25));
-  pointer-events: none;
-}
-
-@media (min-width: 640px) {
-  .hero-dialog-sculpture {
-    right: 14%;
-    bottom: 5%;
-    width: 21.6%;
-    max-width: 84px;
-  }
-}
-
 .hero-message-card-tight {
   margin-top: 0.5rem;
   padding-top: 0.5rem;
@@ -765,6 +743,44 @@ All colors MUST be HSL.
   box-shadow: 0 8px 20px hsl(var(--primary) / 0.35);
 }
 
+/* Above the mobile breakpoint the dialog card sits directly over the hero photo (which
+   already carries a dark scrim via .cargo-hero-overlay), so it drops its own background/
+   border/shadow and the copy switches to light text with a soft shadow for legibility. */
+@media (min-width: 640px) {
+  .hero-message-card {
+    background: transparent;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .hero-message-card-tight {
+    background: transparent;
+  }
+
+  .hero-dialog-title {
+    color: #fff;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+  }
+
+  .hero-dialog-sub {
+    color: rgba(255, 255, 255, 0.78);
+    border-top-color: rgba(255, 255, 255, 0.35);
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
+  }
+
+  .hero-dialog-btn {
+    border-color: #fff;
+    color: #fff;
+  }
+
+  .hero-dialog-btn:hover {
+    background: #fff;
+    color: #111;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  }
+}
+
 /* Frame for HeroSection's `bordered` prop. */
 .cargo-hero-framed {
   border: 20px solid #dc2626;
@@ -812,10 +828,8 @@ All colors MUST be HSL.
     justify-content: center;
   }
 
-  /* Dialog card sits at 75% of the framed photo's width and swaps its black border
-     for the same red frame as the photo above it. */
   .hero-message-card-tight {
-    width: 75%;
+    width: 100%;
     max-width: none;
     margin: 0;
   }
@@ -828,8 +842,7 @@ All colors MUST be HSL.
     min-width: 0;
   }
 
-  /* Text block gets its own hairline border, separate from the card's outer frame; the
-     sculpture breaks out of *this* box's bottom edge. */
+  /* Text block gets its own hairline border, separate from the card's outer frame. */
   .hero-dialog-textbox {
     position: relative;
     border: 1px solid rgba(17, 17, 17, 0.14);
@@ -837,13 +850,6 @@ All colors MUST be HSL.
     padding: 1.25rem 1.5rem;
     margin-top: 1.25rem;
     background: #fff;
-  }
-
-  .hero-dialog-textbox .hero-dialog-sculpture {
-    right: 22%;
-    bottom: -30%;
-    width: 28%;
-    max-width: 115px;
   }
 
   .hero-message-card-tight > img {

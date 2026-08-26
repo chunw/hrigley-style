@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import cutoutCake from "@/assets/cutout_cake_trimmed.png";
 
 interface HeroSectionProps {
   titleOverride?: ReactNode;
@@ -98,7 +97,6 @@ const HeroSection = ({
                 {t.hero.forImaginativeCollectors}
               </p>
               <a className="hero-dialog-btn" href="#products">{t.hero.shopCta}</a>
-              <img src={cutoutCake} alt="" aria-hidden="true" className="hero-dialog-sculpture" draggable={false} />
             </div>
           </div>
         </div>
