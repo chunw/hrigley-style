@@ -576,9 +576,10 @@ All colors MUST be HSL.
 }
 
 .handwritten-note-text {
-  font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 1.1rem;
-  line-height: 1.7;
+  font-family: 'Cormorant Garamond', 'Instrument Serif', Georgia, serif;
+  font-size: 1.05rem;
+  line-height: 1.85;
+  letter-spacing: 0.015em;
   color: #2b2b2b;
   text-shadow: none;
   text-align: left;
@@ -804,7 +805,7 @@ All colors MUST be HSL.
   }
 
   .cargo-hero-framed.cargo-hero {
-    border-width: 4px;
+    border-width: 2px;
   }
 
   .cargo-hero-theme-aware .cargo-hero-inner {

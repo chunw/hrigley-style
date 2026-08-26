@@ -112,7 +112,7 @@ function vcCoverSpread(
   return spread(left, right);
 }
 
-function vcCategoryDividerSpread(
+function vcCategoryDividerPage(
   brand: CatalogBrand,
   category: string,
   items: CatalogItem[],
@@ -122,33 +122,18 @@ function vcCategoryDividerSpread(
   total: number,
   muted: string,
 ): string {
-  const mosaic = items.slice(0, 4);
-  const mosaicStyle = (count: number, i: number): string => {
-    if (count === 1) return "grid-column:1/3;grid-row:1/3;";
-    if (count === 2) return "grid-row:1/3;";
-    if (count === 3 && i === 0) return "grid-column:1/3;";
-    return "";
-  };
-  const left = `
-    <div class="vc-page vc-page-left">
-      ${vcEyebrow(brand.eyebrow1, brand.eyebrow2)}
-      ${vcTagTop(`#${String(catIndex).padStart(2, "0")}`)}
-      <div class="vc-mosaic">
-        ${mosaic.map((it, i) => `<img src="${it.image_url}" style="${mosaicStyle(mosaic.length, i)}" alt="" onerror="this.style.visibility='hidden'" />`).join("")}
-      </div>
-      ${vcFooter(`${brand.footerWord} | ${isZh ? "分类" : "CATEGORY"}`, page, total, muted)}
-    </div>`;
-  const right = `
+  const content = `
     <div class="vc-page vc-page-right">
+      ${vcEyebrow(brand.eyebrow1, brand.eyebrow2)}
       ${vcTagTop(isZh ? `${items.length} 件` : `${items.length} ITEMS`)}
       <div class="vc-cover-body">
         <div class="vc-div-num">${String(catIndex).padStart(2, "0")}</div>
         <div class="vc-cover-title" style="font-size:44px;">${category}</div>
         <div class="vc-cover-sub">${brand.eyebrow2}</div>
       </div>
-      ${vcFooter(`${brand.footerWord} | ${category}`, page + 1, total, muted)}
+      ${vcFooter(`${brand.footerWord} | ${category}`, page, total, muted)}
     </div>`;
-  return spread(left, right);
+  return spread(content, "");
 }
 
 function vcProductPage(
@@ -321,22 +306,6 @@ function getCatalogCSS(isDark: boolean): string {
     border: 1px solid ${fg};
     padding: 3px 9px;
     margin-bottom: 16px;
-  }
-  .vc-mosaic {
-    margin-top: 70px;
-    flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 6px;
-    min-height: 0;
-  }
-  .vc-mosaic img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    background: ${accentBlock};
   }
   .vc-prod-head { margin-top: 70px; margin-bottom: 20px; }
   .vc-prod-num {
@@ -519,7 +488,6 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
 <body>
   ${coverHtml}
   ${sectionsHtml}
-  <script>window.onload = function() { setTimeout(function() { window.print(); }, 300); };<\/script>
 </body>
 </html>`;
 }
@@ -675,7 +643,6 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
   ${coverHtml}
   ${bioHtml}
   ${sectionsHtml}
-  <script>window.onload = function() { setTimeout(function() { window.print(); }, 300); };<\/script>
 </body>
 </html>`;
 }

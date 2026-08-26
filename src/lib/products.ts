@@ -803,20 +803,31 @@ export const productImages = products.flatMap((product) => {
   const coverFilename = product.image_url
     ? decodeURIComponent(product.image_url.split('/').pop() || '')
     : ''
-  const folderImages = folder
-    ? Object.entries(_allProductImages)
-        .filter(([path]) => path.startsWith(`../assets/products/${folder}/`))
-        .sort(([a], [b]) => {
-          const aFile = a.split('/').pop() || ''
-          const bFile = b.split('/').pop() || ''
-          if (aFile === coverFilename) return -1
-          if (bFile === coverFilename) return 1
-          return a.localeCompare(b)
-        })
-        .map(([, url]) => url)
+  const folderEntries = folder
+    ? Object.entries(_allProductImages).filter(([path]) => path.startsWith(`../assets/products/${folder}/`))
     : []
+  const coverInFolder = folderEntries.some(([path]) => (path.split('/').pop() || '') === coverFilename)
+  const folderImages = folderEntries
+    .sort(([a], [b]) => {
+      const aFile = a.split('/').pop() || ''
+      const bFile = b.split('/').pop() || ''
+      if (aFile === coverFilename) return -1
+      if (bFile === coverFilename) return 1
+      return a.localeCompare(b)
+    })
+    .map(([, url]) => url)
   const seriesImages = PRINT_PACKET_SERIES_IMAGES[product.id] ?? []
-  return [...folderImages, ...seriesImages].map((url, i) => ({
+  let images = [...folderImages, ...seriesImages]
+  // The cover can also live outside the imageFolder (e.g. a print-packet
+  // product whose cover is a specific watercolor's series image) — if so,
+  // pull it to the front by exact URL match instead of relying on array order.
+  if (!coverInFolder && product.image_url) {
+    const coverIndex = images.indexOf(product.image_url)
+    if (coverIndex > 0) {
+      images = [images[coverIndex], ...images.slice(0, coverIndex), ...images.slice(coverIndex + 1)]
+    }
+  }
+  return images.map((url, i) => ({
     id: `${product.id}-auto-${i}`,
     product_id: product.id,
     image_url: url,
