@@ -97,14 +97,6 @@ const HeroSection = ({
         </div>
       )}
     </section>
-    {logoSrc && (
-      <img
-        src={logoSrc}
-        alt="Slightly Useful Object logo"
-        draggable={false}
-        className="hero-logo-below block mx-auto"
-      />
-    )}
     </>
   );
 };
