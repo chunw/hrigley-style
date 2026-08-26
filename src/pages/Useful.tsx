@@ -48,20 +48,7 @@ const Useful = () => {
     <div className="useful-page relative min-h-screen bg-background">
 
       <Header />
-      <HeroSection
-        titleOverride={
-          <>
-            <span className="block">Slightly</span>
-            <span className="hero-title-sub block">Useful Object</span>
-          </>
-        }
-        bordered
-        logoSrc="/1%20logo.png"
-        titleBlack
-        bgImageSrc={usefulBg}
-        hideTitle
-        hideAboutLink
-      />
+
       <div className="border-t border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <Link
@@ -100,6 +87,21 @@ const Useful = () => {
           </div>
         </div>
       </div>
+
+      <HeroSection
+        titleOverride={
+          <>
+            <span className="block">Slightly</span>
+            <span className="hero-title-sub block">Useful Object</span>
+          </>
+        }
+        bordered
+        logoSrc="/1%20logo.png"
+        titleBlack
+        bgImageSrc={usefulBg}
+        hideTitle
+        hideAboutLink
+      />
 
       <section id="products">
         <ProductGrid
