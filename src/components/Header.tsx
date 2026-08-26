@@ -36,7 +36,7 @@ const Header = () => {
   return (
     <header className={`${headerIsLight ? "bg-background" : "bg-black"} ${isHomePage ? "home-header-adaptive" : ""}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between h-28 pt-6 pb-6">
+        <div className={`relative flex items-center justify-between pt-6 pb-6 ${isSlightlyUsefulObjectPage ? "h-40" : "h-28"}`}>
           <div className="absolute inset-y-0 right-0 hidden md:inline-flex items-center gap-8 text-sm fangsong-nav">
             <Tooltip>
               <TooltipTrigger asChild>
@@ -189,7 +189,7 @@ const Header = () => {
                 <img
                   src="/1%20logo.png"
                   alt="Slightly Useful Object"
-                  className="h-28 w-auto object-contain"
+                  className="h-36 w-auto object-contain"
                 />
               </Link>
             ) : (
