@@ -21,6 +21,7 @@ const Header = () => {
   const { lang, setLang, toggleLang, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const isHomePage = location.pathname === "/";
+  const isSlightlyUsefulObjectPage = location.pathname === "/slightlyusefulobject";
   const useGloriaTitle = /^\/(product|watercolors|remains|21spirit|photography)\/[^/]+\/?$/.test(location.pathname)
     || location.pathname === "/catalogs"
     || location.pathname === "/about"
@@ -183,17 +184,27 @@ const Header = () => {
 
           {/* Left - Logo */}
           <div className="flex-shrink-0">
-            {!location.pathname.startsWith("/catalogs") && (
-              <div className="shop-title gloria-title text-2xl leading-none transition-colors header-shop-scale">
-                <Link to="/" className="header-brand-link block cursor-pointer">
-                  {t.shopTitle.line1}
-                  <br />
-                  {t.shopTitle.line2}
-                </Link>
-                <Link to="/" className="block text-primary cursor-pointer">
-                  {t.shopTitle.line3}
-                </Link>
-              </div>
+            {isSlightlyUsefulObjectPage ? (
+              <Link to="/" className="block cursor-pointer">
+                <img
+                  src="/1%20logo.png"
+                  alt="Slightly Useful Object"
+                  className="h-36 w-auto object-contain"
+                />
+              </Link>
+            ) : (
+              !location.pathname.startsWith("/catalogs") && (
+                <div className="shop-title gloria-title text-2xl leading-none transition-colors header-shop-scale">
+                  <Link to="/" className="header-brand-link block cursor-pointer">
+                    {t.shopTitle.line1}
+                    <br />
+                    {t.shopTitle.line2}
+                  </Link>
+                  <Link to="/" className="block text-primary cursor-pointer">
+                    {t.shopTitle.line3}
+                  </Link>
+                </div>
+              )
             )}
           </div>
 
