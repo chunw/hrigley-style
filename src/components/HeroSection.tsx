@@ -79,27 +79,29 @@ const HeroSection = ({
       </div>
 
       {logoSrc && (
-        <div className="hero-message-card-bottom-wrap">
-          <div className="hero-message-card hero-message-card-tight">
-            <img
-              src={logoSrc}
-              alt="Slightly Useful Object logo"
-              draggable={false}
-              className="mx-auto mb-1 w-[180px] h-[180px] sm:w-[220px] sm:h-[220px] object-contain"
-            />
-            <div className="hero-dialog-textbox">
-              <h2 className="hero-dialog-title">{t.hero.dialogTitle}</h2>
-              <p className="hero-dialog-sub font-helvetica">
-                {t.hero.createdExclusivelyBy}{" "}
-                <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
-                  <span className="text-primary">chun wang</span>
-                </a>
-                {t.hero.forImaginativeCollectors}
-              </p>
-              <a className="hero-dialog-btn" href="#products">{t.hero.shopCta}</a>
+        <>
+          <img
+            src={logoSrc}
+            alt="Slightly Useful Object logo"
+            draggable={false}
+            className="hero-logo-badge"
+          />
+          <div className="hero-message-card-bottom-wrap">
+            <div className="hero-message-card hero-message-card-tight">
+              <div className="hero-dialog-textbox">
+                <h2 className="hero-dialog-title">{t.hero.dialogTitle}</h2>
+                <p className="hero-dialog-sub font-helvetica">
+                  {t.hero.createdExclusivelyBy}{" "}
+                  <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
+                    <span className="text-primary">chun wang</span>
+                  </a>
+                  {t.hero.forImaginativeCollectors}
+                </p>
+                <a className="hero-dialog-btn" href="#products">{t.hero.shopCta}</a>
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </section>
   );
