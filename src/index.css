@@ -259,6 +259,11 @@ All colors MUST be HSL.
     transform: scale(1) rotate(-4deg);
   }
 
+  .header-shop-scale:hover,
+  .header-shop-scale:hover a {
+    cursor: url('/favicon-32x32.png') 16 16, pointer;
+  }
+
   /* Purchase buttons use the handwritten style, while other utility buttons keep the Aileron label. */
   .gloria-button-label {
     font-family: 'Gloria Hallelujah', 'Comic Sans MS', 'Bradley Hand', 'Marker Felt', 'Chalkboard SE', cursive;
