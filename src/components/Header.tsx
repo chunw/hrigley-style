@@ -38,7 +38,7 @@ const Header = () => {
 
   return (
     <header className={`${headerIsLight ? "bg-background" : "bg-black"} ${isHomePage ? "home-header-adaptive" : ""}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className={isSlightlyUsefulObjectPage ? "px-4 sm:px-6 lg:px-16" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"}>
         <div className={`relative flex items-center justify-between pt-6 pb-6 ${isSlightlyUsefulObjectPage ? "h-40" : "h-28"}`}>
           <div className="absolute inset-y-0 right-0 hidden md:inline-flex items-center gap-8 text-sm fangsong-nav">
             {!isSlightlyUsefulObjectPage && (
@@ -192,7 +192,7 @@ const Header = () => {
           {/* Left - Logo */}
           <div className="flex-shrink-0">
             {isSlightlyUsefulObjectPage ? (
-              <Link to="/" className="block cursor-pointer -ml-16">
+              <Link to="/" className="block cursor-pointer">
                 <img
                   src={slightlyUsefulLogo}
                   alt="Slightly Useful Object"

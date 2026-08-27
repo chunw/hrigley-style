@@ -49,7 +49,7 @@ const Useful = () => {
       <Header />
 
       <div className="border-t border-white/10 bg-black">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+        <div className="px-4 sm:px-6 lg:px-16 py-4 flex items-center justify-between">
           <Link
             to="/"
             className="sans-label font-normal inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 text-white hover:text-primary"
