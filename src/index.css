@@ -252,6 +252,11 @@ All colors MUST be HSL.
   .header-shop-scale {
     transform: scale(0.9);
     transform-origin: left center;
+    transition: transform 0.3s ease-out;
+  }
+
+  .header-shop-scale:hover {
+    transform: scale(1) rotate(-4deg);
   }
 
   /* Purchase buttons use the handwritten style, while other utility buttons keep the Aileron label. */
