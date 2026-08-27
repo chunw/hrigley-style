@@ -135,7 +135,7 @@ const Header = () => {
 
               <DrawerContent>
                 <DrawerHeader className="text-left">
-                  <DrawerTitle className="shop-title gloria-title text-lg font-bold leading-tight tracking-wide text-left">
+                  <DrawerTitle className="shop-title gloria-title text-lg font-bold leading-tight tracking-wide text-left pl-2">
                     {t.shopTitle.line1}
                     <br />
                     {t.shopTitle.line2}
