@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -8,12 +9,14 @@ import { useCart } from "@/contexts/CartContext";
 import { Minus, Plus, Trash2, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+const MINIMUM_ORDER_AMOUNT = 0.5;
+const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID as string | undefined;
+
 const Cart = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { state, updateQuantity, removeItem, clearCart } = useCart();
   const [searchQuery, setSearchQuery] = useState("");
-  const [isProcessing, setIsProcessing] = useState(false);
 
   const formatPrice = (price: number, currency: string) => {
     const symbol = currency === 'gbp' ? '£' : currency === 'eur' ? '€' : '$';
@@ -28,51 +31,48 @@ const Cart = () => {
     }
   };
 
-  const handleCheckout = async () => {
-    if (state.items.length === 0) return;
+  const createOrder = async () => {
+    const response = await fetch("/api/paypal/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items: state.items }),
+    });
 
-    // Check minimum amount requirement
-    if (state.total < 0.50) {
-      toast({
-        title: "Minimum Order Amount",
-        description: "Your order must be at least $0.50 to proceed with checkout.",
-        variant: "destructive",
-      });
-      return;
+    if (!response.ok) {
+      throw new Error("Failed to start PayPal checkout. Please try again.");
     }
 
-    setIsProcessing(true);
-    try {
-      // Mock checkout - in production, this would call your payment API
-      const checkoutUrl = `https://checkout.stripe.com/pay/mock_checkout_${Date.now()}`;
-      
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
+    const order = await response.json();
+    return order.id as string;
+  };
 
-      // Open mock checkout in a new tab
-      window.open(checkoutUrl, '_blank');
-      
-      toast({
-        title: "Checkout Started",
-        description: "Redirecting to payment page...",
+  const onError = (error: unknown) => {
+    console.error("PayPal checkout error:", error);
+    toast({
+      title: "Checkout Error",
+      description: "Something went wrong with PayPal checkout. Please try again.",
+      variant: "destructive",
+    });
+  };
+
+  const onApprove = async (data: { orderID: string }) => {
+    try {
+      const response = await fetch("/api/paypal/capture-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderID: data.orderID }),
       });
 
-    } catch (error: any) {
-      console.error('Checkout error:', error);
-      
-      let errorMessage = "Failed to create checkout session. Please try again.";
-      
-      if (error.message) {
-        errorMessage = error.message;
+      const capture = await response.json();
+
+      if (!response.ok || capture.status !== "COMPLETED") {
+        throw new Error("Capture did not complete");
       }
 
-      toast({
-        title: "Checkout Error",
-        description: errorMessage,
-        variant: "destructive",
-      });
-    } finally {
-      setIsProcessing(false);
+      clearCart();
+      navigate(`/payment-success?order_id=${data.orderID}`);
+    } catch (error) {
+      onError(error);
     }
   };
 
@@ -212,17 +212,26 @@ const Cart = () => {
                   </div>
 
                   <div className="space-y-3">
-                    <Button 
-                      onClick={handleCheckout}
-                      disabled={isProcessing}
-                      className="w-full sans-label text-lg font-bold"
-                      variant="outline-pink"
-                      size="lg"
-                    >
-                      {isProcessing ? "PROCESSING..." : "CHECKOUT"}
-                    </Button>
-                    
-                    <Button 
+                    {state.total < MINIMUM_ORDER_AMOUNT ? (
+                      <p className="text-sm text-muted-foreground text-center sans-label">
+                        Add at least {formatPrice(MINIMUM_ORDER_AMOUNT, "usd")} to check out.
+                      </p>
+                    ) : !PAYPAL_CLIENT_ID ? (
+                      <p className="text-sm text-destructive text-center sans-label">
+                        PayPal checkout isn't configured yet.
+                      </p>
+                    ) : (
+                      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID, currency: "USD" }}>
+                        <PayPalButtons
+                          style={{ layout: "vertical", label: "pay" }}
+                          createOrder={createOrder}
+                          onApprove={onApprove}
+                          onError={onError}
+                        />
+                      </PayPalScriptProvider>
+                    )}
+
+                    <Button
                       onClick={clearCart}
                       variant="ghost"
                       className="w-full sans-label text-sm"

@@ -1,4 +1,6 @@
 import { Instagram, Linkedin } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { CONTACT_EMAIL, INSTAGRAM_URL } from "@/lib/constants";
 
 const socialLinks = [
   { href: "https://www.instagram.com/chunwang.art/", label: "Instagram", icon: Instagram },
@@ -6,6 +8,8 @@ const socialLinks = [
 ];
 
 const Footer = () => {
+  const { t } = useLanguage();
+
   return (
     <footer className="border-t border-border bg-background text-foreground">
       <div className="mx-auto max-w-[1600px] px-4 py-5 sm:px-5 lg:px-7">
@@ -27,8 +31,28 @@ const Footer = () => {
 
           <div className="text-center text-[0.5rem] uppercase tracking-[0.18em] text-foreground/70">
             <div>© Chun Wang Studio Shop 2026</div>
-            <div>All rights reserved.</div>
-            <div className="mt-1 normal-case">Designed & shipped from New York City. Ships worldwide.</div>
+            <div>{t.footer.copyright}</div>
+            <div className="mt-1 normal-case">{t.footer.locationShipping}</div>
+          </div>
+
+          <div className="text-center text-[0.5rem] uppercase tracking-[0.18em] text-foreground/70 lg:justify-self-end lg:text-right">
+            <div>{t.footer.shippingNote}</div>
+            <div className="normal-case">{t.footer.returnsNote}</div>
+            <div className="mt-1">
+              {t.footer.contactPrefix}{" "}
+              <a href={`mailto:${CONTACT_EMAIL}`} className="normal-case underline hover:text-foreground">
+                {CONTACT_EMAIL}
+              </a>{" "}
+              {t.footer.contactOr}{" "}
+              <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="normal-case underline hover:text-foreground"
+              >
+                Instagram
+              </a>
+            </div>
           </div>
         </div>
       </div>

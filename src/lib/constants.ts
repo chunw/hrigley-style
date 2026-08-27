@@ -3,6 +3,7 @@ export const SITE_NAME = "CHUN WANG STUDIO SHOP";
 export const INSTAGRAM_URL = "https://www.instagram.com/chunwang.art/";
 export const SITE_URL = "https://www.chunwang.art/";
 export const SHOP_URL = "https://www.chunwangshop.com/";
+export const CONTACT_EMAIL = "chunwang.me@gmail.com";
 
 // Shared intro paragraph for the Remains and In the Spirit of the 21st Century catalogs
 export const seriesIntro = {

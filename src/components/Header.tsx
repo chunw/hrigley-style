@@ -1,8 +1,9 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Sun, Moon, BookOpen, User, Menu } from "lucide-react";
+import { Sun, Moon, BookOpen, User, Menu, ShoppingBag } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Lang } from "@/lib/translations";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useCart } from "@/contexts/CartContext";
 import {
   Drawer,
   DrawerTrigger,
@@ -21,6 +22,7 @@ const Header = () => {
   const location = useLocation();
   const { lang, setLang, toggleLang, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
+  const { state: cartState } = useCart();
   const isHomePage = location.pathname === "/";
   const isSlightlyUsefulObjectPage = location.pathname === "/slightlyusefulobject";
   const useGloriaTitle = /^\/(product|watercolors|remains|21spirit|photography)\/[^/]+\/?$/.test(location.pathname)
@@ -118,10 +120,40 @@ const Header = () => {
                 <option value="zh">中文</option>
               </select>
             </div>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  to="/cart"
+                  aria-label="View cart"
+                  className={`relative transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
+                >
+                  <ShoppingBag className={`h-4 w-4 ${controlColor}`} />
+                  {cartState.itemCount > 0 && (
+                    <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold leading-none text-primary-foreground">
+                      {cartState.itemCount}
+                    </span>
+                  )}
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent>Cart ({cartState.itemCount})</TooltipContent>
+            </Tooltip>
           </div>
 
           {/* Mobile - show compact drawer trigger */}
-          <div className="absolute inset-y-0 right-0 flex items-center md:hidden">
+          <div className="absolute inset-y-0 right-0 flex items-center gap-1 md:hidden">
+            <Link
+              to="/cart"
+              aria-label="View cart"
+              className={`relative transition-colors p-2 hover:text-primary ${controlColor}`}
+            >
+              <ShoppingBag className={`h-5 w-5 ${controlColor}`} />
+              {cartState.itemCount > 0 && (
+                <span className="absolute top-0.5 right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold leading-none text-primary-foreground">
+                  {cartState.itemCount}
+                </span>
+              )}
+            </Link>
             <Drawer>
               <DrawerTrigger asChild>
                 <button

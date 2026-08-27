@@ -8,10 +8,11 @@ import { Badge } from "@/components/ui/badge";
 import { useProductDetails, useProductImages } from "@/hooks/useProductDetails";
 import { shopOrderNavigableItems, getArtboxPrintCount } from "@/hooks/useProducts";
 import { getProductCategories, getProductCategoriesZh, getProductCollections, getProductCollectionsZh } from "@/lib/products";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, ShoppingBag } from "lucide-react";
 import { ZoomableImage } from "@/components/ZoomableImage";
 import { toast } from "sonner";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { useCart } from "@/contexts/CartContext";
 
 const ProductDetails = () => {
   const { t, lang } = useLanguage();
@@ -20,6 +21,7 @@ const ProductDetails = () => {
   const navigate = useNavigate();
   const { data: product, isLoading: productLoading, error: productError } = useProductDetails(id!);
   const { data: images, isLoading: imagesLoading } = useProductImages(id!);
+  const { addItem } = useCart();
 
   const rawImages = (images && images.length > 0)
     ? images
@@ -110,6 +112,18 @@ const ProductDetails = () => {
       // ignore
     }
     window.location.href = `mailto:${INQUIRY_EMAIL}?subject=${subject}&body=${body}`;
+  };
+
+  const handleAddToCart = () => {
+    addItem({
+      id: product.id,
+      name: product.name,
+      title: product.title || product.name,
+      price: product.price,
+      currency: product.currency ?? "USD",
+      image_url: product.image_url,
+    });
+    toast(`${product.title || product.name} added to cart`);
   };
 
   // Pick the right language field, fall back to English if Chinese not filled in
@@ -280,8 +294,22 @@ const ProductDetails = () => {
               </div>
             )}
 
-            {(product.paylink || product.is_active) && (
+            {!product.soldOut && (
               <div className="pt-4">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={handleAddToCart}
+                  className="w-full rounded-none text-sm px-8 py-6 transition-colors"
+                >
+                  <ShoppingBag className="h-4 w-4 mr-2" />
+                  ADD TO CART
+                </Button>
+              </div>
+            )}
+
+            {(product.paylink || product.is_active) && (
+              <div className={product.soldOut ? "pt-4" : "pt-3"}>
                 <Button
                   variant="outline-pink"
                   size="lg"

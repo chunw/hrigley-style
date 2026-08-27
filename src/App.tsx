@@ -56,8 +56,8 @@ const App = () => (
             <Route path="/catalogs" element={<Catalogs />} />
             <Route path="/all-items" element={<AllItems />} />
             <Route path="/hidden-items" element={<HiddenItems />} />
-            {/* <Route path="/cart" element={<Cart />} />
-            <Route path="/payment-success" element={<PaymentSuccess />} /> */}
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

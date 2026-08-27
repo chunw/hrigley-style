@@ -5,6 +5,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "sonner";
 import { getProductCategories, getProductCategoriesZh, getProductCollections, getProductCollectionsZh } from "@/lib/products";
 import { useImageHoverExpand } from "@/hooks/useImageHoverExpand";
+import { useCart } from "@/contexts/CartContext";
+import { ShoppingBag } from "lucide-react";
 
 interface ProductCardProps {
   id: string;
@@ -36,6 +38,7 @@ interface ProductCardProps {
 const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, priceLabel, currency, image_url, category, category_zh, categories, categories_zh, collections, collections_zh, paylink, detailPath, hideOrderButton, hideShippingLabel, highlightQuery, artboxPrintCount, soldOut, is_active }: ProductCardProps) => {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
+  const { addItem } = useCart();
   const { imgRef, imgStyle, hoverHandlers, wrapperHoverClassName } = useImageHoverExpand("contain");
 
   const zh = lang === "zh";
@@ -117,6 +120,19 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
     window.location.href = `mailto:${INQUIRY_EMAIL}?subject=${subject}&body=${body}`;
   };
 
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addItem({
+      id,
+      name,
+      title: title || name,
+      price,
+      currency,
+      image_url,
+    });
+    toast(`${title || name} added to cart`);
+  };
+
   return (
     <Card
       className="group border-0 rounded-none bg-transparent shadow-none cursor-pointer h-full flex flex-col"
@@ -165,6 +181,17 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
                   {renderHighlightedText(priceLabel ?? `${currency === 'gbp' ? '£' : '$'}${price.toFixed(2)}`)}
                 </p>
                 {!hideShippingLabel && <p className="text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>}
+                {!hideOrderButton && !soldOut && (
+                  <Button
+                    variant="outline"
+                    className="w-full rounded-none text-xs transition-colors"
+                    size="sm"
+                    onClick={handleAddToCart}
+                  >
+                    <ShoppingBag className="h-3.5 w-3.5 mr-1.5" />
+                    ADD TO CART
+                  </Button>
+                )}
                 {!hideOrderButton && (paylink || is_active) && (
                   <Button
                     variant="outline-pink"
