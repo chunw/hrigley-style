@@ -144,24 +144,24 @@ const Header = () => {
                       type="button"
                       onClick={toggleTheme}
                       aria-label="Toggle dark/light mode"
-                      className={`flex items-center gap-2 text-sm p-2 transition-colors ${controlColor}`}
+                      className="flex items-center gap-2 text-sm p-2 transition-colors text-foreground"
                     >
                       {theme === "light" ? (
-                        <Moon className={`h-4 w-4 ${controlColor}`} />
+                        <Moon className="h-4 w-4 text-foreground" />
                       ) : (
-                        <Sun className={`h-4 w-4 ${controlColor}`} />
+                        <Sun className="h-4 w-4 text-foreground" />
                       )}
                       {theme === "light" ? "Dark" : "Light"}
                     </button>
                   )}
 
-                  <Link to="/about" className={`text-sm p-2 ${controlColor}`}>{t.index.ctaAbout}</Link>
-                  <Link to="/catalogs" className={`text-sm p-2 ${controlColor}`}>{t.index.ctaCatalog}</Link>
+                  <Link to="/about" className="text-sm p-2 text-foreground">{t.index.ctaAbout}</Link>
+                  <Link to="/catalogs" className="text-sm p-2 text-foreground">{t.index.ctaCatalog}</Link>
                   <a
                     href={INSTAGRAM_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`text-sm p-2 ${controlColor}`}
+                    className="text-sm p-2 text-foreground"
                   >
                     {t.index.ctaInstagram}
                   </a>
@@ -172,7 +172,7 @@ const Header = () => {
                       value={lang}
                       onChange={(e) => setLang(e.target.value as Lang)}
                       aria-label="Select language"
-                      className={`w-full text-sm p-2 bg-transparent border rounded ${controlColor}`}
+                      className="w-full text-sm p-2 bg-transparent border rounded text-foreground"
                     >
                       <option value="en">EN</option>
                       <option value="zh">中文</option>
