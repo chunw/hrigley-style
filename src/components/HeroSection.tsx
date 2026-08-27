@@ -12,6 +12,7 @@ interface HeroSectionProps {
   bgImageSrc?: string;
   hideTitle?: boolean;
   hideAboutLink?: boolean;
+  forceDarkHero?: boolean;
 }
 
 const DEFAULT_BG_IMAGE =
@@ -28,12 +29,14 @@ const HeroSection = ({
   bgImageSrc = DEFAULT_BG_IMAGE,
   hideTitle = false,
   hideAboutLink = false,
+  forceDarkHero = false,
 }: HeroSectionProps = {}) => {
   const { t, lang } = useLanguage();
+  const heroThemeClass = logoSrc && !forceDarkHero ? "cargo-hero-theme-aware" : "cargo-hero-adaptive";
 
   return (
     <>
-    <section className={`cargo-hero ${logoSrc ? "cargo-hero-theme-aware" : "cargo-hero-adaptive"} relative ${bordered ? "cargo-hero-framed" : ""} ${yellowBackground ? "!bg-yellow-400" : ""}`}>
+    <section className={`cargo-hero ${heroThemeClass} relative ${bordered ? "cargo-hero-framed" : ""} ${yellowBackground ? "!bg-yellow-400" : ""}`}>
       {!hideBgImage && (
         <div className="cargo-hero-bg" aria-hidden="true">
           <img

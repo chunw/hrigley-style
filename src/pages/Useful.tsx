@@ -100,6 +100,7 @@ const Useful = () => {
         bgImageSrc={usefulBg}
         hideTitle
         hideAboutLink
+        forceDarkHero
       />
 
       <section id="products">

@@ -107,6 +107,31 @@ All colors MUST be HSL.
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
+  /* Slightly Useful Object page: has no light/dark toggle (see Header/Useful.tsx) and
+     always renders its hero dark and everything else (header, products, footer) light,
+     so it must ignore any leftover .theme-dark state from the global toggle on <html>. */
+  .theme-dark .useful-page {
+    --background: 48 45% 95%;
+    --foreground: 0 0% 0%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+
+    --secondary: 0 0% 95%;
+    --secondary-foreground: 0 0% 0%;
+
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 30%;
+
+    --border: 0 0% 85%;
+    --input: 0 0% 90%;
+
+    --footer-background: 0 0% 100%;
+  }
+
   /* Site-wide dark/light mode toggle, applied to <html> by ThemeContext */
   .theme-dark {
     --background: 0 0% 0%;
