@@ -136,11 +136,13 @@ const Header = () => {
               <DrawerContent>
                 <DrawerHeader className="text-left">
                   <DrawerTitle className="shop-title gloria-title text-lg font-bold leading-tight tracking-wide text-left pl-2">
-                    {t.shopTitle.line1}
-                    <br />
-                    {t.shopTitle.line2}
-                    <br />
-                    <span className="text-primary">{t.shopTitle.line3}</span>
+                    <Link to="/" className="block cursor-pointer">
+                      {t.shopTitle.line1}
+                      <br />
+                      {t.shopTitle.line2}
+                      <br />
+                      <span className="text-primary">{t.shopTitle.line3}</span>
+                    </Link>
                   </DrawerTitle>
                 </DrawerHeader>
 
