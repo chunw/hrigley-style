@@ -633,6 +633,14 @@ All colors MUST be HSL.
   text-decoration: none;
 }
 
+.about-quote {
+  display: block;
+  margin: 1.25em 0;
+  padding-left: 1.25rem;
+  border-left: 2px solid rgba(43, 43, 43, 0.35);
+  font-style: italic;
+}
+
 .cargo-hero-description {
   max-width: 640px;
   margin: 0 auto;
