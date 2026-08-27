@@ -282,6 +282,14 @@ All colors MUST be HSL.
     font-family: '"Instrument Serif"', 'Zhuque Fangsong (technical preview)', Georgia, serif;
   }
 
+  /* Slightly Useful Object page only — product grid prices in Instrument Serif, matching
+     the product-title treatment above. */
+  .useful-page .product-price {
+    font-family: '"Instrument Serif"', 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
+  }
+
   /* Category filter labels (product grid sidebar) — Aileron for English, matching other
      functional UI copy, instead of the cursive Gloria Hallelujah used for page/brand titles. */
   .category-label {

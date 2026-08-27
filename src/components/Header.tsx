@@ -192,11 +192,11 @@ const Header = () => {
           {/* Left - Logo */}
           <div className="flex-shrink-0">
             {isSlightlyUsefulObjectPage ? (
-              <Link to="/" className="block cursor-pointer">
+              <Link to="/" className="block cursor-pointer group">
                 <img
                   src={slightlyUsefulLogo}
                   alt="Slightly Useful Object"
-                  className="h-36 w-auto object-contain"
+                  className="h-36 w-auto object-contain transition-transform duration-300 ease-out group-hover:scale-110 group-hover:-rotate-6"
                 />
               </Link>
             ) : (

@@ -161,7 +161,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
           <div className="mt-auto pt-4 space-y-2.5">
             {(priceLabel || price > 0) && (
               <>
-                <p className="text-sm font-helvetica tracking-wide text-foreground">
+                <p className="text-sm font-helvetica tracking-wide text-foreground product-price">
                   {renderHighlightedText(priceLabel ?? `${currency === 'gbp' ? '£' : '$'}${price.toFixed(2)}`)}
                 </p>
                 {!hideShippingLabel && <p className="text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>}
