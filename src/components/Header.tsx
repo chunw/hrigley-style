@@ -135,7 +135,10 @@ const Header = () => {
 
               <DrawerContent>
                 <DrawerHeader>
-                  <DrawerTitle>{t.shopTitle.line1}</DrawerTitle>
+                  <DrawerTitle className="shop-title gloria-title text-lg font-bold leading-none tracking-wide">
+                    {t.shopTitle.line1} {t.shopTitle.line2}{" "}
+                    <span className="text-primary">{t.shopTitle.line3}</span>
+                  </DrawerTitle>
                 </DrawerHeader>
 
                 <div className="flex flex-col gap-4 p-4">
