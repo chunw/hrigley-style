@@ -134,9 +134,12 @@ const Header = () => {
               </DrawerTrigger>
 
               <DrawerContent>
-                <DrawerHeader>
-                  <DrawerTitle className="shop-title gloria-title text-lg font-bold leading-none tracking-wide">
-                    {t.shopTitle.line1} {t.shopTitle.line2}{" "}
+                <DrawerHeader className="text-left">
+                  <DrawerTitle className="shop-title gloria-title text-lg font-bold leading-tight tracking-wide text-left">
+                    {t.shopTitle.line1}
+                    <br />
+                    {t.shopTitle.line2}
+                    <br />
                     <span className="text-primary">{t.shopTitle.line3}</span>
                   </DrawerTitle>
                 </DrawerHeader>
