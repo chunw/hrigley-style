@@ -48,11 +48,11 @@ const Useful = () => {
 
       <Header />
 
-      <div className="border-t border-border">
+      <div className="border-t border-white/10 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <Link
             to="/"
-            className="sans-label font-normal inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 hover:text-primary"
+            className="sans-label font-normal inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 text-white hover:text-primary"
           >
             ← {t.about.backToShop}
           </Link>
@@ -63,7 +63,7 @@ const Useful = () => {
             <button
               type="button"
               onClick={() => setPrintMenuOpen((open) => !open)}
-              className="sans-label font-normal inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 hover:text-primary"
+              className="sans-label font-normal inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 text-white hover:text-primary"
             >
               <Store className="h-4 w-4" />
               {t.watercolorCatalog.printVendorCatalog}
