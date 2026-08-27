@@ -11,7 +11,7 @@ export const translations = {
       description:"",
        // "What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity.",
       createdExclusivelyBy: "created exclusively by",
-      forImaginativeCollectors: " in New York City for the imaginative collectors",
+      forImaginativeCollectors: " in New York City",
       dialogTitle: "Handmade & one of a kind.",
       shopCta: "View Collection",
     },

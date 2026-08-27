@@ -124,7 +124,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
     >
       <CardContent className="p-0 flex flex-col flex-1">
         <div
-          className={`relative aspect-square mb-4 sm:mb-6 overflow-hidden shrink-0 bg-[#f7f6f3] p-3 sm:p-6 flex items-center justify-center ${wrapperHoverClassName}`}
+          className={`relative aspect-square mb-4 sm:mb-6 overflow-hidden shrink-0 bg-background p-3 sm:p-6 flex items-center justify-center ${wrapperHoverClassName}`}
           {...hoverHandlers}
         >
           <img
