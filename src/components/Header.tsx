@@ -31,9 +31,9 @@ const Header = () => {
   // Determine whether header should render in light mode.
   // On product/detail and related pages we prefer a light header so it observes
   // the page's light background even if the global theme is dark. The Slightly
-  // Useful Object page's header bar is always light, regardless of the site-wide
-  // toggle (unlike its hero below, which stays dark).
-  const headerIsLight = isSlightlyUsefulObjectPage ? true : (theme === "light" || useGloriaTitle);
+  // Useful Object page's header bar is always dark, regardless of the site-wide
+  // toggle (matching its hero below).
+  const headerIsLight = isSlightlyUsefulObjectPage ? false : (theme === "light" || useGloriaTitle);
   const controlColor = headerIsLight ? "text-foreground" : "text-white";
 
   return (
