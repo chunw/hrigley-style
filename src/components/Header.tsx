@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/drawer";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { INSTAGRAM_URL } from "@/lib/constants";
-import slightlyUsefulLogo from "@/assets/slightly_useful_transparent.png";
+import slightlyUsefulLogo from "@/assets/slightly_useful_mid_byline.png";
 
 const Header = () => {
   const navigate = useNavigate();
