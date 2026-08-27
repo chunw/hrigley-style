@@ -192,7 +192,7 @@ const Header = () => {
           {/* Left - Logo */}
           <div className="flex-shrink-0">
             {isSlightlyUsefulObjectPage ? (
-              <Link to="/" className="block cursor-pointer">
+              <Link to="/" className="block cursor-pointer -ml-16">
                 <img
                   src={slightlyUsefulLogo}
                   alt="Slightly Useful Object"
