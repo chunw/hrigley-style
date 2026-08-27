@@ -635,10 +635,19 @@ All colors MUST be HSL.
 
 .about-quote {
   display: block;
+  position: relative;
   margin: 1.25em 0;
   padding-left: 1.25rem;
   border-left: 2px solid rgba(43, 43, 43, 0.35);
   font-style: italic;
+}
+
+.about-quote::before {
+  content: '\201C';
+}
+
+.about-quote::after {
+  content: '\201D';
 }
 
 .cargo-hero-description {
