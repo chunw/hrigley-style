@@ -50,7 +50,22 @@ export function getProductCollectionsZh(product: { id: unknown; collections_zh?:
   return product.collections_zh ?? [];
 }
 
-export const products = [
+// Finds a file named "main" (any extension) inside a product's imageFolder,
+// so a folder's main.* file always wins as the cover — regardless of what
+// image_url happens to be set to below.
+function findMainImageUrl(imageFolder?: string): string | undefined {
+  if (!imageFolder) return undefined
+  const prefix = `../assets/products/${imageFolder}/`
+  for (const [path, url] of Object.entries(_allProductImages)) {
+    if (!path.startsWith(prefix)) continue
+    const filename = path.slice(prefix.length)
+    const basename = filename.slice(0, filename.lastIndexOf('.'))
+    if (basename.toLowerCase() === 'main') return url
+  }
+  return undefined
+}
+
+const rawProducts = [
 
   {
     id: "book-paintings-2019-2026",
@@ -71,7 +86,7 @@ export const products = [
     edition_info: null,
     edition_size: null,
     alt_text: "Chun Wang Paintings 2019–2026 book",
-    image_url: new URL("../assets/products/book/book-covers.jpg", import.meta.url).href,
+    image_url: new URL("../assets/products/book/main.jpg", import.meta.url).href,
     is_active: true,
     printInCatalog: false,
     showInStorefront: true,
@@ -795,9 +810,18 @@ Set of 2 original paintings.</p>`.trim(),
   },
 ];
 
+// A folder's main.* file always wins as the cover image, overriding whatever
+// image_url is set above — keeps product data correct even if a main.* file
+// is added, renamed, or swapped later without editing this file.
+export const products = rawProducts.map((product) => {
+  const mainUrl = findMainImageUrl((product as { imageFolder?: string }).imageFolder)
+  return mainUrl ? { ...product, image_url: mainUrl } : product
+})
+
 // Auto-generated from each product's imageFolder — no manual entries needed.
 // To add images, drop files into src/assets/products/<imageFolder>/.
-// The cover image (image_url) is always sorted first.
+// The cover image (image_url) is always sorted first, and the rest of the
+// thumbnail row is sorted alphabetically ascending by filename.
 export const productImages = products.flatMap((product) => {
   const folder = (product as { imageFolder?: string }).imageFolder
   const coverFilename = product.image_url

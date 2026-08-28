@@ -121,6 +121,7 @@ const Header = () => {
               </select>
             </div>
 
+            {/* Cart hidden until checkout API is ready
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
@@ -138,10 +139,12 @@ const Header = () => {
               </TooltipTrigger>
               <TooltipContent>Cart ({cartState.itemCount})</TooltipContent>
             </Tooltip>
+            */}
           </div>
 
           {/* Mobile - show compact drawer trigger */}
           <div className="absolute inset-y-0 right-0 flex items-center gap-1 md:hidden">
+            {/* Cart hidden until checkout API is ready
             <Link
               to="/cart"
               aria-label="View cart"
@@ -154,6 +157,7 @@ const Header = () => {
                 </span>
               )}
             </Link>
+            */}
             <Drawer>
               <DrawerTrigger asChild>
                 <button

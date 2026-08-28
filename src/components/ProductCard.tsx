@@ -181,6 +181,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
                   {renderHighlightedText(priceLabel ?? `${currency === 'gbp' ? '£' : '$'}${price.toFixed(2)}`)}
                 </p>
                 {!hideShippingLabel && <p className="text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>}
+                {/* Add to Cart hidden until checkout API is ready
                 {!hideOrderButton && !soldOut && (
                   <Button
                     variant="outline"
@@ -192,6 +193,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
                     ADD TO CART
                   </Button>
                 )}
+                */}
                 {!hideOrderButton && (paylink || is_active) && (
                   <Button
                     variant="outline-pink"

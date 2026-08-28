@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -28,6 +28,10 @@ const ProductDetails = () => {
     : product ? [{ image_url: product.image_url, alt_text: product.name || product.title }] : [];
   const allImages = rawImages.filter(img => img && img.image_url);
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [id]);
 
   usePageMeta({
     title: product ? (product.title || product.name) : "Product",
