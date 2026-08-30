@@ -7,6 +7,7 @@ import ProductGrid from "@/components/ProductGrid";
 import Footer from "@/components/Footer";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { buildVendorCatalogHTML } from "@/lib/printCatalog";
 import usefulBg from "@/assets/hands_clay_objects_clean_skin.jpg";
 
@@ -16,9 +17,19 @@ const Useful = () => {
   const [printMenuOpen, setPrintMenuOpen] = useState(false);
   const location = useLocation();
   const { t, lang } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
 
-  const handlePrint = (theme: "light" | "dark") => {
-    const html = buildVendorCatalogHTML(window.location.origin, lang, theme);
+  // This page always lands in dark mode, regardless of the site-wide theme preference
+  // (still overridable via the header's toggle while on the page).
+  useEffect(() => {
+    if (theme === "light") {
+      toggleTheme();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handlePrint = (printTheme: "light" | "dark") => {
+    const html = buildVendorCatalogHTML(window.location.origin, lang, printTheme);
     const blob = new Blob([html], { type: "text/html" });
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");
@@ -48,11 +59,11 @@ const Useful = () => {
 
       <Header />
 
-      <div className="border-t border-white/10 bg-black">
+      <div className="border-t border-border bg-background">
         <div className="px-4 sm:px-6 lg:px-16 py-4 flex items-center justify-between">
           <Link
             to="/"
-            className="sans-label font-normal inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 text-white hover:text-primary"
+            className="sans-label font-normal inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 text-foreground hover:text-primary"
           >
             ← {t.about.backToShop}
           </Link>
@@ -63,7 +74,7 @@ const Useful = () => {
             <button
               type="button"
               onClick={() => setPrintMenuOpen((open) => !open)}
-              className="sans-label font-normal inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 text-white hover:text-primary"
+              className="sans-label font-normal inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 text-foreground hover:text-primary"
             >
               <Store className="h-4 w-4" />
               {t.watercolorCatalog.printVendorCatalog}

@@ -33,9 +33,9 @@ const Header = () => {
   // Determine whether header should render in light mode.
   // On product/detail and related pages we prefer a light header so it observes
   // the page's light background even if the global theme is dark. The Slightly
-  // Useful Object page's header bar is always dark, regardless of the site-wide
-  // toggle (matching its hero below).
-  const headerIsLight = isSlightlyUsefulObjectPage ? false : (theme === "light" || useGloriaTitle);
+  // Useful Object page instead follows the site-wide toggle like the homepage does,
+  // since its background now tracks the same toggle.
+  const headerIsLight = isSlightlyUsefulObjectPage ? theme === "light" : (theme === "light" || useGloriaTitle);
   const controlColor = headerIsLight ? "text-foreground" : "text-white";
 
   return (
@@ -43,27 +43,25 @@ const Header = () => {
       <div className={isSlightlyUsefulObjectPage ? "px-4 sm:px-6 lg:px-16" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"}>
         <div className={`relative flex items-center justify-between pt-6 pb-6 ${isSlightlyUsefulObjectPage ? "h-40" : "h-28"}`}>
           <div className="absolute inset-y-0 right-0 hidden md:inline-flex items-center gap-8 text-sm fangsong-nav">
-            {!isSlightlyUsefulObjectPage && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    type="button"
-                    onClick={toggleTheme}
-                    aria-label="Toggle dark/light mode"
-                    className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
-                  >
-                    {theme === "light" ? (
-                      <Moon className={`h-4 w-4 ${controlColor}`} />
-                    ) : (
-                      <Sun className={`h-4 w-4 ${controlColor}`} />
-                    )}
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  {theme === "light" ? "switch to dark mode" : "switch to light mode"}
-                </TooltipContent>
-              </Tooltip>
-            )}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  aria-label="Toggle dark/light mode"
+                  className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
+                >
+                  {theme === "light" ? (
+                    <Moon className={`h-4 w-4 ${controlColor}`} />
+                  ) : (
+                    <Sun className={`h-4 w-4 ${controlColor}`} />
+                  )}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {theme === "light" ? "switch to dark mode" : "switch to light mode"}
+              </TooltipContent>
+            </Tooltip>
 
             <Tooltip>
               <TooltipTrigger asChild>
@@ -183,21 +181,19 @@ const Header = () => {
                 </DrawerHeader>
 
                 <div className="flex flex-col gap-4 p-4">
-                  {!isSlightlyUsefulObjectPage && (
-                    <button
-                      type="button"
-                      onClick={toggleTheme}
-                      aria-label="Toggle dark/light mode"
-                      className="flex items-center gap-2 text-sm p-2 transition-colors text-foreground"
-                    >
-                      {theme === "light" ? (
-                        <Moon className="h-4 w-4 text-foreground" />
-                      ) : (
-                        <Sun className="h-4 w-4 text-foreground" />
-                      )}
-                      {theme === "light" ? "Dark" : "Light"}
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    onClick={toggleTheme}
+                    aria-label="Toggle dark/light mode"
+                    className="flex items-center gap-2 text-sm p-2 transition-colors text-foreground"
+                  >
+                    {theme === "light" ? (
+                      <Moon className="h-4 w-4 text-foreground" />
+                    ) : (
+                      <Sun className="h-4 w-4 text-foreground" />
+                    )}
+                    {theme === "light" ? "Dark" : "Light"}
+                  </button>
 
                   <Link to="/about" className="text-sm p-2 text-foreground">{t.index.ctaAbout}</Link>
                   <Link to="/catalogs" className="text-sm p-2 text-foreground">{t.index.ctaCatalog}</Link>
