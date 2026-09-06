@@ -751,9 +751,7 @@ All colors MUST be HSL.
   padding-top: 0.9rem;
   border-top: 1px solid rgba(17, 17, 17, 0.12);
   color: rgba(17, 17, 17, 0.62);
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-style: italic;
-  font-size: 1.05rem;
+  font-size: 1rem;
   line-height: 1.5;
 }
 

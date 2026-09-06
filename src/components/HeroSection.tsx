@@ -82,7 +82,14 @@ const HeroSection = ({
           <div className="hero-message-card hero-message-card-tight">
             <div className="hero-dialog-textbox">
               <h2 className="hero-dialog-title">{t.hero.dialogTitle}</h2>
-              <a className="hero-dialog-btn mt-4" href="#products">{t.hero.shopCta}</a>
+              <p className="hero-dialog-sub font-helvetica">
+                {t.hero.smallStudioPrefix}
+                <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
+                  <span className="text-primary">{t.hero.smallStudioLinkText}</span>
+                </a>
+                {t.hero.smallStudioSuffix}
+              </p>
+              <a className="hero-dialog-btn" href="#products">{t.hero.shopCta}</a>
             </div>
           </div>
         </div>

@@ -33,10 +33,6 @@ const SlightlyUsefulObject = () => {
             className="mx-auto w-full max-w-5xl h-auto object-contain drop-shadow-[0_12px_30px_rgba(0,0,0,0.12)]"
           />
 
-          <p className="font-helvetica cargo-hero-description mt-8">
-            {t.hero.description}
-          </p>
-
           <nav className="cargo-hero-links" aria-label="hero links">
             <a href="/about" className="cargo-link">{t.index.ctaAbout}</a>
           </nav>
