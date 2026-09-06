@@ -555,8 +555,8 @@ All colors MUST be HSL.
 }
 
 .about-portrait {
-  width: 140px;
-  height: 140px;
+  width: 260px;
+  height: 260px;
   margin: 0 auto 2rem;
   border-radius: 50%;
   overflow: hidden;

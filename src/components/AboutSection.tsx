@@ -1,5 +1,5 @@
 import deliveryGif from "@/assets/delivery.gif";
-import chunPortrait from "@/assets/chun.jpg";
+import chunAbout from "@/assets/about.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const AboutSection = () => {
@@ -28,8 +28,8 @@ const AboutSection = () => {
 
         <div className="about-portrait">
           <img
-            src={chunPortrait}
-            alt="Chun Wang"
+            src={chunAbout}
+            alt="Chun Wang holding handmade clay charms"
             className="about-portrait-img"
           />
         </div>
