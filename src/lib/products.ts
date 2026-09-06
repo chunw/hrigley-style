@@ -718,6 +718,35 @@ Set of 2 original paintings.</p>`.trim(),
     category: "Jewelry",
     collections: ["Slightly Useful Object"],
     created_at: new Date().toISOString(),
+    paylink: "https://www.paypal.com/ncp/payment/28A4RZTAX6HMN"
+  },
+
+  {
+    id: "nyc-hotdog-clip",
+    imageFolder: "nychotdogclip",
+    title: "NYC Hotdog Clip",
+    name: "NYC Hotdog Clip",
+    title_zh: "纽约热狗小夹子",
+    description_zh: "一根迷你纽约热狗，别在金属夹子上——街头小吃，但可以戴着走。",
+    detailed_description_html_zh: `<p>手工捏塑的聚合物粘土热狗，涂满芥末酱与酸黄瓜碎，比纽约街头餐车做得还讲究，安装在结实的金属夹子上。</p><p>可以夹在背包带、外套翻领、帽檐上——随时随地带一点街头热狗能量。</p><p>聚合物粘土，金属鳄鱼夹。轻巧防水。</p>`,
+    category_zh: "首饰",
+    collections_zh: ["小用之物"],
+    edition_info_zh: "",
+    price: 32,
+    currency: "USD",
+    description: "A miniature NYC hot dog, snapped onto a metal clip — street meat, but make it wearable.",
+    detailed_description_html: `<p>A hand-sculpted polymer clay hot dog, dressed in mustard and relish exactly the way a cart on the corner would never quite get it right, mounted on a sturdy metal clip.</p><p>Clip it to a bag strap, a jacket lapel, a hat brim — wherever it needs a little dirty-water-dog energy.</p><p>Polymer clay, metal alligator clip. Lightweight and waterproof.</p>`,
+    dimensions: "",
+    edition_info: null,
+    edition_size: null,
+    alt_text: "NYC Hotdog Clip — handmade clay accessory",
+    image_url: "",
+    is_active: true,
+    printInCatalog: false,
+    showInStorefront: true,
+    category: "Jewelry",
+    collections: ["Slightly Useful Object"],
+    created_at: new Date().toISOString(),
     paylink: ""
   },
 
@@ -857,3 +886,15 @@ export const productImages = products.flatMap((product) => {
     display_order: i,
   }))
 })
+
+// The product grid flips a card's image on hover to its second photo, if one
+// exists — this attaches that second photo's URL onto each product so grid
+// cards don't need to know about `productImages` at all.
+const secondImageByProductId = new Map<string, string>()
+for (const img of productImages) {
+  if (img.display_order === 1) secondImageByProductId.set(img.product_id, img.image_url)
+}
+for (const product of products) {
+  const secondImageUrl = secondImageByProductId.get(product.id)
+  if (secondImageUrl) (product as { secondImageUrl?: string }).secondImageUrl = secondImageUrl
+}

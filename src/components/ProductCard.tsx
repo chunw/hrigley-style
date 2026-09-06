@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +19,7 @@ interface ProductCardProps {
   price: number;
   currency: string;
   image_url: string | null;
+  secondImageUrl?: string | null;
   category?: string | null;
   category_zh?: string | null;
   categories?: string[];
@@ -35,11 +37,27 @@ interface ProductCardProps {
   is_active?: boolean;
 }
 
-const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, priceLabel, currency, image_url, category, category_zh, categories, categories_zh, collections, collections_zh, paylink, detailPath, hideOrderButton, hideShippingLabel, highlightQuery, artboxPrintCount, soldOut, is_active }: ProductCardProps) => {
+const ProductCard = ({ id, name, title, title_zh, description, description_zh, price, priceLabel, currency, image_url, secondImageUrl, category, category_zh, categories, categories_zh, collections, collections_zh, paylink, detailPath, hideOrderButton, hideShippingLabel, highlightQuery, artboxPrintCount, soldOut, is_active }: ProductCardProps) => {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
   const { addItem } = useCart();
-  const { imgRef, imgStyle, hoverHandlers, wrapperHoverClassName } = useImageHoverExpand("contain");
+  const { imgRef, imgStyle, hovered, hoverHandlers, wrapperHoverClassName } = useImageHoverExpand("contain");
+
+  // Preload the second photo (if any) so hovering can flip to it instantly —
+  // never shown until confirmed loadable, so a missing "if available" image
+  // never flashes a broken-image icon.
+  const [secondImageReady, setSecondImageReady] = useState(false);
+  useEffect(() => {
+    setSecondImageReady(false);
+    if (!secondImageUrl) return;
+    let cancelled = false;
+    const preload = new Image();
+    preload.onload = () => { if (!cancelled) setSecondImageReady(true); };
+    preload.src = secondImageUrl;
+    return () => { cancelled = true; };
+  }, [secondImageUrl]);
+
+  const displayImageUrl = (hovered && secondImageReady && secondImageUrl) ? secondImageUrl : image_url;
 
   const zh = lang === "zh";
   const displayTitle = (zh && title_zh) ? title_zh : (title || name);
@@ -145,12 +163,12 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
         >
           <img
             ref={imgRef}
-            src={image_url || "/placeholder.svg"}
+            src={displayImageUrl || "/placeholder.svg"}
             alt={name}
             className="w-full h-full object-contain"
             style={imgStyle}
             onError={(e) => {
-              console.log('Image failed to load:', image_url);
+              console.log('Image failed to load:', displayImageUrl);
               e.currentTarget.src = "/placeholder.svg";
             }}
             loading="lazy"
