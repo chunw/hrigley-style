@@ -26,23 +26,25 @@ const AboutSection = () => {
           </>
         )}
 
-        <div className="about-portrait">
-          <img
-            src={chunAbout}
-            alt="Chun Wang holding handmade clay charms"
-            className="about-portrait-img"
-          />
-        </div>
+        <div className="about-content lg:flex lg:items-center lg:justify-center lg:gap-16">
+          <div className="about-portrait lg:mx-0 lg:mb-0 lg:shrink-0">
+            <img
+              src={chunAbout}
+              alt="Chun Wang holding handmade clay charms"
+              className="about-portrait-img"
+            />
+          </div>
 
-        <div className="handwritten-note">
-          <p
-            className="handwritten-note-text whitespace-pre-line"
-            dangerouslySetInnerHTML={{ __html: t.about.body }}
-          />
+          <div className="handwritten-note lg:mx-0">
+            <p
+              className="handwritten-note-text whitespace-pre-line"
+              dangerouslySetInnerHTML={{ __html: t.about.body }}
+            />
 
-          <nav className="handwritten-note-links" aria-label="about links">
-            <a href="/#products" className="handwritten-note-link">{t.about.backToShop}</a>
-          </nav>
+            <nav className="handwritten-note-links" aria-label="about links">
+              <a href="/#products" className="handwritten-note-link">{t.about.backToShop}</a>
+            </nav>
+          </div>
         </div>
       </div>
     </section>
