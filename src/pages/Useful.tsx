@@ -109,6 +109,7 @@ const Useful = () => {
         titleBlack
         bgImageSrc={usefulBg}
         hideAboutLink
+        hideDescription
         forceDarkHero
       />
 

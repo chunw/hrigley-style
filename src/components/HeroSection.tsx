@@ -12,6 +12,7 @@ interface HeroSectionProps {
   bgImageSrc?: string;
   hideTitle?: boolean;
   hideAboutLink?: boolean;
+  hideDescription?: boolean;
   forceDarkHero?: boolean;
   /** Show the bottom-left "Handmade & one of a kind" message card, independent of logoSrc. */
   showMessageCard?: boolean;
@@ -31,6 +32,7 @@ const HeroSection = ({
   bgImageSrc = DEFAULT_BG_IMAGE,
   hideTitle = false,
   hideAboutLink = false,
+  hideDescription = false,
   forceDarkHero = false,
   showMessageCard = false,
 }: HeroSectionProps = {}) => {
@@ -65,9 +67,11 @@ const HeroSection = ({
           </h1>
         )}
 
-        <p className="hidden sm:block font-helvetica cargo-hero-description">
-          {t.hero.description}
-        </p>
+        {!hideDescription && (
+          <p className="hidden sm:block font-helvetica cargo-hero-description">
+            {t.hero.description}
+          </p>
+        )}
 
         {!hideAboutLink && (
           <nav className="cargo-hero-links" aria-label="hero links">
