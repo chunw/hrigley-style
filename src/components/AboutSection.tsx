@@ -1,5 +1,4 @@
 import deliveryGif from "@/assets/delivery.gif";
-import chunAbout from "@/assets/about.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const AboutSection = () => {

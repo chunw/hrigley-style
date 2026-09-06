@@ -620,6 +620,12 @@ All colors MUST be HSL.
   text-decoration: none;
 }
 
+/* Intro bio line — plain readable copy, not the cursive handwritten face */
+.handwritten-note-text em {
+  font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-style: normal;
+}
+
 .about-quote {
   display: block;
   position: relative;
