@@ -11,7 +11,7 @@ const HERO_TITLE = {
 };
 
 const SlightlyUsefulObject = () => {
-  const { t, lang } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <div className="relative min-h-screen bg-background">
@@ -44,11 +44,11 @@ const SlightlyUsefulObject = () => {
           <div className="hero-message-card">
             <h2 className="hero-dialog-title">{t.hero.dialogTitle}</h2>
             <p className="hero-dialog-sub font-helvetica">
-              {t.hero.createdExclusivelyBy}{" "}
+              {t.hero.smallStudioPrefix}
               <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
-                <span className="text-primary">chun wang</span>
+                <span className="text-primary">{t.hero.smallStudioLinkText}</span>
               </a>
-              {lang === "zh" ? "" : " in New York City"}
+              {t.hero.smallStudioSuffix}
             </p>
             <a className="hero-dialog-btn" href="#products">{t.hero.shopCta}</a>
           </div>
@@ -103,8 +103,6 @@ const SlightlyUsefulObject = () => {
                   className="w-3/4 h-3/4 object-cover"
                 />
               </a>
-              {/* Decorative border */}
-              <div className="absolute inset-0 border-4 border-primary translate-x-4 translate-y-4 rounded-lg -z-10"></div>
             </div>
           </div>
         </div>

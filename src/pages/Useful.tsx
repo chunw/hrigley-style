@@ -101,15 +101,13 @@ const Useful = () => {
       <HeroSection
         titleOverride={
           <>
-            <span className="block">Slightly</span>
-            <span className="hero-title-sub block">Useful Object</span>
+            Slightly Useful <span className="text-primary">Objects</span>
           </>
         }
         bordered
         logoSrc="/1%20logo.png"
         titleBlack
         bgImageSrc={usefulBg}
-        hideTitle
         hideAboutLink
         forceDarkHero
       />

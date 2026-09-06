@@ -8,11 +8,11 @@ export const translations = {
       contactEmailCopyFailedDescription: "Please copy manually:",
     },
     hero: {
-      description:"",
-       // "What started as bespoke observations and a bit of overthinking turn into whimsical objects you can use, gift, or just stare at in existential curiosity.",
-      createdExclusivelyBy: "created exclusively by",
-      forImaginativeCollectors: " in New York City",
+      description: "Sculptural planters, clay pendants, and original paintings — each one designed and made entirely by hand, one at a time, in a small NYC studio. Plus fine art prints of the work, for every budget.",
       dialogTitle: "Handmade & one of a kind.",
+      smallStudioPrefix: "designed and made entirely by hand, one at a time, in ",
+      smallStudioLinkText: "a small NYC studio",
+      smallStudioSuffix: ".",
       shopCta: "View Collection",
     },
     about: {
@@ -117,11 +117,11 @@ export const translations = {
       contactEmailCopyFailedDescription: "请手动复制：",
     },
     hero: {
-      description: "",
-      // "从一点点生活观察，和一点点过度思考开始。想法落地，变成好用、好送、也好对着发呆的小物件。",
-      createdExclusivelyBy: "独家创作 by",
-      forImaginativeCollectors: "",
+      description: "雕塑感花器、粘土吊坠、原创绘画——每一件都在纽约的小工作室里，从头到尾纯手工制作，独一无二；此外还提供作品的艺术微喷版画，价格更亲民。",
       dialogTitle: "手工制作，独一无二。",
+      smallStudioPrefix: "纯手工设计制作，独一无二，诞生于",
+      smallStudioLinkText: "纽约的一个小工作室",
+      smallStudioSuffix: "。",
       shopCta: "查看系列",
     },
     about: {

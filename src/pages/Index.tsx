@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ProductGrid from "@/components/ProductGrid";
@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import { SITE_URL, SHOP_URL, INSTAGRAM_URL } from "@/lib/constants";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import handsBg from "@/assets/hands_clay_objects_clean_skin.jpg";
 
 const Index = () => {
   const { lang, t } = useLanguage();
@@ -40,6 +41,9 @@ const Index = () => {
     <div className="relative min-h-screen bg-background">
       
       <Header />
+
+      <HeroSection bgImageSrc={handsBg} showMessageCard />
+
       <section id="products">
         <ProductGrid
           searchQuery={searchQuery}
@@ -50,30 +54,6 @@ const Index = () => {
           hideShippingLabel
         />
       </section>
-
-
-      {/* <section className="border-t border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <Link
-            to="/watercolor-catalog"
-            className="group flex items-center justify-between hover:text-primary transition-colors"
-          >
-            <div>
-              <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-2">
-                Original Works
-              </p>
-              <h2 className="shop-title text-4xl md:text-5xl leading-none">Visions in Watercolor</h2>
-            </div>
-            <span className="handwritten text-sm text-muted-foreground group-hover:text-primary transition-colors">
-              view all →
-            </span>
-          </Link>
-        </div>
-      </section> */}
-
-      {/* Removed shop title/tagline section per request */}
-
-      <HeroSection />
 
       <Footer />
     </div>

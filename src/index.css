@@ -826,9 +826,10 @@ All colors MUST be HSL.
   object-fit: contain;
 }
 
-/* Frame for HeroSection's `bordered` prop. */
+/* Frame for HeroSection's `bordered` prop. Desktop keeps no frame; only the
+   mobile breakpoint below re-adds a thin one. */
 .cargo-hero-framed {
-  border: 20px solid #dc2626;
+  border: none;
 }
 
 /* Mobile layout for the "Slightly Useful Object" hero (HeroSection with logoSrc): the
@@ -840,7 +841,7 @@ All colors MUST be HSL.
   }
 
   .cargo-hero-framed.cargo-hero {
-    border-width: 2px;
+    border: 2px solid #dc2626;
   }
 
   .cargo-hero-theme-aware .cargo-hero-inner {

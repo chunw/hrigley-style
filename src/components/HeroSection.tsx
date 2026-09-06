@@ -13,6 +13,8 @@ interface HeroSectionProps {
   hideTitle?: boolean;
   hideAboutLink?: boolean;
   forceDarkHero?: boolean;
+  /** Show the bottom-left "Handmade & one of a kind" message card, independent of logoSrc. */
+  showMessageCard?: boolean;
 }
 
 const DEFAULT_BG_IMAGE =
@@ -30,6 +32,7 @@ const HeroSection = ({
   hideTitle = false,
   hideAboutLink = false,
   forceDarkHero = false,
+  showMessageCard = false,
 }: HeroSectionProps = {}) => {
   const { t, lang } = useLanguage();
   const heroThemeClass = logoSrc && !forceDarkHero ? "cargo-hero-theme-aware" : "cargo-hero-adaptive";
@@ -49,7 +52,7 @@ const HeroSection = ({
       )}
       <div className="cargo-hero-inner">
         {!hideTitle && (
-          <h1 className={`shop-title cargo-hero-title ${lang === "en" ? "gloria-title" : ""} ${titleBlack ? "!text-black" : ""}`}>
+          <h1 className={`hidden sm:block shop-title cargo-hero-title ${lang === "en" ? "gloria-title" : ""} ${titleBlack ? "!text-black" : ""}`}>
             {titleOverride ? (
               <span className="hero-title-brand block">{titleOverride}</span>
             ) : (
@@ -62,16 +65,8 @@ const HeroSection = ({
           </h1>
         )}
 
-        <p className="font-helvetica cargo-hero-description">
+        <p className="hidden sm:block font-helvetica cargo-hero-description">
           {t.hero.description}
-        </p>
-
-        <p className="font-helvetica cargo-hero-byline">
-          {/* {t.hero.createdExclusivelyBy}{" "} */}
-          {/* <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
-            <span className="text-primary">chun wang</span>
-          </a>
-          {t.hero.forImaginativeCollectors} */}
         </p>
 
         {!hideAboutLink && (
@@ -82,19 +77,12 @@ const HeroSection = ({
 
       </div>
 
-      {logoSrc && (
+      {(logoSrc || showMessageCard) && (
         <div className="hero-message-card-bottom-wrap">
           <div className="hero-message-card hero-message-card-tight">
             <div className="hero-dialog-textbox">
               <h2 className="hero-dialog-title">{t.hero.dialogTitle}</h2>
-              <p className="hero-dialog-sub font-helvetica">
-                {t.hero.createdExclusivelyBy}{" "}
-                <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
-                  <span className="text-primary">chun wang</span>
-                </a>
-                {t.hero.forImaginativeCollectors}
-              </p>
-              <a className="hero-dialog-btn" href="#products">{t.hero.shopCta}</a>
+              <a className="hero-dialog-btn mt-4" href="#products">{t.hero.shopCta}</a>
             </div>
           </div>
         </div>
