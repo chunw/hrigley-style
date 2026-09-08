@@ -42,7 +42,7 @@ const Index = () => {
       
       <Header />
 
-      <HeroSection bgImageSrc={handsBg} showMessageCard />
+      <HeroSection bgImageSrc={handsBg} showMessageCard hideAboutLink hideDescription />
 
       <section id="products">
         <ProductGrid
