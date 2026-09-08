@@ -119,7 +119,7 @@ export const translations = {
     hero: {
       description: "雕塑感花器、粘土吊坠、原创绘画——每一件都在纽约的小工作室里，从头到尾纯手工制作，独一无二；此外还提供作品的艺术微喷版画，价格更亲民。",
       dialogTitle: "手工制作，独一无二。",
-      smallStudioPrefix: "纯手工设计制作，独一无二，诞生于",
+      smallStudioPrefix: "纯手工设计制作，诞生于",
       smallStudioLinkText: "纽约的一个小工作室",
       smallStudioSuffix: "。",
       shopCta: "查看系列",
