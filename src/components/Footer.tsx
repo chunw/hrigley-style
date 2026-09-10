@@ -29,13 +29,13 @@ const Footer = () => {
             ))}
           </div>
 
-          <div className="text-center text-xs uppercase tracking-[0.18em] text-foreground/70">
+          <div className="text-center text-[11px] uppercase tracking-[0.18em] text-foreground/70">
             <div>© Chun Wang Studio Shop 2026</div>
             <div>{t.footer.copyright}</div>
             <div className="mt-1 normal-case">{t.footer.locationShipping}</div>
           </div>
 
-          <div className="text-center text-xs uppercase tracking-[0.18em] text-foreground/70 lg:justify-self-end lg:text-right">
+          <div className="text-center text-[11px] uppercase tracking-[0.18em] text-foreground/70 lg:justify-self-end lg:text-right">
             <div>{t.footer.shippingNote}</div>
             <div className="normal-case">{t.footer.returnsNote}</div>
             <div className="mt-1">
