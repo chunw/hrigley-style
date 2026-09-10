@@ -36,9 +36,7 @@ const Footer = () => {
           </div>
 
           <div className="text-center text-[11px] uppercase tracking-[0.18em] text-foreground/70 lg:justify-self-end lg:text-right">
-            <div>{t.footer.shippingNote}</div>
-            <div className="normal-case">{t.footer.returnsNote}</div>
-            <div className="mt-1">
+            <div>
               {t.footer.contactPrefix}{" "}
               <a href={`mailto:${CONTACT_EMAIL}`} className="normal-case underline hover:text-foreground">
                 {CONTACT_EMAIL}

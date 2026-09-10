@@ -38,8 +38,6 @@ export const translations = {
     footer: {
       copyright: "All rights reserved.",
       locationShipping: "Designed & shipped from New York City. Ships worldwide.",
-      shippingNote: "Shipping & taxes included in every price.",
-      returnsNote: "Each piece is handmade to order, so all sales are final — if anything arrives damaged, email me and I'll make it right.",
       contactPrefix: "Questions? Email",
       contactOr: "or DM on",
     },
@@ -147,8 +145,6 @@ export const translations = {
     footer: {
       copyright: "版权所有。",
       locationShipping: "所有作品在纽约市设计并发货，全球配送。",
-      shippingNote: "所有价格均已包含运费和税费。",
-      returnsNote: "每件作品均为手工定制，恕不接受退货——如收到商品有损坏，请发邮件联系我，我会为您妥善处理。",
       contactPrefix: "有疑问？欢迎发邮件至",
       contactOr: "或私信",
     },
