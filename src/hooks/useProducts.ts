@@ -6,7 +6,7 @@ import { remainsWorks } from "@/lib/remains";
 import { spiritWorks } from "@/lib/21spirit";
 
 const DEFAULT_PRINT_INFO = '9×12" fine art matte paper print';
-const DEFAULT_PRINT_INFO_ZH = '23×30厘米精细艺术哑光纸印刷品';
+const DEFAULT_PRINT_INFO_ZH = '9×12英寸精细艺术哑光纸印刷品';
 const DEFAULT_PRINT_PRICE = 10;
 
 const buildDescription = (desc: string | undefined | null, printInfo: string) => {

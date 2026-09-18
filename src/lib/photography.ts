@@ -81,7 +81,7 @@ export const photographyWorks: PhotographyWork[] = [
     description: "London International Creative Competition (LICC) Shortlist · Photo/Video · Scotland, 2024.",
     descriptionZh: "伦敦国际创意大赛（LICC）入围 · 摄影/视频类 · 苏格兰，2024年。",
     printInfo: '9×12" fine art matte paper print or framed 12×18" fine art matte paper print',
-    printInfoZh: '23×30厘米精细艺术哑光纸印刷品或裱框30×46厘米精细艺术哑光纸印刷品',
+    printInfoZh: '9×12英寸精细艺术哑光纸印刷品或裱框12×18英寸精细艺术哑光纸印刷品',
     printPrice: 10,
     printPrice12x18: 20,
     paylink12x18: "https://www.paypal.com/ncp/payment/CEBWTTHT6Y5K6",
@@ -101,7 +101,7 @@ export const photographyWorks: PhotographyWork[] = [
     description: "Scotland, 2024.",
     descriptionZh: "苏格兰，2024年。",
     printInfo: '9×12" fine art matte paper print',
-    printInfoZh: '23×30厘米精细艺术哑光纸印刷品',
+    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
   },
   {
     id: "15",
@@ -118,7 +118,7 @@ export const photographyWorks: PhotographyWork[] = [
     description: "Scotland, 2024.",
     descriptionZh: "苏格兰，2024年。",
     printInfo: '9×12" fine art matte paper print',
-    printInfoZh: '23×30厘米精细艺术哑光纸印刷品',
+    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
   },
   {
     id: "16",
@@ -135,7 +135,7 @@ export const photographyWorks: PhotographyWork[] = [
     description: "Scotland, 2024.",
     descriptionZh: "苏格兰，2024年。",
     printInfo: '9×12" fine art matte paper print',
-    printInfoZh: '23×30厘米精细艺术哑光纸印刷品',
+    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
   },
 
 
@@ -155,7 +155,7 @@ export const photographyWorks: PhotographyWork[] = [
     description: `2022 15th International Color Awards Honorable Mention in Category: Portrait · Exhibited in <a href="https://www.ph21gallery.com/colour-25" target="_blank">Significant Colour</a> at PH21 Photography Gallery, Budapest, Hungary.`,
     descriptionZh: `2022年第15届国际色彩大奖荣誉奖 · 肖像类 · 曾在匈牙利布达佩斯 PH21 摄影画廊的<a href="https://www.ph21gallery.com/colour-25" target="_blank">《Significant Colour》</a>展览中展出。`,
     printInfo: '9×12" fine art matte paper print',
-    printInfoZh: '23×30厘米精细艺术哑光纸印刷品',
+    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
   },
   {
     id: "3",
@@ -172,7 +172,7 @@ export const photographyWorks: PhotographyWork[] = [
     description: `2022 15th International Color Awards Nominee in Category: Fine Art · Exhibited in <a href="https://www.ph21gallery.com/colour-25" target="_blank">Significant Colour</a> at PH21 Photography Gallery, Budapest, Hungary.`,
     descriptionZh: `2022年第15届国际色彩大奖提名 · 艺术类 · 曾在匈牙利布达佩斯 PH21 摄影画廊的<a href="https://www.ph21gallery.com/colour-25" target="_blank">《Significant Colour》</a>展览中展出。`,
     printInfo: '9×12" fine art matte paper print',
-    printInfoZh: '23×30厘米精细艺术哑光纸印刷品',
+    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
   },
   {
     id: "4",
@@ -264,7 +264,7 @@ export const photographyWorks: PhotographyWork[] = [
     description: "Buenos Aires, 2023.",
     descriptionZh: "布宜诺斯艾利斯，2023年。",
     printInfo: '9×12" fine art matte paper print',
-    printInfoZh: '23×30厘米精细艺术哑光纸印刷品',
+    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
   },
   {
     id: "10",
@@ -292,7 +292,7 @@ export const photographyWorks: PhotographyWork[] = [
     description: "Paris, 2019.",
     descriptionZh: "巴黎，2019年。",
     printInfo: '9×12" fine art matte paper print',
-    printInfoZh: '23×30厘米精细艺术哑光纸印刷品',
+    printInfoZh: '9×12英寸精细艺术哑光纸印刷品',
   },
   {
     id: "13",

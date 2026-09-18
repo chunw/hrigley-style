@@ -82,7 +82,7 @@ const rawProducts = [
     description: "Collects paintings spanning seven years, demanding the kind of looking that contemporary life rarely permits.",
     detailed_description_html: `<p><i>Chun Wang Paintings 2019–2026</i> collects paintings spanning seven years from watercolour to mixed media, across four series: <i><a href="/watercolor-catalog" target="_blank" rel="noreferrer">Residuals</a></i>, <i><a href="/watercolor-catalog" target="_blank" rel="noreferrer">Still Things</a></i>, <i><a href="/remains-catalog" target="_blank" rel="noreferrer">Remains</a></i>, and <i><a href="/21spirit-catalog" target="_blank" rel="noreferrer">Spirit of the 21st Century</a></i>.</p>`,
     dimensions: `Full color, 40 pages. 6 × 6 inches. Softcover, sleek and lightweight. Soft touch matte finish, velvety to the hand.`,
-    dimensions_zh: `全彩印刷，40页，15 × 15厘米。平装本，轻巧灵便，覆哑膜软触感封面。`,
+    dimensions_zh: `全彩印刷，40页，6 × 6 英寸。平装本，轻巧灵便，覆哑膜软触感封面。`,
     edition_info: null,
     edition_size: null,
     alt_text: "Chun Wang Paintings 2019–2026 book",
