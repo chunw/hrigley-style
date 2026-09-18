@@ -4,10 +4,10 @@ import deliveryExampleOrderPng from "@/assets/delivery_example order.png";
 import { usePageMeta } from "@/hooks/usePageMeta";
 
 // UPDATE WITH REAL DATA BEFORE SENDING
-const customerName = "[CUSTOMER NAME]";
-const customerMessage = "[MESSAGE]";
-const trackingNumber = "[TRACKING NUMBER]";
-const trackingLink = `[TRACKING LINK WITH ${trackingNumber}]`;
+const customerName = "Ms. Wang";
+const customerMessage = "亲爱的妈咪，感谢您惠顾 <a href='https://www.chunwangshop.com/' target='_blank' rel='noopener noreferrer' style='color:#d42b1a;text-decoration:none;'>Chun Wang 创意工作室商店</a>。您的包裹已经开始配送，详情可查询邮件中附上的USPS tracking number及详细清单/收据（含赠品）。请注意这批寄送中不包含您所订购的10本画册 - 由于画册内容日前正在增订中，制作周期较长，请您耐心等待。再次感谢您的大力支持！";
+const trackingNumber = "4202014880029505514887756261648296";
+const trackingLink = `https://tools.usps.com/tracking/?tLabels=${trackingNumber}`;
 const carrier = "USPS";
 const estimatedArrival = "7-10 business days";
 const itemName = "Remains Tote Bag";
@@ -383,6 +383,34 @@ const deliveryHtml = `<!DOCTYPE html>
       padding: 24px 32px;
       border-top: 1px solid #d42b1a;
     }
+    /* Attachment note */
+    .attached-note {
+      border: 1px dashed #d42b1a;
+      background: #ffffff;
+      padding: 14px 18px 16px;
+      margin-bottom: 28px;
+      transform: rotate(-0.75deg);
+    }
+    .attached-note-label {
+      font-family: Helvetica, Arial, sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      letter-spacing: 0.05em;
+      text-transform: none;
+      color: #d42b1a;
+      margin-bottom: 8px;
+    }
+    .attached-note-body {
+      font-family: Helvetica, Arial, sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.65;
+      letter-spacing: 0.05em;
+      text-transform: none;
+      color: #000000;
+    }
+    .attached-note-body strong { color: #d42b1a; font-weight: 400; }
+
     .footer-text {
       font-size: 12px;
       color: #000000;
@@ -430,16 +458,16 @@ const deliveryHtml = `<!DOCTYPE html>
   <div class="how-to-use">
     <span style="font-size: 16px; line-height: 1;">📬</span> <br>
     <br>
-    <span style="font-family: Helvetica, Arial, sans-serif;">Hi ${customerName},</span> <br><br>
-    ${customerMessageHtml}
+    <span style="font-family: Helvetica, Arial, sans-serif;">Dear ${customerName},</span> <br><br>
+    <div style="line-height: 1.8;">${customerMessageHtml}</div>
     <br>
     <br>
     <br>
     
     
-    Warmly,
+    <div style="line-height: 1.8;">Warmly,
     <br>
-    Chun 
+    Chun</div>
     
   </div>
 
@@ -459,40 +487,23 @@ const deliveryHtml = `<!DOCTYPE html>
 
       
 
-        <div class="email-greeting"><span style="font-family: Helvetica, Arial, sans-serif;">Hello, ${customerName}</span></div>
-        <div class="email-headline">Your order<br>has <span>shipped</span>.</div>
+        <div class="email-greeting"><span style="font-family: Helvetica, Arial, sans-serif;">Dear ${customerName},</span></div>
+        <div class="email-headline">Your order<br>has <span>shipped</span> 📦</div>
        
-      <div class="tracking-box">
-          <div style="margin:0;background:#000000;padding-bottom:16px;">
-            <img src="${deliveryJpg}" alt="Delivery" style="display:block;width:100%;height:auto;" />
-          </div>
-          <div style="background:#000000;border:1px solid #ffffff;padding:14px;">
-            <div style="font-family: 'Space Mono', 'Courier New', monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#ffffff;margin-bottom:10px;">
-              Tracking Number: ${trackingNumber}
-              <br>
-              Carrier: ${carrier} · Est. Arrival: ${estimatedArrival}
-            </div>
-            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-              <tr>
-                <td valign="top" style="width:84px;padding-right:12px;">
-                  <img src="${deliveryExampleOrderPng}" alt="Example order" style="display:block;width:100%;max-width:84px;height:auto;border:1px solid #d9d9d9;" />
-                </td>
-                <td valign="top" style="font-family: var(--handwritten-font);font-weight:400;letter-spacing:0.05em;color:#ffffff;text-transform:uppercase;">
-                  <div style="font-size:18px;line-height:1.1;margin-bottom:4px;">Your Order</div>
-                  <div style="font-size:12px;line-height:1.35;">Item: ${itemName}</div>
-                  <div style="font-size:12px;line-height:1.35;">Quantity: ${quantity}</div>
-                </td>
-              </tr>
-            </table>
+        <a href="${trackingLink}" target="_blank" rel="noopener noreferrer" class="cta-btn">Track Your Package</a>
+
+        <div class="attached-note">
+          <div class="attached-note-label">📎 Attached to this email</div>
+          <div class="attached-note-body">
+            Your <strong>shipped items list</strong> and <strong>receipt</strong> &mdash;
+            complimentary gifts included. ♡
           </div>
         </div>
-
-        <a href="${trackingLink}" target="_blank" rel="noopener noreferrer" class="cta-btn">Track Your Package</a>
 
         <div class="footer-text">
         <!--Great news — your package has left our facility and is making its way to you across the tundra. 
        -->
-        Questions about your order? Reply to this email.
+        Any questions about your order? Please reply directly to this email.
         </div>
       </div>
 
