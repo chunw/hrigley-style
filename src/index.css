@@ -598,6 +598,58 @@ All colors MUST be HSL.
   font-style: normal;
 }
 
+/* About page — two columns: handwritten note (left) + artist bio (right) */
+.about-columns {
+  display: flex;
+  gap: 2.5rem;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+}
+.about-columns .handwritten-note {
+  margin: 0;
+  flex: 0 1 600px;
+}
+.about-bio-column {
+  flex: 0 1 470px;
+  max-width: 470px;
+  padding-top: 0.75rem;
+}
+.about-bio-heading {
+  font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  margin-bottom: 1rem;
+}
+.about-bio-text {
+  font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+.about-bio-text em {
+  font-style: italic;
+}
+.about-bio-text a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+@media (max-width: 1023px) {
+  .about-columns {
+    flex-direction: column;
+    align-items: center;
+  }
+  .about-bio-column {
+    max-width: 600px;
+  }
+}
+
 .about-quote {
   display: block;
   position: relative;
