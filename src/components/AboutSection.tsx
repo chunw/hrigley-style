@@ -18,10 +18,6 @@ const AboutSection = () => {
         {lang !== "zh" && (
           <>
             <h1 className="shop-title about-hero-title gloria-title !text-white">{t.about.title}</h1>
-
-            <p className="font-helvetica cargo-hero-subtitle">
-              {t.about.subtitle}
-            </p>
           </>
         )}
 
