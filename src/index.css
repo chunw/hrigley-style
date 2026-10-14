@@ -598,6 +598,16 @@ All colors MUST be HSL.
   font-style: normal;
 }
 
+/* Artist bio appended on About — professional sans, not the handwritten face */
+.handwritten-note-text .about-bio-pro {
+  font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+.handwritten-note-text .about-bio-pro em {
+  font-style: italic;
+}
+
 .about-quote {
   display: block;
   position: relative;
