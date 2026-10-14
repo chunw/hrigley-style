@@ -635,6 +635,11 @@ All colors MUST be HSL.
 .about-bio-text em {
   font-style: italic;
 }
+.about-bio-text a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 @media (max-width: 1023px) {
   .about-columns {
     flex-direction: column;
