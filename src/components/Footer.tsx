@@ -1,13 +1,8 @@
-import { ArrowUpRight, Instagram, Linkedin } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { CONTACT_EMAIL, INSTAGRAM_URL, SITE_URL } from "@/lib/constants";
 
 const LINKEDIN_URL = "https://www.linkedin.com/company/107686784/";
-
-const socialLinks = [
-  { href: INSTAGRAM_URL, label: "Instagram", icon: Instagram },
-  { href: LINKEDIN_URL, label: "LinkedIn", icon: Linkedin },
-];
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -35,22 +30,7 @@ const Footer = () => {
             </div>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-foreground/70">
               {t.footer.locationShipping}
-            </p>
-            <div className="mt-5 flex items-center gap-2">
-              {socialLinks.map(({ href, label, icon: Icon }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={label}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-foreground/80 transition-colors hover:bg-foreground hover:text-background"
-                >
-                  <Icon className="h-4 w-4" />
-                </a>
-              ))}
-            </div>
-          </div>
+            </p>          </div>
 
           <nav aria-label="Footer">
             <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/60">
