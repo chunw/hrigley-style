@@ -1,0 +1,788 @@
+/* ── Catalogs Art Book — screen preview + print ─────────────────────────────────
+   Every .bk-page is sized in inches to the exact PDF page (trim + optional bleed), so the
+   browser's "Save as PDF" with Margins: None produces one PDF page per .bk-page. The @page
+   size itself is injected by CatalogBook.tsx since it depends on the selected part/bleed.
+
+   Visual language follows /catalogs: black tiles, the layered two-image collage, oversized
+   Gloria Hallelujah titles, uppercase tracked Aileron labels, hairline rules, pink accent. */
+
+.bk-root {
+  --trim-w: 8.5in;
+  --trim-h: 11in;
+  --m-top: 0.7in;
+  --m-bottom: 0.85in;
+  --m-inner: 0.85in;
+  --m-outer: 0.6in;
+  --col-pad: calc(var(--bleed) + 0.55in);
+
+  --paper: #ffffff;
+  --text: #111111;
+  --muted: #767066;
+  --rule: #ddd8ce;
+  --accent: hsl(328 85% 72%);
+
+  min-height: 100vh;
+  background: #d8d4cb;
+}
+
+.theme-dark .bk-root {
+  background: #161616;
+}
+
+/* Site background (--background in light mode) as the paper stock */
+.bk-cream {
+  --paper: hsl(48 45% 95%);
+}
+
+.bk-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+/* ── Preview stage ─────────────────────────────────────────────────────────── */
+.bk-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+  padding: 40px 16px 80px;
+}
+
+.bk-spread {
+  display: flex;
+  justify-content: center;
+}
+
+.bk-sheet {
+  flex: none;
+  width: var(--sheet-w);
+  height: var(--sheet-h);
+}
+
+.bk-sheet:not(.bk-sheet-empty) {
+  box-shadow: 0 24px 48px -18px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Page box ──────────────────────────────────────────────────────────────── */
+.bk-page {
+  position: relative;
+  box-sizing: border-box;
+  width: var(--sheet-w);
+  height: var(--sheet-h);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-top: calc(var(--bleed) + var(--m-top));
+  padding-bottom: calc(var(--bleed) + var(--m-bottom));
+  background: var(--paper);
+  color: var(--text);
+  font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.bk-page *,
+.bk-page *::before,
+.bk-page *::after {
+  box-sizing: border-box;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* Wider margin toward the spine: right on versos, left on rectos */
+.bk-verso {
+  padding-left: calc(var(--bleed) + var(--m-outer));
+  padding-right: calc(var(--bleed) + var(--m-inner));
+}
+
+.bk-recto {
+  padding-left: calc(var(--bleed) + var(--m-inner));
+  padding-right: calc(var(--bleed) + var(--m-outer));
+}
+
+.bk-single,
+.bk-wrap {
+  padding: 0;
+}
+
+.bk-tone-ink {
+  --text: #ffffff;
+  --muted: rgba(255, 255, 255, 0.55);
+  --rule: rgba(255, 255, 255, 0.18);
+  background: #000;
+}
+
+.bk-tone-accent {
+  background: var(--accent);
+}
+
+/* Links in essays/bios are printed as plain text */
+.bk-page a {
+  color: inherit !important;
+  text-decoration: none;
+}
+
+.bk-page p + p {
+  margin-top: 0.8em;
+}
+
+.bk-center {
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Running heads, folios, small labels ───────────────────────────────────── */
+.bk-runhead,
+.bk-eyebrow {
+  position: absolute;
+  top: calc(var(--bleed) + 0.4in);
+  font-size: 6.5pt;
+  line-height: 1.7;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.bk-verso .bk-runhead,
+.bk-verso .bk-eyebrow {
+  left: calc(var(--bleed) + var(--m-outer));
+}
+
+.bk-recto .bk-runhead,
+.bk-recto .bk-eyebrow {
+  right: calc(var(--bleed) + var(--m-outer));
+  text-align: right;
+}
+
+.bk-folio,
+.bk-folio-tag {
+  position: absolute;
+  bottom: calc(var(--bleed) + 0.4in);
+}
+
+.bk-folio {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 7pt;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.bk-verso .bk-folio {
+  left: calc(var(--bleed) + var(--m-outer));
+  flex-direction: row-reverse;
+}
+
+.bk-recto .bk-folio {
+  right: calc(var(--bleed) + var(--m-outer));
+}
+
+.bk-folio-tag {
+  font-size: 6pt;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+
+.bk-verso .bk-folio-tag {
+  right: calc(var(--bleed) + var(--m-inner));
+}
+
+.bk-recto .bk-folio-tag {
+  left: calc(var(--bleed) + var(--m-inner));
+}
+
+.bk-num-box {
+  display: inline-block;
+  border: 1px solid currentColor;
+  padding: 2px 7px;
+  font-size: 8pt;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.04em;
+}
+
+.bk-rule {
+  height: 1px;
+  background: currentColor;
+}
+
+.bk-section-title {
+  margin: 0;
+  font-size: 0.56in;
+  line-height: 0.95;
+}
+
+/* ── Collage (covers + chapter openers) ────────────────────────────────────── */
+.bk-collage {
+  position: absolute;
+  inset: 0;
+  color: #fff;
+}
+
+.bk-collage-back,
+.bk-collage-front {
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+}
+
+.bk-collage-back {
+  right: 0;
+  width: 38%;
+  height: 50%;
+  z-index: 5;
+  -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+}
+
+.bk-collage-front {
+  left: 0;
+  width: 37%;
+  height: 68%;
+  z-index: 20;
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+}
+
+.bk-collage-back img,
+.bk-collage-front img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+}
+
+.bk-collage-titleblock {
+  position: absolute;
+  z-index: 10;
+  left: var(--face-pad-l, var(--col-pad));
+  right: var(--face-pad-r, var(--col-pad));
+  bottom: calc(var(--bleed) + 0.6in);
+}
+
+.bk-collage-title {
+  margin: 0;
+  color: #fff;
+  line-height: 1;
+  overflow-wrap: normal;
+}
+
+.bk-collage-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.22in;
+  font-size: 7pt;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* ── Front / back cover faces ──────────────────────────────────────────────── */
+.bk-face {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  color: #fff;
+}
+
+.bk-face-front .bk-collage-front {
+  width: 62%;
+  height: 66%;
+}
+
+.bk-face-front .bk-collage-back {
+  width: 50%;
+  height: 46%;
+}
+
+.bk-face-sub {
+  margin-top: 0.2in;
+  font-size: 8pt;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.bk-face-eyebrow {
+  position: absolute;
+  top: calc(var(--bleed) + 0.55in);
+  left: var(--face-pad-l, var(--col-pad));
+  right: var(--face-pad-r, var(--col-pad));
+  display: flex;
+  justify-content: space-between;
+  font-size: 7pt;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.bk-back-body {
+  position: absolute;
+  top: calc(var(--bleed) + 2in);
+  left: var(--face-pad-l, var(--col-pad));
+  right: var(--face-pad-r, var(--col-pad));
+}
+
+.bk-back-blurb {
+  max-width: 4.8in;
+  font-size: 10pt;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.bk-back-chapters {
+  list-style: none;
+  margin: 0.55in 0 0;
+  padding: 0;
+  max-width: 4.8in;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.bk-back-chapters li {
+  display: flex;
+  align-items: center;
+  gap: 0.16in;
+  padding: 0.1in 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 13pt;
+}
+
+.bk-back-chapters .bk-num-box {
+  font-size: 7pt;
+}
+
+.bk-back-foot {
+  position: absolute;
+  bottom: calc(var(--bleed) + 0.55in);
+  left: var(--face-pad-l, var(--col-pad));
+}
+
+.bk-back-mark {
+  font-size: 18pt;
+  line-height: 1;
+}
+
+.bk-back-urls {
+  margin-top: 0.12in;
+  font-size: 6.5pt;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ── Cover wrap (back | spine | front) ─────────────────────────────────────── */
+.bk-wrap {
+  flex-direction: row;
+}
+
+.bk-wrap-back,
+.bk-wrap-front {
+  position: relative;
+  flex: none;
+  width: calc(var(--trim-w) + var(--bleed));
+  height: 100%;
+}
+
+.bk-wrap-back .bk-face {
+  --face-pad-r: 0.55in;
+}
+
+.bk-wrap-front .bk-face {
+  --face-pad-l: 0.55in;
+}
+
+.bk-wrap-spine {
+  position: relative;
+  flex: none;
+  width: var(--spine);
+  height: 100%;
+  background: #000;
+}
+
+.bk-spine {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.bk-spine-text {
+  display: flex;
+  align-items: center;
+  gap: 0.18in;
+  transform: rotate(90deg);
+  white-space: nowrap;
+  font-size: calc(var(--spine) * 0.42);
+  line-height: 1;
+}
+
+.bk-spine-dot {
+  color: var(--accent);
+}
+
+/* ── Chapter opener spread ─────────────────────────────────────────────────── */
+/* One canvas the size of the open spread; the left page shows its left half, the right page
+   is shifted by one trim width to show the right half, so the collage runs across the gutter. */
+.bk-spread-canvas {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: calc(2 * var(--trim-w) + 2 * var(--bleed));
+}
+
+.bk-opener-left .bk-spread-canvas {
+  left: 0;
+}
+
+.bk-opener-right .bk-spread-canvas {
+  left: calc(-1 * var(--trim-w));
+}
+
+.bk-opener-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.14in;
+}
+
+/* ── Front matter ──────────────────────────────────────────────────────────── */
+.bk-half-title {
+  font-size: 13pt;
+  letter-spacing: 0.32em;
+}
+
+.bk-frontis {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.bk-frontis img,
+.bk-plate-frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.bk-frontis-caption {
+  margin-top: 0.2in;
+  font-size: 7pt;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.bk-title-body {
+  margin-top: auto;
+}
+
+.bk-title-author {
+  margin-bottom: 0.25in;
+  font-size: 10pt;
+  letter-spacing: 0.32em;
+}
+
+.bk-title-main {
+  margin: 0;
+  line-height: 0.9;
+}
+
+.bk-title-page .bk-rule {
+  margin: 0.3in 0 0.16in;
+}
+
+.bk-title-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 7.5pt;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.bk-title-meta .sans-label {
+  font-weight: 400;
+  letter-spacing: 0.22em;
+}
+
+.bk-colophon-body {
+  margin-top: auto;
+  max-width: 3.7in;
+  font-size: 7pt;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.bk-page .bk-colophon-body p + p {
+  margin-top: 0.14in;
+}
+
+.bk-colophon-title {
+  font-size: 10pt;
+  letter-spacing: 0.22em;
+  color: var(--text);
+}
+
+.bk-contents {
+  margin-top: 1in;
+}
+
+.bk-contents .bk-section-title {
+  margin-bottom: 0.5in;
+}
+
+.bk-contents ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--text);
+}
+
+.bk-contents li {
+  display: grid;
+  grid-template-columns: 0.6in 1fr auto;
+  align-items: baseline;
+  padding: 0.17in 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.bk-contents-title .shop-title {
+  font-size: 14pt;
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+}
+
+.bk-contents-sub {
+  display: block;
+  margin-top: 5px;
+  font-size: 6.5pt;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.bk-contents-page {
+  font-size: 9pt;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+/* ── Essay / about pages ───────────────────────────────────────────────────── */
+.bk-essay {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  margin-top: 0.55in;
+}
+
+.bk-essay-head .bk-section-title {
+  margin: 0.2in 0 0.14in;
+  font-size: 0.42in;
+  letter-spacing: 0.06em;
+}
+
+.bk-essay-meta {
+  font-size: 6.5pt;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: var(--muted);
+}
+
+.bk-essay-text {
+  margin-top: 0.45in;
+  max-width: 4.9in;
+  font-size: 9.5pt;
+  line-height: 1.65;
+}
+
+.bk-essay-long {
+  font-size: 8.5pt;
+  line-height: 1.6;
+}
+
+/* ── Plates ────────────────────────────────────────────────────────────────── */
+.bk-plate-frame {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin-top: 0.3in;
+}
+
+.bk-caption {
+  display: grid;
+  grid-template-columns: 0.75in 1fr;
+  gap: 0 0.15in;
+  margin-top: 0.3in;
+  padding-top: 0.13in;
+  border-top: 1px solid var(--text);
+}
+
+.bk-caption-num {
+  padding-top: 3px;
+  font-size: 6.5pt;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.bk-caption-title {
+  font-size: 13pt;
+  line-height: 1.25;
+}
+
+.bk-caption-meta {
+  margin-top: 4px;
+  font-size: 7pt;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.bk-caption-desc {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+  max-width: 4.5in;
+  margin-top: 8px;
+  font-size: 7.5pt;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* ── List of plates ────────────────────────────────────────────────────────── */
+.bk-index {
+  margin-top: 0.55in;
+}
+
+.bk-index .bk-section-title {
+  margin-bottom: 0.45in;
+}
+
+.bk-index table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bk-index th {
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--text);
+  font-size: 6pt;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--muted);
+}
+
+.bk-index td {
+  padding: 0.07in 0.12in 0.07in 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: baseline;
+}
+
+.bk-index th:last-child,
+.bk-index-page {
+  text-align: right;
+  padding-right: 0;
+}
+
+.bk-index-num,
+.bk-index-page {
+  width: 0.5in;
+  font-size: 7pt;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.bk-index-title {
+  font-size: 9pt;
+}
+
+.bk-index-meta {
+  font-size: 6.5pt;
+  color: var(--muted);
+}
+
+/* ── Closing page ──────────────────────────────────────────────────────────── */
+.bk-end {
+  text-align: center;
+  font-size: 20pt;
+}
+
+.bk-end-sub {
+  margin-top: 0.12in;
+  font-size: 6.5pt;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── Screen-only gutter shading, so spreads read as an open book ───────────── */
+@media screen {
+  .bk-spread .bk-verso::after,
+  .bk-spread .bk-recto::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 0.35in;
+    z-index: 50;
+    pointer-events: none;
+  }
+
+  .bk-spread .bk-verso::after {
+    right: 0;
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.14), transparent);
+  }
+
+  .bk-spread .bk-recto::after {
+    left: 0;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.14), transparent);
+  }
+}
+
+/* ── Print: one .bk-page per PDF page, nothing else ────────────────────────── */
+@media print {
+  html,
+  body {
+    background: none !important;
+  }
+
+  [data-noprint] {
+    display: none !important;
+  }
+
+  .bk-root {
+    min-height: 0;
+    background: none;
+  }
+
+  .bk-stage {
+    display: block;
+    padding: 0;
+    zoom: 1 !important;
+  }
+
+  .bk-spread {
+    display: block;
+  }
+
+  .bk-sheet {
+    box-shadow: none !important;
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .bk-spread:last-child .bk-sheet:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}

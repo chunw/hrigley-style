@@ -42,13 +42,17 @@ function vcFooter(tagText: string, page: number, total: number, muted: string): 
     <div class="vc-footer-page">${String(page).padStart(2, "0")} / ${String(total).padStart(2, "0")} ${vcCrosshair(muted)}</div>`;
 }
 
-interface CatalogItem {
+export interface CatalogItem {
   title: string;
   metaLine?: string | null;
+  year?: string | null;
+  medium?: string | null;
   description?: string | null;
   dimensions?: string | null;
   category: string;
   image_url: string;
+  /** Used when image_url (a work's printInCatalogImage) is missing — falls back to its main.jpg. */
+  fallback_image_url?: string;
 }
 
 interface CatalogBrand {
@@ -492,81 +496,66 @@ export function buildVendorCatalogHTML(origin: string, lang: "en" | "zh", theme:
 </html>`;
 }
 
-export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme: PrintTheme = "light"): string {
-  const isDark = theme === "dark";
-  const isZh = lang === "zh";
-  const muted = isDark ? "#8f887a" : "#767066";
-  const brand = vcBrand(isZh, "combined");
+export type CatalogSectionKey = "spirit" | "remains" | "watercolor" | "photography" | "shop";
 
-  const printableWatercolors = watercolors.filter((w) => w.printInCatalog !== false);
-  const printableRemains = remainsWorks.filter((w) => w.printInCatalog !== false);
-  const printableSpirit = spiritWorks.filter((w) => w.printInCatalog !== false);
-  const printablePhotography = photographyWorks.filter((w) => w.printInCatalog !== false);
-  const printableProducts = products.filter((p) => p.printInCatalog !== false);
+export interface CatalogSection {
+  key: CatalogSectionKey;
+  category: string;
+  descriptionHtml: string;
+  items: CatalogItem[];
+}
+
+/**
+ * The artwork + product sections shown in the Complete Catalog, in print order. Shared by the
+ * HTML print catalog below and the /catalogs/book art-book page, so both always list the same
+ * works with the same titles, metadata and images.
+ */
+export function getCombinedCatalogSections(origin: string, lang: "en" | "zh"): CatalogSection[] {
+  const isZh = lang === "zh";
 
   const artMetaLine = (year: string, medium?: string | null): string => `${year}${medium ? ` · ${medium}` : ""}`;
 
-  const watercolorItems: CatalogItem[] = printableWatercolors.map((work) => {
-    const padded = work.id.padStart(2, "0");
-    const medium = isZh
-      ? (work.mediumZh || watercolorMeta.mediumZh || watercolorMeta.medium)
-      : (work.medium || watercolorMeta.medium);
-    return {
-      title: isZh ? (work.titleZh ?? work.title) : work.title,
-      metaLine: artMetaLine(work.year, medium),
-      dimensions: isZh ? (work.dimensionsZh ?? work.dimensions) : work.dimensions,
-      description: isZh ? (work.descriptionZh ?? work.description) : work.description,
-      category: isZh ? watercolorMeta.zh : watercolorMeta.en,
-      image_url: normalizePrintAsset(origin, `/watercolors/${padded}/${work.printInCatalogImage ?? "main"}.jpg`),
-    };
-  });
+  interface ArtWork {
+    id: string;
+    title: string;
+    titleZh?: string;
+    year: string;
+    medium?: string;
+    mediumZh?: string;
+    dimensions?: string;
+    dimensionsZh?: string;
+    description?: string;
+    descriptionZh?: string;
+    printInCatalog?: boolean;
+    printInCatalogImage?: string;
+  }
+  interface ArtMeta {
+    en: string;
+    zh: string;
+    medium: string;
+    mediumZh?: string;
+  }
 
-  const remainsItems: CatalogItem[] = printableRemains.map((work) => {
-    const padded = work.id.padStart(2, "0");
-    const medium = isZh
-      ? (work.mediumZh || remainsMeta.mediumZh || remainsMeta.medium)
-      : (work.medium || remainsMeta.medium);
-    return {
-      title: isZh ? (work.titleZh ?? work.title) : work.title,
-      metaLine: artMetaLine(work.year, medium),
-      dimensions: isZh ? (work.dimensionsZh ?? work.dimensions) : work.dimensions,
-      description: isZh ? (work.descriptionZh ?? work.description) : work.description,
-      category: isZh ? remainsMeta.zh : remainsMeta.en,
-      image_url: normalizePrintAsset(origin, `/remains/${padded}/${work.printInCatalogImage ?? "main"}.jpg`),
-    };
-  });
+  const artItems = (works: ArtWork[], meta: ArtMeta, dir: string): CatalogItem[] =>
+    works.filter((work) => work.printInCatalog !== false).map((work) => {
+      const padded = work.id.padStart(2, "0");
+      const medium = isZh
+        ? (work.mediumZh || meta.mediumZh || meta.medium)
+        : (work.medium || meta.medium);
+      return {
+        title: isZh ? (work.titleZh ?? work.title) : work.title,
+        metaLine: artMetaLine(work.year, medium),
+        year: work.year,
+        medium,
+        dimensions: isZh ? (work.dimensionsZh ?? work.dimensions) : work.dimensions,
+        description: isZh ? (work.descriptionZh ?? work.description) : work.description,
+        category: isZh ? meta.zh : meta.en,
+        image_url: normalizePrintAsset(origin, `/${dir}/${padded}/${work.printInCatalogImage ?? "main"}.jpg`),
+        fallback_image_url: normalizePrintAsset(origin, `/${dir}/${padded}/main.jpg`),
+      };
+    });
 
-  const spiritItems: CatalogItem[] = printableSpirit.map((work) => {
-    const padded = work.id.padStart(2, "0");
-    const medium = isZh
-      ? (work.mediumZh || spiritMeta.mediumZh || spiritMeta.medium)
-      : (work.medium || spiritMeta.medium);
-    return {
-      title: isZh ? (work.titleZh ?? work.title) : work.title,
-      metaLine: artMetaLine(work.year, medium),
-      dimensions: isZh ? (work.dimensionsZh ?? work.dimensions) : work.dimensions,
-      description: isZh ? (work.descriptionZh ?? work.description) : work.description,
-      category: isZh ? spiritMeta.zh : spiritMeta.en,
-      image_url: normalizePrintAsset(origin, `/21spirit/${padded}/${work.printInCatalogImage ?? "main"}.jpg`),
-    };
-  });
-
-  const photographyItems: CatalogItem[] = printablePhotography.map((work) => {
-    const padded = work.id.padStart(2, "0");
-    const medium = isZh
-      ? (work.mediumZh || photographyMeta.mediumZh || photographyMeta.medium)
-      : (work.medium || photographyMeta.medium);
-    return {
-      title: isZh ? (work.titleZh ?? work.title) : work.title,
-      metaLine: artMetaLine(work.year, medium),
-      dimensions: isZh ? (work.dimensionsZh ?? work.dimensions) : work.dimensions,
-      description: isZh ? (work.descriptionZh ?? work.description) : work.description,
-      category: isZh ? photographyMeta.zh : photographyMeta.en,
-      image_url: normalizePrintAsset(origin, `/photography/${padded}/${work.printInCatalogImage ?? "main"}.jpg`),
-    };
-  });
-
-  const shopItems: CatalogItem[] = printableProducts.map((p) => {
+  const shopItems: CatalogItem[] = products.filter((p) => p.printInCatalog !== false).map((p) => {
     const imgs = productImages.filter((img) => img.product_id === p.id);
     const imgSrc = imgs.length > 0 ? imgs[0].image_url : p.image_url;
     return {
@@ -578,13 +567,23 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
     };
   });
 
-  const sections: { category: string; items: CatalogItem[] }[] = [
-    { category: isZh ? spiritMeta.zh : spiritMeta.en, items: spiritItems },
-    { category: isZh ? remainsMeta.zh : remainsMeta.en, items: remainsItems },
-    { category: isZh ? watercolorMeta.zh : watercolorMeta.en, items: watercolorItems },
-    { category: isZh ? photographyMeta.zh : photographyMeta.en, items: photographyItems },
-    { category: isZh ? "商店" : "Shop", items: shopItems },
+  return [
+    { key: "spirit", category: isZh ? spiritMeta.zh : spiritMeta.en, descriptionHtml: isZh ? spiritMeta.descriptionZh : spiritMeta.description, items: artItems(spiritWorks, spiritMeta, "21spirit") },
+    { key: "remains", category: isZh ? remainsMeta.zh : remainsMeta.en, descriptionHtml: isZh ? remainsMeta.descriptionZh : remainsMeta.description, items: artItems(remainsWorks, remainsMeta, "remains") },
+    { key: "watercolor", category: isZh ? watercolorMeta.zh : watercolorMeta.en, descriptionHtml: isZh ? watercolorMeta.descriptionHtmlZh : watercolorMeta.descriptionHtml, items: artItems(watercolors, watercolorMeta, "watercolors") },
+    { key: "photography", category: isZh ? photographyMeta.zh : photographyMeta.en, descriptionHtml: isZh ? photographyMeta.descriptionZh : photographyMeta.description, items: artItems(photographyWorks, photographyMeta, "photography") },
+    { key: "shop", category: isZh ? "商店" : "Shop", descriptionHtml: "", items: shopItems },
   ];
+}
+
+export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme: PrintTheme = "light"): string {
+  const isDark = theme === "dark";
+  const isZh = lang === "zh";
+  const muted = isDark ? "#8f887a" : "#767066";
+  const brand = vcBrand(isZh, "combined");
+
+  const sections = getCombinedCatalogSections(origin, lang);
+  const sectionItems = (key: CatalogSectionKey) => sections.find((s) => s.key === key)?.items ?? [];
 
   const totalItems = sections.reduce((sum, s) => sum + s.items.length, 0);
 
@@ -594,7 +593,7 @@ export function buildCombinedPrintHTML(origin: string, lang: "en" | "zh", theme:
   }
 
   const bioIntro = `<p>${artistBioSegments[lang].intro.split("<br><br>")[0]}</p>`;
-  const heroImage = watercolorItems[0]?.image_url || spiritItems[0]?.image_url || remainsItems[0]?.image_url || photographyItems[0]?.image_url || "";
+  const heroImage = sectionItems("watercolor")[0]?.image_url || sectionItems("spirit")[0]?.image_url || sectionItems("remains")[0]?.image_url || sectionItems("photography")[0]?.image_url || "";
 
   let pageCounter = 1;
   const coverHtml = vcCoverSpread(
