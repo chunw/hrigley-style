@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, BookOpen, Store } from "lucide-react";
+import { ArrowLeft, BookImage, BookOpen, Store } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -156,6 +156,14 @@ const Catalogs = () => {
           </Link>
 
           <div className="flex items-center gap-2">
+            <Link
+              to="/catalogs/book"
+              className="sans-label font-normal inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 hover:text-primary"
+            >
+              <BookImage className="h-4 w-4" />
+              {t.catalogBook.cta}
+            </Link>
+
             <div className="relative">
               {openMenu === "shop" && (
                 <div className="fixed inset-0 z-10" onClick={() => setOpenMenu(null)} />

@@ -24,6 +24,7 @@ import PhotographyCatalog from "./pages/PhotographyCatalog";
 import PhotographyDetail from "./pages/PhotographyDetail";
 import PhotographyPhotobook from "./pages/PhotographyPhotobook";
 import Catalogs from "./pages/Catalogs";
+import CatalogBook from "./pages/CatalogBook";
 import AllItems from "./pages/AllItems";
 import HiddenItems from "./pages/HiddenItems";
 
@@ -54,6 +55,7 @@ const App = () => (
             <Route path="/photography/:id" element={<PhotographyDetail />} />
             <Route path="/photography-photobook" element={<PhotographyPhotobook />} />
             <Route path="/catalogs" element={<Catalogs />} />
+            <Route path="/catalogs/book" element={<CatalogBook />} />
             <Route path="/all-items" element={<AllItems />} />
             <Route path="/hidden-items" element={<HiddenItems />} />
             <Route path="/cart" element={<Cart />} />
