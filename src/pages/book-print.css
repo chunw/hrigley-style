@@ -1,0 +1,268 @@
+/* ── Chun Wang Paintings 2019–2026 — print-ready book ─────────────────────
+   Trim: 6 × 6 in square (152 × 152 mm), matching the physical softcover
+   sold in the shop. Every .book-page is exactly one trim page. Covers are
+   full-bleed: artwork runs to the trim edge; live text stays inside the
+   0.35 in safe zone. For a press PDF with 0.125 in bleed, export at
+   6.25 × 6.25 in and allow cover backgrounds to extend — see Colophon. */
+
+@page {
+  size: 6in 6in;
+  margin: 0;
+}
+/* One page rule for the whole book: covers use the same 6in trim with
+   edge-to-edge artwork via their own padding. (A named @page for covers
+   makes Chrome emit a leading blank sheet for the auto page group.) */
+
+/* Screen viewer ----------------------------------------------------------- */
+.book-root {
+  --book-paper: hsl(48 45% 95%);
+  --book-ink: #111111;
+  --book-muted: #767066;
+  --book-rule: rgba(17, 17, 17, 0.18);
+  --book-accent-block: #efe9dc;
+  --book-pink: hsl(328 85% 72%);
+  --book-page-w: min(576px, 92vw);
+  background: #16130e;
+  color: var(--book-ink);
+}
+
+.book-root[data-paper="white"] {
+  --book-paper: #ffffff;
+  --book-ink: #111111;
+  --book-muted: #737373;
+  --book-rule: rgba(17, 17, 17, 0.16);
+  --book-accent-block: #f2efe9;
+}
+
+.book-root[data-paper="dark"] {
+  --book-paper: #0b0b0b;
+  --book-ink: #f3efe8;
+  --book-muted: #9a9282;
+  --book-rule: rgba(243, 239, 232, 0.22);
+  --book-accent-block: #1c1c1c;
+}
+
+.book-page {
+  position: relative;
+  width: var(--book-page-w);
+  height: var(--book-page-w);
+  flex: none;
+  overflow: hidden;
+  background: var(--book-paper);
+  color: var(--book-ink);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55), 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.book-page[data-kind="cover"] {
+  background: #000;
+  color: #fff;
+}
+
+/* Interior safe margins: wider at the spine (gutter). Recto = right-hand
+   page, spine on the left. Verso = left-hand page, spine on the right. */
+.book-safe {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 9% 8% 10% 8%;
+}
+.book-page[data-side="recto"] .book-safe {
+  padding-left: 11%;
+  padding-right: 7.5%;
+}
+.book-page[data-side="verso"] .book-safe {
+  padding-right: 11%;
+  padding-left: 7.5%;
+}
+.book-page[data-kind="cover"] .book-safe {
+  padding: 8%;
+}
+
+.book-eyebrow {
+  font-family: "Aileron", "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(7px, calc(var(--book-page-w) * 0.017), 9px);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--book-muted);
+  line-height: 1.7;
+}
+.book-page[data-kind="cover"] .book-eyebrow {
+  color: rgba(255, 255, 255, 0.88);
+  /* Chip keeps cover eyebrows legible where they cross the layered images */
+  background: rgba(0, 0, 0, 0.82);
+  padding: 3px 7px;
+  align-self: flex-start;
+}
+
+.book-body-serif {
+  font-family: "Cormorant Garamond", "Zhuque Fangsong (technical preview)", Georgia, serif;
+  font-size: clamp(11px, calc(var(--book-page-w) * 0.026), 15px);
+  line-height: 1.62;
+}
+.book-caption {
+  font-family: "Aileron", "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(7.5px, calc(var(--book-page-w) * 0.018), 10px);
+  line-height: 1.55;
+  color: var(--book-muted);
+}
+.book-plate-title {
+  font-family: "Zhuque Fangsong (technical preview)", "Gloria Hallelujah", serif;
+  font-size: clamp(13px, calc(var(--book-page-w) * 0.033), 19px);
+  line-height: 1.15;
+  color: var(--book-ink);
+}
+.book-rule {
+  border-top: 1px solid var(--book-rule);
+}
+
+/* Running head + folio */
+.book-runhead {
+  position: absolute;
+  top: 4.6%;
+  font-family: "Aileron", "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(6px, calc(var(--book-page-w) * 0.014), 8px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--book-muted);
+  white-space: nowrap;
+}
+.book-page[data-side="recto"] .book-runhead { right: 7.5%; }
+.book-page[data-side="verso"] .book-runhead { left: 7.5%; }
+
+.book-folio {
+  position: absolute;
+  bottom: 4.4%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "Aileron", "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(7px, calc(var(--book-page-w) * 0.016), 9px);
+  letter-spacing: 0.14em;
+  color: var(--book-muted);
+}
+.book-page[data-side="recto"] .book-folio { right: 7.5%; }
+.book-page[data-side="verso"] .book-folio { left: 7.5%; }
+
+/* Contents dotted leaders */
+.book-toc-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+}
+.book-toc-leader {
+  flex: 1;
+  border-bottom: 1px dotted var(--book-muted);
+  transform: translateY(-3px);
+  min-width: 18px;
+}
+
+/* Trim / safe guides (screen only, toggled) */
+.book-guides {
+  display: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
+}
+.book-root[data-guides="on"] .book-guides { display: block; }
+.book-guides .g-safe {
+  position: absolute;
+  inset: 5.8%;
+  border: 1px dashed hsl(328 85% 62%);
+}
+.book-guides .g-trim {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(56, 189, 248, 0.9);
+}
+.book-guides .g-label {
+  position: absolute;
+  top: 1.5%;
+  left: 2%;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  color: #38bdf8;
+  background: rgba(0, 0, 0, 0.75);
+  padding: 2px 5px;
+}
+.book-guides .g-crop { position: absolute; width: 14px; height: 14px; border-color: rgba(255,255,255,0.9); border-style: solid; }
+.book-guides .g-crop.tl { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
+.book-guides .g-crop.tr { top: -1px; right: -1px; border-width: 1px 1px 0 0; }
+.book-guides .g-crop.bl { bottom: -1px; left: -1px; border-width: 0 0 1px 1px; }
+.book-guides .g-crop.br { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
+
+/* Spread gutter shadow (screen) */
+.book-spread {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 0;
+}
+.book-spread .book-page[data-side="verso"] {
+  box-shadow: 18px 18px 50px rgba(0,0,0,0.5), inset -18px 0 24px -18px rgba(0,0,0,0.35);
+}
+.book-spread .book-page[data-side="recto"] {
+  box-shadow: 18px 18px 50px rgba(0,0,0,0.5), inset 18px 0 24px -18px rgba(0,0,0,0.35);
+}
+
+.book-img-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: var(--book-accent-block);
+  color: var(--book-muted);
+  font-family: "Aileron", "Helvetica Neue", Arial, sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 12px;
+}
+
+/* Print ------------------------------------------------------------------- */
+@media print {
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  html, body { background: #fff !important; }
+  .book-root { background: #fff !important; }
+  [data-noprint] { display: none !important; }
+
+  /* Zero every screen-only offset (main padding, stack gaps, spread
+     wrappers) — any stray pixel before a 6in page in a 6in page box
+     pushes it onto an extra blank sheet. */
+  .book-root main, .book-spread, .book-stack, .book-stack > div {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    gap: 0 !important;
+    max-width: none !important;
+  }
+  .book-page {
+    width: 6in !important;
+    height: 6in !important;
+    max-width: none !important;
+    box-shadow: none !important;
+    break-after: page;
+    page-break-after: always;
+    break-inside: avoid;
+    margin: 0 !important;
+  }
+  /* Only the true final page (back cover) avoids a trailing blank sheet.
+     (:last-of-type would wrongly match the second page of every spread.) */
+  #book-p40 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+  .book-guides { display: none !important; }
+  img { opacity: 1 !important; }
+}

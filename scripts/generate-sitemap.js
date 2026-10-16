@@ -24,6 +24,7 @@ const STATIC_ROUTES = [
   "/21spirit-catalog",
   "/photography-catalog",
   "/photography-photobook",
+  "/book",
 ];
 
 async function main() {
