@@ -5,11 +5,12 @@ import { CONTACT_EMAIL, INSTAGRAM_URL, SITE_URL } from "@/lib/constants";
 const LINKEDIN_URL = "https://www.linkedin.com/company/107686784/";
 
 const Footer = () => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   const exploreLinks = [
     { href: "/#products", label: t.footer.navShop },
     { href: "/catalogs", label: t.footer.navCatalogs },
+    { href: "/book", label: lang === "zh" ? "绘画集" : "The Book" },
     { href: "/about", label: t.footer.navAbout },
     { href: "/cart", label: t.footer.navCart },
   ];

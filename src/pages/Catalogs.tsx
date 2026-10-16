@@ -164,6 +164,13 @@ const Catalogs = () => {
               {t.catalogBook.cta}
             </Link>
 
+            <Link
+              to="/book"
+              className="sans-label font-normal inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 hover:text-primary"
+            >
+              <BookOpen className="h-4 w-4" />
+              {lang === "zh" ? "读整本书" : "Read the book"}
+            </Link>
             <div className="relative">
               {openMenu === "shop" && (
                 <div className="fixed inset-0 z-10" onClick={() => setOpenMenu(null)} />
@@ -235,6 +242,13 @@ const Catalogs = () => {
             isLeftColumn={index % 2 === 0}
           />
         ))}
+        {/* The printed book — same tile language, linking to the full print-ready edition */}
+        <CatalogTile
+          to="/book"
+          images={["/watercolors/01/main.jpg", "/remains/01/main.jpg"]}
+          label={lang === "zh" ? "王淳绘画集" : "Chun Wang Paintings"}
+          isLeftColumn={false}
+        />
       </section>
 
       <Footer />
