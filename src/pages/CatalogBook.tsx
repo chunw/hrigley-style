@@ -44,6 +44,7 @@ type PageSpec =
   | { kind: "title" }
   | { kind: "colophon" }
   | { kind: "contents" }
+  | { kind: "preface"; chunk: number }
   | { kind: "opener"; half: "left" | "right"; chapter: Chapter }
   | { kind: "essay"; chapter: Chapter }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
@@ -83,10 +84,28 @@ const displaySize = (text: string, lineInches: number, max: number) =>
 const pad2 = (n: number) => String(n).padStart(2, "0");
 const plainText = (html: string) => html.replace(/<br\s*\/?>/gi, " ").replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
 
+/** Split paragraphs into page-sized chunks of at most ~maxChars each. */
+function chunkParagraphs(paras: readonly string[], maxChars: number): string[][] {
+  const chunks: string[][] = [];
+  let cur: string[] = [];
+  let len = 0;
+  for (const p of paras) {
+    if (cur.length > 0 && len + p.length > maxChars) {
+      chunks.push(cur);
+      cur = [];
+      len = 0;
+    }
+    cur.push(p);
+    len += p.length;
+  }
+  if (cur.length > 0) chunks.push(cur);
+  return chunks;
+}
+
 // ── Pagination ────────────────────────────────────────────────────────────────
 // Odd pages are rectos (right-hand), even pages versos. Chapter openers are two-page spreads,
 // so they must start on a verso; a blank is inserted before them whenever needed.
-function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, plateCount: number): InteriorPage[] {
+function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, plateCount: number, prefaceChunkCount: number): InteriorPage[] {
   const specs: PageSpec[] = [];
   const nextIsVerso = () => (specs.length + 1) % 2 === 0;
 
@@ -95,6 +114,7 @@ function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, pl
   specs.push({ kind: "title" });
   specs.push({ kind: "colophon" });
   specs.push({ kind: "contents" });
+  for (let i = 0; i < prefaceChunkCount; i++) specs.push({ kind: "preface", chunk: i });
 
   for (const chapter of chapters) {
     if (!nextIsVerso()) specs.push({ kind: "blank" });
@@ -211,6 +231,7 @@ interface BookContext {
   years: string;
   coverFront?: CatalogItem;
   coverBack?: CatalogItem;
+  prefaceChunks: string[][];
 }
 
 function FrontCoverFace({ ctx }: { ctx: BookContext }) {
@@ -356,6 +377,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
     case "contents": {
       const startOf = (pred: (s: PageSpec) => boolean) => pages.find((p) => pred(p.spec))?.number ?? 0;
       const rows = [
+        { num: "", title: b.preface, sub: "", page: startOf((s) => s.kind === "preface") },
         ...chapters.map((c) => ({
           num: pad2(c.number),
           title: c.title,
@@ -383,6 +405,29 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
               ))}
             </ol>
           </div>
+        </Page>
+      );
+    }
+
+    case "preface": {
+      const paras = ctx.prefaceChunks[spec.chunk] ?? [];
+      const long = paras.join("").length > 1400;
+      return (
+        <Page side={side}>
+          <RunningHead side={side} left={bookHead} right={b.preface} />
+          <div className="bk-essay">
+            {spec.chunk === 0 && (
+              <div className="bk-essay-head">
+                <h2 className="bk-section-title shop-title gloria-title">{b.preface}</h2>
+              </div>
+            )}
+            <div className={`bk-essay-text description-html ${long ? "bk-essay-long" : ""}`}>
+              {paras.map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
+            </div>
+          </div>
+          <Folio number={number} tag={`${b.title} | ${b.preface}`} />
         </Page>
       );
     }
@@ -602,8 +647,10 @@ const CatalogBook = () => {
         title: CHAPTER_TITLE[s.key](t),
         // Sections without an essay of their own fall back to the copy the site already uses for them.
         descriptionHtml:
-          s.descriptionHtml ||
-          (s.key === "watercolor" ? `<p>${t.watercolorCatalog.noteText}</p>` : s.key === "shop" ? `<p>${t.hero.description}</p>` : ""),
+          s.key === "remains"
+            ? t.catalogBook.remainsEssayBody.map((p) => `<p>${p}</p>`).join("")
+            : s.descriptionHtml ||
+              (s.key === "watercolor" ? `<p>${t.watercolorCatalog.noteText}</p>` : s.key === "shop" ? `<p>${t.hero.description}</p>` : ""),
         items: s.items.map((item) => ({ item: { ...item, title: item.title || t.catalogBook.untitled }, plate: ++plate })),
         years: yearRange(s.items.map((item) => item.year)),
       }));
@@ -612,6 +659,7 @@ const CatalogBook = () => {
       t,
       lang,
       chapters,
+      prefaceChunks: chunkParagraphs(t.catalogBook.prefaceBody, 1500),
       years: yearRange(chapters.flatMap((c) => c.items.map((i) => i.item.year))),
       coverFront: byKey("watercolor")[0] ?? chapters[0]?.items[0]?.item,
       coverBack: byKey("photography")[0] ?? chapters[0]?.items[1]?.item,
@@ -620,7 +668,7 @@ const CatalogBook = () => {
 
   const plateCount = ctx.chapters.reduce((sum, c) => sum + c.items.length, 0);
   const frontispiece = ctx.chapters.find((c) => c.key === "photography")?.items[1]?.item ?? ctx.coverBack;
-  const pages = useMemo(() => paginate(ctx.chapters, frontispiece, plateCount), [ctx, frontispiece, plateCount]);
+  const pages = useMemo(() => paginate(ctx.chapters, frontispiece, plateCount, ctx.prefaceChunks.length), [ctx, frontispiece, plateCount]);
   const spine = spineWidth(pages.length);
 
   const bleedIn = bleed ? BLEED : 0;
