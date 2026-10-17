@@ -115,7 +115,7 @@ export const translations = {
     },
     catalogBook: {
       cta: "Art Book",
-      title: "Catalogs",
+      title: "Remains",
       subtitle: "Paintings · Photography · Objects",
       publisher: "Chun Wang Studio",
       city: "New York",
@@ -261,7 +261,7 @@ export const translations = {
     },
     catalogBook: {
       cta: "画册",
-      title: "作品目录",
+      title: "Remains",
       subtitle: "绘画 · 摄影 · 器物",
       publisher: "王淳工作室",
       city: "纽约",
