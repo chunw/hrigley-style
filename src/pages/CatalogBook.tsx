@@ -587,7 +587,7 @@ const CatalogBook = () => {
 
   usePageMeta({
     title: `${b.title} — ${b.cta}`,
-    description: "A print-ready art book of Chun Wang's catalogs — covers and interior pages laid out for PDF export.",
+    description: "Remains, a print-ready art book by Chun Wang. Covers and interior pages laid out for PDF export.",
     path: "/catalogs/book",
     noindex: true,
   });
