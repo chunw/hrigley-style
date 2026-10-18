@@ -184,7 +184,6 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   padding: 3px 8px;
-  border: 1px solid currentColor;
   white-space: nowrap;
 }
 
@@ -198,7 +197,6 @@
 
 .bk-num-box {
   display: inline-block;
-  border: 1px solid currentColor;
   padding: 2px 7px;
   font-size: 8pt;
   font-weight: 700;
@@ -542,7 +540,6 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  border-top: 1px solid var(--text);
 }
 
 .bk-contents li {
@@ -550,7 +547,6 @@
   grid-template-columns: 0.6in 1fr auto;
   align-items: baseline;
   padding: 0.17in 0;
-  border-bottom: 1px solid var(--rule);
 }
 
 .bk-contents-title .shop-title {
@@ -672,7 +668,6 @@
 
 .bk-index th {
   padding-bottom: 6px;
-  border-bottom: 1px solid var(--text);
   font-size: 6pt;
   font-weight: 400;
   letter-spacing: 0.22em;
@@ -683,7 +678,6 @@
 
 .bk-index td {
   padding: 0.07in 0.12in 0.07in 0;
-  border-bottom: 1px solid var(--rule);
   vertical-align: baseline;
 }
 
