@@ -9,10 +9,10 @@
 .bk-root {
   --trim-w: 8.5in;
   --trim-h: 11in;
-  --m-top: 0.7in;
-  --m-bottom: 0.85in;
-  --m-inner: 0.85in;
-  --m-outer: 0.6in;
+  --m-top: 0.85in;
+  --m-bottom: 1in;
+  --m-inner: 0.95in;
+  --m-outer: 0.85in;
   --col-pad: calc(var(--bleed) + 0.55in);
 
   --paper: #ffffff;
@@ -135,6 +135,27 @@
   background: var(--accent);
   align-items: center;
   justify-content: center;
+}
+
+/* Chapter title page: the page right after the pink separator carries the title */
+.bk-chapter-title-page {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.bk-chapter-title {
+  margin: 0.22in 0 0.14in;
+  font-size: 0.38in;
+  line-height: 1.15;
+  letter-spacing: 0.04em;
+}
+
+.bk-chapter-title-meta {
+  font-size: 6.5pt;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .bk-divider-card {
@@ -637,7 +658,17 @@
 }
 
 /* ── Front matter ──────────────────────────────────────────────────────────── */
+.bk-half-block {
+  text-align: center;
+}
+
 .bk-half-title {
+  font-size: 13pt;
+  letter-spacing: 0.32em;
+}
+
+.bk-half-title-zh {
+  margin-top: 0.16in;
   font-size: 13pt;
   letter-spacing: 0.32em;
 }
@@ -715,7 +746,15 @@
 }
 
 .bk-contents {
-  margin-top: 1in;
+  margin-top: 0.85in;
+}
+
+.bk-contents li > * {
+  min-width: 0;
+}
+
+.bk-contents-title {
+  overflow-wrap: break-word;
 }
 
 .bk-contents .bk-section-title {
