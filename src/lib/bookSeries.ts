@@ -1,4 +1,6 @@
 export interface BookSeries {
+  /** When set, this entry is not a standalone section: its texts lead the named catalog chapter instead. */
+  mergedInto?: string;
   id: string;
   titleEn: string;
   titleZh: string;
@@ -27,6 +29,7 @@ export const BOOK_SERIES: BookSeries[] = [
     textZh: "一个用于冥想与自我反思的线上空间，点缀着怀旧的意象。",
   },
   {
+    mergedInto: "shop",
     id: "ceramics",
     titleEn: "Visions in Ceramics",
     titleZh: "陶之视界",

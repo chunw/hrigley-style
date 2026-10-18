@@ -966,7 +966,7 @@ const CatalogBook = () => {
     // Series sections that complete the outline but have no catalog plates yet
     // (Nostalgia, Visions in Ceramics, the Screen & Archive and Live chapters),
     // merged with the catalog chapters in the book outline's order.
-    const seriesChapters: Chapter[] = BOOK_SERIES.map((s) => ({
+    const seriesChapters: Chapter[] = BOOK_SERIES.filter((s) => !s.mergedInto).map((s) => ({
       key: `series:${s.id}`,
       number: 0,
       title: s.titleEn === s.titleZh ? s.titleEn : `${s.titleEn} · ${s.titleZh}`,
@@ -977,7 +977,7 @@ const CatalogBook = () => {
     }));
     const SECTION_ORDER = [
       "remains", "watercolor", "spirit", "series:nostalgia", "photography",
-      "series:ceramics", "shop",
+      "shop",
       "series:immemory", "series:negotiated", "series:unfinished", "series:google",
       "series:feedscanner", "series:cavedance", "series:infected",
       "series:soliloquy", "series:artempath", "series:stillirise", "series:oneday",
@@ -1049,9 +1049,30 @@ const CatalogBook = () => {
           { lang: "zh", items: [{ html: `<p>${fieldTexts["tx:watercolorNote:zh"]}</p>`, edit: "tx:watercolorNote:zh" }] },
         ];
       } else if (chapter.key === "shop") {
+        // Slightly Useful Objects: the Visions in Ceramics texts are this same series,
+        // so they lead the chapter, ahead of the shop's own description.
+        const cer = BOOK_SERIES.find((x) => x.id === "ceramics");
+        const cerEn = (cer && (textEdits["series:ceramics:en"] ?? cer.textEn)) || "";
+        const cerZh = (cer && (textEdits["series:ceramics:zh"] ?? cer.textZh)) || "";
+        if (cer) {
+          fieldTexts["series:ceramics:en"] = cerEn;
+          fieldTexts["series:ceramics:zh"] = cerZh;
+        }
         essayChunks[chapter.key] = [
-          { lang: "en", items: [{ html: `<p>${fieldTexts["tx:heroDesc:en"]}</p>`, edit: "tx:heroDesc:en" }] },
-          { lang: "zh", items: [{ html: `<p>${fieldTexts["tx:heroDesc:zh"]}</p>`, edit: "tx:heroDesc:zh" }] },
+          {
+            lang: "en",
+            items: [
+              ...(cerEn ? [{ html: `<p>${cerEn}</p>`, edit: "series:ceramics:en" }] : []),
+              { html: `<p>${fieldTexts["tx:heroDesc:en"]}</p>`, edit: "tx:heroDesc:en" },
+            ],
+          },
+          {
+            lang: "zh",
+            items: [
+              ...(cerZh ? [{ html: `<p>${cerZh}</p>`, edit: "series:ceramics:zh" }] : []),
+              { html: `<p>${fieldTexts["tx:heroDesc:zh"]}</p>`, edit: "tx:heroDesc:zh" },
+            ],
+          },
         ];
       } else {
         essayChunks[chapter.key] = [{ lang: "en", items: [] }];
