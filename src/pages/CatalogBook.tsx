@@ -1009,7 +1009,7 @@ const CatalogBook = () => {
       wcSplit("road", "Notes from the Road · 旅途笔记", "Notes from the Road"),
     ];
     const SECTION_ORDER = [
-      "spirit", "remains", "residuals", "stillthings", "road", "series:nostalgia", "photography",
+      "spirit", "remains", "residuals", "stillthings", "road", "photography", "series:nostalgia",
       "shop",
       "series:immemory", "series:negotiated", "series:unfinished", "series:google",
       "series:feedscanner", "series:cavedance", "series:infected",
