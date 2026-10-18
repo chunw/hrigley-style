@@ -10,7 +10,6 @@ const Footer = () => {
   const exploreLinks = [
     { href: "/#products", label: t.footer.navShop },
     { href: "/catalogs", label: t.footer.navCatalogs },
-    { href: "/book", label: lang === "zh" ? "绘画集" : "The Book" },
     { href: "/about", label: t.footer.navAbout },
     { href: "/cart", label: t.footer.navCart },
   ];
