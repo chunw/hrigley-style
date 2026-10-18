@@ -152,6 +152,150 @@
   letter-spacing: 0.04em;
 }
 
+/* Per-page paper overrides (editor): beat the tone backgrounds */
+.bk-page.bk-bg-white {
+  --paper: #ffffff;
+  --text: #111111;
+  --muted: #767066;
+  --rule: #ddd8ce;
+  background: #ffffff;
+}
+
+.bk-page.bk-bg-cream {
+  --paper: hsl(48 45% 95%);
+  --text: #111111;
+  --muted: #767066;
+  --rule: #ddd8ce;
+  background: hsl(48 45% 95%);
+}
+
+.bk-page.bk-bg-black {
+  --paper: #17140f;
+  --text: #f0e9da;
+  --muted: #a79c86;
+  --rule: #3a352a;
+  background: #17140f;
+}
+
+.bk-page.bk-bg-pink {
+  --paper: var(--accent);
+  --text: #26221c;
+  --muted: rgba(38, 34, 28, 0.62);
+  --rule: rgba(38, 34, 28, 0.25);
+  background: var(--accent);
+}
+
+/* Editor affordances (screen only) */
+.bk-editable {
+  cursor: text;
+}
+
+.bk-editable:hover {
+  outline: 1px dashed rgba(220, 38, 38, 0.55);
+  outline-offset: 3px;
+}
+
+.bk-pagebg-ctl {
+  position: absolute;
+  top: calc(var(--bleed) + 0.16in);
+  right: 0.16in;
+  z-index: 30;
+  display: flex;
+  gap: 4px;
+}
+
+.bk-pagebg-btn {
+  font-size: 10px;
+  line-height: 1;
+  padding: 5px 7px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  background: rgba(255, 253, 248, 0.92);
+  color: #26221c;
+  cursor: pointer;
+}
+
+.bk-pagebg-on {
+  background: #26221c;
+  color: #fffdf8;
+}
+
+.bk-editor-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 80;
+  background: #fffdf8;
+  border-top: 2px solid #26221c;
+  padding: 14px 20px 16px;
+  box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.18);
+}
+
+.bk-editor-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.bk-editor-hint {
+  font-size: 12px;
+  color: #767066;
+}
+
+.bk-editor-panel textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 10px 12px;
+  border: 1px solid #c9c2b4;
+  background: #ffffff;
+  color: #26221c;
+  resize: vertical;
+}
+
+.bk-editor-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.bk-editor-actions button {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  padding: 8px 18px;
+  border: 1px solid #26221c;
+  background: #26221c;
+  color: #fffdf8;
+  cursor: pointer;
+}
+
+.bk-editor-actions button:last-child {
+  background: transparent;
+  color: #26221c;
+}
+
+.bk-editor-msg {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 70;
+  background: #26221c;
+  color: #fffdf8;
+  padding: 8px 14px;
+  max-width: 70vw;
+}
+
+@media print {
+  .bk-pagebg-ctl,
+  .bk-editor-panel,
+  .bk-editor-msg {
+    display: none !important;
+  }
+}
+
 .bk-divider-meta {
   font-size: 6.5pt;
   letter-spacing: 0.22em;

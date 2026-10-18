@@ -8,6 +8,7 @@ import { artistBioHTML, artistBioSegments } from "@/lib/artistBio";
 import { SHOP_URL, SITE_URL } from "@/lib/constants";
 import { getCombinedCatalogSections, type CatalogItem, type CatalogSection, type CatalogSectionKey } from "@/lib/printCatalog";
 import { translations, type Translations } from "@/lib/translations";
+import { PAGE_BACKGROUNDS, type PageBgKind } from "@/lib/pageBackgrounds";
 
 // ── Book geometry ─────────────────────────────────────────────────────────────
 // US Letter trim so the PDF prints 1:1 on a home/office printer, and matches the standard
@@ -88,41 +89,60 @@ const plainText = (html: string) => html.replace(/<br\s*\/?>/gi, " ").replace(/<
 const hasCjk = (s: string) => /[\u4e00-\u9fff]/.test(s);
 
 /** Split paragraphs into page-sized chunks of at most ~maxChars each. */
-function chunkParagraphs(paras: readonly string[], maxChars: number): string[][] {
-  const chunks: string[][] = [];
-  let cur: string[] = [];
+
+interface ParaItem {
+  text: string;
+  edit: string;
+}
+
+interface EssayItem {
+  html: string;
+  edit: string;
+}
+
+interface EssayChunk {
+  lang: "en" | "zh";
+  items: EssayItem[];
+}
+
+/** Chunk paragraphs (carrying their source edit ids) by plain length. */
+function chunkParas(paras: ParaItem[], maxChars: number): { paras: ParaItem[] }[] {
+  const out: { paras: ParaItem[] }[] = [];
+  let cur: ParaItem[] = [];
   let len = 0;
   for (const p of paras) {
-    if (cur.length > 0 && len + p.length > maxChars) {
-      chunks.push(cur);
+    if (cur.length > 0 && len + p.text.length > maxChars) {
+      out.push({ paras: cur });
       cur = [];
       len = 0;
     }
     cur.push(p);
-    len += p.length;
+    len += p.text.length;
   }
-  if (cur.length > 0) chunks.push(cur);
-  return chunks;
+  if (cur.length > 0) out.push({ paras: cur });
+  return out.length > 0 ? out : [{ paras: [] }];
 }
 
-/** Group a chapter essay's <p> blocks into page-sized chunks by plain-text length. */
-function chunkHtmlBlocks(blocks: string[], maxChars: number): string[] {
-  const chunks: string[] = [];
-  let cur: string[] = [];
+/** Chunk essay items (paragraph blocks carrying their edit ids) by plain-text length. */
+function chunkItems(items: EssayItem[], maxChars: number): EssayItem[][] {
+  const out: EssayItem[][] = [];
+  let cur: EssayItem[] = [];
   let len = 0;
-  for (const block of blocks) {
-    const n = plainText(block).length;
+  for (const it of items) {
+    const n = plainText(it.html).length;
     if (cur.length > 0 && len + n > maxChars) {
-      chunks.push(cur.join(""));
+      out.push(cur);
       cur = [];
       len = 0;
     }
-    cur.push(block);
+    cur.push(it);
     len += n;
   }
-  if (cur.length > 0) chunks.push(cur.join(""));
-  return chunks.length > 0 ? chunks : [""];
+  if (cur.length > 0) out.push(cur);
+  return out;
 }
+
+/** Group a chapter essay's <p> blocks into page-sized chunks by plain-text length. */
 
 // ── Pagination ────────────────────────────────────────────────────────────────
 // Odd pages are rectos (right-hand), even pages versos. Chapter openers are two-page spreads,
@@ -206,11 +226,63 @@ function BookImage({ src, fallback, alt = "", className, style }: { src: string;
   );
 }
 
-function Page({ side, tone = "paper", className = "", id, children }: { side: Side; tone?: "paper" | "ink" | "accent"; className?: string; id?: string; children?: ReactNode }) {
+function Page({ side, tone = "paper", className = "", id, bg, ctl, children }: { side: Side; tone?: "paper" | "ink" | "accent"; className?: string; id?: string; bg?: PageBgKind; ctl?: ReactNode; children?: ReactNode }) {
   return (
-    <section id={id} className={`bk-page bk-${side} bk-tone-${tone} ${className}`}>
+    <section id={id} className={`bk-page bk-${side} bk-tone-${tone} ${bg ? `bk-bg-${bg}` : ""} ${className}`}>
+      {ctl}
       {children}
     </section>
+  );
+}
+
+/** Stable identity for a page, used by per-page background overrides (src/lib/pageBackgrounds.ts). */
+function pageKeyOf(spec: PageSpec): string | null {
+  switch (spec.kind) {
+    case "blank":
+      return null;
+    case "preface":
+      return `preface:${spec.chunk}`;
+    case "painting-intro":
+      return `painting:${spec.chunk}`;
+    case "essay":
+      return `essay:${spec.chapter.key}:${spec.chunk}`;
+    case "divider":
+      return `divider:${spec.chapter.key}`;
+    case "opener":
+      return `opener:${spec.chapter.key}:${spec.half}`;
+    case "plate":
+      return `plate:${spec.plate}`;
+    case "about":
+      return `about:${spec.chunk}`;
+    case "plates-index":
+      return `plates-index:${spec.from}`;
+    default:
+      return spec.kind;
+  }
+}
+
+const BG_OPTIONS: [PageBgKind | "global", string][] = [
+  ["global", "全局"],
+  ["white", "白"],
+  ["cream", "米"],
+  ["black", "黑"],
+  ["pink", "粉"],
+];
+
+function PageBgCtl({ current, onPick }: { current?: PageBgKind; onPick: (kind: PageBgKind | "global") => void }) {
+  return (
+    <div className="bk-pagebg-ctl" data-noprint>
+      {BG_OPTIONS.map(([kind, label]) => (
+        <button
+          key={kind}
+          type="button"
+          className={`bk-pagebg-btn ${(current ?? "global") === kind ? "bk-pagebg-on" : ""}`}
+          onClick={() => onPick(kind)}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
   );
 }
 
@@ -265,9 +337,14 @@ interface BookContext {
   years: string;
   coverFront?: CatalogItem;
   coverBack?: CatalogItem;
-  prefaceChunks: string[][];
-  essayChunks: Record<string, string[]>;
-  paintingChunks: string[][];
+  prefaceChunks: { paras: ParaItem[] }[];
+  essayChunks: Record<string, EssayChunk[]>;
+  editMode: boolean;
+  fieldTexts: Record<string, string>;
+  openEditor: (edit: string, label: string, current: string) => void;
+  pageBgFor: (key: string | null) => PageBgKind | undefined;
+  setPageBg: (key: string, kind: PageBgKind | "global") => void;
+  paintingChunks: { paras: ParaItem[] }[];
 }
 
 function FrontCoverFace({ ctx }: { ctx: BookContext }) {
@@ -344,20 +421,24 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
   const b = t.catalogBook;
   const side: Side = number % 2 === 0 ? "verso" : "recto";
   const pageId = `bk-page-${number}`;
+  const pageKey = pageKeyOf(spec);
+  const bg = ctx.pageBgFor(pageKey);
+  const ctl =
+    ctx.editMode && pageKey ? <PageBgCtl current={bg} onPick={(kind) => ctx.setPageBg(pageKey, kind)} /> : null;
   const author = "Chun Wang · 王淳";
   const bookHead = `${author} — ${b.title}`;
 
   switch (spec.kind) {
     case "half-title":
       return (
-        <Page id={pageId} side={side} className="bk-center">
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-center">
           <div className="bk-half-title shop-title">{b.title}</div>
         </Page>
       );
 
     case "frontispiece":
       return (
-        <Page id={pageId} side={side} tone="ink">
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} tone="ink">
           <div className="bk-frontis">
             <BookImage src={spec.item.image_url} fallback={spec.item.fallback_image_url} alt={spec.item.title} />
           </div>
@@ -370,7 +451,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
 
     case "title":
       return (
-        <Page id={pageId} side={side} className="bk-title-page">
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-title-page">
           <div className="bk-eyebrow">
             {translations.en.catalogBook.publisher} · {translations.zh.catalogBook.publisher}
             <br />
@@ -393,7 +474,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
     case "colophon": {
       const year = new Date().getFullYear();
       return (
-        <Page id={pageId} side={side} className="bk-colophon">
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-colophon">
           <div className="bk-colophon-body">
             <p className="bk-colophon-title shop-title">{b.title}</p>
             <p>{translations.en.catalogBook.subtitle} · {translations.zh.catalogBook.subtitle} · {years}</p>
@@ -431,7 +512,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
         { num: "", title: `${translations.en.catalogBook.listOfPlates} · ${translations.zh.catalogBook.listOfPlates}`, sub: "", page: startOf((s) => s.kind === "plates-index") },
       ];
       return (
-        <Page id={pageId} side={side}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
           <div className="bk-eyebrow">{translations.en.catalogBook.contents} · {translations.zh.catalogBook.contents}</div>
           <div className="bk-contents">
             <h2 className="bk-section-title shop-title gloria-title">{b.contents}</h2>
@@ -457,10 +538,10 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
     }
 
     case "preface": {
-      const paras = ctx.prefaceChunks[spec.chunk] ?? [];
-      const long = paras.join("").length > 1400;
+      const paras = ctx.prefaceChunks[spec.chunk]?.paras ?? [];
+      const long = paras.map((p) => p.text).join("").length > 1400;
       return (
-        <Page id={pageId} side={side}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
           <RunningHead side={side} left={bookHead} right={b.preface} />
           <div className="bk-essay">
             {spec.chunk === 0 && (
@@ -470,7 +551,13 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
             )}
             <div className={`bk-essay-text description-html ${long ? "bk-essay-long" : ""}`}>
               {paras.map((p, i) => (
-                <p key={i}>{p}</p>
+                <p
+                  key={i}
+                  className={ctx.editMode ? "bk-editable" : undefined}
+                  onDoubleClick={ctx.editMode ? () => ctx.openEditor(p.edit, `${b.preface} · ${spec.chunk + 1}-${i + 1}`, p.text) : undefined}
+                >
+                  {p.text}
+                </p>
               ))}
             </div>
           </div>
@@ -480,10 +567,10 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
     }
 
     case "painting-intro": {
-      const paras = ctx.paintingChunks[spec.chunk] ?? [];
-      const long = paras.join("").length > 1400;
+      const paras = ctx.paintingChunks[spec.chunk]?.paras ?? [];
+      const long = paras.map((p) => p.text).join("").length > 1400;
       return (
-        <Page id={pageId} side={side}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
           <RunningHead side={side} left={bookHead} right={b.paintingIntro} />
           <div className="bk-essay">
             {spec.chunk === 0 && (
@@ -493,7 +580,13 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
             )}
             <div className={`bk-essay-text description-html ${long ? "bk-essay-long" : ""}`}>
               {paras.map((p, i) => (
-                <p key={i}>{p}</p>
+                <p
+                  key={i}
+                  className={ctx.editMode ? "bk-editable" : undefined}
+                  onDoubleClick={ctx.editMode ? () => ctx.openEditor(p.edit, `${b.paintingIntro} · ${spec.chunk + 1}-${i + 1}`, p.text) : undefined}
+                >
+                  {p.text}
+                </p>
               ))}
             </div>
           </div>
@@ -505,7 +598,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
     case "divider": {
       const { chapter } = spec;
       return (
-        <Page id={pageId} side={side} className="bk-divider-page">
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-divider-page">
           <div className="bk-divider-card">
             <span className="bk-num-box">{pad2(chapter.number)}</span>
             <h2 className="bk-divider-title shop-title">{chapter.title}</h2>
@@ -523,7 +616,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       const front = chapter.items[0]?.item;
       const back = chapter.items[1]?.item ?? front;
       return (
-        <Page id={pageId} side={side} tone="ink" className={`bk-opener bk-opener-${half}`}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} tone="ink" className={`bk-opener bk-opener-${half}`}>
           <div className="bk-spread-canvas">
             <Collage
               front={front}
@@ -553,9 +646,10 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       const { chapter } = spec;
       const first = chapter.items[0]?.plate;
       const last = chapter.items[chapter.items.length - 1]?.plate;
-      const html = ctx.essayChunks[chapter.key]?.[spec.chunk] ?? "";
+      const chunk = ctx.essayChunks[chapter.key]?.[spec.chunk];
+      const items = chunk?.items ?? [];
       return (
-        <Page id={pageId} side={side}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
           <RunningHead side={side} left={bookHead} right={chapter.title} />
           <div className="bk-essay">
             {spec.chunk === 0 && (
@@ -569,7 +663,20 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
                 </div>
               </div>
             )}
-            <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: html }} />
+            <div className="bk-essay-text description-html">
+              {items.map((it, i) => (
+                <p
+                  key={i}
+                  className={ctx.editMode ? "bk-editable" : undefined}
+                  onDoubleClick={
+                    ctx.editMode
+                      ? () => ctx.openEditor(it.edit, `${chapter.title} · ${chunk?.lang === "zh" ? "中文" : "EN"}`, ctx.fieldTexts[it.edit] ?? plainText(it.html))
+                      : undefined
+                  }
+                  dangerouslySetInnerHTML={{ __html: it.html.replace(/^<p[^>]*>/, "").replace(/<\/p>$/, "") }}
+                />
+              ))}
+            </div>
           </div>
           <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
         </Page>
@@ -579,7 +686,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
     case "plate": {
       const { item, chapter, plate } = spec;
       return (
-        <Page id={pageId} side={side} className="bk-plate-page">
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-plate-page">
           <RunningHead side={side} left={bookHead} right={chapter.title} />
           <div className="bk-plate-frame">
             <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
@@ -603,7 +710,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
 
     case "about":
       return (
-        <Page id={pageId} side={side}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
           <RunningHead side={side} left={bookHead} right={`${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`} />
           <div className="bk-essay">
             <div className="bk-essay-head">
@@ -626,7 +733,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
         })),
       );
       return (
-        <Page id={pageId} side={side}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
           <RunningHead side={side} left={bookHead} right={b.listOfPlates} />
           <div className="bk-index">
             {spec.from === 1 && <h2 className="bk-section-title shop-title gloria-title">{b.listOfPlates}</h2>}
@@ -658,7 +765,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
 
     case "end":
       return (
-        <Page id={pageId} side={side} className="bk-center">
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-center">
           <div className="bk-end">
             <div className="shop-title gloria-title">{b.publisher}</div>
             <div className="bk-end-sub">
@@ -669,7 +776,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       );
 
     case "blank":
-      return <Page id={pageId} side={side} />;
+      return <Page id={pageId} side={side} bg={bg} ctl={ctl} />;
   }
 }
 
@@ -717,6 +824,68 @@ const CatalogBook = () => {
   const [dividers, setDividers] = useState(true);
   const [preparing, setPreparing] = useState(false);
   const [zoom, setZoom] = useState(1);
+  // ── Book editor (edit mode): staged text edits + per-page backgrounds ──
+  const loadJSON = <T,>(key: string, fallback: T): T => {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? (JSON.parse(raw) as T) : fallback;
+    } catch {
+      return fallback;
+    }
+  };
+  const [editMode, setEditMode] = useState(false);
+  const [textEdits, setTextEdits] = useState<Record<string, string>>(() => loadJSON("remains-book-text-edits", {}));
+  const [pageBgEdits, setPageBgEdits] = useState<Record<string, PageBgKind | "global">>(() => loadJSON("remains-book-page-bg", {}));
+  const [savedSnapshot, setSavedSnapshot] = useState(() =>
+    JSON.stringify({ t: loadJSON("remains-book-text-edits", {}), b: loadJSON("remains-book-page-bg", {}) }),
+  );
+  const [panel, setPanel] = useState<{ edit: string; label: string; value: string } | null>(null);
+  const [prMsg, setPrMsg] = useState("");
+  const editorDirty = JSON.stringify({ t: textEdits, b: pageBgEdits }) !== savedSnapshot;
+  const openEditor = (edit: string, label: string, current: string) => setPanel({ edit, label, value: current });
+  const pageBgFor = (key: string | null): PageBgKind | undefined => {
+    if (!key) return undefined;
+    const e = pageBgEdits[key];
+    if (e && e !== "global") return e;
+    return PAGE_BACKGROUNDS[key];
+  };
+  const setPageBg = (key: string, kind: PageBgKind | "global") => setPageBgEdits((prev) => ({ ...prev, [key]: kind }));
+  const saveAllEdits = () => {
+    localStorage.setItem("remains-book-text-edits", JSON.stringify(textEdits));
+    localStorage.setItem("remains-book-page-bg", JSON.stringify(pageBgEdits));
+    setSavedSnapshot(JSON.stringify({ t: textEdits, b: pageBgEdits }));
+    setPrMsg(lang === "zh" ? "已保存到本机浏览器。" : "Saved in this browser.");
+  };
+  const generatePR = async () => {
+    setPrMsg(lang === "zh" ? "正在生成 PR…" : "Creating PR…");
+    const pageBg: Record<string, PageBgKind> = { ...PAGE_BACKGROUNDS };
+    for (const [k, v] of Object.entries(pageBgEdits)) {
+      if (v === "global") delete pageBg[k];
+      else pageBg[k] = v;
+    }
+    const payload = { textEdits, pageBg };
+    try {
+      const res = await fetch("/api/book-pr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+      const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
+      if (res.ok && data.url) {
+        setPrMsg(`PR: ${data.url}`);
+        return;
+      }
+      throw new Error(data.error || `HTTP ${res.status}`);
+    } catch (err) {
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "book-edits.json";
+      a.click();
+      URL.revokeObjectURL(a.href);
+      setPrMsg(
+        lang === "zh"
+          ? `自动生成失败（${err instanceof Error ? err.message : "网络问题"}），已下载 book-edits.json，把它发给 Beignet 即可生成同样的 PR。`
+          : "Automatic PR failed; book-edits.json downloaded instead — send it to Beignet.",
+      );
+    }
+  };
   const stageRef = useRef<HTMLDivElement>(null);
 
   usePageMeta({
@@ -775,56 +944,84 @@ const CatalogBook = () => {
       }));
     // Essay layout rule: English gets its own pages, Chinese gets its own pages.
     // The two languages never share an essay page, so the book does not read like a translation.
+    // Editor: every paragraph carries the id of the source text it came from (see api/book-pr.js).
+    const txParas = (field: "prefaceBody" | "paintingIntroBody" | "remainsEssayBody" | "elOtroEssayBody"): ParaItem[] =>
+      translations.en.catalogBook[field].map((p, i) => ({ text: textEdits[`tx:${field}:${i}`] ?? p, edit: `tx:${field}:${i}` }));
+    const fieldText = (key: CatalogSectionKey, which: "en" | "zh") =>
+      textEdits[`field:${key}:${which}`] ?? descOf(which === "en" ? sectionsEn : sectionsZh, key);
+    const fieldTexts: Record<string, string> = {};
+    for (const key of ["spirit", "photography", "watercolor"] as const) {
+      fieldTexts[`field:${key}:en`] = fieldText(key, "en");
+      fieldTexts[`field:${key}:zh`] = fieldText(key, "zh");
+    }
+    fieldTexts["tx:watercolorNote:en"] = textEdits["tx:watercolorNote:en"] ?? translations.en.watercolorCatalog.noteText;
+    fieldTexts["tx:watercolorNote:zh"] = textEdits["tx:watercolorNote:zh"] ?? translations.zh.watercolorCatalog.noteText;
+    fieldTexts["tx:heroDesc:en"] = textEdits["tx:heroDesc:en"] ?? translations.en.hero.description;
+    fieldTexts["tx:heroDesc:zh"] = textEdits["tx:heroDesc:zh"] ?? translations.zh.hero.description;
     const pBlocks = (html: string) => html.match(/<p[^>]*>[\s\S]*?<\/p>/g) ?? (html ? [html] : []);
-    const someChunks = (blocks: string[]) => (blocks.length > 0 ? chunkHtmlBlocks(blocks, 2300) : []);
-    const langChunks = (en: string[], zh: string[]) => {
-      const all = [...someChunks(en), ...someChunks(zh)];
-      return all.length > 0 ? all : [""];
+    const fieldItems = (key: CatalogSectionKey, which: "en" | "zh"): EssayItem[] =>
+      pBlocks(asParas(fieldText(key, which))).map((html) => ({ html, edit: `field:${key}:${which}` }));
+    const paraItems = (paras: ParaItem[]): EssayItem[] => paras.map((p) => ({ html: `<p>${p.text}</p>`, edit: p.edit }));
+    const langChunks = (en: EssayItem[], zh: EssayItem[]): EssayChunk[] => {
+      const all = [
+        ...chunkItems(en, 2300).map((items) => ({ lang: "en" as const, items })),
+        ...chunkItems(zh, 2300).map((items) => ({ lang: "zh" as const, items })),
+      ];
+      return all.length > 0 ? all : [{ lang: "en", items: [] }];
     };
-    const essayChunks: Record<string, string[]> = {};
+    const essayChunks: Record<string, EssayChunk[]> = {};
     for (const chapter of chapters) {
       if (chapter.key === "remains") {
-        const en = t.catalogBook.remainsEssayBody.filter((p) => !hasCjk(p)).map((p) => `<p>${p}</p>`);
-        const zh = t.catalogBook.remainsEssayBody.filter((p) => hasCjk(p)).map((p) => `<p>${p}</p>`);
-        essayChunks[chapter.key] = langChunks(en, zh);
+        const paras = txParas("remainsEssayBody");
+        essayChunks[chapter.key] = langChunks(paraItems(paras.filter((p) => !hasCjk(p.text))), paraItems(paras.filter((p) => hasCjk(p.text))));
       } else if (chapter.key === "photography") {
-        const head = "<p>El Otro, El Mismo</p>";
-        const en = [...pBlocks(asParas(descOf(sectionsEn, "photography"))), head, ...t.catalogBook.elOtroEssayBody.filter((p) => !hasCjk(p)).map((p) => `<p>${p}</p>`)];
-        const zh = [...pBlocks(asParas(descOf(sectionsZh, "photography"))), head, ...t.catalogBook.elOtroEssayBody.filter((p) => hasCjk(p)).map((p) => `<p>${p}</p>`)];
+        const head: EssayItem = { html: "<p>El Otro, El Mismo</p>", edit: "field:photography:en" };
+        const otro = txParas("elOtroEssayBody");
+        const en = [...fieldItems("photography", "en"), head, ...paraItems(otro.filter((p) => !hasCjk(p.text)))];
+        const zh = [...fieldItems("photography", "zh"), { ...head, edit: "field:photography:zh" }, ...paraItems(otro.filter((p) => hasCjk(p.text)))];
         essayChunks[chapter.key] = langChunks(en, zh);
+      } else if (fieldText(chapter.key, "en") || fieldText(chapter.key, "zh")) {
+        essayChunks[chapter.key] = langChunks(fieldItems(chapter.key, "en"), fieldItems(chapter.key, "zh"));
+      } else if (chapter.key === "watercolor") {
+        essayChunks[chapter.key] = [
+          { lang: "en", items: [{ html: `<p>${fieldTexts["tx:watercolorNote:en"]}</p>`, edit: "tx:watercolorNote:en" }] },
+          { lang: "zh", items: [{ html: `<p>${fieldTexts["tx:watercolorNote:zh"]}</p>`, edit: "tx:watercolorNote:zh" }] },
+        ];
+      } else if (chapter.key === "shop") {
+        essayChunks[chapter.key] = [
+          { lang: "en", items: [{ html: `<p>${fieldTexts["tx:heroDesc:en"]}</p>`, edit: "tx:heroDesc:en" }] },
+          { lang: "zh", items: [{ html: `<p>${fieldTexts["tx:heroDesc:zh"]}</p>`, edit: "tx:heroDesc:zh" }] },
+        ];
       } else {
-        const enHtml = descOf(sectionsEn, chapter.key);
-        const zhHtml = descOf(sectionsZh, chapter.key);
-        if (enHtml || zhHtml) {
-          essayChunks[chapter.key] = langChunks(pBlocks(asParas(enHtml)), pBlocks(asParas(zhHtml)));
-        } else if (chapter.key === "watercolor") {
-          essayChunks[chapter.key] = [`<p>${translations.en.watercolorCatalog.noteText}</p>`, `<p>${translations.zh.watercolorCatalog.noteText}</p>`];
-        } else if (chapter.key === "shop") {
-          essayChunks[chapter.key] = [`<p>${translations.en.hero.description}</p>`, `<p>${translations.zh.hero.description}</p>`];
-        } else {
-          essayChunks[chapter.key] = [""];
-        }
+        essayChunks[chapter.key] = [{ lang: "en", items: [] }];
       }
     }
     const byKey = (key: CatalogSectionKey) => chapters.find((c) => c.key === key)?.items.map((i) => i.item) ?? [];
+    const prefaceParas = txParas("prefaceBody");
+    const paintingParas = txParas("paintingIntroBody");
     return {
       t,
       lang,
       chapters,
       prefaceChunks: [
-        ...chunkParagraphs(t.catalogBook.prefaceBody.filter((p) => !hasCjk(p)), 2300),
-        ...chunkParagraphs(t.catalogBook.prefaceBody.filter((p) => hasCjk(p)), 2300),
+        ...chunkParas(prefaceParas.filter((p) => !hasCjk(p.text)), 2300),
+        ...chunkParas(prefaceParas.filter((p) => hasCjk(p.text)), 2300),
       ],
       paintingChunks: [
-        ...chunkParagraphs(t.catalogBook.paintingIntroBody.filter((p) => !hasCjk(p)), 2300),
-        ...chunkParagraphs(t.catalogBook.paintingIntroBody.filter((p) => hasCjk(p)), 2300),
+        ...chunkParas(paintingParas.filter((p) => !hasCjk(p.text)), 2300),
+        ...chunkParas(paintingParas.filter((p) => hasCjk(p.text)), 2300),
       ],
       essayChunks,
+      editMode,
+      fieldTexts,
+      openEditor,
+      pageBgFor,
+      setPageBg,
       years: yearRange(chapters.flatMap((c) => c.items.map((i) => i.item.year))),
       coverFront: byKey("watercolor")[0] ?? chapters[0]?.items[0]?.item,
       coverBack: byKey("photography")[0] ?? chapters[0]?.items[1]?.item,
     };
-  }, [lang, t]);
+  }, [lang, t, textEdits, editMode, pageBgEdits]);
 
   const plateCount = ctx.chapters.reduce((sum, c) => sum + c.items.length, 0);
   const frontispiece = ctx.chapters.find((c) => c.key === "photography")?.items[1]?.item ?? ctx.coverBack;
@@ -945,6 +1142,20 @@ const CatalogBook = () => {
             <button type="button" onClick={() => setDividers((v) => !v)} className={toggleClass(dividers)}>
               {lang === "zh" ? "粉色分隔页" : "Pink dividers"}
             </button>
+            <button type="button" onClick={() => setEditMode((v) => !v)} className={toggleClass(editMode)}>
+              {lang === "zh" ? "编辑模式" : "Edit mode"}
+            </button>
+            {editMode && (
+              <>
+                <button type="button" onClick={saveAllEdits} disabled={!editorDirty} className={toggleClass(false)}>
+                  {lang === "zh" ? "保存内容修改" : "Save edits"}
+                  {editorDirty ? " *" : ""}
+                </button>
+                <button type="button" onClick={generatePR} className={toggleClass(false)}>
+                  {lang === "zh" ? "生成PR" : "Make PR"}
+                </button>
+              </>
+            )}
             <button type="button" onClick={toggleLang} className={toggleClass(false)}>
               {lang === "en" ? "中文" : "EN"}
             </button>
@@ -967,6 +1178,35 @@ const CatalogBook = () => {
           <span className="normal-case tracking-normal">{b.printHint}</span>
         </div>
       </div>
+
+      {panel && (
+        <div data-noprint className="bk-editor-panel">
+          <div className="bk-editor-head">
+            <span className="sans-label">{panel.label}</span>
+            <span className="bk-editor-hint">{lang === "zh" ? "改完点「确定」应用到页面，再点工具栏「保存内容修改」存好" : "Apply, then Save edits in the toolbar"}</span>
+          </div>
+          <textarea value={panel.value} onChange={(e) => setPanel({ ...panel, value: e.target.value })} rows={10} />
+          <div className="bk-editor-actions">
+            <button
+              type="button"
+              onClick={() => {
+                setTextEdits((prev) => ({ ...prev, [panel.edit]: panel.value }));
+                setPanel(null);
+              }}
+            >
+              {lang === "zh" ? "确定" : "Apply"}
+            </button>
+            <button type="button" onClick={() => setPanel(null)}>
+              {lang === "zh" ? "取消" : "Cancel"}
+            </button>
+          </div>
+        </div>
+      )}
+      {prMsg && (
+        <div data-noprint className="bk-editor-msg sans-label">
+          {prMsg}
+        </div>
+      )}
 
       <div ref={stageRef} className="bk-stage" style={{ zoom }}>
         {toSpreads(sheets).map((row, i) => (
