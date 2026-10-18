@@ -45,6 +45,7 @@ type PageSpec =
   | { kind: "half-title" }
   | { kind: "frontispiece"; item: CatalogItem }
   | { kind: "title" }
+  | { kind: "motto"; lang: "en" | "zh" }
   | { kind: "colophon" }
   | { kind: "contents"; chunk: number }
   | { kind: "preface"; chunk: number }
@@ -157,6 +158,8 @@ function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, pl
   specs.push({ kind: "half-title" });
   specs.push(frontispiece ? { kind: "frontispiece", item: frontispiece } : { kind: "blank" });
   specs.push({ kind: "title" });
+  specs.push({ kind: "motto", lang: "en" });
+  specs.push({ kind: "motto", lang: "zh" });
   specs.push({ kind: "colophon" });
   const tocPages = Math.max(1, Math.ceil((chapters.length + 4) / 9));
   for (let i = 0; i < tocPages; i++) specs.push({ kind: "contents", chunk: i });
@@ -487,6 +490,18 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
           </div>
         </Page>
       );
+
+    case "motto": {
+      const en = spec.lang === "en";
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
+          <div className="bk-motto">
+            <p className="bk-motto-q">{en ? "When machines learn to create, what remains human?" : "当机器学会了创造，人身上还剩下什么？"}</p>
+            <p className="bk-motto-body">{en ? "This book is more than a retrospective. It is an argument for slowness, demanding the kind of looking that contemporary life rarely permits." : "这本书不只是一次回顾。它为缓慢辩护，要求一种当代生活难得允许的凝视。"}</p>
+          </div>
+        </Page>
+      );
+    }
 
     case "colophon": {
       const year = new Date().getFullYear();
@@ -1039,7 +1054,9 @@ const CatalogBook = () => {
               );
       } else if (chapter.key === "remains") {
         const paras = txParas("remainsEssayBody");
-        essayChunks[chapter.key] = langChunks(paraItems(paras.filter((p) => !hasCjk(p.text))), paraItems(paras.filter((p) => hasCjk(p.text))));
+        const leadEn: EssayItem = { html: "<p>Remains was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions.</p>" };
+        const leadZh: EssayItem = { html: "<p>《遗迹》是一个源于微妙荒诞感的综合媒材系列。研读古代陶俑时，我被它们那种熟悉、笨拙、僵在无所事事半途的表情迷住了。</p>" };
+        essayChunks[chapter.key] = langChunks([leadEn, ...paraItems(paras.filter((p) => !hasCjk(p.text)))], [leadZh, ...paraItems(paras.filter((p) => hasCjk(p.text)))]);
       } else if (chapter.key === "photography") {
         const head: EssayItem = { html: "<p>El Otro, El Mismo</p>", edit: "field:photography:en" };
         const otro = txParas("elOtroEssayBody");
