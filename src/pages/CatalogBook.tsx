@@ -471,7 +471,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
         <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-center">
           <div className="bk-half-block">
             <div className="bk-half-title shop-title">{translations.en.catalogBook.title}</div>
-            <div className="bk-half-title-zh shop-title">{translations.zh.catalogBook.title}</div>
+            <div className="bk-half-title-zh shop-title">{"遗迹"}</div>
           </div>
         </Page>
       );
@@ -502,7 +502,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
             <h1 className="bk-title-main shop-title gloria-title" style={{ fontSize: displaySize(translations.en.catalogBook.title, 6.8, 1.35) }}>
               {translations.en.catalogBook.title}
             </h1>
-            <div className="bk-title-zh shop-title">{translations.zh.catalogBook.title}</div>
+            <div className="bk-title-zh shop-title">{"遗迹"}</div>
             <div className="bk-rule" />
             <div className="bk-title-meta">
               <span className="sans-label">{translations.en.catalogBook.subtitle} · {translations.zh.catalogBook.subtitle}</span>
@@ -517,7 +517,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-colophon">
           <div className="bk-colophon-body">
-            <p className="bk-colophon-title shop-title">{translations.en.catalogBook.title} · {translations.zh.catalogBook.title}</p>
+            <p className="bk-colophon-title shop-title">{translations.en.catalogBook.title} · {"遗迹"}</p>
             <p>{translations.en.catalogBook.subtitle} · {translations.zh.catalogBook.subtitle} · {years}</p>
             <p>© {year} Chun Wang. {translations.en.catalogBook.rights}</p>
             <p>© {year} 王淳。{translations.zh.catalogBook.rights}</p>
