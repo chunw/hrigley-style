@@ -6,8 +6,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { artistBioHTML, artistBioSegments } from "@/lib/artistBio";
 import { SHOP_URL, SITE_URL } from "@/lib/constants";
-import { getCombinedCatalogSections, type CatalogItem, type CatalogSectionKey } from "@/lib/printCatalog";
-import type { Translations } from "@/lib/translations";
+import { getCombinedCatalogSections, type CatalogItem, type CatalogSection, type CatalogSectionKey } from "@/lib/printCatalog";
+import { translations, type Translations } from "@/lib/translations";
 
 // ── Book geometry ─────────────────────────────────────────────────────────────
 // US Letter trim so the PDF prints 1:1 on a home/office printer, and matches the standard
@@ -389,16 +389,16 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
     case "contents": {
       const startOf = (pred: (s: PageSpec) => boolean) => pages.find((p) => pred(p.spec))?.number ?? 0;
       const rows = [
-        { num: "", title: b.preface, sub: "", page: startOf((s) => s.kind === "preface") },
-        { num: "", title: b.paintingIntro, sub: "", page: startOf((s) => s.kind === "painting-intro") },
+        { num: "", title: `${translations.en.catalogBook.preface} · ${translations.zh.catalogBook.preface}`, sub: "", page: startOf((s) => s.kind === "preface") },
+        { num: "", title: `${translations.en.catalogBook.paintingIntro} · ${translations.zh.catalogBook.paintingIntro}`, sub: "", page: startOf((s) => s.kind === "painting-intro") },
         ...chapters.map((c) => ({
           num: pad2(c.number),
           title: c.title,
           sub: `${c.items.length} ${b.works}${c.years ? ` · ${c.years}` : ""}`,
           page: startOf((s) => s.kind === "opener" && s.chapter.key === c.key),
         })),
-        { num: "", title: b.aboutArtist, sub: "", page: startOf((s) => s.kind === "about") },
-        { num: "", title: b.listOfPlates, sub: "", page: startOf((s) => s.kind === "plates-index") },
+        { num: "", title: `${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`, sub: "", page: startOf((s) => s.kind === "about") },
+        { num: "", title: `${translations.en.catalogBook.listOfPlates} · ${translations.zh.catalogBook.listOfPlates}`, sub: "", page: startOf((s) => s.kind === "plates-index") },
       ];
       return (
         <Page id={pageId} side={side}>
@@ -562,7 +562,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
               <div className="bk-essay-meta sans-label">{b.aboutArtist}</div>
               <h2 className="bk-section-title shop-title gloria-title">{author}</h2>
             </div>
-            <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: artistBioHTML(lang) }} />
+            <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: artistBioHTML("en") + artistBioHTML("zh") }} />
           </div>
           <Folio number={number} tag={`${b.title} | ${b.aboutArtist}`} />
         </Page>
@@ -679,22 +679,39 @@ const CatalogBook = () => {
 
   const ctx = useMemo<BookContext>(() => {
     let plate = 0;
+    // The book is one bilingual edition (print-book rule): English first, Chinese immediately
+    // after, everywhere. Nothing in the book waits on the site language toggle.
+    const sectionsEn = getCombinedCatalogSections("", "en");
+    const sectionsZh = getCombinedCatalogSections("", "zh");
+    const descOf = (list: CatalogSection[], key: CatalogSectionKey) => list.find((x) => x.key === key)?.descriptionHtml || "";
+    const asParas = (html: string) =>
+      html.includes("<") ? html : html.split(/\n\s*\n/).filter(Boolean).map((p) => `<p>${p.trim()}</p>`).join("");
+    const bilingualDesc = (key: CatalogSectionKey) => {
+      const en = descOf(sectionsEn, key);
+      const zh = descOf(sectionsZh, key);
+      return asParas(en && zh && en !== zh ? en + "\n\n" + zh : en || zh);
+    };
+    const bilingualTitle = (en: string, zh: string) => (en === zh ? en : `${en} · ${zh}`);
     const chapters: Chapter[] = getCombinedCatalogSections("", lang)
       .filter((s) => s.items.length > 0)
       .map((s, i) => ({
         key: s.key,
         number: i + 1,
-        title: CHAPTER_TITLE[s.key](t),
+        title: bilingualTitle(CHAPTER_TITLE[s.key](translations.en), CHAPTER_TITLE[s.key](translations.zh)),
         // Sections without an essay of their own fall back to the copy the site already uses for them.
         descriptionHtml:
           s.key === "remains"
             ? t.catalogBook.remainsEssayBody.map((p) => `<p>${p}</p>`).join("")
             : s.key === "photography"
-              ? (s.descriptionHtml || "") +
+              ? bilingualDesc("photography") +
                 `<p>El Otro, El Mismo</p>` +
                 t.catalogBook.elOtroEssayBody.map((p) => `<p>${p}</p>`).join("")
-              : s.descriptionHtml ||
-                (s.key === "watercolor" ? `<p>${t.watercolorCatalog.noteText}</p>` : s.key === "shop" ? `<p>${t.hero.description}</p>` : ""),
+              : bilingualDesc(s.key) ||
+                (s.key === "watercolor"
+                  ? `<p>${translations.en.watercolorCatalog.noteText}</p><p>${translations.zh.watercolorCatalog.noteText}</p>`
+                  : s.key === "shop"
+                    ? `<p>${translations.en.hero.description}</p><p>${translations.zh.hero.description}</p>`
+                    : ""),
         items: s.items.map((item, ii) => {
           // Bilingual plate titles from the sample chapter draft; only No.1 and No.4 have titles so far.
           const caption =
