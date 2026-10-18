@@ -9,6 +9,7 @@ import { SHOP_URL, SITE_URL } from "@/lib/constants";
 import { getCombinedCatalogSections, type CatalogItem, type CatalogSection, type CatalogSectionKey } from "@/lib/printCatalog";
 import { translations, type Translations } from "@/lib/translations";
 import { PAGE_BACKGROUNDS, type PageBgKind } from "@/lib/pageBackgrounds";
+import { BOOK_SERIES } from "@/lib/bookSeries";
 
 // ── Book geometry ─────────────────────────────────────────────────────────────
 // US Letter trim so the PDF prints 1:1 on a home/office printer, and matches the standard
@@ -31,12 +32,13 @@ type Part = "complete" | "interior" | "cover";
 type Side = "verso" | "recto" | "single";
 
 interface Chapter {
-  key: CatalogSectionKey;
+  key: string;
   number: number;
   title: string;
   descriptionHtml: string;
   items: { item: CatalogItem; plate: number }[];
   years: string;
+  seriesOnly?: boolean;
 }
 
 type PageSpec =
@@ -168,6 +170,11 @@ function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, pl
     if (dividersOn) {
       specs.push({ kind: "divider", chapter });
       specs.push({ kind: "chapter-title", chapter });
+    }
+    if (chapter.seriesOnly) {
+      const seriesEssayCount = essayChunkCounts[chapter.key] ?? 0;
+      for (let i = 0; i < seriesEssayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
+      continue;
     }
     if (!nextIsVerso()) specs.push({ kind: "blank" });
     specs.push({ kind: "opener", half: "left", chapter });
@@ -514,7 +521,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
         ...chapters.map((c) => ({
           num: pad2(c.number),
           title: c.title,
-          sub: `${c.items.length} ${b.works}${c.years ? ` · ${c.years}` : ""}`,
+          sub: c.items.length > 0 ? `${c.items.length} ${b.works}${c.years ? ` · ${c.years}` : ""}` : c.years,
           page: startOf((s) => s.kind === "opener" && s.chapter.key === c.key),
         })),
         { num: "", title: `${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`, sub: "", page: startOf((s) => s.kind === "about") },
@@ -617,8 +624,8 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
             <span className="bk-num-box">{pad2(chapter.number)}</span>
             <h2 className="bk-chapter-title shop-title">{chapter.title}</h2>
             <div className="bk-chapter-title-meta sans-label">
-              {chapter.items.length} {b.works}
-              {chapter.years ? ` · ${chapter.years}` : ""}
+              {chapter.items.length > 0 ? `${chapter.items.length} ${b.works}` : ""}
+              {chapter.items.length > 0 && chapter.years ? ` · ${chapter.years}` : chapter.years}
             </div>
           </div>
         </Page>
@@ -924,7 +931,7 @@ const CatalogBook = () => {
       return asParas(en && zh && en !== zh ? en + "\n\n" + zh : en || zh);
     };
     const bilingualTitle = (en: string, zh: string) => (en === zh ? en : `${en} · ${zh}`);
-    const chapters: Chapter[] = getCombinedCatalogSections("", lang)
+    const catalogChapters: Chapter[] = getCombinedCatalogSections("", lang)
       .filter((s) => s.items.length > 0)
       .map((s, i) => ({
         key: s.key,
@@ -956,6 +963,31 @@ const CatalogBook = () => {
         }),
         years: yearRange(s.items.map((item) => item.year)),
       }));
+    // Series sections that complete the outline but have no catalog plates yet
+    // (Nostalgia, Visions in Ceramics, the Screen & Archive and Live chapters),
+    // merged with the catalog chapters in the book outline's order.
+    const seriesChapters: Chapter[] = BOOK_SERIES.map((s) => ({
+      key: `series:${s.id}`,
+      number: 0,
+      title: s.titleEn === s.titleZh ? s.titleEn : `${s.titleEn} · ${s.titleZh}`,
+      descriptionHtml: "",
+      items: [],
+      years: s.years,
+      seriesOnly: true,
+    }));
+    const SECTION_ORDER = [
+      "remains", "watercolor", "spirit", "series:nostalgia", "photography",
+      "series:ceramics", "shop",
+      "series:immemory", "series:negotiated", "series:unfinished", "series:google",
+      "series:feedscanner", "series:cavedance", "series:infected",
+      "series:soliloquy", "series:artempath", "series:stillirise", "series:oneday",
+      "series:respirator", "series:pingpong",
+    ];
+    const byChapterKey = new Map([...catalogChapters, ...seriesChapters].map((ch) => [ch.key, ch]));
+    const chapters = SECTION_ORDER.map((k) => byChapterKey.get(k))
+      .filter((ch): ch is Chapter => !!ch)
+      .map((ch, i) => ({ ...ch, number: i + 1 }));
+
     // Essay layout rule: English gets its own pages, Chinese gets its own pages.
     // The two languages never share an essay page, so the book does not read like a translation.
     // Editor: every paragraph carries the id of the source text it came from (see api/book-pr.js).
@@ -985,7 +1017,22 @@ const CatalogBook = () => {
     };
     const essayChunks: Record<string, EssayChunk[]> = {};
     for (const chapter of chapters) {
-      if (chapter.key === "remains") {
+      if (chapter.key.startsWith("series:")) {
+        const s = BOOK_SERIES.find((x) => `series:${x.id}` === chapter.key);
+        const enT = (s && (textEdits[`series:${s.id}:en`] ?? s.textEn)) || "";
+        const zhT = (s && (textEdits[`series:${s.id}:zh`] ?? s.textZh)) || "";
+        if (s) {
+          fieldTexts[`series:${s.id}:en`] = enT;
+          fieldTexts[`series:${s.id}:zh`] = zhT;
+        }
+        essayChunks[chapter.key] =
+          !enT && !zhT
+            ? []
+            : langChunks(
+                enT ? pBlocks(asParas(enT)).map((html) => ({ html, edit: `series:${s?.id}:en` })) : [],
+                zhT ? pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s?.id}:zh` })) : [],
+              );
+      } else if (chapter.key === "remains") {
         const paras = txParas("remainsEssayBody");
         essayChunks[chapter.key] = langChunks(paraItems(paras.filter((p) => !hasCjk(p.text))), paraItems(paras.filter((p) => hasCjk(p.text))));
       } else if (chapter.key === "photography") {
