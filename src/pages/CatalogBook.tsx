@@ -39,12 +39,14 @@ interface Chapter {
   items: { item: CatalogItem; plate: number }[];
   years: string;
   seriesOnly?: boolean;
+  seriesTextId?: string;
 }
 
 type PageSpec =
   | { kind: "half-title" }
   | { kind: "frontispiece"; item: CatalogItem }
   | { kind: "title" }
+  | { kind: "motto"; lang: "en" | "zh" }
   | { kind: "colophon" }
   | { kind: "contents"; chunk: number }
   | { kind: "preface"; chunk: number }
@@ -157,6 +159,8 @@ function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, pl
   specs.push({ kind: "half-title" });
   specs.push(frontispiece ? { kind: "frontispiece", item: frontispiece } : { kind: "blank" });
   specs.push({ kind: "title" });
+  specs.push({ kind: "motto", lang: "en" });
+  specs.push({ kind: "motto", lang: "zh" });
   specs.push({ kind: "colophon" });
   const tocPages = Math.max(1, Math.ceil((chapters.length + 4) / 9));
   for (let i = 0; i < tocPages; i++) specs.push({ kind: "contents", chunk: i });
@@ -487,6 +491,18 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
           </div>
         </Page>
       );
+
+    case "motto": {
+      const en = spec.lang === "en";
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
+          <div className="bk-motto">
+            <p className="bk-motto-q">{en ? "When machines learn to create, what remains human?" : "当机器学会了创造，人身上还剩下什么？"}</p>
+            <p className="bk-motto-body">{en ? "This book is more than a retrospective. It is an argument for slowness, demanding the kind of looking that contemporary life rarely permits." : "这本书不只是一次回顾。它为缓慢辩护，要求一种当代生活难得允许的凝视。"}</p>
+          </div>
+        </Page>
+      );
+    }
 
     case "colophon": {
       const year = new Date().getFullYear();
@@ -979,8 +995,21 @@ const CatalogBook = () => {
       years: s.years,
       seriesOnly: true,
     }));
+    // The watercolor catalog dissolves into its three named series (her call:
+    // no "Visions in Watercolor" umbrella chapter). Plates split from the
+    // watercolor catalog by title; the texts live in BOOK_SERIES.
+    const wcChapter = catalogChapters.find((ch) => ch.key === "watercolor");
+    const wcSplit = (id: string, title: string, prefix: string): Chapter => {
+      const items = (wcChapter?.items ?? []).filter(({ item }) => (item.title ?? "").startsWith(prefix));
+      return { key: id, number: 0, title, descriptionHtml: "", items, years: yearRange(items.map(({ item }) => item.year)), seriesTextId: id };
+    };
+    const splitChapters: Chapter[] = [
+      wcSplit("residuals", "Residuals · 残留", "Residuals"),
+      wcSplit("stillthings", "Still Things · 静物", "Still Things"),
+      wcSplit("road", "Notes from the Road · 旅途笔记", "Notes from the Road"),
+    ];
     const SECTION_ORDER = [
-      "remains", "watercolor", "spirit", "series:nostalgia", "photography",
+      "spirit", "remains", "residuals", "stillthings", "road", "photography", "series:nostalgia",
       "shop",
       "series:immemory", "series:negotiated", "series:unfinished", "series:google",
       "series:feedscanner", "series:cavedance", "series:infected",
@@ -988,7 +1017,7 @@ const CatalogBook = () => {
       "series:pingpong",
       "series:interview",
     ];
-    const byChapterKey = new Map([...catalogChapters, ...seriesChapters].map((ch) => [ch.key, ch]));
+    const byChapterKey = new Map([...catalogChapters, ...seriesChapters, ...splitChapters].map((ch) => [ch.key, ch]));
     const chapters = SECTION_ORDER.map((k) => byChapterKey.get(k))
       .filter((ch): ch is Chapter => !!ch)
       .map((ch, i) => ({ ...ch, number: i + 1 }));
@@ -1039,13 +1068,27 @@ const CatalogBook = () => {
               );
       } else if (chapter.key === "remains") {
         const paras = txParas("remainsEssayBody");
-        essayChunks[chapter.key] = langChunks(paraItems(paras.filter((p) => !hasCjk(p.text))), paraItems(paras.filter((p) => hasCjk(p.text))));
+        const leadEn: EssayItem = { html: "<p>Remains was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions.</p>" };
+        const leadZh: EssayItem = { html: "<p>《遗迹》是一个源于微妙荒诞感的综合媒材系列。研读古代陶俑时，我被它们那种熟悉、笨拙、僵在无所事事半途的表情迷住了。</p>" };
+        essayChunks[chapter.key] = langChunks([leadEn, ...paraItems(paras.filter((p) => !hasCjk(p.text)))], [leadZh, ...paraItems(paras.filter((p) => hasCjk(p.text)))]);
       } else if (chapter.key === "photography") {
         const head: EssayItem = { html: "<p>El Otro, El Mismo</p>", edit: "field:photography:en" };
         const otro = txParas("elOtroEssayBody");
         const en = [...fieldItems("photography", "en"), head, ...paraItems(otro.filter((p) => !hasCjk(p.text)))];
         const zh = [...fieldItems("photography", "zh"), { ...head, edit: "field:photography:zh" }, ...paraItems(otro.filter((p) => hasCjk(p.text)))];
         essayChunks[chapter.key] = langChunks(en, zh);
+      } else if (chapter.seriesTextId) {
+        const s = BOOK_SERIES.find((x) => x.id === chapter.seriesTextId);
+        const enT = (s && (textEdits[`series:${s.id}:en`] ?? s.textEn)) || "";
+        const zhT = (s && (textEdits[`series:${s.id}:zh`] ?? s.textZh)) || "";
+        if (s) {
+          fieldTexts[`series:${s.id}:en`] = enT;
+          fieldTexts[`series:${s.id}:zh`] = zhT;
+        }
+        essayChunks[chapter.key] = langChunks(
+          enT ? pBlocks(asParas(enT)).map((html) => ({ html, edit: `series:${s?.id}:en` })) : [],
+          zhT ? pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s?.id}:zh` })) : [],
+        );
       } else if (fieldText(chapter.key, "en") || fieldText(chapter.key, "zh")) {
         essayChunks[chapter.key] = langChunks(fieldItems(chapter.key, "en"), fieldItems(chapter.key, "zh"));
       } else if (chapter.key === "watercolor") {
@@ -1105,7 +1148,7 @@ const CatalogBook = () => {
       pageBgFor,
       setPageBg,
       years: yearRange(chapters.flatMap((c) => c.items.map((i) => i.item.year))),
-      coverFront: byKey("watercolor")[0] ?? chapters[0]?.items[0]?.item,
+      coverFront: byKey("residuals")[0] ?? chapters[0]?.items[0]?.item,
       coverBack: byKey("photography")[0] ?? chapters[0]?.items[1]?.item,
     };
   }, [lang, t, textEdits, editMode, pageBgEdits]);

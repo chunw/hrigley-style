@@ -745,6 +745,25 @@
   color: var(--text);
 }
 
+.bk-motto {
+  margin-top: 1.9in;
+}
+
+.bk-motto-q {
+  font-family: var(--serif);
+  font-size: 0.4in;
+  line-height: 1.32;
+  max-width: 5.4in;
+}
+
+.bk-motto-body {
+  margin-top: 0.5in;
+  font-size: 0.135in;
+  line-height: 2;
+  max-width: 4.7in;
+  color: #44403c;
+}
+
 .bk-contents {
   margin-top: 0.85in;
 }
