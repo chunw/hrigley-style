@@ -12,8 +12,7 @@ export interface BookSeries {
  * Nostalgia and Visions in Ceramics, the whole Screen & Archive chapter
  * (IMMEMORY, Negotiated Intelligence, Unfinished Archive, Google Searches,
  * Feed Scanner, Cave Dance, Infected Instructions) and the whole Live chapter
- * (Soliloquy, Art.empath.io, Still I Rise, One Day, Life On Respirator,
- * Augmented Ping-Pong). English texts are the artist's own project overviews;
+ * (Soliloquy, Art.empath.io, Still I Rise, One Day, Augmented Ping-Pong). English texts are the artist's own project overviews;
  * Chinese texts are translations of them. Plates are added per series later.
  * Keep the field format exactly (id first, double-quoted strings):
  * the book editor's PR flow (api/book-pr.js) edits textEn/textZh by id.
@@ -40,8 +39,8 @@ export const BOOK_SERIES: BookSeries[] = [
     titleEn: "IMMEMORY: ON COVID-19",
     titleZh: "IMMEMORY：新冠记忆",
     years: "2019 - permanent",
-    textEn: "Initiated in the midst of the COVID-19 pandemic in early 2020, IMMEMORY is a long-term archival project aiming to facilitate sharing of creative and thoughtful responses to the changing pandemic crisis from around the world. IMMEMORY website is one of the 5 official nominees for the 2021 Webby Awards in the Cultural Websites category.",
-    textZh: "IMMEMORY 始于 2020 年初新冠疫情之中，是一个长期的档案项目，旨在促进世界各地对不断变化的疫情危机的创造性与思考性回应的分享。IMMEMORY 网站是 2021 年威比奖文化网站类五位官方提名者之一。",
+    textEn: "Initiated in the midst of the COVID-19 pandemic in early 2020, IMMEMORY is a long-term archival project aiming to facilitate sharing of creative and thoughtful responses to the changing pandemic crisis from around the world.\n\n“Immemory”, in the sense that the pandemic produces many artifacts quickly forgotten, narratives rapidly changed, and perceptions constantly shifting. As Winston Churchill remarked in the aftermath of WWII, “never let a good crisis go to waste”. While the pandemic is profoundly shaking up the world, this exhibition is dedicated to bringing perspectives to issues revealed by the current crisis and documenting what it means to live through this unprecedented moment, through a creative angle.\n\nUltimately, in these troubled times, we want to use this exhibition to foster a better understanding of the experiences of others, to transcend individual differences and cultivate a sense of empathy, and to raise awareness of shared values rooted in our humanity.\n\nIMMEMORY website is one of the 5 official nominees for the 2021 Webby Awards in the Cultural Websites category.",
+    textZh: "IMMEMORY 始于 2020 年初新冠疫情之中，是一个长期的档案项目，旨在促进世界各地对不断变化的疫情危机的创造性与思考性回应的分享。\n\n“Immemory”的意思是，疫情产生了许多很快被遗忘的物件、迅速改写的叙事和不断变化的认知。正如温斯顿·丘吉尔在二战后所说，“永远不要让一场好危机白白浪费”。当疫情深刻地撼动世界时，这个展览致力于以创造性的角度，为危机所揭示的问题带来新的视角，并记录活过这一前所未有的时刻意味着什么。\n\n最终，在这段动荡的日子里，我们希望用这个展览增进人们对他人经历的理解，超越个体的差异，培养共情，并唤起对植根于我们人性的共同价值的意识。\n\nIMMEMORY 网站是 2021 年威比奖文化网站类五位官方提名者之一。",
   },
   {
     id: "negotiated",
@@ -122,14 +121,6 @@ export const BOOK_SERIES: BookSeries[] = [
     years: "2018 - 2020",
     textEn: "An emotional ride through performance with projection.",
     textZh: "一次借表演与投影完成的情感之旅。",
-  },
-  {
-    id: "respirator",
-    titleEn: "Life On Respirator",
-    titleZh: "呼吸机上的生活",
-    years: "",
-    textEn: "",
-    textZh: "",
   },
   {
     id: "pingpong",

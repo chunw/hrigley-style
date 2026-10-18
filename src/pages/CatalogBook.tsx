@@ -981,7 +981,7 @@ const CatalogBook = () => {
       "series:immemory", "series:negotiated", "series:unfinished", "series:google",
       "series:feedscanner", "series:cavedance", "series:infected",
       "series:soliloquy", "series:artempath", "series:stillirise", "series:oneday",
-      "series:respirator", "series:pingpong",
+      "series:pingpong",
     ];
     const byChapterKey = new Map([...catalogChapters, ...seriesChapters].map((ch) => [ch.key, ch]));
     const chapters = SECTION_ORDER.map((k) => byChapterKey.get(k))
