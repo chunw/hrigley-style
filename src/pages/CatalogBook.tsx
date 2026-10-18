@@ -369,6 +369,7 @@ interface BookContext {
   coverBack?: CatalogItem;
   prefaceChunks: { paras: ParaItem[] }[];
   essayChunks: Record<string, EssayChunk[]>;
+  cvPages: { heading: string | null; entries: { year: string; head: string; body?: string }[] }[];
   editMode: boolean;
   fieldTexts: Record<string, string>;
   openEditor: (edit: string, label: string, current: string) => void;
