@@ -50,7 +50,7 @@ type PageSpec =
   | { kind: "essay"; chapter: Chapter; chunk: number }
   | { kind: "divider"; chapter: Chapter }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
-  | { kind: "about" }
+  | { kind: "about"; chunk: number }
   | { kind: "plates-index"; from: number; to: number }
   | { kind: "blank" }
   | { kind: "end" };
@@ -85,6 +85,7 @@ const displaySize = (text: string, lineInches: number, max: number) =>
 
 const pad2 = (n: number) => String(n).padStart(2, "0");
 const plainText = (html: string) => html.replace(/<br\s*\/?>/gi, " ").replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+const hasCjk = (s: string) => /[\u4e00-\u9fff]/.test(s);
 
 /** Split paragraphs into page-sized chunks of at most ~maxChars each. */
 function chunkParagraphs(paras: readonly string[], maxChars: number): string[][] {
@@ -154,7 +155,8 @@ function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, pl
 
   // Back matter opens on a recto, as is conventional.
   if (nextIsVerso()) specs.push({ kind: "blank" });
-  specs.push({ kind: "about" });
+  specs.push({ kind: "about", chunk: 0 });
+  specs.push({ kind: "about", chunk: 1 });
   if (!nextIsVerso()) specs.push({ kind: "blank" });
   for (let from = 1; from <= plateCount; ) {
     const to = Math.min(plateCount, from + (from === 1 ? INDEX_ROWS_FIRST : INDEX_ROWS_REST) - 1);
@@ -608,7 +610,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
               <div className="bk-essay-meta sans-label">{translations.en.catalogBook.aboutArtist} · {translations.zh.catalogBook.aboutArtist}</div>
               <h2 className="bk-section-title shop-title gloria-title">{author}</h2>
             </div>
-            <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: artistBioHTML("en") + artistBioHTML("zh") }} />
+            <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: spec.chunk === 0 ? artistBioHTML("en") : artistBioHTML("zh") }} />
           </div>
           <Folio number={number} tag={`${b.title} | ${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`} />
         </Page>
@@ -771,18 +773,52 @@ const CatalogBook = () => {
         }),
         years: yearRange(s.items.map((item) => item.year)),
       }));
+    // Essay layout rule: English gets its own pages, Chinese gets its own pages.
+    // The two languages never share an essay page, so the book does not read like a translation.
+    const pBlocks = (html: string) => html.match(/<p[^>]*>[\s\S]*?<\/p>/g) ?? (html ? [html] : []);
+    const someChunks = (blocks: string[]) => (blocks.length > 0 ? chunkHtmlBlocks(blocks, 2300) : []);
+    const langChunks = (en: string[], zh: string[]) => {
+      const all = [...someChunks(en), ...someChunks(zh)];
+      return all.length > 0 ? all : [""];
+    };
     const essayChunks: Record<string, string[]> = {};
     for (const chapter of chapters) {
-      const blocks = chapter.descriptionHtml.match(/<p[^>]*>[\s\S]*?<\/p>/g) ?? (chapter.descriptionHtml ? [chapter.descriptionHtml] : []);
-      essayChunks[chapter.key] = chunkHtmlBlocks(blocks, 2300);
+      if (chapter.key === "remains") {
+        const en = t.catalogBook.remainsEssayBody.filter((p) => !hasCjk(p)).map((p) => `<p>${p}</p>`);
+        const zh = t.catalogBook.remainsEssayBody.filter((p) => hasCjk(p)).map((p) => `<p>${p}</p>`);
+        essayChunks[chapter.key] = langChunks(en, zh);
+      } else if (chapter.key === "photography") {
+        const head = "<p>El Otro, El Mismo</p>";
+        const en = [...pBlocks(asParas(descOf(sectionsEn, "photography"))), head, ...t.catalogBook.elOtroEssayBody.filter((p) => !hasCjk(p)).map((p) => `<p>${p}</p>`)];
+        const zh = [...pBlocks(asParas(descOf(sectionsZh, "photography"))), head, ...t.catalogBook.elOtroEssayBody.filter((p) => hasCjk(p)).map((p) => `<p>${p}</p>`)];
+        essayChunks[chapter.key] = langChunks(en, zh);
+      } else {
+        const enHtml = descOf(sectionsEn, chapter.key);
+        const zhHtml = descOf(sectionsZh, chapter.key);
+        if (enHtml || zhHtml) {
+          essayChunks[chapter.key] = langChunks(pBlocks(asParas(enHtml)), pBlocks(asParas(zhHtml)));
+        } else if (chapter.key === "watercolor") {
+          essayChunks[chapter.key] = [`<p>${translations.en.watercolorCatalog.noteText}</p>`, `<p>${translations.zh.watercolorCatalog.noteText}</p>`];
+        } else if (chapter.key === "shop") {
+          essayChunks[chapter.key] = [`<p>${translations.en.hero.description}</p>`, `<p>${translations.zh.hero.description}</p>`];
+        } else {
+          essayChunks[chapter.key] = [""];
+        }
+      }
     }
     const byKey = (key: CatalogSectionKey) => chapters.find((c) => c.key === key)?.items.map((i) => i.item) ?? [];
     return {
       t,
       lang,
       chapters,
-      prefaceChunks: chunkParagraphs(t.catalogBook.prefaceBody, 2300),
-      paintingChunks: chunkParagraphs(t.catalogBook.paintingIntroBody, 2300),
+      prefaceChunks: [
+        ...chunkParagraphs(t.catalogBook.prefaceBody.filter((p) => !hasCjk(p)), 2300),
+        ...chunkParagraphs(t.catalogBook.prefaceBody.filter((p) => hasCjk(p)), 2300),
+      ],
+      paintingChunks: [
+        ...chunkParagraphs(t.catalogBook.paintingIntroBody.filter((p) => !hasCjk(p)), 2300),
+        ...chunkParagraphs(t.catalogBook.paintingIntroBody.filter((p) => hasCjk(p)), 2300),
+      ],
       essayChunks,
       years: yearRange(chapters.flatMap((c) => c.items.map((i) => i.item.year))),
       coverFront: byKey("watercolor")[0] ?? chapters[0]?.items[0]?.item,
