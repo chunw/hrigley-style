@@ -147,6 +147,7 @@ export const translations = {
       ],
       elOtroEssayBody: [
         "Lacan wrote that the self is born in a mirror: an image more whole than the body that claims it. We never meet ourselves directly. We arrive by way of other faces. In this series, portraits of others and self-portraits take turns, and the turn matters more than the likeness. A stranger holds still and returns my looking. Then I step into the frame and become the stranger. Other, then same, then other again. If identity is a recognition borrowed from outside, then a portrait is not a record of who someone is. It is the moment two people lend each other a self.",
+        "拉康说，自我诞生于一面镜子：一个比身体本身更完整的形象。我们从不直接遇见自己，我们总是绕道他人的面孔抵达。这一组作品里，他人的肖像与自画像轮流出现，轮换比相像更重要。陌生人停住，回望我的注视；然后我走进画面，成为那个陌生人。他者，然后自身，然后又是他者。如果身份是从外部借来的认领，那么肖像就不是「某人是谁」的记录，而是两个人互相借出一个自我的瞬间。",
       ],
       paintingIntroBody: [
         "Painting comes first in this book because it is where I started, and because it is the slowest of my media. A website can be revised overnight. A photograph is decided in a fraction of a second. A watercolor gives you one chance. The pigment touches wet paper and the decision is permanent. You can glaze over it, lift some of it, apologize to it. You cannot take it back. It is a medium that keeps its own archive of every move you made, including the mistakes. I have made my peace with that. The mistake stays in the painting the way the past stays in everything else in this book, visibly.",
@@ -317,6 +318,7 @@ export const translations = {
         "本系列入选 2024 年伦敦国际创意大赛（LICC）Official Selection。",
       ],
       elOtroEssayBody: [
+        "Lacan wrote that the self is born in a mirror: an image more whole than the body that claims it. We never meet ourselves directly. We arrive by way of other faces. In this series, portraits of others and self-portraits take turns, and the turn matters more than the likeness. A stranger holds still and returns my looking. Then I step into the frame and become the stranger. Other, then same, then other again. If identity is a recognition borrowed from outside, then a portrait is not a record of who someone is. It is the moment two people lend each other a self.",
         "拉康说，自我诞生于一面镜子：一个比身体本身更完整的形象。我们从不直接遇见自己，我们总是绕道他人的面孔抵达。这一组作品里，他人的肖像与自画像轮流出现，轮换比相像更重要。陌生人停住，回望我的注视；然后我走进画面，成为那个陌生人。他者，然后自身，然后又是他者。如果身份是从外部借来的认领，那么肖像就不是「某人是谁」的记录，而是两个人互相借出一个自我的瞬间。",
       ],
       paintingIntroBody: [
