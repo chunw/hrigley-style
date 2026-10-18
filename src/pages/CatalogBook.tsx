@@ -46,7 +46,7 @@ type PageSpec =
   | { kind: "frontispiece"; item: CatalogItem }
   | { kind: "title" }
   | { kind: "colophon" }
-  | { kind: "contents" }
+  | { kind: "contents"; chunk: number }
   | { kind: "preface"; chunk: number }
   | { kind: "painting-intro"; chunk: number }
   | { kind: "opener"; half: "left" | "right"; chapter: Chapter }
@@ -158,7 +158,8 @@ function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, pl
   specs.push(frontispiece ? { kind: "frontispiece", item: frontispiece } : { kind: "blank" });
   specs.push({ kind: "title" });
   specs.push({ kind: "colophon" });
-  specs.push({ kind: "contents" });
+  const tocPages = Math.max(1, Math.ceil((chapters.length + 4) / 9));
+  for (let i = 0; i < tocPages; i++) specs.push({ kind: "contents", chunk: i });
   for (let i = 0; i < prefaceChunkCount; i++) specs.push({ kind: "preface", chunk: i });
 
   let firstChapter = true;
@@ -522,18 +523,21 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
           num: pad2(c.number),
           title: c.title,
           sub: c.items.length > 0 ? `${c.items.length} ${b.works}${c.years ? ` · ${c.years}` : ""}` : c.years,
-          page: startOf((s) => s.kind === "opener" && s.chapter.key === c.key),
+          page: startOf((s) => "chapter" in s && s.chapter.key === c.key),
         })),
         { num: "", title: `${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`, sub: "", page: startOf((s) => s.kind === "about") },
         { num: "", title: `${translations.en.catalogBook.listOfPlates} · ${translations.zh.catalogBook.listOfPlates}`, sub: "", page: startOf((s) => s.kind === "plates-index") },
       ];
+      const pageRows = rows.slice(spec.chunk * 9, spec.chunk * 9 + 9);
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
-          <div className="bk-eyebrow">{translations.en.catalogBook.contents} · {translations.zh.catalogBook.contents}</div>
+          {spec.chunk === 0 && (
+            <div className="bk-eyebrow">{translations.en.catalogBook.contents} · {translations.zh.catalogBook.contents}</div>
+          )}
           <div className="bk-contents">
-            <h2 className="bk-section-title shop-title gloria-title">{b.contents}</h2>
+            {spec.chunk === 0 && <h2 className="bk-section-title shop-title gloria-title">{b.contents}</h2>}
             <ol>
-              {rows.map((r) => (
+              {pageRows.map((r) => (
                 <li
                   key={r.title}
                   className="bk-contents-link"

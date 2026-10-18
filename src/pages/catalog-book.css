@@ -9,10 +9,10 @@
 .bk-root {
   --trim-w: 8.5in;
   --trim-h: 11in;
-  --m-top: 0.7in;
-  --m-bottom: 0.85in;
-  --m-inner: 0.85in;
-  --m-outer: 0.6in;
+  --m-top: 0.85in;
+  --m-bottom: 1in;
+  --m-inner: 0.95in;
+  --m-outer: 0.85in;
   --col-pad: calc(var(--bleed) + 0.55in);
 
   --paper: #ffffff;
@@ -746,7 +746,15 @@
 }
 
 .bk-contents {
-  margin-top: 1in;
+  margin-top: 0.85in;
+}
+
+.bk-contents li > * {
+  min-width: 0;
+}
+
+.bk-contents-title {
+  overflow-wrap: break-word;
 }
 
 .bk-contents .bk-section-title {
