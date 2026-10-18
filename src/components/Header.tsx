@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Sun, Moon, BookOpen, User, Menu, ShoppingBag } from "lucide-react";
+import { Sun, Moon, User, Menu, ShoppingBag } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Lang } from "@/lib/translations";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -87,19 +87,6 @@ const Header = () => {
                 </Link>
               </TooltipTrigger>
               <TooltipContent>{t.index.ctaCatalogs}</TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  to="/book"
-                  aria-label={lang === "zh" ? "王淳绘画集" : "Chun Wang Paintings — the book"}
-                  className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
-                >
-                  {lang === "zh" ? "绘画集" : "book"}
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent>{lang === "zh" ? "王淳绘画集 2019–2026" : "Chun Wang Paintings 2019–2026"}</TooltipContent>
             </Tooltip>
 
             {/* Removed link to /all-items per request */}
@@ -210,7 +197,6 @@ const Header = () => {
 
                   <Link to="/about" className="text-sm p-2 text-foreground">{t.index.ctaAbout}</Link>
                   <Link to="/catalogs" className="text-sm p-2 text-foreground">{t.index.ctaCatalog}</Link>
-                  <Link to="/book" className="text-sm p-2 text-foreground">{lang === "zh" ? "绘画集" : "Book"}</Link>
                   <a
                     href={INSTAGRAM_URL}
                     target="_blank"
