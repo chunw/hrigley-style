@@ -11,6 +11,7 @@ import { translations, type Translations } from "@/lib/translations";
 import { PAGE_BACKGROUNDS, type PageBgKind } from "@/lib/pageBackgrounds";
 import { BOOK_SERIES } from "@/lib/bookSeries";
 import { EXHIBITIONS } from "@/lib/exhibitions";
+import { CV_SECTIONS } from "@/lib/cv";
 
 // ── Book geometry ─────────────────────────────────────────────────────────────
 // US Letter trim so the PDF prints 1:1 on a home/office printer, and matches the standard
@@ -55,6 +56,7 @@ type PageSpec =
   | { kind: "opener"; half: "left" | "right"; chapter: Chapter }
   | { kind: "essay"; chapter: Chapter; chunk: number }
   | { kind: "exhibitions"; chapter: Chapter }
+  | { kind: "cv"; chunk: number }
   | { kind: "divider"; chapter: Chapter }
   | { kind: "chapter-title"; chapter: Chapter }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
@@ -154,7 +156,7 @@ function chunkItems(items: EssayItem[], maxChars: number): EssayItem[][] {
 // ── Pagination ────────────────────────────────────────────────────────────────
 // Odd pages are rectos (right-hand), even pages versos. Chapter openers are two-page spreads,
 // so they must start on a verso; a blank is inserted before them whenever needed.
-function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, plateCount: number, prefaceChunkCount: number, paintingChunkCount: number, essayChunkCounts: Record<string, number>, dividersOn: boolean): InteriorPage[] {
+function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, plateCount: number, prefaceChunkCount: number, paintingChunkCount: number, essayChunkCounts: Record<string, number>, dividersOn: boolean, cvChunkCount = 0): InteriorPage[] {
   const specs: PageSpec[] = [];
   const nextIsVerso = () => (specs.length + 1) % 2 === 0;
 
@@ -164,7 +166,7 @@ function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, pl
   specs.push({ kind: "motto", lang: "en" });
   specs.push({ kind: "motto", lang: "zh" });
   specs.push({ kind: "colophon" });
-  const tocPages = Math.max(1, Math.ceil((chapters.length + 4) / 9));
+  const tocPages = Math.max(1, Math.ceil((chapters.length + 5) / 9));
   for (let i = 0; i < tocPages; i++) specs.push({ kind: "contents", chunk: i });
   for (let i = 0; i < prefaceChunkCount; i++) specs.push({ kind: "preface", chunk: i });
 
@@ -203,6 +205,8 @@ function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, pl
     specs.push({ kind: "plates-index", from, to });
     from = to + 1;
   }
+  // Her CV closes the book.
+  for (let i = 0; i < cvChunkCount; i++) specs.push({ kind: "cv", chunk: i });
 
   // Closing page sits on the final (verso) page of the last signature.
   while ((specs.length + 1) % SIGNATURE !== 0) specs.push({ kind: "blank" });
@@ -272,6 +276,8 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `chapter-title:${spec.chapter.key}`;
     case "exhibitions":
       return `exhibitions:${spec.chapter.key}`;
+    case "cv":
+      return `cv:${spec.chunk}`;
     case "opener":
       return `opener:${spec.chapter.key}:${spec.half}`;
     case "plate":
@@ -549,6 +555,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
         })),
         { num: "", title: `${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`, sub: "", page: startOf((s) => s.kind === "about") },
         { num: "", title: `${translations.en.catalogBook.listOfPlates} · ${translations.zh.catalogBook.listOfPlates}`, sub: "", page: startOf((s) => s.kind === "plates-index") },
+        { num: "", title: "CV · 简历", sub: "", page: startOf((s) => s.kind === "cv") },
       ];
       const pageRows = rows.slice(spec.chunk * 9, spec.chunk * 9 + 9);
       return (
@@ -785,6 +792,38 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
                 </li>
               ))}
             </ul>
+          </div>
+        </Page>
+      );
+    }
+
+    case "cv": {
+      const pageData = ctx.cvPages[spec.chunk] ?? { heading: null, entries: [] };
+      const out: ReactNode[] = [];
+      let lastHeading: string | null = null;
+      pageData.entries.forEach((e, i) => {
+        const sec = CV_SECTIONS.find((s) => s.entries.includes(e));
+        const h = sec?.heading ?? null;
+        if (h && h !== lastHeading) {
+          out.push(<h3 key={`h-${i}`} className="bk-cv-head">{h}</h3>);
+          lastHeading = h;
+        }
+        out.push(
+          <div key={i} className="bk-cv-entry">
+            <span className="bk-cv-year">{e.year}</span>
+            <span className="bk-cv-text">
+              {e.head}
+              {e.body && <span className="bk-cv-body">{e.body}</span>}
+            </span>
+          </div>,
+        );
+      });
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
+          {spec.chunk === 0 && <div className="bk-eyebrow">CV · 简历</div>}
+          <div className="bk-cv">
+            {spec.chunk === 0 && <h2 className="bk-cv-name shop-title">CHUN WANG</h2>}
+            {out}
           </div>
         </Page>
       );
@@ -1153,6 +1192,24 @@ const CatalogBook = () => {
       }
     }
     const byKey = (key: CatalogSectionKey) => chapters.find((c) => c.key === key)?.items.map((i) => i.item) ?? [];
+    // CV pages: flow the sections' entries over pages by character budget.
+    const cvPages: { heading: string | null; entries: { year: string; head: string; body?: string }[] }[] = [];
+    {
+      let cur: { heading: string | null; entries: { year: string; head: string; body?: string }[] } = { heading: null, entries: [] };
+      let len = 0;
+      const pushPage = () => { if (cur.entries.length > 0) cvPages.push(cur); cur = { heading: null, entries: [] }; len = 0; };
+      for (const sec of CV_SECTIONS) {
+        if (len > 1500) pushPage();
+        len += 90;
+        for (const e of sec.entries) {
+          const cost = e.year.length + e.head.length + (e.body?.length ?? 0) + 34;
+          if (len + cost > 2050 && cur.entries.length > 0) pushPage();
+          cur.entries.push(e);
+          len += cost;
+        }
+      }
+      pushPage();
+    }
     const prefaceParas = txParas("prefaceBody");
     const paintingParas = txParas("paintingIntroBody");
     return {
@@ -1168,6 +1225,7 @@ const CatalogBook = () => {
         ...chunkParas(paintingParas.filter((p) => hasCjk(p.text)), 2300),
       ],
       essayChunks,
+      cvPages,
       editMode,
       fieldTexts,
       openEditor,
@@ -1181,7 +1239,7 @@ const CatalogBook = () => {
 
   const plateCount = ctx.chapters.reduce((sum, c) => sum + c.items.length, 0);
   const frontispiece = ctx.chapters.find((c) => c.key === "photography")?.items[1]?.item ?? ctx.coverBack;
-  const pages = useMemo(() => paginate(ctx.chapters, frontispiece, plateCount, ctx.prefaceChunks.length, ctx.paintingChunks.length, Object.fromEntries(Object.entries(ctx.essayChunks).map(([k, v]) => [k, v.length])), dividers), [ctx, frontispiece, plateCount, dividers]);
+  const pages = useMemo(() => paginate(ctx.chapters, frontispiece, plateCount, ctx.prefaceChunks.length, ctx.paintingChunks.length, Object.fromEntries(Object.entries(ctx.essayChunks).map(([k, v]) => [k, v.length])), dividers, ctx.cvPages.length), [ctx, frontispiece, plateCount, dividers]);
   const spine = spineWidth(pages.length);
 
   const bleedIn = bleed ? BLEED : 0;

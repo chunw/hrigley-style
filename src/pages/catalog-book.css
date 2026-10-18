@@ -745,6 +745,45 @@
   color: var(--text);
 }
 
+.bk-cv {
+  margin-top: 0.5in;
+  max-width: 6in;
+}
+
+.bk-cv-name {
+  font-size: 0.34in;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.35in;
+}
+
+.bk-cv-head {
+  font-family: var(--label);
+  font-size: 0.105in;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin: 0.3in 0 0.14in;
+  color: #78716c;
+}
+
+.bk-cv-entry {
+  display: grid;
+  grid-template-columns: 0.95in 1fr;
+  gap: 0.18in;
+  margin-bottom: 0.085in;
+  font-size: 0.108in;
+  line-height: 1.65;
+}
+
+.bk-cv-year {
+  color: #57534e;
+  white-space: nowrap;
+}
+
+.bk-cv-body {
+  display: block;
+  color: #57534e;
+}
+
 .bk-exhibitions {
   margin-top: 0.55in;
   max-width: 5.6in;
