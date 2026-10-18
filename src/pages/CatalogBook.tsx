@@ -39,6 +39,7 @@ interface Chapter {
   items: { item: CatalogItem; plate: number }[];
   years: string;
   seriesOnly?: boolean;
+  seriesTextId?: string;
 }
 
 type PageSpec =
@@ -994,8 +995,21 @@ const CatalogBook = () => {
       years: s.years,
       seriesOnly: true,
     }));
+    // The watercolor catalog dissolves into its three named series (her call:
+    // no "Visions in Watercolor" umbrella chapter). Plates split from the
+    // watercolor catalog by title; the texts live in BOOK_SERIES.
+    const wcChapter = catalogChapters.find((ch) => ch.key === "watercolor");
+    const wcSplit = (id: string, title: string, prefix: string): Chapter => {
+      const items = (wcChapter?.items ?? []).filter(({ item }) => (item.title ?? "").startsWith(prefix));
+      return { key: id, number: 0, title, descriptionHtml: "", items, years: yearRange(items.map(({ item }) => item.year)), seriesTextId: id };
+    };
+    const splitChapters: Chapter[] = [
+      wcSplit("residuals", "Residuals · 残留", "Residuals"),
+      wcSplit("stillthings", "Still Things · 静物", "Still Things"),
+      wcSplit("road", "Notes from the Road · 旅途笔记", "Notes from the Road"),
+    ];
     const SECTION_ORDER = [
-      "remains", "watercolor", "spirit", "series:nostalgia", "photography",
+      "spirit", "remains", "residuals", "stillthings", "road", "series:nostalgia", "photography",
       "shop",
       "series:immemory", "series:negotiated", "series:unfinished", "series:google",
       "series:feedscanner", "series:cavedance", "series:infected",
@@ -1003,7 +1017,7 @@ const CatalogBook = () => {
       "series:pingpong",
       "series:interview",
     ];
-    const byChapterKey = new Map([...catalogChapters, ...seriesChapters].map((ch) => [ch.key, ch]));
+    const byChapterKey = new Map([...catalogChapters, ...seriesChapters, ...splitChapters].map((ch) => [ch.key, ch]));
     const chapters = SECTION_ORDER.map((k) => byChapterKey.get(k))
       .filter((ch): ch is Chapter => !!ch)
       .map((ch, i) => ({ ...ch, number: i + 1 }));
@@ -1063,6 +1077,18 @@ const CatalogBook = () => {
         const en = [...fieldItems("photography", "en"), head, ...paraItems(otro.filter((p) => !hasCjk(p.text)))];
         const zh = [...fieldItems("photography", "zh"), { ...head, edit: "field:photography:zh" }, ...paraItems(otro.filter((p) => hasCjk(p.text)))];
         essayChunks[chapter.key] = langChunks(en, zh);
+      } else if (chapter.seriesTextId) {
+        const s = BOOK_SERIES.find((x) => x.id === chapter.seriesTextId);
+        const enT = (s && (textEdits[`series:${s.id}:en`] ?? s.textEn)) || "";
+        const zhT = (s && (textEdits[`series:${s.id}:zh`] ?? s.textZh)) || "";
+        if (s) {
+          fieldTexts[`series:${s.id}:en`] = enT;
+          fieldTexts[`series:${s.id}:zh`] = zhT;
+        }
+        essayChunks[chapter.key] = langChunks(
+          enT ? pBlocks(asParas(enT)).map((html) => ({ html, edit: `series:${s?.id}:en` })) : [],
+          zhT ? pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s?.id}:zh` })) : [],
+        );
       } else if (fieldText(chapter.key, "en") || fieldText(chapter.key, "zh")) {
         essayChunks[chapter.key] = langChunks(fieldItems(chapter.key, "en"), fieldItems(chapter.key, "zh"));
       } else if (chapter.key === "watercolor") {
@@ -1122,7 +1148,7 @@ const CatalogBook = () => {
       pageBgFor,
       setPageBg,
       years: yearRange(chapters.flatMap((c) => c.items.map((i) => i.item.year))),
-      coverFront: byKey("watercolor")[0] ?? chapters[0]?.items[0]?.item,
+      coverFront: byKey("residuals")[0] ?? chapters[0]?.items[0]?.item,
       coverBack: byKey("photography")[0] ?? chapters[0]?.items[1]?.item,
     };
   }, [lang, t, textEdits, editMode, pageBgEdits]);
