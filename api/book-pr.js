@@ -3,7 +3,7 @@
 // Applies the edits to the source files on a fresh branch and opens a PR.
 // Requires env GITHUB_TOKEN (fine-grained, this repo: Contents + Pull requests RW).
 // Edit ids (see CatalogBook.tsx): tx:<arrayField>:<index> | tx:watercolorNote:<lang> |
-// tx:heroDesc:<lang> | field:<chapterKey>:<lang>
+// tx:heroDesc:<lang> | field:<chapterKey>:<lang> | series:<seriesId>:<lang>
 
 export const config = { maxDuration: 60 };
 
@@ -170,6 +170,11 @@ export default async function handler(req, res) {
         add("src/lib/translations.ts", {
           id,
           apply: (c) => replaceBlockScalar(c, "hero: {", m[1] === "en" ? 0 : 1, "description", newText),
+        });
+      } else if ((m = id.match(/^series:([a-z]+):(en|zh)$/))) {
+        add("src/lib/bookSeries.ts", {
+          id,
+          apply: (c) => replaceBlockScalar(c, `id: "${m[1]}"`, 0, m[2] === "en" ? "textEn" : "textZh", newText),
         });
       } else if ((m = id.match(/^field:(spirit|photography|watercolor):(en|zh)$/))) {
         const meta = META_FILES[m[1]];
