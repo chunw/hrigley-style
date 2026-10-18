@@ -570,6 +570,15 @@
   letter-spacing: 0.06em;
 }
 
+.bk-contents-link {
+  cursor: pointer;
+}
+
+.bk-contents-link:hover .bk-contents-title .shop-title {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 /* ── Essay / about pages ───────────────────────────────────────────────────── */
 .bk-essay {
   display: flex;
