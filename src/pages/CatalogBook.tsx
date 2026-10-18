@@ -182,8 +182,12 @@ function BookImage({ src, fallback, alt = "", className, style }: { src: string;
   );
 }
 
-function Page({ side, tone = "paper", className = "", children }: { side: Side; tone?: "paper" | "ink" | "accent"; className?: string; children?: ReactNode }) {
-  return <section className={`bk-page bk-${side} bk-tone-${tone} ${className}`}>{children}</section>;
+function Page({ side, tone = "paper", className = "", id, children }: { side: Side; tone?: "paper" | "ink" | "accent"; className?: string; id?: string; children?: ReactNode }) {
+  return (
+    <section id={id} className={`bk-page bk-${side} bk-tone-${tone} ${className}`}>
+      {children}
+    </section>
+  );
 }
 
 function RunningHead({ side, left, right }: { side: Side; left: string; right: string }) {
@@ -312,20 +316,21 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
   const { t, lang, chapters, years } = ctx;
   const b = t.catalogBook;
   const side: Side = number % 2 === 0 ? "verso" : "recto";
+  const pageId = `bk-page-${number}`;
   const author = lang === "zh" ? "王淳" : "Chun Wang";
   const bookHead = `${author} — ${b.title}`;
 
   switch (spec.kind) {
     case "half-title":
       return (
-        <Page side={side} className="bk-center">
+        <Page id={pageId} side={side} className="bk-center">
           <div className="bk-half-title shop-title">{b.title}</div>
         </Page>
       );
 
     case "frontispiece":
       return (
-        <Page side={side} tone="ink">
+        <Page id={pageId} side={side} tone="ink">
           <div className="bk-frontis">
             <BookImage src={spec.item.image_url} fallback={spec.item.fallback_image_url} alt={spec.item.title} />
           </div>
@@ -338,7 +343,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
 
     case "title":
       return (
-        <Page side={side} className="bk-title-page">
+        <Page id={pageId} side={side} className="bk-title-page">
           <div className="bk-eyebrow">
             {b.publisher}
             <br />
@@ -361,7 +366,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
     case "colophon": {
       const year = new Date().getFullYear();
       return (
-        <Page side={side} className="bk-colophon">
+        <Page id={pageId} side={side} className="bk-colophon">
           <div className="bk-colophon-body">
             <p className="bk-colophon-title shop-title">{b.title}</p>
             <p>{b.subtitle} · {years}</p>
@@ -396,13 +401,17 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
         { num: "", title: b.listOfPlates, sub: "", page: startOf((s) => s.kind === "plates-index") },
       ];
       return (
-        <Page side={side}>
+        <Page id={pageId} side={side}>
           <div className="bk-eyebrow">{b.contents}</div>
           <div className="bk-contents">
             <h2 className="bk-section-title shop-title gloria-title">{b.contents}</h2>
             <ol>
               {rows.map((r) => (
-                <li key={r.title}>
+                <li
+                  key={r.title}
+                  className="bk-contents-link"
+                  onClick={() => document.getElementById(`bk-page-${r.page}`)?.scrollIntoView({ behavior: "smooth", block: "start" })}
+                >
                   <span className="bk-contents-num">{r.num && <span className="bk-num-box">{r.num}</span>}</span>
                   <span className="bk-contents-title">
                     <span className="shop-title">{r.title}</span>
@@ -421,7 +430,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       const paras = ctx.prefaceChunks[spec.chunk] ?? [];
       const long = paras.join("").length > 1400;
       return (
-        <Page side={side}>
+        <Page id={pageId} side={side}>
           <RunningHead side={side} left={bookHead} right={b.preface} />
           <div className="bk-essay">
             {spec.chunk === 0 && (
@@ -444,7 +453,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       const paras = ctx.paintingChunks[spec.chunk] ?? [];
       const long = paras.join("").length > 1400;
       return (
-        <Page side={side}>
+        <Page id={pageId} side={side}>
           <RunningHead side={side} left={bookHead} right={b.paintingIntro} />
           <div className="bk-essay">
             {spec.chunk === 0 && (
@@ -468,7 +477,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       const front = chapter.items[0]?.item;
       const back = chapter.items[1]?.item ?? front;
       return (
-        <Page side={side} tone="ink" className={`bk-opener bk-opener-${half}`}>
+        <Page id={pageId} side={side} tone="ink" className={`bk-opener bk-opener-${half}`}>
           <div className="bk-spread-canvas">
             <Collage
               front={front}
@@ -500,7 +509,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       const last = chapter.items[chapter.items.length - 1]?.plate;
       const long = plainText(chapter.descriptionHtml).length > 1400;
       return (
-        <Page side={side}>
+        <Page id={pageId} side={side}>
           <RunningHead side={side} left={bookHead} right={chapter.title} />
           <div className="bk-essay">
             <div className="bk-essay-head">
@@ -522,7 +531,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
     case "plate": {
       const { item, chapter, plate } = spec;
       return (
-        <Page side={side} className="bk-plate-page">
+        <Page id={pageId} side={side} className="bk-plate-page">
           <RunningHead side={side} left={bookHead} right={chapter.title} />
           <div className="bk-plate-frame">
             <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
@@ -546,7 +555,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
 
     case "about":
       return (
-        <Page side={side}>
+        <Page id={pageId} side={side}>
           <RunningHead side={side} left={bookHead} right={b.aboutArtist} />
           <div className="bk-essay">
             <div className="bk-essay-head">
@@ -569,7 +578,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
         })),
       );
       return (
-        <Page side={side}>
+        <Page id={pageId} side={side}>
           <RunningHead side={side} left={bookHead} right={b.listOfPlates} />
           <div className="bk-index">
             {spec.from === 1 && <h2 className="bk-section-title shop-title gloria-title">{b.listOfPlates}</h2>}
@@ -601,7 +610,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
 
     case "end":
       return (
-        <Page side={side} className="bk-center">
+        <Page id={pageId} side={side} className="bk-center">
           <div className="bk-end">
             <div className="shop-title gloria-title">{b.publisher}</div>
             <div className="bk-end-sub">
@@ -612,7 +621,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       );
 
     case "blank":
-      return <Page side={side} />;
+      return <Page id={pageId} side={side} />;
   }
 }
 
