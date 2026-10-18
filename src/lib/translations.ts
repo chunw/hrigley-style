@@ -129,6 +129,7 @@ export const translations = {
       listOfPlates: "List of Plates",
       frontispiece: "Frontispiece",
       preface: "Preface",
+      paintingIntro: "Painting",
       prefaceBody: [
         "Some two thousand years ago, a potter shaped a small figure out of clay and sent it underground, to keep company with the dead. The figure was not made to be looked at for long. It was made to stay.",
         "It stayed. It outlived its maker, its language, and the entire world that once knew what it was for. It slept through dynasties. Then one day it was dug up, given a number, and placed behind glass, where it now stands in the quiet of a museum, lit like a jewel, explained by a label.",
@@ -143,6 +144,11 @@ export const translations = {
         "The figures in these six paintings are ancient pottery figurines, the kind made to accompany the dead. In the museum they stand in rows, patient and identically lit, as if history were a waiting room. I kept wondering what they were waiting for. So I gave them the present day. One studies a toilet with the gravity of a philosopher. Three attend a video meeting, in the posture anyone who has survived remote work will recognize, present in body and absent in every other way. Their faces do not change. That is the point. The expressions were fixed two thousand years ago, and they fit our meetings, our bathrooms, and our small daily despairs without any adjustment at all.",
         "People ask whether the series is a joke about the past. It is not. It is a joke about the present, told by the only witnesses who have seen enough of both to compare. The figurines have outlasted an empire. They will probably outlast the video call. Painting them is my way of keeping them on the record, and of asking what, in our own moment, is built to stay.",
         "The series was named an Official Selection of the London International Creative Competition in 2024.",
+      ],
+      paintingIntroBody: [
+        "Painting comes first in this book because it is where I started, and because it is the slowest of my media. A website can be revised overnight. A photograph is decided in a fraction of a second. A watercolor gives you one chance. The pigment touches wet paper and the decision is permanent. You can glaze over it, lift some of it, apologize to it. You cannot take it back. It is a medium that keeps its own archive of every move you made, including the mistakes. I have made my peace with that. The mistake stays in the painting the way the past stays in everything else in this book, visibly.",
+        "Four series of paintings are gathered here. Remains follows the museum figurines described in the preface, small ancient survivors re-employed in modern life. Visions in Watercolor is the opposite discipline, sketches from life, drawn quickly before the light or the sitter changes its mind. In the Spirit of the 21st Century takes its subjects from the news and from sociology research, the public world translated into figures. Nostalgia mixes painting with photography and memory, and looks at the past the way you look at a room you used to live in.",
+        "Different tempers, one question. What does an image keep, and what does it let go?",
       ],
       page: "Page",
       rights: "All rights reserved. No part of this publication may be reproduced, stored in a retrieval system, or transmitted in any form or by any means without the prior written permission of the artist.",
@@ -291,6 +297,7 @@ export const translations = {
       listOfPlates: "图版索引",
       frontispiece: "卷首插图",
       preface: "前言",
+      paintingIntro: "绘画",
       prefaceBody: [
         "大约两千年前，一位陶工捏了一个小小的陶俑，把它送进地下，去陪伴逝者。这个陶俑做出来，并不是为了让人长久观看的。它是为了留下来。",
         "它留下来了。它活得比它的制作者更久，比它的语言更久，比那个曾经知道它用途的整个世界都更久。它睡过了一个个朝代。然后有一天，它被挖了出来，编上号，放进玻璃柜，站在博物馆的安静里，被灯光照得像一件珠宝，旁边有一小块说明牌。",
@@ -299,14 +306,17 @@ export const translations = {
         "艺术史家哈尔·福斯特写过，档案艺术的理想媒介是互联网这个超级档案。我建过不少那样的档案，我爱它，但我仍然想做一本书。网站可以装下一切，又什么都留不住。它更新，它迁移，服务器的账单没人付，它就消失了。书是更古老的存留技术。它对未来的要求更少。纸、胶和线，履历还不错。",
         "所以这本书的主题是存留，方法是档案。而我的态度，希望比这两个词都简单。有些日子我像考古学家一样工作，向下挖，挖到一个当下问题的根部；另一些日子我像宇航员，踏进还没有人画过地图的地方。我挖出来和带回来的东西，往往很小、很日常、很好笑，因为生活的大部分正是这些东西，我们失去的也大部分是这些东西。",
         "慢慢读。这本书里没有什么在赶时间，而且其中大多数东西，已经等了很久很久了。",
-        "---",
       ],
       remainsEssayBody: [
         "《Remains》是一个持续中的综合材料绘画系列，灵感来自世界各地的博物馆。我希望通过这些作品，在现代艺术与往昔文明多样的美学之间，点起一点连续性的火花。",
         "这六幅画里的主角是古代陶俑，就是那种做出来陪伴逝者的陶俑。在博物馆里，它们成排站着，有耐心，灯光均匀，仿佛历史是一间候诊室。我一直想知道它们在等什么。于是我把当下给了它们。一个以哲学家的庄重研究一只马桶。三个参加视频会议，姿势是任何熬过远程工作的人都认得的，人在，心不在。它们的表情不变。这正是关键所在。那些表情在两千年前就定型了，而它们配我们的会议、我们的卫生间、我们日常的小绝望，严丝合缝，不需要任何调整。",
         "有人问，这个系列是不是在拿过去开玩笑。不是。它是在拿当下开玩笑，而讲笑话的，是唯一见过两边、有资格比较的见证者。陶俑熬过了一个帝国。它们大概也将熬过视频会议。画它们，是我把它们留在记录里的方式，也是我在问：在我们自己的时代里，有什么东西是造出来为了留下来的？",
         "本系列入选 2024 年伦敦国际创意大赛（LICC）Official Selection。",
-        "---",
+      ],
+      paintingIntroBody: [
+        "绘画在这本书里排第一，因为我从这里开始，也因为它是我所有媒介里最慢的一个。网站可以连夜修改。照片在一瞬间就做出了决定。水彩只给你一次机会。颜料碰到湿纸，决定就成立了。你可以罩染，可以洗掉一点，可以向它道歉。你收不回来。它是一种自带档案的媒介，你走过的每一步都在里面，包括错误。我已经和这一点和解了。错误留在画里，就像过去留在本书的其他一切东西里一样，看得见。",
+        "这一章收了四个绘画系列。Remains 就是前言里说的那些博物馆陶俑，古代的小幸存者，在现代生活里重新就业。Visions in Watercolor 是相反的功夫，写生，在光或者模特改变主意之前快速画下来。In the Spirit of the 21st Century 从新闻和社会学研究里取材，把公共世界翻译成人物。Nostalgia 把绘画与摄影、记忆混在一起，看待过去的方式，像看一间你曾经住过的房间。",
+        "性情各不相同，问题只有一个：一幅图像留住了什么，又放走了什么？",
       ],
       page: "页码",
       rights: "版权所有。未经艺术家事先书面许可，不得以任何形式或任何方式复制、存储或传播本出版物的任何部分。",
