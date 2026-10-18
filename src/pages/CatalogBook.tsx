@@ -1305,7 +1305,9 @@ const CatalogBook = () => {
   }, [lang, t, textEdits, editMode, pageBgEdits]);
 
   const plateCount = ctx.chapters.reduce((sum, c) => sum + c.items.length, 0);
-  const frontispiece = ctx.chapters.find((c) => c.key === "photography")?.items[1]?.item ?? ctx.coverBack;
+  // Frontispiece: Remains No.4 (The Meeting Has Begun) — the namesake series'
+  // emblem, in the quiet watercolor register the title page asks for.
+  const frontispiece = ctx.chapters.find((c) => c.key === "remains")?.items[3]?.item ?? ctx.coverBack;
   const pages = useMemo(() => paginate(ctx.chapters, frontispiece, plateCount, ctx.prefaceChunks.length, ctx.paintingChunks.length, Object.fromEntries(Object.entries(ctx.essayChunks).map(([k, v]) => [k, v.length])), dividers, ctx.cvPages.length), [ctx, frontispiece, plateCount, dividers]);
   const spine = spineWidth(pages.length);
 
