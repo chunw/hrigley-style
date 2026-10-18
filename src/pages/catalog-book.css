@@ -570,15 +570,6 @@
   letter-spacing: 0.06em;
 }
 
-.bk-contents-link {
-  cursor: pointer;
-}
-
-.bk-contents-link:hover .bk-contents-title .shop-title {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
 /* ── Essay / about pages ───────────────────────────────────────────────────── */
 .bk-essay {
   display: flex;
@@ -590,8 +581,9 @@
 
 .bk-essay-head .bk-section-title {
   margin: 0.2in 0 0.14in;
-  font-size: 0.42in;
-  letter-spacing: 0.06em;
+  font-size: 0.3in;
+  line-height: 1.15;
+  letter-spacing: 0.05em;
 }
 
 .bk-essay-meta {
@@ -602,15 +594,23 @@
 }
 
 .bk-essay-text {
-  margin-top: 0.45in;
-  max-width: 4.9in;
+  margin-top: 0.65in;
+  max-width: 4.55in;
   font-size: 9.5pt;
-  line-height: 1.65;
+  line-height: 1.95;
+}
+
+.bk-essay-text p {
+  margin: 0 0 1.1em;
+}
+
+.bk-essay-text p:last-child {
+  margin-bottom: 0;
 }
 
 .bk-essay-long {
-  font-size: 8.5pt;
-  line-height: 1.6;
+  font-size: 9.5pt;
+  line-height: 1.95;
 }
 
 /* ── Plates ────────────────────────────────────────────────────────────────── */
