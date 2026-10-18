@@ -29,9 +29,20 @@
   background: #161616;
 }
 
-/* Site background (--background in light mode) as the paper stock */
-.bk-cream {
+/* Paper stock choices (toolbar): white is the default above, cream is the warm stock,
+   black inverts the text variables on paper pages only (ink and accent pages keep theirs) */
+.bk-paper-cream {
   --paper: hsl(48 45% 95%);
+}
+
+.bk-paper-black {
+  --paper: #17140f;
+}
+
+.bk-paper-black .bk-page.bk-tone-paper {
+  --text: #f0e9da;
+  --muted: #a79c86;
+  --rule: #3a352a;
 }
 
 .bk-toolbar {
@@ -115,6 +126,37 @@
 
 .bk-tone-accent {
   background: var(--accent);
+}
+
+/* Chapter divider: full pink page with a white card, after the Egami catalog reference */
+.bk-divider-page {
+  --text: #26221c;
+  --muted: rgba(38, 34, 28, 0.62);
+  background: var(--accent);
+  align-items: center;
+  justify-content: center;
+}
+
+.bk-divider-card {
+  background: #fffdf8;
+  color: #26221c;
+  text-align: center;
+  padding: 0.6in 0.55in;
+  max-width: 4.8in;
+}
+
+.bk-divider-title {
+  margin: 0.22in 0 0.14in;
+  font-size: 0.34in;
+  line-height: 1.15;
+  letter-spacing: 0.04em;
+}
+
+.bk-divider-meta {
+  font-size: 6.5pt;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #767066;
 }
 
 /* Links in essays/bios are printed as plain text */
@@ -570,15 +612,6 @@
   letter-spacing: 0.06em;
 }
 
-.bk-contents-link {
-  cursor: pointer;
-}
-
-.bk-contents-link:hover .bk-contents-title .shop-title {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
 /* ── Essay / about pages ───────────────────────────────────────────────────── */
 .bk-essay {
   display: flex;
@@ -590,8 +623,9 @@
 
 .bk-essay-head .bk-section-title {
   margin: 0.2in 0 0.14in;
-  font-size: 0.42in;
-  letter-spacing: 0.06em;
+  font-size: 0.3in;
+  line-height: 1.15;
+  letter-spacing: 0.05em;
 }
 
 .bk-essay-meta {
@@ -602,15 +636,23 @@
 }
 
 .bk-essay-text {
-  margin-top: 0.45in;
-  max-width: 4.9in;
+  margin-top: 0.65in;
+  max-width: 4.55in;
   font-size: 9.5pt;
-  line-height: 1.65;
+  line-height: 1.95;
+}
+
+.bk-essay-text p {
+  margin: 0 0 1.1em;
+}
+
+.bk-essay-text p:last-child {
+  margin-bottom: 0;
 }
 
 .bk-essay-long {
-  font-size: 8.5pt;
-  line-height: 1.6;
+  font-size: 9.5pt;
+  line-height: 1.95;
 }
 
 /* ── Plates ────────────────────────────────────────────────────────────────── */

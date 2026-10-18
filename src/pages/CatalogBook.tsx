@@ -47,7 +47,8 @@ type PageSpec =
   | { kind: "preface"; chunk: number }
   | { kind: "painting-intro"; chunk: number }
   | { kind: "opener"; half: "left" | "right"; chapter: Chapter }
-  | { kind: "essay"; chapter: Chapter }
+  | { kind: "essay"; chapter: Chapter; chunk: number }
+  | { kind: "divider"; chapter: Chapter }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
   | { kind: "about" }
   | { kind: "plates-index"; from: number; to: number }
@@ -103,10 +104,29 @@ function chunkParagraphs(paras: readonly string[], maxChars: number): string[][]
   return chunks;
 }
 
+/** Group a chapter essay's <p> blocks into page-sized chunks by plain-text length. */
+function chunkHtmlBlocks(blocks: string[], maxChars: number): string[] {
+  const chunks: string[] = [];
+  let cur: string[] = [];
+  let len = 0;
+  for (const block of blocks) {
+    const n = plainText(block).length;
+    if (cur.length > 0 && len + n > maxChars) {
+      chunks.push(cur.join(""));
+      cur = [];
+      len = 0;
+    }
+    cur.push(block);
+    len += n;
+  }
+  if (cur.length > 0) chunks.push(cur.join(""));
+  return chunks.length > 0 ? chunks : [""];
+}
+
 // ── Pagination ────────────────────────────────────────────────────────────────
 // Odd pages are rectos (right-hand), even pages versos. Chapter openers are two-page spreads,
 // so they must start on a verso; a blank is inserted before them whenever needed.
-function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, plateCount: number, prefaceChunkCount: number, paintingChunkCount: number): InteriorPage[] {
+function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, plateCount: number, prefaceChunkCount: number, paintingChunkCount: number, essayChunkCounts: Record<string, number>, dividersOn: boolean): InteriorPage[] {
   const specs: PageSpec[] = [];
   const nextIsVerso = () => (specs.length + 1) % 2 === 0;
 
@@ -123,10 +143,12 @@ function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, pl
       for (let i = 0; i < paintingChunkCount; i++) specs.push({ kind: "painting-intro", chunk: i });
       firstChapter = false;
     }
+    if (dividersOn) specs.push({ kind: "divider", chapter });
     if (!nextIsVerso()) specs.push({ kind: "blank" });
     specs.push({ kind: "opener", half: "left", chapter });
     specs.push({ kind: "opener", half: "right", chapter });
-    specs.push({ kind: "essay", chapter });
+    const essayCount = essayChunkCounts[chapter.key] ?? 1;
+    for (let i = 0; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
     for (const { item, plate } of chapter.items) specs.push({ kind: "plate", chapter, item, plate });
   }
 
@@ -242,6 +264,7 @@ interface BookContext {
   coverFront?: CatalogItem;
   coverBack?: CatalogItem;
   prefaceChunks: string[][];
+  essayChunks: Record<string, string[]>;
   paintingChunks: string[][];
 }
 
@@ -472,6 +495,22 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       );
     }
 
+    case "divider": {
+      const { chapter } = spec;
+      return (
+        <Page id={pageId} side={side} className="bk-divider-page">
+          <div className="bk-divider-card">
+            <span className="bk-num-box">{pad2(chapter.number)}</span>
+            <h2 className="bk-divider-title shop-title">{chapter.title}</h2>
+            <div className="bk-divider-meta sans-label">
+              {chapter.items.length} {b.works}
+              {chapter.years ? ` · ${chapter.years}` : ""}
+            </div>
+          </div>
+        </Page>
+      );
+    }
+
     case "opener": {
       const { chapter, half } = spec;
       const front = chapter.items[0]?.item;
@@ -507,21 +546,23 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       const { chapter } = spec;
       const first = chapter.items[0]?.plate;
       const last = chapter.items[chapter.items.length - 1]?.plate;
-      const long = plainText(chapter.descriptionHtml).length > 1400;
+      const html = ctx.essayChunks[chapter.key]?.[spec.chunk] ?? "";
       return (
         <Page id={pageId} side={side}>
           <RunningHead side={side} left={bookHead} right={chapter.title} />
           <div className="bk-essay">
-            <div className="bk-essay-head">
-              <span className="bk-num-box">{pad2(chapter.number)}</span>
-              <h2 className="bk-section-title shop-title">{chapter.title}</h2>
-              <div className="bk-essay-meta sans-label">
-                {chapter.items.length} {b.works}
-                {chapter.years ? ` · ${chapter.years}` : ""}
-                {first ? ` · ${b.plates} ${first}–${last}` : ""}
+            {spec.chunk === 0 && (
+              <div className="bk-essay-head">
+                <span className="bk-num-box">{pad2(chapter.number)}</span>
+                <h2 className="bk-section-title shop-title">{chapter.title}</h2>
+                <div className="bk-essay-meta sans-label">
+                  {chapter.items.length} {b.works}
+                  {chapter.years ? ` · ${chapter.years}` : ""}
+                  {first ? ` · ${b.plates} ${first}–${last}` : ""}
+                </div>
               </div>
-            </div>
-            <div className={`bk-essay-text description-html ${long ? "bk-essay-long" : ""}`} dangerouslySetInnerHTML={{ __html: chapter.descriptionHtml }} />
+            )}
+            <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: html }} />
           </div>
           <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
         </Page>
@@ -665,7 +706,8 @@ const CatalogBook = () => {
   const b = t.catalogBook;
   const [part, setPart] = useState<Part>("complete");
   const [bleed, setBleed] = useState(false);
-  const [cream, setCream] = useState(true);
+  const [paper, setPaper] = useState<"white" | "cream" | "black">("cream");
+  const [dividers, setDividers] = useState(true);
   const [preparing, setPreparing] = useState(false);
   const [zoom, setZoom] = useState(1);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -724,6 +766,11 @@ const CatalogBook = () => {
         }),
         years: yearRange(s.items.map((item) => item.year)),
       }));
+    const essayChunks: Record<string, string[]> = {};
+    for (const chapter of chapters) {
+      const blocks = chapter.descriptionHtml.match(/<p[^>]*>[\s\S]*?<\/p>/g) ?? (chapter.descriptionHtml ? [chapter.descriptionHtml] : []);
+      essayChunks[chapter.key] = chunkHtmlBlocks(blocks, 1500);
+    }
     const byKey = (key: CatalogSectionKey) => chapters.find((c) => c.key === key)?.items.map((i) => i.item) ?? [];
     return {
       t,
@@ -731,6 +778,7 @@ const CatalogBook = () => {
       chapters,
       prefaceChunks: chunkParagraphs(t.catalogBook.prefaceBody, 1500),
       paintingChunks: chunkParagraphs(t.catalogBook.paintingIntroBody, 1500),
+      essayChunks,
       years: yearRange(chapters.flatMap((c) => c.items.map((i) => i.item.year))),
       coverFront: byKey("watercolor")[0] ?? chapters[0]?.items[0]?.item,
       coverBack: byKey("photography")[0] ?? chapters[0]?.items[1]?.item,
@@ -739,7 +787,7 @@ const CatalogBook = () => {
 
   const plateCount = ctx.chapters.reduce((sum, c) => sum + c.items.length, 0);
   const frontispiece = ctx.chapters.find((c) => c.key === "photography")?.items[1]?.item ?? ctx.coverBack;
-  const pages = useMemo(() => paginate(ctx.chapters, frontispiece, plateCount, ctx.prefaceChunks.length, ctx.paintingChunks.length), [ctx, frontispiece, plateCount]);
+  const pages = useMemo(() => paginate(ctx.chapters, frontispiece, plateCount, ctx.prefaceChunks.length, ctx.paintingChunks.length, Object.fromEntries(Object.entries(ctx.essayChunks).map(([k, v]) => [k, v.length])), dividers), [ctx, frontispiece, plateCount, dividers]);
   const spine = spineWidth(pages.length);
 
   const bleedIn = bleed ? BLEED : 0;
@@ -815,7 +863,7 @@ const CatalogBook = () => {
     }`;
 
   return (
-    <div className={`bk-root ${cream ? "bk-cream" : ""}`} style={rootStyle}>
+    <div className={`bk-root bk-paper-${paper}`} style={rootStyle}>
       {/* One @page size per export: interior/complete pages, or the wide cover wrap. */}
       <style>{`@page { size: ${sheetW}in ${pageH}in; margin: 0; }`}</style>
 
@@ -840,8 +888,21 @@ const CatalogBook = () => {
             <button type="button" onClick={() => setBleed((v) => !v)} className={toggleClass(bleed)}>
               {b.bleed} {BLEED}in
             </button>
-            <button type="button" onClick={() => setCream((v) => !v)} className={toggleClass(cream)}>
-              {b.creamPaper}
+            <div className="flex">
+              {(
+                [
+                  ["white", "White", "白色"],
+                  ["cream", "Cream", "米色"],
+                  ["black", "Black", "黑色"],
+                ] as const
+              ).map(([k, en, zh]) => (
+                <button key={k} type="button" onClick={() => setPaper(k)} className={`${toggleClass(paper === k)} -ml-px first:ml-0`}>
+                  {lang === "zh" ? zh : en}
+                </button>
+              ))}
+            </div>
+            <button type="button" onClick={() => setDividers((v) => !v)} className={toggleClass(dividers)}>
+              {lang === "zh" ? "粉色分隔页" : "Pink dividers"}
             </button>
             <button type="button" onClick={toggleLang} className={toggleClass(false)}>
               {lang === "en" ? "中文" : "EN"}
