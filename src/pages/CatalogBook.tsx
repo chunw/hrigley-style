@@ -10,6 +10,7 @@ import { getCombinedCatalogSections, type CatalogItem, type CatalogSection, type
 import { translations, type Translations } from "@/lib/translations";
 import { PAGE_BACKGROUNDS, type PageBgKind } from "@/lib/pageBackgrounds";
 import { BOOK_SERIES } from "@/lib/bookSeries";
+import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS } from "@/lib/exhibitions";
 import { CV_SECTIONS } from "@/lib/cv";
 import { CANVA_COVER } from "@/lib/coverImage";
@@ -1082,7 +1083,7 @@ const CatalogBook = () => {
       wcSplit("road", "Notes from the Road · 旅途笔记", "Notes from the Road"),
     ];
     const SECTION_ORDER = [
-      "spirit", "remains", "residuals", "stillthings", "road", "photography", "series:nostalgia",
+      "spirit", "remains", "residuals", "stillthings", "road", "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography", "series:nostalgia",
       "shop",
       "series:immemory", "series:negotiated", "series:unfinished", "series:google",
       "series:feedscanner", "series:cavedance", "series:infected",
@@ -1090,10 +1091,68 @@ const CatalogBook = () => {
       "series:pingpong",
       "series:interview",
     ];
-    const byChapterKey = new Map([...catalogChapters, ...seriesChapters, ...splitChapters].map((ch) => [ch.key, ch]));
+    // Photography, restructured at her direction (2026-10-18): the part is
+    // "Inner Wilderness · 内在荒原" — an opening text chapter carrying the
+    // landscape statement — then each series stands as its own section with
+    // its own text: Death Valley, Sahara, Scottish Highlands, Theater, and
+    // El Otro, El Mismo (the old mixed photography chapter) closing the part.
+    // Sahara and Theater #2/#3 are printInCatalog=false on the site, so they
+    // never reached the book through the catalog sections; they are added
+    // here directly from the photography data.
+    const photoParent = catalogChapters.find((ch) => ch.key === "photography");
+    const photoItems = photoParent?.items ?? [];
+    const titleHas = (pair: { item: CatalogItem }, ...needles: string[]) =>
+      needles.some((n) => (pair.item.title ?? "").includes(n));
+    const yrOf = (pairs: { item: CatalogItem }[]) => {
+      const ys = pairs.map(({ item }) => parseInt(item.year ?? "", 10)).filter((y) => !Number.isNaN(y));
+      if (ys.length === 0) return "";
+      const lo = Math.min(...ys);
+      const hi = Math.max(...ys);
+      return lo === hi ? `${lo}` : `${lo} – ${hi}`;
+    };
+    const mkPhotoItem = (workId: string): CatalogItem | null => {
+      const w = photographyWorks.find((x) => x.id === workId);
+      if (!w) return null;
+      const tpl = photoItems[0]?.item.image_url ?? "";
+      const img = tpl.includes("/photography/")
+        ? tpl.replace(/\/photography\/\d+\//, `/photography/${workId.padStart(2, "0")}/`)
+        : `/photography/${workId.padStart(2, "0")}/main.jpg`;
+      return {
+        title: lang === "zh" ? (w.titleZh ?? w.title) : w.title,
+        metaLine: [w.year, w.medium].filter(Boolean).join(" · "),
+        year: w.year,
+        medium: w.medium,
+        dimensions: lang === "zh" ? (w.dimensionsZh ?? w.dimensions) : w.dimensions,
+        description: lang === "zh" ? (w.descriptionZh ?? w.description) : w.description,
+        category: lang === "zh" ? "内在荒原" : "Inner Wilderness",
+        image_url: img,
+        fallback_image_url: img,
+      };
+    };
+    const dvItems = photoItems.filter((p) => titleHas(p, "Death Valley", "死亡谷"));
+    const hgItems = photoItems.filter((p) => titleHas(p, "Highland", "高地"));
+    const thKnown = photoItems.filter((p) => titleHas(p, "Theater", "死亡的戏剧"));
+    const thItems = [...thKnown, ...["10", "11"].map(mkPhotoItem).filter((x): x is CatalogItem => !!x).map((item) => ({ item, plate: 0 }))];
+    const saharaItem = mkPhotoItem("7");
+    const usedPhoto = new Set([...dvItems, ...hgItems, ...thKnown]);
+    const elOtroItems = photoItems.filter((p) => !usedPhoto.has(p));
+    const photoChapters: Chapter[] = photoParent
+      ? [
+          { key: "innerwilderness", number: 0, title: "Inner Wilderness · 内在荒原", descriptionHtml: "", years: "2017 – 2025", items: [], seriesTextId: "innerwilderness" },
+          { key: "deathvalley", number: 0, title: "Death Valley · 死亡谷", descriptionHtml: "", years: yrOf(dvItems), items: dvItems, seriesTextId: "deathvalley" },
+          { key: "sahara", number: 0, title: "Sahara · 撒哈拉", descriptionHtml: "", years: saharaItem?.year ?? "", items: saharaItem ? [{ item: saharaItem, plate: 0 }] : [], seriesTextId: "sahara" },
+          { key: "highlands", number: 0, title: "Scottish Highlands · 苏格兰高地", descriptionHtml: "", years: yrOf(hgItems), items: hgItems, seriesTextId: "highlands" },
+          { key: "theater", number: 0, title: "Theater · 登场", descriptionHtml: "", years: yrOf(thItems), items: thItems, seriesTextId: "theater" },
+          { ...photoParent, title: "El Otro, El Mismo · 另一个，同一个", descriptionHtml: "", years: yrOf(elOtroItems), items: elOtroItems },
+        ]
+      : [];
+    const byChapterKey = new Map([...catalogChapters, ...photoChapters, ...seriesChapters, ...splitChapters].map((ch) => [ch.key, ch]));
     const chapters = SECTION_ORDER.map((k) => byChapterKey.get(k))
       .filter((ch): ch is Chapter => !!ch)
       .map((ch, i) => ({ ...ch, number: i + 1 }));
+    // Plates are numbered in book order across the whole volume.
+    let plateSeq = 0;
+    for (const ch of chapters) ch.items = ch.items.map(({ item }) => ({ item, plate: ++plateSeq }));
 
     // Essay layout rule: English gets its own pages, Chinese gets its own pages.
     // The two languages never share an essay page, so the book does not read like a translation.
@@ -1103,7 +1162,7 @@ const CatalogBook = () => {
     const fieldText = (key: CatalogSectionKey, which: "en" | "zh") =>
       textEdits[`field:${key}:${which}`] ?? descOf(which === "en" ? sectionsEn : sectionsZh, key);
     const fieldTexts: Record<string, string> = {};
-    for (const key of ["spirit", "photography", "watercolor"] as const) {
+    for (const key of ["spirit", "watercolor"] as const) {
       fieldTexts[`field:${key}:en`] = fieldText(key, "en");
       fieldTexts[`field:${key}:zh`] = fieldText(key, "zh");
     }
@@ -1145,10 +1204,10 @@ const CatalogBook = () => {
         const leadZh: EssayItem = { html: "<p>《遗迹》是一个源于微妙荒诞感的综合媒材系列。研读古代陶俑时，我被它们那种熟悉、笨拙、僵在无所事事半途的表情迷住了。</p>" };
         essayChunks[chapter.key] = langChunks([leadEn, ...paraItems(paras.filter((p) => !hasCjk(p.text)))], [leadZh, ...paraItems(paras.filter((p) => hasCjk(p.text)))]);
       } else if (chapter.key === "photography") {
-        const head: EssayItem = { html: "<p>El Otro, El Mismo</p>", edit: "field:photography:en" };
+        const head: EssayItem = { html: "<p>El Otro, El Mismo</p>" };
         const otro = txParas("elOtroEssayBody");
-        const en = [...fieldItems("photography", "en"), head, ...paraItems(otro.filter((p) => !hasCjk(p.text)))];
-        const zh = [...fieldItems("photography", "zh"), { ...head, edit: "field:photography:zh" }, ...paraItems(otro.filter((p) => hasCjk(p.text)))];
+        const en = [head, ...paraItems(otro.filter((p) => !hasCjk(p.text)))];
+        const zh = [head, ...paraItems(otro.filter((p) => hasCjk(p.text)))];
         essayChunks[chapter.key] = langChunks(en, zh);
       } else if (chapter.seriesTextId) {
         const s = BOOK_SERIES.find((x) => x.id === chapter.seriesTextId);
