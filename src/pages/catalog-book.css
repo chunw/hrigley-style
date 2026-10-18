@@ -658,7 +658,17 @@
 }
 
 /* ── Front matter ──────────────────────────────────────────────────────────── */
+.bk-half-block {
+  text-align: center;
+}
+
 .bk-half-title {
+  font-size: 13pt;
+  letter-spacing: 0.32em;
+}
+
+.bk-half-title-zh {
+  margin-top: 0.16in;
   font-size: 13pt;
   letter-spacing: 0.32em;
 }

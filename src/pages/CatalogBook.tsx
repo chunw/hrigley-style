@@ -438,7 +438,10 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
     case "half-title":
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-center">
-          <div className="bk-half-title shop-title">{b.title}</div>
+          <div className="bk-half-block">
+            <div className="bk-half-title shop-title">{b.title}</div>
+            <div className="bk-half-title-zh shop-title">{translations.zh.remainsCatalog.subtitle}</div>
+          </div>
         </Page>
       );
 
