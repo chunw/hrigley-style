@@ -10,6 +10,7 @@ import { getCombinedCatalogSections, type CatalogItem, type CatalogSection, type
 import { translations, type Translations } from "@/lib/translations";
 import { PAGE_BACKGROUNDS, type PageBgKind } from "@/lib/pageBackgrounds";
 import { BOOK_SERIES } from "@/lib/bookSeries";
+import { EXHIBITIONS } from "@/lib/exhibitions";
 
 // ── Book geometry ─────────────────────────────────────────────────────────────
 // US Letter trim so the PDF prints 1:1 on a home/office printer, and matches the standard
@@ -53,6 +54,7 @@ type PageSpec =
   | { kind: "painting-intro"; chunk: number }
   | { kind: "opener"; half: "left" | "right"; chapter: Chapter }
   | { kind: "essay"; chapter: Chapter; chunk: number }
+  | { kind: "exhibitions"; chapter: Chapter }
   | { kind: "divider"; chapter: Chapter }
   | { kind: "chapter-title"; chapter: Chapter }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
@@ -179,6 +181,7 @@ function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, pl
     if (chapter.seriesOnly) {
       const seriesEssayCount = essayChunkCounts[chapter.key] ?? 0;
       for (let i = 0; i < seriesEssayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
+      if (EXHIBITIONS[chapter.key]?.length) specs.push({ kind: "exhibitions", chapter });
       continue;
     }
     if (!nextIsVerso()) specs.push({ kind: "blank" });
@@ -187,6 +190,7 @@ function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, pl
     const essayCount = essayChunkCounts[chapter.key] ?? 1;
     for (let i = 0; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
     for (const { item, plate } of chapter.items) specs.push({ kind: "plate", chapter, item, plate });
+    if (EXHIBITIONS[chapter.key]?.length) specs.push({ kind: "exhibitions", chapter });
   }
 
   // Back matter opens on a recto, as is conventional.
@@ -266,6 +270,8 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `divider:${spec.chapter.key}`;
     case "chapter-title":
       return `chapter-title:${spec.chapter.key}`;
+    case "exhibitions":
+      return `exhibitions:${spec.chapter.key}`;
     case "opener":
       return `opener:${spec.chapter.key}:${spec.half}`;
     case "plate":
@@ -763,6 +769,26 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
           <Folio number={number} tag={`${b.title} | ${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`} />
         </Page>
       );
+
+    case "exhibitions": {
+      const entries = EXHIBITIONS[spec.chapter.key] ?? [];
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
+          <div className="bk-eyebrow">Exhibitions · 展览</div>
+          <div className="bk-exhibitions">
+            <h3 className="bk-exhibitions-head shop-title">{spec.chapter.title}</h3>
+            <ul>
+              {entries.map((e, i) => (
+                <li key={i}>
+                  <span className="bk-exhibitions-en">{e.en}</span>
+                  <span className="bk-exhibitions-zh">{e.zh}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Page>
+      );
+    }
 
     case "plates-index": {
       const plateRows = chapters.flatMap((c) =>
