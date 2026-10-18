@@ -168,6 +168,10 @@ function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, pl
   const tocPages = Math.max(1, Math.ceil((chapters.length + 5) / 9));
   for (let i = 0; i < tocPages; i++) specs.push({ kind: "contents", chunk: i });
   for (let i = 0; i < prefaceChunkCount; i++) specs.push({ kind: "preface", chunk: i });
+  // About the Artist stands at the front of the book, right after the preface
+  // (her direction, 2026-10-18) — the CV still closes the book.
+  specs.push({ kind: "about", chunk: 0 });
+  specs.push({ kind: "about", chunk: 1 });
 
   let firstChapter = true;
   for (const chapter of chapters) {
@@ -196,9 +200,6 @@ function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, pl
 
   // Back matter opens on a recto, as is conventional.
   if (nextIsVerso()) specs.push({ kind: "blank" });
-  specs.push({ kind: "about", chunk: 0 });
-  specs.push({ kind: "about", chunk: 1 });
-  if (!nextIsVerso()) specs.push({ kind: "blank" });
   for (let from = 1; from <= plateCount; ) {
     const to = Math.min(plateCount, from + (from === 1 ? INDEX_ROWS_FIRST : INDEX_ROWS_REST) - 1);
     specs.push({ kind: "plates-index", from, to });
@@ -543,6 +544,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       const startOf = (pred: (s: PageSpec) => boolean) => pages.find((p) => pred(p.spec))?.number ?? 0;
       const rows = [
         { num: "", title: `${translations.en.catalogBook.preface} · ${translations.zh.catalogBook.preface}`, sub: "", page: startOf((s) => s.kind === "preface") },
+        { num: "", title: `${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`, sub: "", page: startOf((s) => s.kind === "about") },
         { num: "", title: `${translations.en.catalogBook.paintingIntro} · ${translations.zh.catalogBook.paintingIntro}`, sub: "", page: startOf((s) => s.kind === "painting-intro") },
         ...chapters.map((c) => ({
           num: pad2(c.number),
@@ -550,7 +552,6 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
           sub: c.items.length > 0 ? `${c.items.length} ${b.works}${c.years ? ` · ${c.years}` : ""}` : c.years,
           page: startOf((s) => "chapter" in s && s.chapter.key === c.key),
         })),
-        { num: "", title: `${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`, sub: "", page: startOf((s) => s.kind === "about") },
         { num: "", title: `${translations.en.catalogBook.listOfPlates} · ${translations.zh.catalogBook.listOfPlates}`, sub: "", page: startOf((s) => s.kind === "plates-index") },
         { num: "", title: "CV · 简历", sub: "", page: startOf((s) => s.kind === "cv") },
       ];
