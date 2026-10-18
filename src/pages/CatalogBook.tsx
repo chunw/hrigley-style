@@ -774,15 +774,15 @@ const CatalogBook = () => {
     const essayChunks: Record<string, string[]> = {};
     for (const chapter of chapters) {
       const blocks = chapter.descriptionHtml.match(/<p[^>]*>[\s\S]*?<\/p>/g) ?? (chapter.descriptionHtml ? [chapter.descriptionHtml] : []);
-      essayChunks[chapter.key] = chunkHtmlBlocks(blocks, 1500);
+      essayChunks[chapter.key] = chunkHtmlBlocks(blocks, 2300);
     }
     const byKey = (key: CatalogSectionKey) => chapters.find((c) => c.key === key)?.items.map((i) => i.item) ?? [];
     return {
       t,
       lang,
       chapters,
-      prefaceChunks: chunkParagraphs(t.catalogBook.prefaceBody, 1500),
-      paintingChunks: chunkParagraphs(t.catalogBook.paintingIntroBody, 1500),
+      prefaceChunks: chunkParagraphs(t.catalogBook.prefaceBody, 2300),
+      paintingChunks: chunkParagraphs(t.catalogBook.paintingIntroBody, 2300),
       essayChunks,
       years: yearRange(chapters.flatMap((c) => c.items.map((i) => i.item.year))),
       coverFront: byKey("watercolor")[0] ?? chapters[0]?.items[0]?.item,
