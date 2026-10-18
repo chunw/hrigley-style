@@ -705,6 +705,12 @@
   letter-spacing: 0.32em;
 }
 
+.bk-title-zh {
+  font-size: 0.52in;
+  margin-top: 0.14in;
+  color: #44403c;
+}
+
 .bk-title-main {
   margin: 0;
   line-height: 0.9;

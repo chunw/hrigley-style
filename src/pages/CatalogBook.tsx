@@ -470,8 +470,8 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-center">
           <div className="bk-half-block">
-            <div className="bk-half-title shop-title">{b.title}</div>
-            <div className="bk-half-title-zh shop-title">{translations.zh.remainsCatalog.subtitle}</div>
+            <div className="bk-half-title shop-title">{translations.en.catalogBook.title}</div>
+            <div className="bk-half-title-zh shop-title">{translations.zh.catalogBook.title}</div>
           </div>
         </Page>
       );
@@ -499,9 +499,10 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
           </div>
           <div className="bk-title-body">
             <div className="bk-title-author sans-label">{author}</div>
-            <h1 className="bk-title-main shop-title gloria-title" style={{ fontSize: displaySize(b.title, 6.8, 1.35) }}>
-              {b.title}
+            <h1 className="bk-title-main shop-title gloria-title" style={{ fontSize: displaySize(translations.en.catalogBook.title, 6.8, 1.35) }}>
+              {translations.en.catalogBook.title}
             </h1>
+            <div className="bk-title-zh shop-title">{translations.zh.catalogBook.title}</div>
             <div className="bk-rule" />
             <div className="bk-title-meta">
               <span className="sans-label">{translations.en.catalogBook.subtitle} · {translations.zh.catalogBook.subtitle}</span>
@@ -516,7 +517,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-colophon">
           <div className="bk-colophon-body">
-            <p className="bk-colophon-title shop-title">{b.title}</p>
+            <p className="bk-colophon-title shop-title">{translations.en.catalogBook.title} · {translations.zh.catalogBook.title}</p>
             <p>{translations.en.catalogBook.subtitle} · {translations.zh.catalogBook.subtitle} · {years}</p>
             <p>© {year} Chun Wang. {translations.en.catalogBook.rights}</p>
             <p>© {year} 王淳。{translations.zh.catalogBook.rights}</p>
@@ -586,11 +587,11 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       const long = paras.map((p) => p.text).join("").length > 1400;
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
-          <RunningHead side={side} left={bookHead} right={b.preface} />
+          <RunningHead side={side} left={bookHead} right={`${translations.en.catalogBook.preface} · ${translations.zh.catalogBook.preface}`} />
           <div className="bk-essay">
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
-                <h2 className="bk-section-title shop-title gloria-title">{b.preface}</h2>
+                <h2 className="bk-section-title shop-title gloria-title">{translations.en.catalogBook.preface} · {translations.zh.catalogBook.preface}</h2>
               </div>
             )}
             <div className={`bk-essay-text description-html ${long ? "bk-essay-long" : ""}`}>
@@ -605,7 +606,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
               ))}
             </div>
           </div>
-          <Folio number={number} tag={`${b.title} | ${b.preface}`} />
+          <Folio number={number} tag={`${b.title} | ${translations.en.catalogBook.preface} · ${translations.zh.catalogBook.preface}`} />
         </Page>
       );
     }
@@ -615,11 +616,11 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       const long = paras.map((p) => p.text).join("").length > 1400;
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
-          <RunningHead side={side} left={bookHead} right={b.paintingIntro} />
+          <RunningHead side={side} left={bookHead} right={`${translations.en.catalogBook.paintingIntro} · ${translations.zh.catalogBook.paintingIntro}`} />
           <div className="bk-essay">
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
-                <h2 className="bk-section-title shop-title gloria-title">{b.paintingIntro}</h2>
+                <h2 className="bk-section-title shop-title gloria-title">{translations.en.catalogBook.paintingIntro} · {translations.zh.catalogBook.paintingIntro}</h2>
               </div>
             )}
             <div className={`bk-essay-text description-html ${long ? "bk-essay-long" : ""}`}>
@@ -634,7 +635,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
               ))}
             </div>
           </div>
-          <Folio number={number} tag={`${b.title} | ${b.paintingIntro}`} />
+          <Folio number={number} tag={`${b.title} | ${translations.en.catalogBook.paintingIntro} · ${translations.zh.catalogBook.paintingIntro}`} />
         </Page>
       );
     }
@@ -847,16 +848,16 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       );
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
-          <RunningHead side={side} left={bookHead} right={b.listOfPlates} />
+          <RunningHead side={side} left={bookHead} right={`${translations.en.catalogBook.listOfPlates} · ${translations.zh.catalogBook.listOfPlates}`} />
           <div className="bk-index">
-            {spec.from === 1 && <h2 className="bk-section-title shop-title gloria-title">{b.listOfPlates}</h2>}
+            {spec.from === 1 && <h2 className="bk-section-title shop-title gloria-title">{translations.en.catalogBook.listOfPlates} · {translations.zh.catalogBook.listOfPlates}</h2>}
             <table>
               <thead>
                 <tr>
-                  <th>{b.plate}</th>
+                  <th>{translations.en.catalogBook.plate} · {translations.zh.catalogBook.plate}</th>
                   <th />
                   <th />
-                  <th>{b.page}</th>
+                  <th>{translations.en.catalogBook.page} · {translations.zh.catalogBook.page}</th>
                 </tr>
               </thead>
               <tbody>
