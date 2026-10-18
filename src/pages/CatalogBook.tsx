@@ -680,8 +680,12 @@ const CatalogBook = () => {
         descriptionHtml:
           s.key === "remains"
             ? t.catalogBook.remainsEssayBody.map((p) => `<p>${p}</p>`).join("")
-            : s.descriptionHtml ||
-              (s.key === "watercolor" ? `<p>${t.watercolorCatalog.noteText}</p>` : s.key === "shop" ? `<p>${t.hero.description}</p>` : ""),
+            : s.key === "photography"
+              ? (s.descriptionHtml || "") +
+                `<p>El Otro, El Mismo</p>` +
+                t.catalogBook.elOtroEssayBody.map((p) => `<p>${p}</p>`).join("")
+              : s.descriptionHtml ||
+                (s.key === "watercolor" ? `<p>${t.watercolorCatalog.noteText}</p>` : s.key === "shop" ? `<p>${t.hero.description}</p>` : ""),
         items: s.items.map((item, ii) => {
           // Bilingual plate titles from the sample chapter draft; only No.1 and No.4 have titles so far.
           const caption =

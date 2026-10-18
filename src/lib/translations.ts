@@ -145,6 +145,9 @@ export const translations = {
         "People ask whether the series is a joke about the past. It is not. It is a joke about the present, told by the only witnesses who have seen enough of both to compare. The figurines have outlasted an empire. They will probably outlast the video call. Painting them is my way of keeping them on the record, and of asking what, in our own moment, is built to stay.",
         "The series was named an Official Selection of the London International Creative Competition in 2024.",
       ],
+      elOtroEssayBody: [
+        "Lacan wrote that the self is born in a mirror: an image more whole than the body that claims it. We never meet ourselves directly. We arrive by way of other faces. In this series, portraits of others and self-portraits take turns, and the turn matters more than the likeness. A stranger holds still and returns my looking. Then I step into the frame and become the stranger. Other, then same, then other again. If identity is a recognition borrowed from outside, then a portrait is not a record of who someone is. It is the moment two people lend each other a self.",
+      ],
       paintingIntroBody: [
         "Painting comes first in this book because it is where I started, and because it is the slowest of my media. A website can be revised overnight. A photograph is decided in a fraction of a second. A watercolor gives you one chance. The pigment touches wet paper and the decision is permanent. You can glaze over it, lift some of it, apologize to it. You cannot take it back. It is a medium that keeps its own archive of every move you made, including the mistakes. I have made my peace with that. The mistake stays in the painting the way the past stays in everything else in this book, visibly.",
         "Four series of paintings are gathered here. Remains follows the museum figurines described in the preface, small ancient survivors re-employed in modern life. Visions in Watercolor is the opposite discipline, sketches from life, drawn quickly before the light or the sitter changes its mind. In the Spirit of the 21st Century takes its subjects from the news and from sociology research, the public world translated into figures. Nostalgia mixes painting with photography and memory, and looks at the past the way you look at a room you used to live in.",
@@ -312,6 +315,9 @@ export const translations = {
         "这六幅画里的主角是古代陶俑，就是那种做出来陪伴逝者的陶俑。在博物馆里，它们成排站着，有耐心，灯光均匀，仿佛历史是一间候诊室。我一直想知道它们在等什么。于是我把当下给了它们。一个以哲学家的庄重研究一只马桶。三个参加视频会议，姿势是任何熬过远程工作的人都认得的，人在，心不在。它们的表情不变。这正是关键所在。那些表情在两千年前就定型了，而它们配我们的会议、我们的卫生间、我们日常的小绝望，严丝合缝，不需要任何调整。",
         "有人问，这个系列是不是在拿过去开玩笑。不是。它是在拿当下开玩笑，而讲笑话的，是唯一见过两边、有资格比较的见证者。陶俑熬过了一个帝国。它们大概也将熬过视频会议。画它们，是我把它们留在记录里的方式，也是我在问：在我们自己的时代里，有什么东西是造出来为了留下来的？",
         "本系列入选 2024 年伦敦国际创意大赛（LICC）Official Selection。",
+      ],
+      elOtroEssayBody: [
+        "拉康说，自我诞生于一面镜子：一个比身体本身更完整的形象。我们从不直接遇见自己，我们总是绕道他人的面孔抵达。这一组作品里，他人的肖像与自画像轮流出现，轮换比相像更重要。陌生人停住，回望我的注视；然后我走进画面，成为那个陌生人。他者，然后自身，然后又是他者。如果身份是从外部借来的认领，那么肖像就不是「某人是谁」的记录，而是两个人互相借出一个自我的瞬间。",
       ],
       paintingIntroBody: [
         "绘画在这本书里排第一，因为我从这里开始，也因为它是我所有媒介里最慢的一个。网站可以连夜修改。照片在一瞬间就做出了决定。水彩只给你一次机会。颜料碰到湿纸，决定就成立了。你可以罩染，可以洗掉一点，可以向它道歉。你收不回来。它是一种自带档案的媒介，你走过的每一步都在里面，包括错误。我已经和这一点和解了。错误留在画里，就像过去留在本书的其他一切东西里一样，看得见。",
