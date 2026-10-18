@@ -9,6 +9,7 @@ import { SHOP_URL, SITE_URL } from "@/lib/constants";
 import { getCombinedCatalogSections, type CatalogItem, type CatalogSection, type CatalogSectionKey } from "@/lib/printCatalog";
 import { translations, type Translations } from "@/lib/translations";
 import { PAGE_BACKGROUNDS, type PageBgKind } from "@/lib/pageBackgrounds";
+import { BOOK_SERIES } from "@/lib/bookSeries";
 
 // ── Book geometry ─────────────────────────────────────────────────────────────
 // US Letter trim so the PDF prints 1:1 on a home/office printer, and matches the standard
@@ -31,12 +32,13 @@ type Part = "complete" | "interior" | "cover";
 type Side = "verso" | "recto" | "single";
 
 interface Chapter {
-  key: CatalogSectionKey;
+  key: string;
   number: number;
   title: string;
   descriptionHtml: string;
   items: { item: CatalogItem; plate: number }[];
   years: string;
+  seriesOnly?: boolean;
 }
 
 type PageSpec =
@@ -50,6 +52,7 @@ type PageSpec =
   | { kind: "opener"; half: "left" | "right"; chapter: Chapter }
   | { kind: "essay"; chapter: Chapter; chunk: number }
   | { kind: "divider"; chapter: Chapter }
+  | { kind: "chapter-title"; chapter: Chapter }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
   | { kind: "about"; chunk: number }
   | { kind: "plates-index"; from: number; to: number }
@@ -164,7 +167,15 @@ function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, pl
       for (let i = 0; i < paintingChunkCount; i++) specs.push({ kind: "painting-intro", chunk: i });
       firstChapter = false;
     }
-    if (dividersOn) specs.push({ kind: "divider", chapter });
+    if (dividersOn) {
+      specs.push({ kind: "divider", chapter });
+      specs.push({ kind: "chapter-title", chapter });
+    }
+    if (chapter.seriesOnly) {
+      const seriesEssayCount = essayChunkCounts[chapter.key] ?? 0;
+      for (let i = 0; i < seriesEssayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
+      continue;
+    }
     if (!nextIsVerso()) specs.push({ kind: "blank" });
     specs.push({ kind: "opener", half: "left", chapter });
     specs.push({ kind: "opener", half: "right", chapter });
@@ -248,6 +259,8 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `essay:${spec.chapter.key}:${spec.chunk}`;
     case "divider":
       return `divider:${spec.chapter.key}`;
+    case "chapter-title":
+      return `chapter-title:${spec.chapter.key}`;
     case "opener":
       return `opener:${spec.chapter.key}:${spec.half}`;
     case "plate":
@@ -432,7 +445,10 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
     case "half-title":
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-center">
-          <div className="bk-half-title shop-title">{b.title}</div>
+          <div className="bk-half-block">
+            <div className="bk-half-title shop-title">{b.title}</div>
+            <div className="bk-half-title-zh shop-title">{translations.zh.remainsCatalog.subtitle}</div>
+          </div>
         </Page>
       );
 
@@ -505,7 +521,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
         ...chapters.map((c) => ({
           num: pad2(c.number),
           title: c.title,
-          sub: `${c.items.length} ${b.works}${c.years ? ` · ${c.years}` : ""}`,
+          sub: c.items.length > 0 ? `${c.items.length} ${b.works}${c.years ? ` · ${c.years}` : ""}` : c.years,
           page: startOf((s) => s.kind === "opener" && s.chapter.key === c.key),
         })),
         { num: "", title: `${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`, sub: "", page: startOf((s) => s.kind === "about") },
@@ -596,15 +612,20 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
     }
 
     case "divider": {
+      // Pure colour separator: no text on the pink page itself.
+      return <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-divider-page" />;
+    }
+
+    case "chapter-title": {
       const { chapter } = spec;
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-divider-page">
-          <div className="bk-divider-card">
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-chapter-title-page">
+          <div className="bk-chapter-title-block">
             <span className="bk-num-box">{pad2(chapter.number)}</span>
-            <h2 className="bk-divider-title shop-title">{chapter.title}</h2>
-            <div className="bk-divider-meta sans-label">
-              {chapter.items.length} {b.works}
-              {chapter.years ? ` · ${chapter.years}` : ""}
+            <h2 className="bk-chapter-title shop-title">{chapter.title}</h2>
+            <div className="bk-chapter-title-meta sans-label">
+              {chapter.items.length > 0 ? `${chapter.items.length} ${b.works}` : ""}
+              {chapter.items.length > 0 && chapter.years ? ` · ${chapter.years}` : chapter.years}
             </div>
           </div>
         </Page>
@@ -910,7 +931,7 @@ const CatalogBook = () => {
       return asParas(en && zh && en !== zh ? en + "\n\n" + zh : en || zh);
     };
     const bilingualTitle = (en: string, zh: string) => (en === zh ? en : `${en} · ${zh}`);
-    const chapters: Chapter[] = getCombinedCatalogSections("", lang)
+    const catalogChapters: Chapter[] = getCombinedCatalogSections("", lang)
       .filter((s) => s.items.length > 0)
       .map((s, i) => ({
         key: s.key,
@@ -942,6 +963,32 @@ const CatalogBook = () => {
         }),
         years: yearRange(s.items.map((item) => item.year)),
       }));
+    // Series sections that complete the outline but have no catalog plates yet
+    // (Nostalgia, Visions in Ceramics, the Screen & Archive and Live chapters),
+    // merged with the catalog chapters in the book outline's order.
+    const seriesChapters: Chapter[] = BOOK_SERIES.filter((s) => !s.mergedInto).map((s) => ({
+      key: `series:${s.id}`,
+      number: 0,
+      title: s.titleEn === s.titleZh ? s.titleEn : `${s.titleEn} · ${s.titleZh}`,
+      descriptionHtml: "",
+      items: [],
+      years: s.years,
+      seriesOnly: true,
+    }));
+    const SECTION_ORDER = [
+      "remains", "watercolor", "spirit", "series:nostalgia", "photography",
+      "shop",
+      "series:immemory", "series:negotiated", "series:unfinished", "series:google",
+      "series:feedscanner", "series:cavedance", "series:infected",
+      "series:soliloquy", "series:artempath", "series:stillirise", "series:oneday",
+      "series:pingpong",
+      "series:interview",
+    ];
+    const byChapterKey = new Map([...catalogChapters, ...seriesChapters].map((ch) => [ch.key, ch]));
+    const chapters = SECTION_ORDER.map((k) => byChapterKey.get(k))
+      .filter((ch): ch is Chapter => !!ch)
+      .map((ch, i) => ({ ...ch, number: i + 1 }));
+
     // Essay layout rule: English gets its own pages, Chinese gets its own pages.
     // The two languages never share an essay page, so the book does not read like a translation.
     // Editor: every paragraph carries the id of the source text it came from (see api/book-pr.js).
@@ -971,7 +1018,22 @@ const CatalogBook = () => {
     };
     const essayChunks: Record<string, EssayChunk[]> = {};
     for (const chapter of chapters) {
-      if (chapter.key === "remains") {
+      if (chapter.key.startsWith("series:")) {
+        const s = BOOK_SERIES.find((x) => `series:${x.id}` === chapter.key);
+        const enT = (s && (textEdits[`series:${s.id}:en`] ?? s.textEn)) || "";
+        const zhT = (s && (textEdits[`series:${s.id}:zh`] ?? s.textZh)) || "";
+        if (s) {
+          fieldTexts[`series:${s.id}:en`] = enT;
+          fieldTexts[`series:${s.id}:zh`] = zhT;
+        }
+        essayChunks[chapter.key] =
+          !enT && !zhT
+            ? []
+            : langChunks(
+                enT ? pBlocks(asParas(enT)).map((html) => ({ html, edit: `series:${s?.id}:en` })) : [],
+                zhT ? pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s?.id}:zh` })) : [],
+              );
+      } else if (chapter.key === "remains") {
         const paras = txParas("remainsEssayBody");
         essayChunks[chapter.key] = langChunks(paraItems(paras.filter((p) => !hasCjk(p.text))), paraItems(paras.filter((p) => hasCjk(p.text))));
       } else if (chapter.key === "photography") {
@@ -988,9 +1050,30 @@ const CatalogBook = () => {
           { lang: "zh", items: [{ html: `<p>${fieldTexts["tx:watercolorNote:zh"]}</p>`, edit: "tx:watercolorNote:zh" }] },
         ];
       } else if (chapter.key === "shop") {
+        // Slightly Useful Objects: the Visions in Ceramics texts are this same series,
+        // so they lead the chapter, ahead of the shop's own description.
+        const cer = BOOK_SERIES.find((x) => x.id === "ceramics");
+        const cerEn = (cer && (textEdits["series:ceramics:en"] ?? cer.textEn)) || "";
+        const cerZh = (cer && (textEdits["series:ceramics:zh"] ?? cer.textZh)) || "";
+        if (cer) {
+          fieldTexts["series:ceramics:en"] = cerEn;
+          fieldTexts["series:ceramics:zh"] = cerZh;
+        }
         essayChunks[chapter.key] = [
-          { lang: "en", items: [{ html: `<p>${fieldTexts["tx:heroDesc:en"]}</p>`, edit: "tx:heroDesc:en" }] },
-          { lang: "zh", items: [{ html: `<p>${fieldTexts["tx:heroDesc:zh"]}</p>`, edit: "tx:heroDesc:zh" }] },
+          {
+            lang: "en",
+            items: [
+              ...(cerEn ? [{ html: `<p>${cerEn}</p>`, edit: "series:ceramics:en" }] : []),
+              { html: `<p>${fieldTexts["tx:heroDesc:en"]}</p>`, edit: "tx:heroDesc:en" },
+            ],
+          },
+          {
+            lang: "zh",
+            items: [
+              ...(cerZh ? [{ html: `<p>${cerZh}</p>`, edit: "series:ceramics:zh" }] : []),
+              { html: `<p>${fieldTexts["tx:heroDesc:zh"]}</p>`, edit: "tx:heroDesc:zh" },
+            ],
+          },
         ];
       } else {
         essayChunks[chapter.key] = [{ lang: "en", items: [] }];
