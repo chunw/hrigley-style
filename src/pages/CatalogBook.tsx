@@ -50,6 +50,7 @@ type PageSpec =
   | { kind: "opener"; half: "left" | "right"; chapter: Chapter }
   | { kind: "essay"; chapter: Chapter; chunk: number }
   | { kind: "divider"; chapter: Chapter }
+  | { kind: "chapter-title"; chapter: Chapter }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
   | { kind: "about"; chunk: number }
   | { kind: "plates-index"; from: number; to: number }
@@ -164,7 +165,10 @@ function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, pl
       for (let i = 0; i < paintingChunkCount; i++) specs.push({ kind: "painting-intro", chunk: i });
       firstChapter = false;
     }
-    if (dividersOn) specs.push({ kind: "divider", chapter });
+    if (dividersOn) {
+      specs.push({ kind: "divider", chapter });
+      specs.push({ kind: "chapter-title", chapter });
+    }
     if (!nextIsVerso()) specs.push({ kind: "blank" });
     specs.push({ kind: "opener", half: "left", chapter });
     specs.push({ kind: "opener", half: "right", chapter });
@@ -248,6 +252,8 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `essay:${spec.chapter.key}:${spec.chunk}`;
     case "divider":
       return `divider:${spec.chapter.key}`;
+    case "chapter-title":
+      return `chapter-title:${spec.chapter.key}`;
     case "opener":
       return `opener:${spec.chapter.key}:${spec.half}`;
     case "plate":
@@ -596,13 +602,18 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
     }
 
     case "divider": {
+      // Pure colour separator: no text on the pink page itself.
+      return <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-divider-page" />;
+    }
+
+    case "chapter-title": {
       const { chapter } = spec;
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-divider-page">
-          <div className="bk-divider-card">
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-chapter-title-page">
+          <div className="bk-chapter-title-block">
             <span className="bk-num-box">{pad2(chapter.number)}</span>
-            <h2 className="bk-divider-title shop-title">{chapter.title}</h2>
-            <div className="bk-divider-meta sans-label">
+            <h2 className="bk-chapter-title shop-title">{chapter.title}</h2>
+            <div className="bk-chapter-title-meta sans-label">
               {chapter.items.length} {b.works}
               {chapter.years ? ` · ${chapter.years}` : ""}
             </div>
