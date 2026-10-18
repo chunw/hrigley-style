@@ -12,6 +12,7 @@ import { PAGE_BACKGROUNDS, type PageBgKind } from "@/lib/pageBackgrounds";
 import { BOOK_SERIES } from "@/lib/bookSeries";
 import { EXHIBITIONS } from "@/lib/exhibitions";
 import { CV_SECTIONS } from "@/lib/cv";
+import { CANVA_COVER } from "@/lib/coverImage";
 
 // ── Book geometry ─────────────────────────────────────────────────────────────
 // US Letter trim so the PDF prints 1:1 on a home/office printer, and matches the standard
@@ -48,7 +49,6 @@ type PageSpec =
   | { kind: "half-title" }
   | { kind: "frontispiece"; item: CatalogItem }
   | { kind: "title" }
-  | { kind: "motto"; lang: "en" | "zh" }
   | { kind: "colophon" }
   | { kind: "contents"; chunk: number }
   | { kind: "preface"; chunk: number }
@@ -163,8 +163,6 @@ function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, pl
   specs.push({ kind: "half-title" });
   specs.push(frontispiece ? { kind: "frontispiece", item: frontispiece } : { kind: "blank" });
   specs.push({ kind: "title" });
-  specs.push({ kind: "motto", lang: "en" });
-  specs.push({ kind: "motto", lang: "zh" });
   specs.push({ kind: "colophon" });
   const tocPages = Math.max(1, Math.ceil((chapters.length + 5) / 9));
   for (let i = 0; i < tocPages; i++) specs.push({ kind: "contents", chunk: i });
@@ -379,6 +377,14 @@ interface BookContext {
 }
 
 function FrontCoverFace({ ctx }: { ctx: BookContext }) {
+  // Her Canva book cover, set at her direction (2026-10-18).
+  if (CANVA_COVER) {
+    return (
+      <div className="bk-face bk-face-front bk-face-canva">
+        <img className="bk-canva-cover" src={CANVA_COVER} alt="Chun Wang — Paintings 2019-2026" />
+      </div>
+    );
+  }
   const { t, years } = ctx;
   return (
     <div className="bk-face bk-face-front">
@@ -504,18 +510,6 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
           </div>
         </Page>
       );
-
-    case "motto": {
-      const en = spec.lang === "en";
-      return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
-          <div className="bk-motto">
-            <p className="bk-motto-q">{en ? "When machines learn to create, what remains human?" : "当机器学会了创造，人身上还剩下什么？"}</p>
-            <p className="bk-motto-body">{en ? "This book is more than a retrospective. It is an argument for slowness, demanding the kind of looking that contemporary life rarely permits." : "这本书不只是一次回顾。它为缓慢辩护，要求一种当代生活难得允许的凝视。"}</p>
-          </div>
-        </Page>
-      );
-    }
 
     case "colophon": {
       const year = new Date().getFullYear();
@@ -661,6 +655,18 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
               {chapter.items.length > 0 ? `${chapter.items.length} ${b.works}` : ""}
               {chapter.items.length > 0 && chapter.years ? ` · ${chapter.years}` : chapter.years}
             </div>
+            {chapter.key === "spirit" && (
+              <p className="bk-chapter-epigraph">
+                This book is more than a retrospective. It is an argument for slowness, demanding the kind of looking that contemporary life rarely permits.
+                <span className="bk-chapter-epigraph-zh">这本书不只是一次回顾。它为缓慢辩护，要求一种当代生活难得允许的凝视。</span>
+              </p>
+            )}
+            {chapter.key === "series:immemory" && (
+              <p className="bk-chapter-epigraph">
+                When machines learn to create, what remains human?
+                <span className="bk-chapter-epigraph-zh">当机器学会了创造，人身上还剩下什么？</span>
+              </p>
+            )}
           </div>
         </Page>
       );
