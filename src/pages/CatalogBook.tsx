@@ -49,7 +49,6 @@ type PageSpec =
   | { kind: "opener"; half: "left" | "right"; chapter: Chapter }
   | { kind: "essay"; chapter: Chapter; chunk: number }
   | { kind: "exhibitions"; chapter: Chapter }
-  | { kind: "chapter-title"; chapter: Chapter }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
   | { kind: "about"; chunk: number }
   | { kind: "blank" }
@@ -87,45 +86,12 @@ const pad2 = (n: number) => String(n).padStart(2, "0");
 const plainText = (html: string) => html.replace(/<br\s*\/?>/gi, " ").replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
 const hasCjk = (s: string) => /[\u4e00-\u9fff]/.test(s);
 
-/** Chapter colours (her direction, 2026-10-18): one colour per part of the book.
- *  Body pages share one paper (#FAF5EA, in the CSS); opener spreads wear the
- *  colour of the part they belong to. Chapter title pages are always black
- *  with white type (her direction, 2026-10-18: the standalone colour divider
- *  pages are gone, one title page per chapter is enough). */
-const CHAPTER_COLOR: Record<string, string> = {
-  spirit: "#DFA79B",
-  remains: "#DFA79B",
-  residuals: "#DFA79B",
-  stillthings: "#DFA79B",
-  road: "#DFA79B",
-  innerwilderness: "#9FB2BE",
-  deathvalley: "#9FB2BE",
-  sahara: "#9FB2BE",
-  highlands: "#9FB2BE",
-  theater: "#9FB2BE",
-  photography: "#9FB2BE",
-  "series:nostalgia": "#9FB2BE",
-  shop: "#D8BE8C",
-  "series:immemory": "#1F2226",
-  "series:negotiated": "#1F2226",
-  "series:unfinished": "#1F2226",
-  "series:google": "#1F2226",
-  "series:feedscanner": "#1F2226",
-  "series:cavedance": "#1F2226",
-  "series:infected": "#1F2226",
-  "series:soliloquy": "#2E2C2A",
-  "series:artempath": "#2E2C2A",
-  "series:pingpong": "#2E2C2A",
-  "series:interview": "#DFA79B",
-};
-const DARK_CHAPTERS = new Set(
-  Object.entries(CHAPTER_COLOR)
-    .filter(([, c]) => c === "#1F2226" || c === "#2E2C2A")
-    .map(([k]) => k),
-);
-const chapterColor = (key: string) => CHAPTER_COLOR[key] ?? "#DFA79B";
+/** Chapter opener spreads are uniformly black with white type
+ *  (her direction, 2026-10-18); each chapter's epigraph sits in the
+ *  spread's upper field (CHAPTER_EPIGRAPH below). */
 
-/** One short epigraph per chapter, printed small under the chapter title.
+/** One short epigraph per chapter, printed small in the upper field of
+ *  the chapter's opener spread.
  *  Sourcing rule (her discipline): only lines that already stand in this book
  *  for that chapter — the chapter's own text, verbatim — or her own words.
  *  Nothing is written for the slot. Chapters whose book text carries no such
@@ -327,17 +293,13 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       for (let i = 0; i < paintingChunkCount; i++) specs.push({ kind: "painting-intro", chunk: i });
       firstChapter = false;
     }
-    specs.push({ kind: "chapter-title", chapter });
-    if (chapter.seriesOnly) {
-      const seriesEssayCount = essayChunkCounts[chapter.key] ?? 0;
-      for (let i = 0; i < seriesEssayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
-      if (EXHIBITIONS[chapter.key]?.length) specs.push({ kind: "exhibitions", chapter });
-      continue;
-    }
+    // One opening per chapter (her direction, 2026-10-18): the big-type
+    // opener spread alone — no separate title page before it. Series-only
+    // chapters open with the same spread; their essay count can be 0.
     if (!nextIsVerso()) specs.push({ kind: "blank" });
     specs.push({ kind: "opener", half: "left", chapter });
     specs.push({ kind: "opener", half: "right", chapter });
-    const essayCount = essayChunkCounts[chapter.key] ?? 1;
+    const essayCount = essayChunkCounts[chapter.key] ?? (chapter.seriesOnly ? 0 : 1);
     for (let i = 0; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
     for (const { item, plate } of chapter.items) specs.push({ kind: "plate", chapter, item, plate });
     if (EXHIBITIONS[chapter.key]?.length) specs.push({ kind: "exhibitions", chapter });
@@ -405,8 +367,6 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `painting:${spec.chunk}`;
     case "essay":
       return `essay:${spec.chapter.key}:${spec.chunk}`;
-    case "chapter-title":
-      return `chapter-title:${spec.chapter.key}`;
     case "exhibitions":
       return `exhibitions:${spec.chapter.key}`;
     case "opener":
@@ -719,36 +679,23 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       );
     }
 
-    case "chapter-title": {
-      // One title page per chapter: black page, white type, a short epigraph
-      // under the title where the chapter's own book text carries one.
-      const { chapter } = spec;
-      const epigraph = CHAPTER_EPIGRAPH[chapter.key];
-      return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-chapter-title-page">
-          <div className="bk-chapter-title-block">
-            <span className="bk-num-box">{pad2(chapter.number)}</span>
-            <h2 className="bk-chapter-title shop-title">{chapter.title}</h2>
-            <div className="bk-chapter-title-meta sans-label">{chapter.years}</div>
-            {epigraph && (
-              <p className="bk-chapter-epigraph">
-                {epigraph.en}
-                <span className="bk-chapter-epigraph-zh">{epigraph.zh}</span>
-              </p>
-            )}
-          </div>
-        </Page>
-      );
-    }
-
     case "opener": {
       const { chapter, half } = spec;
-      // Title spread is text only: no artwork appears before the section itself.
-      // The spread wears the chapter's colour (the screen chapter's motto spread
-      // included) instead of the old uniform black.
+      // The chapter's only opening (her direction, 2026-10-18): a black
+      // spread with white type throughout. The big handwritten title runs
+      // across the bottom; the chapter's epigraph, where its own book text
+      // carries one, sits small in the upper field. Text only: no artwork
+      // appears before the section itself.
+      const epigraph = CHAPTER_EPIGRAPH[chapter.key];
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-opener bk-opener-${half}${DARK_CHAPTERS.has(chapter.key) ? " bk-on-dark" : ""}`} style={{ "--chapter-color": chapterColor(chapter.key) } as CSSProperties}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-opener bk-opener-${half}`}>
           <div className="bk-spread-canvas">
+            {epigraph && (
+              <p className="bk-opener-epigraph">
+                {epigraph.en}
+                <span className="bk-opener-epigraph-zh">{epigraph.zh}</span>
+              </p>
+            )}
             <Collage
               title={chapter.title}
               // Two lines across the ~16 in spread at most.

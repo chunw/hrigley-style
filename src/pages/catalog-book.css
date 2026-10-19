@@ -138,39 +138,6 @@
   justify-content: center;
 }
 
-/* Chapter title page: one per chapter, black with white type (her direction,
-   2026-10-18 — the standalone colour divider page before it is gone). */
-.bk-chapter-title-page {
-  --text: #ffffff;
-  --muted: rgba(255, 255, 255, 0.55);
-  --rule: rgba(255, 255, 255, 0.18);
-  background: #FFB3C8;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-/* The title block sits directly on the pink page: no card. */
-.bk-chapter-title-block {
-  text-align: center;
-  padding: 0.6in 0.55in;
-  max-width: 4.8in;
-}
-
-.bk-chapter-title {
-  margin: 0.22in 0 0.14in;
-  font-size: 0.38in;
-  line-height: 1.15;
-  letter-spacing: 0.04em;
-}
-
-.bk-chapter-title-meta {
-  font-size: 6.5pt;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
 .bk-divider-card {
   background: #fffdf8;
   color: #26221c;
@@ -897,29 +864,28 @@
   height: auto;
 }
 
-.bk-chapter-epigraph {
-  margin-top: 0.55in;
-  max-width: 4.6in;
+/* The chapter's epigraph sits small in the upper field of its black
+   opener spread, centred across the spread, clear of the bottom title. */
+.bk-opener-epigraph {
+  position: absolute;
+  top: calc(var(--bleed) + 1.05in);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(8.2in, 62%);
+  margin: 0;
+  z-index: 10;
+  text-align: center;
   font-size: 0.155in;
   line-height: 1.75;
   font-style: italic;
-  color: #44403c;
+  color: rgba(255, 255, 255, 0.88);
 }
 
-.bk-chapter-epigraph-zh {
+.bk-opener-epigraph-zh {
   display: block;
   margin-top: 0.12in;
   font-size: 0.125in;
   font-style: normal;
-  color: #78716c;
-}
-
-/* Epigraphs live on the black chapter title pages now: light type. */
-.bk-chapter-title-page .bk-chapter-epigraph {
-  color: rgba(255, 255, 255, 0.88);
-}
-
-.bk-chapter-title-page .bk-chapter-epigraph-zh {
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -1211,17 +1177,10 @@
   }
 }
 
-/* Dark chapter colours (screen & archive, live) take cream type for legibility;
-   the deep red accent is not used on them. */
-.bk-on-dark {
-  --text: #FFF3C2;
-  --muted: rgba(255, 243, 194, 0.62);
-  --rule: rgba(255, 243, 194, 0.28);
-}
-
-/* Opener spreads wear their chapter colour. */
+/* Opener spreads: black ground, white type, every chapter alike
+   (her direction, 2026-10-18). */
 .bk-opener {
-  background: var(--chapter-color, #1F2226);
+  background: #000;
 }
 
 /* Back cover: blank white barcode box (placeholder until the ISBN arrives). */
