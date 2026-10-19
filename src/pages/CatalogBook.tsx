@@ -179,10 +179,6 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     en: "Opening dialogues between the artist and the viewer as well as among viewers themselves.",
     zh: "在艺术家与观众之间、观众与观众之间开启对话。",
   },
-  "series:pingpong": {
-    en: "Players must decide from three alternative realities.",
-    zh: "玩家必须在三个替代现实之间作出抉择。",
-  },
   "series:interview": {
     en: "Art, for me, is not just a form of expression but a mode of exploration and discovery.",
     zh: "对我来说，艺术不只是一种表达方式，更是一种探索与发现的方式。",
@@ -1086,7 +1082,6 @@ const CatalogBook = () => {
       "series:immemory", "series:negotiated", "series:unfinished", "series:google",
       "series:feedscanner", "series:cavedance", "series:infected",
       "series:soliloquy", "series:artempath",
-      "series:pingpong",
       "series:interview",
     ];
     // Photography, restructured at her direction (2026-10-18): the part is
