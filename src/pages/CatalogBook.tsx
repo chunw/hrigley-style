@@ -12,7 +12,6 @@ import { BOOK_SERIES } from "@/lib/bookSeries";
 import { SPIRIT_BACKGROUNDS } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS } from "@/lib/exhibitions";
-import { CANVA_COVER } from "@/lib/coverImage";
 
 // ── Book geometry ─────────────────────────────────────────────────────────────
 // US Letter trim so the PDF prints 1:1 on a home/office printer, and matches the standard
@@ -419,33 +418,26 @@ interface BookContext {
 }
 
 function FrontCoverFace({ ctx }: { ctx: BookContext }) {
-  // Her Canva book cover, set at her direction (2026-10-18).
-  if (CANVA_COVER) {
-    return (
-      <div className="bk-face bk-face-front bk-face-canva">
-        <img className="bk-canva-cover" src={CANVA_COVER} alt="Remains · 遗迹 — Chun Wang · 王淳" />
-      </div>
-    );
-  }
-  const { t, years } = ctx;
+  // Nauman-style cover (her direction, 2026-10-18, replacing the Canva band
+  // layout): white paper, Remains No.3 whole at the centre, and the lettering
+  // walking the four edges — Chun across the top, Wang down the right side,
+  // Remains up the left side, 遗迹 at the lower right. Set in HTML/CSS, no baked image.
+  const art = ctx.chapters.find((c) => c.key === "remains")?.items[2]?.item ?? ctx.coverFront;
   return (
-    <div className="bk-face bk-face-front">
-      <Collage
-        front={ctx.coverFront}
-        back={ctx.coverBack}
-        title={t.catalogBook.title}
-        titleSize={displaySize(t.catalogBook.title, 7.2, 1.6)}
-        above={
-          <div className="bk-collage-row">
-            <span>Chun Wang · 王淳</span>
-            <span>{years}</span>
-          </div>
-        }
-        below={<div className="bk-face-sub sans-label">{translations.en.catalogBook.subtitle} · {translations.zh.catalogBook.subtitle}</div>}
-      />
+    <div className="bk-face bk-face-front bk-face-nauman">
+      <span className="bk-cover-word bk-cover-top">Chun</span>
+      <span className="bk-cover-word bk-cover-right">Wang</span>
+      <span className="bk-cover-word bk-cover-left">Remains</span>
+      {art && (
+        <div className="bk-cover-art">
+          <BookImage src={art.image_url} fallback={art.fallback_image_url} alt="Remains No.3" />
+        </div>
+      )}
+      <span className="bk-cover-word bk-cover-zh">{"遗迹"}</span>
     </div>
   );
 }
+
 
 function BackCoverFace() {
   // Back cover, after the Nauman-style reference she chose (2026-10-18): one text
