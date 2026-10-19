@@ -46,10 +46,6 @@ export const EXHIBITIONS: Record<string, { en: string; zh: string }[]> = {
   "series:cavedance": [
     { en: "Harvard CAMLab Cave, Harvard University, Cambridge, MA, 2022 – permanent", zh: "哈佛 CAMLab Cave，哈佛大学，剑桥，马萨诸塞州，2022 – 长期" },
   ],
-  "series:infected": [
-    { en: "Infected Instructions, online, May 2020", zh: "《感染指令》，线上，2020年5月" },
-    { en: "Stories from the Room, 2020", zh: "《房间里的故事》，2020" },
-  ],
   "series:soliloquy": [
     { en: "World of Co Artist Residency Virtual Exhibition, Sofia, Bulgaria and online, February 28 – April 20, 2021", zh: "World of Co 驻地虚拟展，索非亚，保加利亚，及线上，2021年2月28日 – 4月20日" },
     { en: "LIC-A@Atlantic Spring 2021, Atlantic Gallery, New York, April – May 2021", zh: "LIC-A@Atlantic 2021 春季展，Atlantic Gallery，纽约，2021年4 – 5月" },
