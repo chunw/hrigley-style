@@ -138,12 +138,23 @@
   justify-content: center;
 }
 
-/* Chapter title page: the page right after the pink separator carries the title */
+/* Chapter title page: one per chapter, black with white type (her direction,
+   2026-10-18 — the standalone colour divider page before it is gone). */
 .bk-chapter-title-page {
-  background: var(--chapter-color, var(--paper));
+  --text: #ffffff;
+  --muted: rgba(255, 255, 255, 0.55);
+  --rule: rgba(255, 255, 255, 0.18);
+  background: #FFB3C8;
   align-items: center;
   justify-content: center;
   text-align: center;
+}
+
+/* The title block sits directly on the pink page: no card. */
+.bk-chapter-title-block {
+  text-align: center;
+  padding: 0.6in 0.55in;
+  max-width: 4.8in;
 }
 
 .bk-chapter-title {
@@ -901,6 +912,15 @@
   font-size: 0.125in;
   font-style: normal;
   color: #78716c;
+}
+
+/* Epigraphs live on the black chapter title pages now: light type. */
+.bk-chapter-title-page .bk-chapter-epigraph {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.bk-chapter-title-page .bk-chapter-epigraph-zh {
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .bk-motto {

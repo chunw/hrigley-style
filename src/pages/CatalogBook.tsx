@@ -49,7 +49,6 @@ type PageSpec =
   | { kind: "opener"; half: "left" | "right"; chapter: Chapter }
   | { kind: "essay"; chapter: Chapter; chunk: number }
   | { kind: "exhibitions"; chapter: Chapter }
-  | { kind: "divider"; chapter: Chapter }
   | { kind: "chapter-title"; chapter: Chapter }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
   | { kind: "about"; chunk: number }
@@ -89,9 +88,10 @@ const plainText = (html: string) => html.replace(/<br\s*\/?>/gi, " ").replace(/<
 const hasCjk = (s: string) => /[\u4e00-\u9fff]/.test(s);
 
 /** Chapter colours (her direction, 2026-10-18): one colour per part of the book.
- *  Body pages share one paper (#FAF5EA, in the CSS); dividers, chapter title pages
- *  and opener spreads wear the colour of the part they belong to. The interview
- *  divider closes the book in the painting chapter's clay pink. */
+ *  Body pages share one paper (#FAF5EA, in the CSS); opener spreads wear the
+ *  colour of the part they belong to. Chapter title pages are always black
+ *  with white type (her direction, 2026-10-18: the standalone colour divider
+ *  pages are gone, one title page per chapter is enough). */
 const CHAPTER_COLOR: Record<string, string> = {
   spirit: "#DFA79B",
   remains: "#DFA79B",
@@ -124,6 +124,102 @@ const DARK_CHAPTERS = new Set(
     .map(([k]) => k),
 );
 const chapterColor = (key: string) => CHAPTER_COLOR[key] ?? "#DFA79B";
+
+/** One short epigraph per chapter, printed small under the chapter title.
+ *  Sourcing rule (her discipline): only lines that already stand in this book
+ *  for that chapter — the chapter's own text, verbatim — or her own words.
+ *  Nothing is written for the slot. Chapters whose book text carries no such
+ *  line (Still Things, Unfinished Archive) get none. */
+const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
+  spirit: {
+    en: "This book is more than a retrospective. It is an argument for slowness, demanding the kind of looking that contemporary life rarely permits.",
+    zh: "这本书不只是一次回顾。它为缓慢辩护，要求一种当代生活难得允许的凝视。",
+  },
+  remains: {
+    en: "The figurines have outlasted an empire. They will probably outlast the video call.",
+    zh: "陶俑熬过了一个帝国。它们大概也将熬过视频会议。",
+  },
+  residuals: {
+    en: "Residuals is a watercolor series about the traces and objects of everyday life, and the beauty found in them.",
+    zh: "《残留》是一个关于日常生活痕迹与物件的水彩系列，记下其中的美。",
+  },
+  road: {
+    en: "The journeys end. The moments remain.",
+    zh: "旅程会结束，瞬间留下来。",
+  },
+  innerwilderness: {
+    en: "The land comes first — before language, before the self.",
+    zh: "土地在先——在语言之前，在自我之前。",
+  },
+  deathvalley: {
+    en: "The salt flats become mirrors at dawn, doubling the sky.",
+    zh: "盐滩在黎明时分成为镜子，复制天空。",
+  },
+  sahara: {
+    en: "An archive of the desert kept by the clock — hour by hour, from 6 to 10.",
+    zh: "按钟点保存的沙漠档案——逐小时，从 6 点到 10 点。",
+  },
+  highlands: {
+    en: "Scottish Highlands: Heroism of the Vista.",
+    zh: "苏格兰高地：眺望的英雄主义。",
+  },
+  theater: {
+    en: "Theatrical moments found on the street.",
+    zh: "街头抓到的戏剧感瞬间。",
+  },
+  photography: {
+    en: "We never meet ourselves directly. We arrive by way of other faces.",
+    zh: "我们从不直接遇见自己，我们总是绕道他人的面孔抵达。",
+  },
+  "series:nostalgia": {
+    en: "An online space for meditation and self-reflection.",
+    zh: "一个用于冥想与自我反思的线上空间。",
+  },
+  shop: {
+    en: "My ceramics begin as functional forms - a candle holder, a cup, a bowl - then leak into surreal landscapes.",
+    zh: "我的陶艺从功能性的形态开始，一只烛台、一只杯子、一只碗，然后渗漏成超现实的风景。",
+  },
+  "series:immemory": {
+    en: "When machines learn to create, what remains human?",
+    zh: "当机器学会了创造，人身上还剩下什么？",
+  },
+  "series:negotiated": {
+    en: "Who can we still be?",
+    zh: "我们还能成为谁？",
+  },
+  "series:google": {
+    en: "Your internet search history is a recycling bin for traces of intellectual and emotional output from your brain.",
+    zh: "你的互联网搜索历史，是大脑智力与情感输出痕迹的回收箱。",
+  },
+  "series:feedscanner": {
+    en: "On the Internet, I read a lot, but not really, anything.",
+    zh: "在互联网上，我读了很多，但其实什么也没读到。",
+  },
+  "series:cavedance": {
+    en: "To revive the music and dance depicted in the Dunhuang cave paintings.",
+    zh: "让敦煌壁画中的音乐与舞蹈重现。",
+  },
+  "series:infected": {
+    en: "The old world imploded from within. A new world awaits new instructions to begin.",
+    zh: "旧世界从内部崩塌了。新世界等待新的指令来开启。",
+  },
+  "series:soliloquy": {
+    en: "A temple for meditation and reflection.",
+    zh: "一座冥想与自我反思的庙宇。",
+  },
+  "series:artempath": {
+    en: "Opening dialogues between the artist and the viewer as well as among viewers themselves.",
+    zh: "在艺术家与观众之间、观众与观众之间开启对话。",
+  },
+  "series:pingpong": {
+    en: "Players must decide from three alternative realities.",
+    zh: "玩家必须在三个替代现实之间作出抉择。",
+  },
+  "series:interview": {
+    en: "Art, for me, is not just a form of expression but a mode of exploration and discovery.",
+    zh: "对我来说，艺术不只是一种表达方式，更是一种探索与发现的方式。",
+  },
+};
 
 /** Exhibition lines are free text carrying their date at the end; pull the year out
  *  to lead the line in bold, leaving the rest of the wording untouched. A range
@@ -211,7 +307,7 @@ function chunkItems(items: EssayItem[], maxChars: number): EssayItem[][] {
 // ── Pagination ────────────────────────────────────────────────────────────────
 // Odd pages are rectos (right-hand), even pages versos. Chapter openers are two-page spreads,
 // so they must start on a verso; a blank is inserted before them whenever needed.
-function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkCount: number, essayChunkCounts: Record<string, number>, dividersOn: boolean): InteriorPage[] {
+function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkCount: number, essayChunkCounts: Record<string, number>): InteriorPage[] {
   const specs: PageSpec[] = [];
   const nextIsVerso = () => (specs.length + 1) % 2 === 0;
 
@@ -231,10 +327,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       for (let i = 0; i < paintingChunkCount; i++) specs.push({ kind: "painting-intro", chunk: i });
       firstChapter = false;
     }
-    if (dividersOn) {
-      specs.push({ kind: "divider", chapter });
-      specs.push({ kind: "chapter-title", chapter });
-    }
+    specs.push({ kind: "chapter-title", chapter });
     if (chapter.seriesOnly) {
       const seriesEssayCount = essayChunkCounts[chapter.key] ?? 0;
       for (let i = 0; i < seriesEssayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
@@ -312,8 +405,6 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `painting:${spec.chunk}`;
     case "essay":
       return `essay:${spec.chapter.key}:${spec.chunk}`;
-    case "divider":
-      return `divider:${spec.chapter.key}`;
     case "chapter-title":
       return `chapter-title:${spec.chapter.key}`;
     case "exhibitions":
@@ -419,7 +510,8 @@ function FrontCoverFace({ ctx }: { ctx: BookContext }) {
   // Final cover (her direction, 2026-10-18): a full rust-brown field, the David
   // still life from the Still Things section whole at the centre on its black
   // ground, and cream serif lettering walking the four edges — Chun across the
-  // top, Wang down the right side, Remains up the left side, 遗迹 at lower right.
+  // top, Wang down the right side, Remains up the left side. No Chinese on
+  // the front cover (her call, 2026-10-18): English lettering only.
   const still = ctx.chapters.find((c) => c.key === "stillthings");
   const art = still?.items.find(({ item }) => item.title === "Still Things")?.item ?? still?.items[0]?.item ?? ctx.coverFront;
   return (
@@ -432,7 +524,6 @@ function FrontCoverFace({ ctx }: { ctx: BookContext }) {
           <BookImage src={art.image_url} fallback={art.fallback_image_url} alt="Still Things" />
         </div>
       )}
-      <span className="bk-cover-word bk-cover-zh">{"遗迹"}</span>
     </div>
   );
 }
@@ -628,29 +719,21 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       );
     }
 
-    case "divider": {
-      // Pure colour separator in the chapter's own colour: no text, no image.
-      return <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-divider-page" style={{ "--chapter-color": chapterColor(spec.chapter.key) } as CSSProperties} />;
-    }
-
     case "chapter-title": {
+      // One title page per chapter: black page, white type, a short epigraph
+      // under the title where the chapter's own book text carries one.
       const { chapter } = spec;
+      const epigraph = CHAPTER_EPIGRAPH[chapter.key];
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-chapter-title-page${DARK_CHAPTERS.has(chapter.key) ? " bk-on-dark" : ""}`} style={{ "--chapter-color": chapterColor(chapter.key) } as CSSProperties}>
-          <div className="bk-chapter-title-block bk-divider-card">
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-chapter-title-page">
+          <div className="bk-chapter-title-block">
             <span className="bk-num-box">{pad2(chapter.number)}</span>
             <h2 className="bk-chapter-title shop-title">{chapter.title}</h2>
             <div className="bk-chapter-title-meta sans-label">{chapter.years}</div>
-            {chapter.key === "spirit" && (
+            {epigraph && (
               <p className="bk-chapter-epigraph">
-                This book is more than a retrospective. It is an argument for slowness, demanding the kind of looking that contemporary life rarely permits.
-                <span className="bk-chapter-epigraph-zh">这本书不只是一次回顾。它为缓慢辩护，要求一种当代生活难得允许的凝视。</span>
-              </p>
-            )}
-            {chapter.key === "series:immemory" && (
-              <p className="bk-chapter-epigraph">
-                When machines learn to create, what remains human?
-                <span className="bk-chapter-epigraph-zh">当机器学会了创造，人身上还剩下什么？</span>
+                {epigraph.en}
+                <span className="bk-chapter-epigraph-zh">{epigraph.zh}</span>
               </p>
             )}
           </div>
@@ -848,7 +931,6 @@ const CatalogBook = () => {
   const [part, setPart] = useState<Part>("complete");
   const [bleed, setBleed] = useState(false);
   const [paper, setPaper] = useState<"white" | "cream" | "black">("cream");
-  const [dividers, setDividers] = useState(true);
   const [preparing, setPreparing] = useState(false);
   const [zoom, setZoom] = useState(1);
   // ── Book editor (edit mode): staged text edits + per-page backgrounds ──
@@ -1210,7 +1292,7 @@ const CatalogBook = () => {
     };
   }, [textEdits, editMode, pageBgEdits]);
 
-  const pages = useMemo(() => paginate(ctx.chapters, ctx.prefaceChunks.length, ctx.paintingChunks.length, Object.fromEntries(Object.entries(ctx.essayChunks).map(([k, v]) => [k, v.length])), dividers), [ctx, dividers]);
+  const pages = useMemo(() => paginate(ctx.chapters, ctx.prefaceChunks.length, ctx.paintingChunks.length, Object.fromEntries(Object.entries(ctx.essayChunks).map(([k, v]) => [k, v.length]))), [ctx]);
   const spine = spineWidth(pages.length);
 
   const bleedIn = bleed ? BLEED : 0;
@@ -1322,9 +1404,6 @@ const CatalogBook = () => {
                 </button>
               ))}
             </div>
-            <button type="button" onClick={() => setDividers((v) => !v)} className={toggleClass(dividers)}>
-              {lang === "zh" ? "章节分隔页" : "Chapter dividers"}
-            </button>
             <button type="button" onClick={() => setEditMode((v) => !v)} className={toggleClass(editMode)}>
               {lang === "zh" ? "编辑模式" : "Edit mode"}
             </button>
