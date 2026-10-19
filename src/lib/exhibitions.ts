@@ -64,9 +64,6 @@ export const EXHIBITIONS: Record<string, { en: string; zh: string }[]> = {
     { en: "Stanford Arts Experimental Media, Stanford Art Gallery, Stanford, California, December 2018", zh: "斯坦福艺术实验媒体展，Stanford Art Gallery，斯坦福，加州，2018年12月" },
     { en: "COVIDEO-19 NOTES / A Living, Virtual Exhibition, Undercurrent, Brooklyn, New York, April 22 – June 30, 2020", zh: "《COVIDEO-19 笔记 / 一场活着的虚拟展览》，Undercurrent，布鲁克林，纽约，2020年4月22日 – 6月30日" },
   ],
-  "series:pingpong": [
-    { en: "Stanford Arts Open Studios, Stanford Art Gallery, Stanford, California, December 2017", zh: "斯坦福艺术开放工作室，Stanford Art Gallery，斯坦福，加州，2017年12月" },
-  ],
   "series:interview": [
     { en: "Artist Interview: Shoutout Atlanta, published February 7, 2024", zh: "艺术家访谈：Shoutout Atlanta，2024年2月7日发表" },
   ],
