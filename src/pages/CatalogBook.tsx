@@ -51,6 +51,7 @@ type PageSpec =
   | { kind: "essay"; chapter: Chapter; chunk: number }
   | { kind: "exhibitions"; chapter: Chapter }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
+  | { kind: "aphorism"; half: "left" | "right"; aphorism: Aphorism }
   | { kind: "about"; chunk: number }
   | { kind: "blank" }
   | { kind: "end" };
@@ -271,12 +272,48 @@ function chunkItems(items: EssayItem[], maxChars: number): EssayItem[][] {
 
 /** Group a chapter essay's <p> blocks into page-sized chunks by plain-text length. */
 
+/** A "remains" aphorism spread: one sentence of hers alone across two
+ * pages, set between chapters as a pause (her direction, 2026-10-18).
+ * Sentences are verbatim from her own texts (see
+ * remains-book/source-texts/remains-aphorisms.md). */
+interface Aphorism {
+  id: string;
+  en?: string;
+  zh?: string;
+}
+
+const APHORISMS: Record<string, Aphorism> = {
+  "what-remains": { id: "what-remains", en: "What remains?", zh: "留下了什么？" },
+  journeys: { id: "journeys", en: "The journeys end. The moments remain.", zh: "旅程会结束，瞬间留下来。" },
+  keep: { id: "keep", en: "I keep what is about to disappear.", zh: "我存留那些即将消失的东西。" },
+  "human-touch": { id: "human-touch", en: "The 'human touch' remains a refuge, a place machines cannot tread." },
+  theme: {
+    id: "theme",
+    en: "The theme of this book is what remains, and its method is the archive.",
+    zh: "主题是存留，方法是档案。",
+  },
+};
+
+/** Aphorism spreads placed immediately before these chapters. The first
+ * one ("What remains?") goes after the front matter, before chapter one. */
+const APHORISM_BEFORE_CHAPTER: Record<string, string> = {
+  "series:nostalgia": "journeys",
+  shop: "keep",
+  "series:immemory": "human-touch",
+  "series:interview": "theme",
+};
+
 // ── Pagination ────────────────────────────────────────────────────────────────
 // Odd pages are rectos (right-hand), even pages versos. Chapter openers are two-page spreads,
 // so they must start on a verso; a blank is inserted before them whenever needed.
 function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkCount: number, essayChunkCounts: Record<string, number>): InteriorPage[] {
   const specs: PageSpec[] = [];
   const nextIsVerso = () => (specs.length + 1) % 2 === 0;
+  const pushAphorism = (a: Aphorism) => {
+    if (!nextIsVerso()) specs.push({ kind: "blank" });
+    specs.push({ kind: "aphorism", half: "left", aphorism: a });
+    specs.push({ kind: "aphorism", half: "right", aphorism: a });
+  };
 
   specs.push({ kind: "title" });
   specs.push({ kind: "colophon" });
@@ -291,9 +328,12 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
   let firstChapter = true;
   for (const chapter of chapters) {
     if (firstChapter) {
+      pushAphorism(APHORISMS["what-remains"]);
       for (let i = 0; i < paintingChunkCount; i++) specs.push({ kind: "painting-intro", chunk: i });
       firstChapter = false;
     }
+    const aphorismId = APHORISM_BEFORE_CHAPTER[chapter.key];
+    if (aphorismId) pushAphorism(APHORISMS[aphorismId]);
     // One opening per chapter (her direction, 2026-10-18): the big-type
     // opener spread alone — no separate title page before it. Series-only
     // chapters open with the same spread; their essay count can be 0.
@@ -372,6 +412,8 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `exhibitions:${spec.chapter.key}`;
     case "opener":
       return `opener:${spec.chapter.key}:${spec.half}`;
+    case "aphorism":
+      return `aphorism:${spec.aphorism.id}:${spec.half}`;
     case "plate":
       return `plate:${spec.plate}`;
     case "about":
@@ -711,6 +753,20 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
                 </div>
               }
             />
+          </div>
+        </Page>
+      );
+    }
+
+    case "aphorism": {
+      const a = spec.aphorism;
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-aphorism bk-aphorism-${spec.half}`}>
+          <div className="bk-spread-canvas">
+            <div className="bk-aphorism-body">
+              {a.en && <p className="bk-aphorism-en">{a.en}</p>}
+              {a.zh && <p className="bk-aphorism-zh">{a.zh}</p>}
+            </div>
           </div>
         </Page>
       );
