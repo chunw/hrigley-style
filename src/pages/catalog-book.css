@@ -1183,6 +1183,46 @@
   background: #000;
 }
 
+/* ── Aphorism spreads ─────────────────────────────────────────────────────── */
+/* One sentence of hers alone across a spread: warm paper and ink type, a
+   light pause against the black chapter openers (her direction, 2026-10-18). */
+.bk-aphorism {
+  background: #f6efe0;
+  color: #2b2b2b;
+}
+
+.bk-aphorism-left .bk-spread-canvas {
+  left: 0;
+}
+
+.bk-aphorism-right .bk-spread-canvas {
+  left: calc(-1 * var(--trim-w));
+}
+
+.bk-aphorism-body {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(9.5in, 72%);
+  text-align: center;
+}
+
+.bk-aphorism-en {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 0.44in;
+  line-height: 1.35;
+}
+
+.bk-aphorism-zh {
+  margin: 0.3in 0 0;
+  font-family: var(--serif);
+  font-size: 0.3in;
+  line-height: 1.5;
+  color: rgba(43, 43, 43, 0.72);
+}
+
 /* Back cover: blank white barcode box (placeholder until the ISBN arrives). */
 .bk-back-barcode {
   width: 2.2in;
