@@ -129,7 +129,7 @@ const chapterColor = (key: string) => CHAPTER_COLOR[key] ?? "#DFA79B";
  *  Sourcing rule (her discipline): only lines that already stand in this book
  *  for that chapter — the chapter's own text, verbatim — or her own words.
  *  Nothing is written for the slot. Chapters whose book text carries no such
- *  line (Still Things, Notes from the Road, Unfinished Archive) get none. */
+ *  line (Still Things, Unfinished Archive) get none. */
 const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
   spirit: {
     en: "This book is more than a retrospective. It is an argument for slowness, demanding the kind of looking that contemporary life rarely permits.",
@@ -142,6 +142,10 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
   residuals: {
     en: "Residuals is a watercolor series about the traces and objects of everyday life, and the beauty found in them.",
     zh: "《残留》是一个关于日常生活痕迹与物件的水彩系列，记下其中的美。",
+  },
+  road: {
+    en: "The journeys end. The moments remain.",
+    zh: "旅程会结束，瞬间留下来。",
   },
   innerwilderness: {
     en: "The land comes first — before language, before the self.",
@@ -506,7 +510,8 @@ function FrontCoverFace({ ctx }: { ctx: BookContext }) {
   // Final cover (her direction, 2026-10-18): a full rust-brown field, the David
   // still life from the Still Things section whole at the centre on its black
   // ground, and cream serif lettering walking the four edges — Chun across the
-  // top, Wang down the right side, Remains up the left side, 遗迹 at lower right.
+  // top, Wang down the right side, Remains up the left side. No Chinese on
+  // the front cover (her call, 2026-10-18): English lettering only.
   const still = ctx.chapters.find((c) => c.key === "stillthings");
   const art = still?.items.find(({ item }) => item.title === "Still Things")?.item ?? still?.items[0]?.item ?? ctx.coverFront;
   return (
@@ -519,7 +524,6 @@ function FrontCoverFace({ ctx }: { ctx: BookContext }) {
           <BookImage src={art.image_url} fallback={art.fallback_image_url} alt="Still Things" />
         </div>
       )}
-      <span className="bk-cover-word bk-cover-zh">{"遗迹"}</span>
     </div>
   );
 }
