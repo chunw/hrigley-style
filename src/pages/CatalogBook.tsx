@@ -1254,7 +1254,6 @@ const CatalogBook = () => {
     if (part === "interior") return interior;
     return [
       { key: "front", side: "single", node: <section className="bk-page bk-single bk-tone-ink"><FrontCoverFace ctx={ctx} /></section> },
-      { key: "ifc", side: "verso", node: <Page side="verso" tone="accent" /> },
       ...interior,
       { key: "back", side: "single", node: <section className="bk-page bk-single bk-tone-ink"><BackCoverFace /></section> },
     ];
