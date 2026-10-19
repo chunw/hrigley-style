@@ -148,8 +148,8 @@ export const BOOK_SERIES: BookSeries[] = [
     titleEn: "Notes from the Road",
     titleZh: "旅途笔记",
     years: "",
-    textEn: "",
-    textZh: "",
+    textEn: "For ten years, I have been on the road.\n\nMilan in the blue hour of morning, painting on a hostel roof. In Hawaii, soul to soul with a manta ray. In a palatial underground cave in Tulum, eye to eye with a boulder. Bats at Angkor; climbing Angkor. Crossing a river inside a Slovenian cave that felt like the edge of the sky; its castles and its lakes. An Ultraman standing guard in a Buddhist cave in Chiang Rai. Spain, New Orleans, Savannah: we walked. Four in the morning, flying over the Amazon River to watch macaws have breakfast on a cliff. Monkeys in Costa Rica. Vivaldi, overheard by accident in a church in Paris. Iceland, where the blue was so pure it made me cry. Cooking with a chef in Rome. Cobblestones in Serbia, on my way to learn flamenco guitar. Wind off the lake at Bacalar. Photographing in Death Valley. Winding through the alleys of Morocco, then resting in a riad. Wild monkeys and mangroves in Japan. Eating fish by the sea in Greece. Every moment in Turkey, above all the balloons. The high Alps in Switzerland; Interlaken, a fairyland. Edinburgh and Florence, their even rows of old stone. The green and the fog of the Quiraing, highland cattle standing surreal in it. Bangkok, city of temples. Stepping onto a stage in Lucerne. And Norway.\n\nThe journeys end, one after another. The moments remain. This section is what they left behind.",
+    textZh: "十年，我一直在路上。\n\n在米兰青色的清晨，青旅屋顶上画画。在夏威夷，与一条鳐鱼灵魂对视；在图卢姆宫殿般的地下洞穴里，与一块巨石灵魂对视。吴哥窟的蝙蝠，攀爬吴哥窟。在斯洛文尼亚宛如天际的岩洞中过河，看它的城堡和湖泊。在清莱的佛教洞窟里，看到一尊奥特曼。在西班牙、在新奥尔良、在萨凡纳，我们一路走。凌晨四点，飞驰在亚马逊河面上，去看金刚鹦鹉在悬崖上吃早餐。在哥斯达黎加看猴子。在巴黎的教堂，不小心听到《四季》。被冰岛的冰蓝色纯净到哭。在罗马，和大厨一起做饭。在塞尔维亚，踏着石板路去学弗拉门戈吉他。Bacalar 湖边的风。在死亡谷拍摄艺术照片。在摩洛哥的羊肠小道里辗转，又在 riad 里享受。在日本看野猿，看红树林。在希腊的海边吃鱼。在土耳其的每一刻，尤其是热气球。在瑞士高山探秘，Interlaken 是仙境。在爱丁堡、在佛罗伦萨，看均一的古建。Quiraing 的绿和雾，高山牦牛的超现实。曼谷，佛寺之城。在卢瑟恩，登上舞台。还有挪威。\n\n旅程一次次散场，这些瞬间留了下来。这一节，就是它们留下的样子。",
     mergedInto: "watercolor-split",
   },
   {
