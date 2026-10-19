@@ -2,17 +2,16 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNod
 import { Link } from "react-router-dom";
 import { ArrowLeft, Printer } from "lucide-react";
 import "./catalog-book.css";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { usePageMeta } from "@/hooks/usePageMeta";
-import { artistBioHTML, artistBioSegments } from "@/lib/artistBio";
+import { artistBioHTML } from "@/lib/artistBio";
 import { SHOP_URL, SITE_URL } from "@/lib/constants";
 import { getCombinedCatalogSections, type CatalogItem, type CatalogSection, type CatalogSectionKey } from "@/lib/printCatalog";
 import { translations, type Translations } from "@/lib/translations";
 import { PAGE_BACKGROUNDS, type PageBgKind } from "@/lib/pageBackgrounds";
 import { BOOK_SERIES } from "@/lib/bookSeries";
+import { SPIRIT_BACKGROUNDS } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS } from "@/lib/exhibitions";
-import { CV_SECTIONS } from "@/lib/cv";
 import { CANVA_COVER } from "@/lib/coverImage";
 
 // ── Book geometry ─────────────────────────────────────────────────────────────
@@ -24,10 +23,6 @@ const BLEED = 0.125;
 const PX_PER_IN = 96;
 // Interior page counts are padded to a multiple of 4 (one printed signature).
 const SIGNATURE = 4;
-// The first List of Plates page also carries the section title, so it holds fewer rows.
-const INDEX_ROWS_FIRST = 19;
-const INDEX_ROWS_REST = 24;
-
 // Spine width estimate for a perfect-bound paperback on ~80# (120gsm) uncoated stock:
 // pages / 444 in + 0.06 in for the cover board. Swap in your printer's own formula.
 const spineWidth = (pages: number) => Math.round((pages / 444 + 0.06) * 1000) / 1000;
@@ -48,7 +43,6 @@ interface Chapter {
 
 type PageSpec =
   | { kind: "half-title" }
-  | { kind: "frontispiece"; item: CatalogItem }
   | { kind: "title" }
   | { kind: "colophon" }
   | { kind: "contents"; chunk: number }
@@ -57,12 +51,10 @@ type PageSpec =
   | { kind: "opener"; half: "left" | "right"; chapter: Chapter }
   | { kind: "essay"; chapter: Chapter; chunk: number }
   | { kind: "exhibitions"; chapter: Chapter }
-  | { kind: "cv"; chunk: number }
   | { kind: "divider"; chapter: Chapter }
   | { kind: "chapter-title"; chapter: Chapter }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
   | { kind: "about"; chunk: number }
-  | { kind: "plates-index"; from: number; to: number }
   | { kind: "blank" }
   | { kind: "end" };
 
@@ -98,6 +90,71 @@ const pad2 = (n: number) => String(n).padStart(2, "0");
 const plainText = (html: string) => html.replace(/<br\s*\/?>/gi, " ").replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
 const hasCjk = (s: string) => /[\u4e00-\u9fff]/.test(s);
 
+/** Chapter colours (her direction, 2026-10-18): one colour per part of the book.
+ *  Body pages share one paper (#FAF5EA, in the CSS); dividers, chapter title pages
+ *  and opener spreads wear the colour of the part they belong to. The interview
+ *  divider closes the book in the painting chapter's clay pink. */
+const CHAPTER_COLOR: Record<string, string> = {
+  spirit: "#DFA79B",
+  remains: "#DFA79B",
+  residuals: "#DFA79B",
+  stillthings: "#DFA79B",
+  road: "#DFA79B",
+  innerwilderness: "#9FB2BE",
+  deathvalley: "#9FB2BE",
+  sahara: "#9FB2BE",
+  highlands: "#9FB2BE",
+  theater: "#9FB2BE",
+  photography: "#9FB2BE",
+  "series:nostalgia": "#9FB2BE",
+  shop: "#D8BE8C",
+  "series:immemory": "#1F2226",
+  "series:negotiated": "#1F2226",
+  "series:unfinished": "#1F2226",
+  "series:google": "#1F2226",
+  "series:feedscanner": "#1F2226",
+  "series:cavedance": "#1F2226",
+  "series:infected": "#1F2226",
+  "series:soliloquy": "#2E2C2A",
+  "series:artempath": "#2E2C2A",
+  "series:pingpong": "#2E2C2A",
+  "series:interview": "#DFA79B",
+};
+const DARK_CHAPTERS = new Set(
+  Object.entries(CHAPTER_COLOR)
+    .filter(([, c]) => c === "#1F2226" || c === "#2E2C2A")
+    .map(([k]) => k),
+);
+const chapterColor = (key: string) => CHAPTER_COLOR[key] ?? "#DFA79B";
+
+/** Exhibition lines are free text carrying their date at the end; pull the year out
+ *  to lead the line in bold, leaving the rest of the wording untouched. A range
+ *  (2025 – 2026) leads with its first year and drops the range from the rest,
+ *  and a 年 right after the year goes with it. */
+function exhibitionParts(text: string): { year: string; rest: string } {
+  const matches = [...text.matchAll(/\d{4}/g)];
+  if (matches.length === 0) return { year: "", rest: text.trim() };
+  const last = matches[matches.length - 1];
+  const lastIdx = last.index ?? 0;
+  const before = text.slice(0, lastIdx).replace(/\s+$/, "");
+  let year = last[0];
+  let cutStart = lastIdx;
+  const cutEnd = lastIdx + 4;
+  if ((before.endsWith("–") || before.endsWith("-") || before.endsWith("—")) && matches.length > 1) {
+    year = matches[0][0];
+    cutStart = matches[0].index ?? 0;
+  }
+  let tail = text.slice(cutEnd);
+  if (tail.startsWith("年")) tail = tail.slice(1);
+  const rest = (text.slice(0, cutStart) + tail)
+    .replace(/\s+/g, " ")
+    .replace(/,\s*,/g, ",")
+    .replace(/^[\s,，、·–—-]+/, "")
+    .replace(/[\s,，、·–—-]+$/, "")
+    .trim();
+  return { year, rest };
+}
+
 /** Split paragraphs into page-sized chunks of at most ~maxChars each. */
 
 interface ParaItem {
@@ -111,7 +168,6 @@ interface EssayItem {
 }
 
 interface EssayChunk {
-  lang: "en" | "zh";
   items: EssayItem[];
 }
 
@@ -157,19 +213,18 @@ function chunkItems(items: EssayItem[], maxChars: number): EssayItem[][] {
 // ── Pagination ────────────────────────────────────────────────────────────────
 // Odd pages are rectos (right-hand), even pages versos. Chapter openers are two-page spreads,
 // so they must start on a verso; a blank is inserted before them whenever needed.
-function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, plateCount: number, prefaceChunkCount: number, paintingChunkCount: number, essayChunkCounts: Record<string, number>, dividersOn: boolean, cvChunkCount = 0): InteriorPage[] {
+function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkCount: number, essayChunkCounts: Record<string, number>, dividersOn: boolean): InteriorPage[] {
   const specs: PageSpec[] = [];
   const nextIsVerso = () => (specs.length + 1) % 2 === 0;
 
   specs.push({ kind: "half-title" });
-  specs.push(frontispiece ? { kind: "frontispiece", item: frontispiece } : { kind: "blank" });
   specs.push({ kind: "title" });
   specs.push({ kind: "colophon" });
-  const tocPages = Math.max(1, Math.ceil((chapters.length + 5) / 9));
+  const tocPages = Math.max(1, Math.ceil((chapters.length + 3) / 9));
   for (let i = 0; i < tocPages; i++) specs.push({ kind: "contents", chunk: i });
   for (let i = 0; i < prefaceChunkCount; i++) specs.push({ kind: "preface", chunk: i });
   // About the Artist stands at the front of the book, right after the preface
-  // (her direction, 2026-10-18) — the CV still closes the book.
+  // (her direction, 2026-10-18).
   specs.push({ kind: "about", chunk: 0 });
   specs.push({ kind: "about", chunk: 1 });
 
@@ -197,16 +252,6 @@ function paginate(chapters: Chapter[], frontispiece: CatalogItem | undefined, pl
     for (const { item, plate } of chapter.items) specs.push({ kind: "plate", chapter, item, plate });
     if (EXHIBITIONS[chapter.key]?.length) specs.push({ kind: "exhibitions", chapter });
   }
-
-  // Back matter opens on a recto, as is conventional.
-  if (nextIsVerso()) specs.push({ kind: "blank" });
-  for (let from = 1; from <= plateCount; ) {
-    const to = Math.min(plateCount, from + (from === 1 ? INDEX_ROWS_FIRST : INDEX_ROWS_REST) - 1);
-    specs.push({ kind: "plates-index", from, to });
-    from = to + 1;
-  }
-  // Her CV closes the book.
-  for (let i = 0; i < cvChunkCount; i++) specs.push({ kind: "cv", chunk: i });
 
   // Closing page sits on the final (verso) page of the last signature.
   while ((specs.length + 1) % SIGNATURE !== 0) specs.push({ kind: "blank" });
@@ -250,9 +295,9 @@ function BookImage({ src, fallback, alt = "", className, style }: { src: string;
   );
 }
 
-function Page({ side, tone = "paper", className = "", id, bg, ctl, children }: { side: Side; tone?: "paper" | "ink" | "accent"; className?: string; id?: string; bg?: PageBgKind; ctl?: ReactNode; children?: ReactNode }) {
+function Page({ side, tone = "paper", className = "", id, bg, ctl, style, children }: { side: Side; tone?: "paper" | "ink" | "accent"; className?: string; id?: string; bg?: PageBgKind; ctl?: ReactNode; style?: CSSProperties; children?: ReactNode }) {
   return (
-    <section id={id} className={`bk-page bk-${side} bk-tone-${tone} ${bg ? `bk-bg-${bg}` : ""} ${className}`}>
+    <section id={id} style={style} className={`bk-page bk-${side} bk-tone-${tone} ${bg ? `bk-bg-${bg}` : ""} ${className}`}>
       {ctl}
       {children}
     </section>
@@ -276,16 +321,12 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `chapter-title:${spec.chapter.key}`;
     case "exhibitions":
       return `exhibitions:${spec.chapter.key}`;
-    case "cv":
-      return `cv:${spec.chunk}`;
     case "opener":
       return `opener:${spec.chapter.key}:${spec.half}`;
     case "plate":
       return `plate:${spec.plate}`;
     case "about":
       return `about:${spec.chunk}`;
-    case "plates-index":
-      return `plates-index:${spec.from}`;
     default:
       return spec.kind;
   }
@@ -369,7 +410,6 @@ interface BookContext {
   coverBack?: CatalogItem;
   prefaceChunks: { paras: ParaItem[] }[];
   essayChunks: Record<string, EssayChunk[]>;
-  cvPages: { heading: string | null; entries: { year: string; head: string; body?: string }[] }[];
   editMode: boolean;
   fieldTexts: Record<string, string>;
   openEditor: (edit: string, label: string, current: string) => void;
@@ -383,7 +423,7 @@ function FrontCoverFace({ ctx }: { ctx: BookContext }) {
   if (CANVA_COVER) {
     return (
       <div className="bk-face bk-face-front bk-face-canva">
-        <img className="bk-canva-cover" src={CANVA_COVER} alt="Chun Wang — Paintings 2019-2026" />
+        <img className="bk-canva-cover" src={CANVA_COVER} alt="Remains · 遗迹 — Chun Wang · 王淳" />
       </div>
     );
   }
@@ -407,37 +447,29 @@ function FrontCoverFace({ ctx }: { ctx: BookContext }) {
   );
 }
 
-function BackCoverFace({ ctx }: { ctx: BookContext }) {
-  const { chapters } = ctx;
-  const blurbEn = plainText(artistBioSegments.en.intro.split("<br><br>")[0]);
-  const blurbZh = plainText(artistBioSegments.zh.intro.split("<br><br>")[0]);
+function BackCoverFace() {
+  // Back cover, after the Nauman-style reference she chose (2026-10-18): one text
+  // block high on the page, a large quiet field below, the studio line at lower
+  // left and a blank white barcode box at lower right (the ISBN is still to come).
+  // The first sentence carries who she is, so the book explains itself.
   return (
     <div className="bk-face bk-face-back">
-      <div className="bk-face-eyebrow">
-        <span>{translations.en.catalogBook.publisher} · {translations.zh.catalogBook.publisher}</span>
-        <span>{translations.en.catalogBook.city} · {translations.zh.catalogBook.city}</span>
-      </div>
       <div className="bk-back-body">
-        <p className="bk-back-blurb">{blurbEn}</p>
-        <p className="bk-back-blurb">{blurbZh}</p>
-        <ul className="bk-back-chapters">
-          {chapters.map((c) => (
-            <li key={c.key}>
-              <span className="bk-num-box">{pad2(c.number)}</span>
-              <span className="shop-title gloria-title">{c.title}</span>
-            </li>
-          ))}
-        </ul>
+        <p className="bk-back-blurb">
+          Remains gathers a decade of work by Chun Wang, a multidisciplinary artist and curator based in New York City, across painting, photography, ceramics and objects, web-based projects, and live performance. Ancient figurines clock back in for video meetings. A stranger's face is held for one second before the train moves on. Search histories, pandemic testimony, and fleeting performances are gathered before they can disappear. The materials change from series to series. The habit underneath them does not. The theme of this book is what remains, and its method is the archive, assembled slowly, in print, the older technology of staying.
+        </p>
+        <p className="bk-back-blurb">
+          《Remains》收拢了王淳十年的作品。王淳是常驻纽约的跨领域艺术家与策展人，创作横跨绘画、摄影、陶艺与物件、网络项目与现场表演。古代陶俑重新上岗，去开视频会议；火车开动之前，一张陌生人的脸被多留了一秒；搜索记录、疫情证言、转瞬即逝的表演，在消失之前先被收集起来。材料从一个系列到下一个系列一直在变，其下的习惯不变。这本书的主题是存留，方法是档案，用印刷慢慢装订起来，用更古老的存留技术。
+        </p>
       </div>
       <div className="bk-back-foot">
         <div className="bk-back-mark shop-title gloria-title">{translations.en.catalogBook.publisher} · {translations.zh.catalogBook.publisher}</div>
-        <div className="bk-back-urls">
-          {SITE_URL.replace(/^https?:\/\/|\/$/g, "")} · {SHOP_URL.replace(/^https?:\/\/|\/$/g, "")}
-        </div>
+        <div className="bk-back-barcode" aria-hidden="true" />
       </div>
     </div>
   );
 }
+
 
 function SpineFace({ ctx, width }: { ctx: BookContext; width: number }) {
   // Below ~1/4 in most printers won't allow spine text.
@@ -447,7 +479,7 @@ function SpineFace({ ctx, width }: { ctx: BookContext; width: number }) {
       <div className="bk-spine-text">
         <span className="shop-title gloria-title">Chun Wang · 王淳</span>
         <span className="bk-spine-dot">·</span>
-        <span className="shop-title gloria-title">{ctx.t.catalogBook.title}</span>
+        <span className="shop-title gloria-title">{translations.en.catalogBook.title} {"遗迹"}</span>
       </div>
     </div>
   );
@@ -478,36 +510,16 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
         </Page>
       );
 
-    case "frontispiece":
-      return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} tone="ink">
-          <div className="bk-frontis">
-            <BookImage src={spec.item.image_url} fallback={spec.item.fallback_image_url} alt={spec.item.title} />
-          </div>
-          <div className="bk-frontis-caption">
-            {b.frontispiece} · <span className="product-title">{spec.item.title}</span>
-            {spec.item.year ? `, ${spec.item.year}` : ""}
-          </div>
-        </Page>
-      );
-
     case "title":
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-title-page">
-          <div className="bk-eyebrow">
-            {translations.en.catalogBook.publisher} · {translations.zh.catalogBook.publisher}
-            <br />
-            {translations.en.catalogBook.city} · {translations.zh.catalogBook.city}
-          </div>
           <div className="bk-title-body">
-            <div className="bk-title-author sans-label">{author}</div>
             <h1 className="bk-title-main shop-title gloria-title" style={{ fontSize: displaySize(translations.en.catalogBook.title, 6.8, 1.35) }}>
               {translations.en.catalogBook.title}
             </h1>
             <div className="bk-title-zh shop-title">{"遗迹"}</div>
             <div className="bk-rule" />
             <div className="bk-title-meta">
-              <span className="sans-label">{translations.en.catalogBook.subtitle} · {translations.zh.catalogBook.subtitle}</span>
               <span>{years}</span>
             </div>
           </div>
@@ -520,13 +532,8 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
         <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-colophon">
           <div className="bk-colophon-body">
             <p className="bk-colophon-title shop-title">{translations.en.catalogBook.title} · {"遗迹"}</p>
-            <p>{translations.en.catalogBook.subtitle} · {translations.zh.catalogBook.subtitle} · {years}</p>
             <p>© {year} Chun Wang. {translations.en.catalogBook.rights}</p>
             <p>© {year} 王淳。{translations.zh.catalogBook.rights}</p>
-            <p>{translations.en.catalogBook.artworkCredit}</p>
-            <p>{translations.zh.catalogBook.artworkCredit}</p>
-            <p>{translations.en.catalogBook.design} {translations.en.catalogBook.typeset}</p>
-            <p>{translations.zh.catalogBook.design} {translations.zh.catalogBook.typeset}</p>
             <p>
               {translations.en.catalogBook.publisher}, {translations.en.catalogBook.city} · {translations.zh.catalogBook.publisher}，{translations.zh.catalogBook.city}
               <br />
@@ -549,11 +556,9 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
         ...chapters.map((c) => ({
           num: pad2(c.number),
           title: c.title,
-          sub: c.items.length > 0 ? `${c.items.length} ${b.works}${c.years ? ` · ${c.years}` : ""}` : c.years,
+          sub: c.years,
           page: startOf((s) => "chapter" in s && s.chapter.key === c.key),
         })),
-        { num: "", title: `${translations.en.catalogBook.listOfPlates} · ${translations.zh.catalogBook.listOfPlates}`, sub: "", page: startOf((s) => s.kind === "plates-index") },
-        { num: "", title: "CV · 简历", sub: "", page: startOf((s) => s.kind === "cv") },
       ];
       const pageRows = rows.slice(spec.chunk * 9, spec.chunk * 9 + 9);
       return (
@@ -562,7 +567,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
             <div className="bk-eyebrow">{translations.en.catalogBook.contents} · {translations.zh.catalogBook.contents}</div>
           )}
           <div className="bk-contents">
-            {spec.chunk === 0 && <h2 className="bk-section-title shop-title gloria-title">{b.contents}</h2>}
+            {spec.chunk === 0 && <h2 className="bk-section-title shop-title gloria-title">{translations.en.catalogBook.contents} {translations.zh.catalogBook.contents}</h2>}
             <ol>
               {pageRows.map((r) => (
                 <li
@@ -593,14 +598,14 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
           <div className="bk-essay">
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
-                <h2 className="bk-section-title shop-title gloria-title">{translations.en.catalogBook.preface} · {translations.zh.catalogBook.preface}</h2>
+                <h2 className="bk-section-title shop-title gloria-title">{translations.en.catalogBook.preface} {translations.zh.catalogBook.preface}</h2>
               </div>
             )}
             <div className={`bk-essay-text description-html ${long ? "bk-essay-long" : ""}`}>
               {paras.map((p, i) => (
                 <p
                   key={i}
-                  className={ctx.editMode ? "bk-editable" : undefined}
+                  className={[ctx.editMode ? "bk-editable" : "", /^<p><strong>[\s\S]*<\/strong><\/p>$/.test(it.html.trim()) ? "bk-essay-q" : ""].filter(Boolean).join(" ") || undefined}
                   onDoubleClick={ctx.editMode ? () => ctx.openEditor(p.edit, `${b.preface} · ${spec.chunk + 1}-${i + 1}`, p.text) : undefined}
                 >
                   {p.text}
@@ -622,7 +627,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
           <div className="bk-essay">
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
-                <h2 className="bk-section-title shop-title gloria-title">{translations.en.catalogBook.paintingIntro} · {translations.zh.catalogBook.paintingIntro}</h2>
+                <h2 className="bk-section-title shop-title gloria-title">{translations.en.catalogBook.paintingIntro} {translations.zh.catalogBook.paintingIntro}</h2>
               </div>
             )}
             <div className={`bk-essay-text description-html ${long ? "bk-essay-long" : ""}`}>
@@ -643,21 +648,18 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
     }
 
     case "divider": {
-      // Pure colour separator: no text on the pink page itself.
-      return <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-divider-page" />;
+      // Pure colour separator in the chapter's own colour: no text, no image.
+      return <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-divider-page" style={{ "--chapter-color": chapterColor(spec.chapter.key) } as CSSProperties} />;
     }
 
     case "chapter-title": {
       const { chapter } = spec;
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-chapter-title-page">
-          <div className="bk-chapter-title-block">
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-chapter-title-page${DARK_CHAPTERS.has(chapter.key) ? " bk-on-dark" : ""}`} style={{ "--chapter-color": chapterColor(chapter.key) } as CSSProperties}>
+          <div className="bk-chapter-title-block bk-divider-card">
             <span className="bk-num-box">{pad2(chapter.number)}</span>
             <h2 className="bk-chapter-title shop-title">{chapter.title}</h2>
-            <div className="bk-chapter-title-meta sans-label">
-              {chapter.items.length > 0 ? `${chapter.items.length} ${b.works}` : ""}
-              {chapter.items.length > 0 && chapter.years ? ` · ${chapter.years}` : chapter.years}
-            </div>
+            <div className="bk-chapter-title-meta sans-label">{chapter.years}</div>
             {chapter.key === "spirit" && (
               <p className="bk-chapter-epigraph">
                 This book is more than a retrospective. It is an argument for slowness, demanding the kind of looking that contemporary life rarely permits.
@@ -677,14 +679,13 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
 
     case "opener": {
       const { chapter, half } = spec;
-      const front = chapter.items[0]?.item;
-      const back = chapter.items[1]?.item ?? front;
+      // Title spread is text only: no artwork appears before the section itself.
+      // The spread wears the chapter's colour (the screen chapter's motto spread
+      // included) instead of the old uniform black.
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} tone="ink" className={`bk-opener bk-opener-${half}`}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-opener bk-opener-${half}${DARK_CHAPTERS.has(chapter.key) ? " bk-on-dark" : ""}`} style={{ "--chapter-color": chapterColor(chapter.key) } as CSSProperties}>
           <div className="bk-spread-canvas">
             <Collage
-              front={front}
-              back={back}
               title={chapter.title}
               // Two lines across the ~16 in spread at most.
               titleSize={displaySize(chapter.title, 2 * 15.5, 1.9)}
@@ -692,12 +693,9 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
                 <div className="bk-collage-row">
                   <span className="bk-opener-label">
                     <span className="bk-num-box">{pad2(chapter.number)}</span>
-                    {b.chapter.replace("{n}", pad2(chapter.number))}
+                    {translations.en.catalogBook.chapter.replace("{n}", pad2(chapter.number))} · {translations.zh.catalogBook.chapter.replace("{n}", pad2(chapter.number))}
                   </span>
-                  <span>
-                    {chapter.items.length} {b.works}
-                    {chapter.years ? ` · ${chapter.years}` : ""}
-                  </span>
+                  <span>{chapter.years}</span>
                 </div>
               }
             />
@@ -708,8 +706,6 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
 
     case "essay": {
       const { chapter } = spec;
-      const first = chapter.items[0]?.plate;
-      const last = chapter.items[chapter.items.length - 1]?.plate;
       const chunk = ctx.essayChunks[chapter.key]?.[spec.chunk];
       const items = chunk?.items ?? [];
       return (
@@ -720,11 +716,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
               <div className="bk-essay-head">
                 <span className="bk-num-box">{pad2(chapter.number)}</span>
                 <h2 className="bk-section-title shop-title">{chapter.title}</h2>
-                <div className="bk-essay-meta sans-label">
-                  {chapter.items.length} {b.works}
-                  {chapter.years ? ` · ${chapter.years}` : ""}
-                  {first ? ` · ${b.plates} ${first}–${last}` : ""}
-                </div>
+                <div className="bk-essay-meta sans-label">{chapter.years}</div>
               </div>
             )}
             <div className="bk-essay-text description-html">
@@ -748,7 +740,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
     }
 
     case "plate": {
-      const { item, chapter, plate } = spec;
+      const { item, chapter } = spec;
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-plate-page">
           <RunningHead side={side} left={bookHead} right={chapter.title} />
@@ -756,9 +748,6 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
             <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
           </div>
           <div className="bk-caption">
-            <div className="bk-caption-num">
-              {b.plate} {pad2(plate)}
-            </div>
             <div className="bk-caption-body">
               <div className="bk-caption-title product-title">{item.title}</div>
               {(item.metaLine || item.dimensions) && (
@@ -791,90 +780,30 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       const entries = EXHIBITIONS[spec.chapter.key] ?? [];
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
-          <div className="bk-eyebrow">Exhibitions · 展览</div>
+          <div className="bk-eyebrow">相关展览 · Exhibitions</div>
           <div className="bk-exhibitions">
             <h3 className="bk-exhibitions-head shop-title">{spec.chapter.title}</h3>
             <ul>
-              {entries.map((e, i) => (
-                <li key={i}>
-                  <span className="bk-exhibitions-en">{e.en}</span>
-                  <span className="bk-exhibitions-zh">{e.zh}</span>
-                </li>
-              ))}
+              {entries.map((e, i) => {
+                const en = exhibitionParts(e.en);
+                const zh = exhibitionParts(e.zh);
+                return (
+                  <li key={i}>
+                    <span className="bk-exhibitions-en">
+                      {en.year && <strong>{en.year}</strong>}
+                      {en.year ? " " : ""}
+                      {en.rest}
+                    </span>
+                    <span className="bk-exhibitions-zh">
+                      {zh.year && <strong>{zh.year}</strong>}
+                      {zh.year ? " " : ""}
+                      {zh.rest}
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           </div>
-        </Page>
-      );
-    }
-
-    case "cv": {
-      const pageData = ctx.cvPages[spec.chunk] ?? { heading: null, entries: [] };
-      const out: ReactNode[] = [];
-      let lastHeading: string | null = null;
-      pageData.entries.forEach((e, i) => {
-        const sec = CV_SECTIONS.find((s) => s.entries.includes(e));
-        const h = sec?.heading ?? null;
-        if (h && h !== lastHeading) {
-          out.push(<h3 key={`h-${i}`} className="bk-cv-head">{h}</h3>);
-          lastHeading = h;
-        }
-        out.push(
-          <div key={i} className="bk-cv-entry">
-            <span className="bk-cv-year">{e.year}</span>
-            <span className="bk-cv-text">
-              {e.head}
-              {e.body && <span className="bk-cv-body">{e.body}</span>}
-            </span>
-          </div>,
-        );
-      });
-      return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
-          {spec.chunk === 0 && <div className="bk-eyebrow">CV · 简历</div>}
-          <div className="bk-cv">
-            {spec.chunk === 0 && <h2 className="bk-cv-name shop-title">CHUN WANG</h2>}
-            {out}
-          </div>
-        </Page>
-      );
-    }
-
-    case "plates-index": {
-      const plateRows = chapters.flatMap((c) =>
-        c.items.filter(({ plate }) => plate >= spec.from && plate <= spec.to).map(({ item, plate }) => ({
-          item,
-          plate,
-          chapter: c.title,
-          page: pages.find((p) => p.spec.kind === "plate" && p.spec.plate === plate)?.number ?? 0,
-        })),
-      );
-      return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
-          <RunningHead side={side} left={bookHead} right={`${translations.en.catalogBook.listOfPlates} · ${translations.zh.catalogBook.listOfPlates}`} />
-          <div className="bk-index">
-            {spec.from === 1 && <h2 className="bk-section-title shop-title gloria-title">{translations.en.catalogBook.listOfPlates} · {translations.zh.catalogBook.listOfPlates}</h2>}
-            <table>
-              <thead>
-                <tr>
-                  <th>{translations.en.catalogBook.plate} · {translations.zh.catalogBook.plate}</th>
-                  <th />
-                  <th />
-                  <th>{translations.en.catalogBook.page} · {translations.zh.catalogBook.page}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {plateRows.map((r) => (
-                  <tr key={r.plate}>
-                    <td className="bk-index-num">{pad2(r.plate)}</td>
-                    <td className="bk-index-title product-title">{r.item.title}</td>
-                    <td className="bk-index-meta">{[r.item.metaLine ?? r.chapter, r.item.dimensions].filter(Boolean).join(" · ")}</td>
-                    <td className="bk-index-page">{pad2(r.page)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <Folio number={number} tag={`${b.title} | ${b.listOfPlates}`} />
         </Page>
       );
     }
@@ -883,10 +812,8 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-center">
           <div className="bk-end">
-            <div className="shop-title gloria-title">{b.publisher}</div>
-            <div className="bk-end-sub">
-              {b.city} · {years}
-            </div>
+            <div className="shop-title gloria-title">{translations.en.catalogBook.publisher} · {translations.zh.catalogBook.publisher}</div>
+            <div className="bk-end-sub">{years}</div>
           </div>
         </Page>
       );
@@ -932,7 +859,10 @@ async function waitForAssets(root: HTMLElement) {
 }
 
 const CatalogBook = () => {
-  const { lang, toggleLang, t } = useLanguage();
+  // The book is one bilingual edition: its labels never follow the site's
+  // language toggle, so the book page reads English first, Chinese right after.
+  const t = translations.en;
+  const lang = "en" as const;
   const b = t.catalogBook;
   const [part, setPart] = useState<Part>("complete");
   const [bleed, setBleed] = useState(false);
@@ -1019,14 +949,14 @@ const CatalogBook = () => {
     const sectionsZh = getCombinedCatalogSections("", "zh");
     const descOf = (list: CatalogSection[], key: CatalogSectionKey) => list.find((x) => x.key === key)?.descriptionHtml || "";
     const asParas = (html: string) =>
-      html.includes("<") ? html : html.split(/\n\s*\n/).filter(Boolean).map((p) => `<p>${p.trim()}</p>`).join("");
+      html.includes("<p") ? html : html.split(/\n\s*\n/).filter(Boolean).map((p) => `<p>${p.trim()}</p>`).join("");
     const bilingualDesc = (key: CatalogSectionKey) => {
       const en = descOf(sectionsEn, key);
       const zh = descOf(sectionsZh, key);
       return asParas(en && zh && en !== zh ? en + "\n\n" + zh : en || zh);
     };
-    const bilingualTitle = (en: string, zh: string) => (en === zh ? en : `${en} · ${zh}`);
-    const catalogChapters: Chapter[] = getCombinedCatalogSections("", lang)
+    const bilingualTitle = (en: string, zh: string) => (en === zh ? en : `${en} ${zh}`);
+    const catalogChapters: Chapter[] = getCombinedCatalogSections("", "en")
       .filter((s) => s.items.length > 0)
       .map((s, i) => ({
         key: s.key,
@@ -1064,7 +994,7 @@ const CatalogBook = () => {
     const seriesChapters: Chapter[] = BOOK_SERIES.filter((s) => !s.mergedInto).map((s) => ({
       key: `series:${s.id}`,
       number: 0,
-      title: s.titleEn === s.titleZh ? s.titleEn : `${s.titleEn} · ${s.titleZh}`,
+      title: !s.titleZh || s.titleEn === s.titleZh ? s.titleEn : `${s.titleEn} ${s.titleZh}`,
       descriptionHtml: "",
       items: [],
       years: s.years,
@@ -1079,21 +1009,21 @@ const CatalogBook = () => {
       return { key: id, number: 0, title, descriptionHtml: "", items, years: yearRange(items.map(({ item }) => item.year)), seriesTextId: id };
     };
     const splitChapters: Chapter[] = [
-      wcSplit("residuals", "Residuals · 残留", "Residuals"),
-      wcSplit("stillthings", "Still Things · 静物", "Still Things"),
-      wcSplit("road", "Notes from the Road · 旅途笔记", "Notes from the Road"),
+      wcSplit("residuals", "Residuals 残留", "Residuals"),
+      wcSplit("stillthings", "Still Things 静物", "Still Things"),
+      wcSplit("road", "Notes from the Road 旅途笔记", "Notes from the Road"),
     ];
     const SECTION_ORDER = [
       "spirit", "remains", "residuals", "stillthings", "road", "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography", "series:nostalgia",
       "shop",
       "series:immemory", "series:negotiated", "series:unfinished", "series:google",
       "series:feedscanner", "series:cavedance", "series:infected",
-      "series:soliloquy", "series:artempath", "series:stillirise", "series:oneday",
+      "series:soliloquy", "series:artempath",
       "series:pingpong",
       "series:interview",
     ];
     // Photography, restructured at her direction (2026-10-18): the part is
-    // "Inner Wilderness · 内在荒原" — an opening text chapter carrying the
+    // "Inner Wilderness 内在荒原" — an opening text chapter carrying the
     // landscape statement — then each series stands as its own section with
     // its own text: Death Valley, Sahara, Scottish Highlands, Theater, and
     // El Otro, El Mismo (the old mixed photography chapter) closing the part.
@@ -1119,13 +1049,13 @@ const CatalogBook = () => {
         ? tpl.replace(/\/photography\/\d+\//, `/photography/${workId.padStart(2, "0")}/`)
         : `/photography/${workId.padStart(2, "0")}/main.jpg`;
       return {
-        title: lang === "zh" ? (w.titleZh ?? w.title) : w.title,
+        title: w.title,
         metaLine: [w.year, w.medium].filter(Boolean).join(" · "),
         year: w.year,
         medium: w.medium,
-        dimensions: lang === "zh" ? (w.dimensionsZh ?? w.dimensions) : w.dimensions,
-        description: lang === "zh" ? (w.descriptionZh ?? w.description) : w.description,
-        category: lang === "zh" ? "内在荒原" : "Inner Wilderness",
+        dimensions: w.dimensions,
+        description: w.description,
+        category: "Inner Wilderness",
         image_url: img,
         fallback_image_url: img,
       };
@@ -1140,11 +1070,11 @@ const CatalogBook = () => {
     const photoChapters: Chapter[] = photoParent
       ? [
           { key: "innerwilderness", number: 0, title: "Inner Wilderness · 内在荒原", descriptionHtml: "", years: "2017 – 2025", items: [], seriesTextId: "innerwilderness" },
-          { key: "deathvalley", number: 0, title: "Death Valley · 死亡谷", descriptionHtml: "", years: yrOf(dvItems), items: dvItems, seriesTextId: "deathvalley" },
-          { key: "sahara", number: 0, title: "Sahara · 撒哈拉", descriptionHtml: "", years: saharaItem?.year ?? "", items: saharaItem ? [{ item: saharaItem, plate: 0 }] : [], seriesTextId: "sahara" },
-          { key: "highlands", number: 0, title: "Scottish Highlands · 苏格兰高地", descriptionHtml: "", years: yrOf(hgItems), items: hgItems, seriesTextId: "highlands" },
-          { key: "theater", number: 0, title: "Theater · 登场", descriptionHtml: "", years: yrOf(thItems), items: thItems, seriesTextId: "theater" },
-          { ...photoParent, title: "El Otro, El Mismo · 另一个，同一个", descriptionHtml: "", years: yrOf(elOtroItems), items: elOtroItems },
+          { key: "deathvalley", number: 0, title: "Death Valley 死亡谷", descriptionHtml: "", years: yrOf(dvItems), items: dvItems, seriesTextId: "deathvalley" },
+          { key: "sahara", number: 0, title: "Sahara 撒哈拉", descriptionHtml: "", years: saharaItem?.year ?? "", items: saharaItem ? [{ item: saharaItem, plate: 0 }] : [], seriesTextId: "sahara" },
+          { key: "highlands", number: 0, title: "Scottish Highlands 苏格兰高地", descriptionHtml: "", years: yrOf(hgItems), items: hgItems, seriesTextId: "highlands" },
+          { key: "theater", number: 0, title: "Theater 登场", descriptionHtml: "", years: yrOf(thItems), items: thItems, seriesTextId: "theater" },
+          { ...photoParent, title: "El Otro, El Mismo 另一个，同一个", descriptionHtml: "", years: yrOf(elOtroItems), items: elOtroItems },
         ]
       : [];
     const byChapterKey = new Map([...catalogChapters, ...photoChapters, ...seriesChapters, ...splitChapters].map((ch) => [ch.key, ch]));
@@ -1177,8 +1107,8 @@ const CatalogBook = () => {
     const paraItems = (paras: ParaItem[]): EssayItem[] => paras.map((p) => ({ html: `<p>${p.text}</p>`, edit: p.edit }));
     const langChunks = (en: EssayItem[], zh: EssayItem[]): EssayChunk[] => {
       const all = [
-        ...chunkItems(en, 2300).map((items) => ({ lang: "en" as const, items })),
-        ...chunkItems(zh, 2300).map((items) => ({ lang: "zh" as const, items })),
+        ...chunkItems(en, 1500).map((items) => ({ lang: "en" as const, items })),
+        ...chunkItems(zh, 1000).map((items) => ({ lang: "zh" as const, items })),
       ];
       return all.length > 0 ? all : [{ lang: "en", items: [] }];
     };
@@ -1222,6 +1152,20 @@ const CatalogBook = () => {
           enT ? pBlocks(asParas(enT)).map((html) => ({ html, edit: `series:${s?.id}:en` })) : [],
           zhT ? pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s?.id}:zh` })) : [],
         );
+      } else if (chapter.key === "spirit") {
+        // The series overview, then the eight sub-series' background texts from her
+        // Portfolio pages: English only, as published there, each group headed by
+        // its bilingual title and closed by its source credit in small type.
+        const bgItems: EssayItem[] = SPIRIT_BACKGROUNDS.flatMap((g) => [
+          { html: `<p><strong>${g.titleEn} ${g.titleZh}</strong></p>`, edit: `spiritbg:${g.id}` },
+          ...(g.workTitle ? [{ html: `<p><strong>${g.workTitle}</strong></p>`, edit: `spiritbg:${g.id}` }] : []),
+          ...g.paras.map((para) => ({
+            html: typeof para === "string" ? `<p>${para}</p>` : `<p><strong>${para.head}</strong></p>`,
+            edit: `spiritbg:${g.id}`,
+          })),
+          ...(g.credit ? [{ html: `<p><span class="bk-credit">${g.credit}</span></p>`, edit: `spiritbg:${g.id}` }] : []),
+        ]);
+        essayChunks[chapter.key] = langChunks([...fieldItems("spirit", "en"), ...bgItems], fieldItems("spirit", "zh"));
       } else if (fieldText(chapter.key, "en") || fieldText(chapter.key, "zh")) {
         essayChunks[chapter.key] = langChunks(fieldItems(chapter.key, "en"), fieldItems(chapter.key, "zh"));
       } else if (chapter.key === "watercolor") {
@@ -1260,40 +1204,20 @@ const CatalogBook = () => {
       }
     }
     const byKey = (key: CatalogSectionKey) => chapters.find((c) => c.key === key)?.items.map((i) => i.item) ?? [];
-    // CV pages: flow the sections' entries over pages by character budget.
-    const cvPages: { heading: string | null; entries: { year: string; head: string; body?: string }[] }[] = [];
-    {
-      let cur: { heading: string | null; entries: { year: string; head: string; body?: string }[] } = { heading: null, entries: [] };
-      let len = 0;
-      const pushPage = () => { if (cur.entries.length > 0) cvPages.push(cur); cur = { heading: null, entries: [] }; len = 0; };
-      for (const sec of CV_SECTIONS) {
-        if (len > 1500) pushPage();
-        len += 90;
-        for (const e of sec.entries) {
-          const cost = e.year.length + e.head.length + (e.body?.length ?? 0) + 34;
-          if (len + cost > 2050 && cur.entries.length > 0) pushPage();
-          cur.entries.push(e);
-          len += cost;
-        }
-      }
-      pushPage();
-    }
     const prefaceParas = txParas("prefaceBody");
     const paintingParas = txParas("paintingIntroBody");
     return {
       t,
-      lang,
       chapters,
       prefaceChunks: [
-        ...chunkParas(prefaceParas.filter((p) => !hasCjk(p.text)), 2300),
-        ...chunkParas(prefaceParas.filter((p) => hasCjk(p.text)), 2300),
+        ...chunkParas(prefaceParas.filter((p) => !hasCjk(p.text)), 1500),
+        ...chunkParas(prefaceParas.filter((p) => hasCjk(p.text)), 1000),
       ],
       paintingChunks: [
-        ...chunkParas(paintingParas.filter((p) => !hasCjk(p.text)), 2300),
-        ...chunkParas(paintingParas.filter((p) => hasCjk(p.text)), 2300),
+        ...chunkParas(paintingParas.filter((p) => !hasCjk(p.text)), 1500),
+        ...chunkParas(paintingParas.filter((p) => hasCjk(p.text)), 1000),
       ],
       essayChunks,
-      cvPages,
       editMode,
       fieldTexts,
       openEditor,
@@ -1303,13 +1227,9 @@ const CatalogBook = () => {
       coverFront: byKey("residuals")[0] ?? chapters[0]?.items[0]?.item,
       coverBack: byKey("photography")[0] ?? chapters[0]?.items[1]?.item,
     };
-  }, [lang, t, textEdits, editMode, pageBgEdits]);
+  }, [textEdits, editMode, pageBgEdits]);
 
-  const plateCount = ctx.chapters.reduce((sum, c) => sum + c.items.length, 0);
-  // Frontispiece: Remains No.4 (The Meeting Has Begun) — the namesake series'
-  // emblem, in the quiet watercolor register the title page asks for.
-  const frontispiece = ctx.chapters.find((c) => c.key === "remains")?.items[3]?.item ?? ctx.coverBack;
-  const pages = useMemo(() => paginate(ctx.chapters, frontispiece, plateCount, ctx.prefaceChunks.length, ctx.paintingChunks.length, Object.fromEntries(Object.entries(ctx.essayChunks).map(([k, v]) => [k, v.length])), dividers, ctx.cvPages.length), [ctx, frontispiece, plateCount, dividers]);
+  const pages = useMemo(() => paginate(ctx.chapters, ctx.prefaceChunks.length, ctx.paintingChunks.length, Object.fromEntries(Object.entries(ctx.essayChunks).map(([k, v]) => [k, v.length])), dividers), [ctx, dividers]);
   const spine = spineWidth(pages.length);
 
   const bleedIn = bleed ? BLEED : 0;
@@ -1326,7 +1246,7 @@ const CatalogBook = () => {
           side: "single",
           node: (
             <section className="bk-page bk-wrap bk-tone-ink">
-              <div className="bk-wrap-back"><BackCoverFace ctx={ctx} /></div>
+              <div className="bk-wrap-back"><BackCoverFace /></div>
               <div className="bk-wrap-spine"><SpineFace ctx={ctx} width={spine} /></div>
               <div className="bk-wrap-front"><FrontCoverFace ctx={ctx} /></div>
             </section>
@@ -1344,8 +1264,7 @@ const CatalogBook = () => {
       { key: "front", side: "single", node: <section className="bk-page bk-single bk-tone-ink"><FrontCoverFace ctx={ctx} /></section> },
       { key: "ifc", side: "verso", node: <Page side="verso" tone="accent" /> },
       ...interior,
-      { key: "ibc", side: "recto", node: <Page side="recto" tone="accent" /> },
-      { key: "back", side: "single", node: <section className="bk-page bk-single bk-tone-ink"><BackCoverFace ctx={ctx} /></section> },
+      { key: "back", side: "single", node: <section className="bk-page bk-single bk-tone-ink"><BackCoverFace /></section> },
     ];
   }, [part, pages, ctx, spine]);
 
@@ -1424,7 +1343,7 @@ const CatalogBook = () => {
               ))}
             </div>
             <button type="button" onClick={() => setDividers((v) => !v)} className={toggleClass(dividers)}>
-              {lang === "zh" ? "粉色分隔页" : "Pink dividers"}
+              {lang === "zh" ? "章节分隔页" : "Chapter dividers"}
             </button>
             <button type="button" onClick={() => setEditMode((v) => !v)} className={toggleClass(editMode)}>
               {lang === "zh" ? "编辑模式" : "Edit mode"}
@@ -1440,9 +1359,6 @@ const CatalogBook = () => {
                 </button>
               </>
             )}
-            <button type="button" onClick={toggleLang} className={toggleClass(false)}>
-              {lang === "en" ? "中文" : "EN"}
-            </button>
             <button
               type="button"
               onClick={handleSave}
