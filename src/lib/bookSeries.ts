@@ -14,7 +14,7 @@ export interface BookSeries {
  * Nostalgia and Visions in Ceramics, the whole Screen & Archive chapter
  * (IMMEMORY, Negotiated Intelligence, Unfinished Archive, Google Searches,
  * Feed Scanner, Cave Dance, Infected Instructions) and the whole Live chapter
- * (Soliloquy, Art.empath.io, Still I Rise, One Day, Augmented Ping-Pong). English texts are the artist's own project overviews;
+ * (Soliloquy, Art.empath.io, Augmented Ping-Pong). English texts are the artist's own project overviews;
  * Chinese texts are translations of them. Plates are added per series later.
  * Keep the field format exactly (id first, double-quoted strings):
  * the book editor's PR flow (api/book-pr.js) edits textEn/textZh by id.
@@ -80,10 +80,10 @@ export const BOOK_SERIES: BookSeries[] = [
   {
     id: "cavedance",
     titleEn: "Cave Dance",
-    titleZh: "洞穴之舞",
+    titleZh: "窟舞",
     years: "2022 - permanent",
     textEn: "Cave Dance (www.cavedance.art) is a website work commissioned by Harvard CAMLab. It was an honor to work with a group of wonderful researchers and creatives who were dedicated to integrating humanistic research with cutting-edge technology and design to explore innovative ways of showcasing art, culture and history.\n\nCave Dance as an immersive installation experience has been featured in the public visits to CAMLab at Harvard. It is an interdisciplinary project that uses digital technologies such as human-machine collaboration, motion capture, AI, and CG to revive the music and dance depicted in the Dunhuang cave paintings. This online space is intended to be both a way of exploring the possibilities of artistic expression based on academic databases, and a place for viewers to read and re-read the works or to understand and examine the process of creation.",
-    textZh: "《洞穴之舞》（www.cavedance.art）是一件受哈佛 CAMLab 委托的网站作品。能与一群出色的研究者和创作者合作是我的荣幸，他们致力于把人文研究与前沿技术和设计结合，探索展示艺术、文化与历史的创新方式。\n\n作为一种沉浸式装置体验，《洞穴之舞》曾在哈佛 CAMLab 的公众开放参观中呈现。这是一个跨学科项目，使用人机协作、动作捕捉、人工智能与 CG 等数字技术，让敦煌壁画中的音乐与舞蹈重现。这个线上空间既是探索基于学术数据库的艺术表达可能性的方式，也是观众阅读、重读作品，或理解与审视创作过程的场所。",
+    textZh: "《窟舞》（www.cavedance.art）是一件受哈佛 CAMLab 委托的网站作品。能与一群出色的研究者和创作者合作是我的荣幸，他们致力于把人文研究与前沿技术和设计结合，探索展示艺术、文化与历史的创新方式。\n\n作为一种沉浸式装置体验，《窟舞》曾在哈佛 CAMLab 的公众开放参观中呈现。这是一个跨学科项目，使用人机协作、动作捕捉、人工智能与 CG 等数字技术，让敦煌壁画中的音乐与舞蹈重现。这个线上空间既是探索基于学术数据库的艺术表达可能性的方式，也是观众阅读、重读作品，或理解与审视创作过程的场所。",
   },
   {
     id: "infected",
@@ -104,26 +104,10 @@ export const BOOK_SERIES: BookSeries[] = [
   {
     id: "artempath",
     titleEn: "Art.empath.io",
-    titleZh: "艺术共情",
+    titleZh: "",
     years: "2018",
     textEn: "Art.empath.io is an interactive system which installs in front of an artwork in exhibition in a modern/contemporary art museum and encourages more visitor engagement with the art on display. At the start of the interaction, the viewer sees on a digital display a printout sliding out of a virtual printer, prompting the viewer to type in his commentary about the artwork he is viewing. When the viewer submits his response, the printout slides back into the virtual printer. After pausing for a few seconds, a thermal receipt printer nearby produces on paper a piece of commentary about the same artwork from a previous viewer or the artwork's creator. The user is invited to take away the physical printout from the printer.\n\nThe problem with modern and contemporary art is that with their extensive use of abstraction and increased emphasis on conceptual art, it has made the task of absorbing and resonating with artworks difficult on the audience. Art.empath.io was my proposed solution for stirring empathy and opening dialogues between the artist and the viewer as well as among viewers themselves.\n\nA critical part of this project was to test the design in the real world to see if the public resonate with the idea and how they actually engage with this work. To this end, I put the system on an unauthorized show at SFMOMA on the bench in front of one of Rothko's famous color field paintings, No.14. With generous support from the staff of Anderson Collection at Stanford University, I was also able to put the system on an official exhibition in front of Joan Mitchell's abstract painting of 1985, Begin, Again IV.\n\nUltimately, this project dates back to the moment when I first finished watching Simon Schama's fascinating documentary about Mark Rothko on a tired night. Every now and again I would walk into a museum and pass by one of Rothko's huge panels of color, and I was always hoping I could find something positive to say but I never could. The documentary finally brought me insight into Rothko's real intention with his creations: he was searching to express and evoke \"basic human emotions\" through painting — \"tragedy, ecstasy, doom, and so on,\" as referred to by Rothko himself. I walked away from the documentary with two things: one was the ability to finally appreciate Rothko's richly colored rectangles, and the other was the desire for a platform for modern art museum-goers to exchange their knowledge and reactions about the (often bewildering) artworks on display.",
     textZh: "Art.empath.io 是一个互动系统，安装在现代/当代美术馆展出的一件作品前面，鼓励观众更多地与展出的艺术互动。互动开始时，观众在数字屏幕上看到一张打印纸从一台虚拟打印机中滑出，提示他输入对眼前作品的评论。观众提交回应后，打印纸滑回虚拟打印机。停顿几秒后，旁边一台热敏小票打印机在纸上打印出另一位观众或作品创作者对同一件作品的评论。观众可以把这张纸质打印带走。\n\n现代与当代艺术的问题在于，它们大量使用抽象、越来越强调观念，使观众难以真正吸收作品并与之共鸣。Art.empath.io 是我提出的解决方案：唤起共情，在艺术家与观众之间、观众与观众之间开启对话。\n\n这个项目关键的一步，是把设计放到真实世界中测试，看公众是否对这个想法有共鸣、他们实际上如何与作品互动。为此，我把这套系统未经许可地放在了 SFMOMA，摆在罗斯科著名的色域绘画《No.14》前的长椅上。在斯坦福大学安德森收藏馆工作人员的慷慨支持下，我也得以把系统正式展出在琼·米切尔 1985 年的抽象绘画《Begin, Again IV》前面。\n\n说到底，这个项目要追溯到一个疲倦的夜晚，我看完 Simon Schama 那部关于 Mark Rothko 的精彩纪录片的时刻。以前我走进博物馆，路过 Rothko 巨大的色块画，总希望自己能说出点什么好的来，却总是说不出。纪录片终于让我理解了 Rothko 的真实意图：他想通过绘画表达和唤起“基本的人类情感”，用他自己的话说，“悲剧、狂喜、厄运，等等”。看完纪录片，我带走了两样东西：一是终于能欣赏 Rothko 色彩丰沛的矩形，二是一个愿望——为现代艺术博物馆的观众做一个平台，让他们交换对那些（常常令人困惑的）作品的知识与反应。",
-  },
-  {
-    id: "stillirise",
-    titleEn: "Still I Rise",
-    titleZh: "我依然崛起",
-    years: "2018",
-    textEn: "Video edited from found footage, reflecting on the repetitive, absurd, and futile part of everyday life. Duration: 5'5\".",
-    textZh: "由现成影像（found footage）剪辑而成，反思日常生活中重复、荒诞与徒劳的部分。时长 5 分 5 秒。",
-  },
-  {
-    id: "oneday",
-    titleEn: "One Day",
-    titleZh: "某一天",
-    years: "2018 - 2020",
-    textEn: "\"One Day\" (total length: 4 min 19 sec) is a video portrait of a person with depression, featuring my own performance and use of projection as part of the set design. A shoutout to all who battle, or have battled depression to find meaning of life.",
-    textZh: "《某一天》（全长 4 分 19 秒）是一件以抑郁为题的影像肖像，由我本人表演，并把投影用作舞台设计的一部分。向所有正在与抑郁战斗、或曾经战斗过、为寻找生命意义的人致意。",
   },
   {
     id: "pingpong",
