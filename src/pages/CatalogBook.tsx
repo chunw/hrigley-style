@@ -167,10 +167,6 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     en: "To revive the music and dance depicted in the Dunhuang cave paintings.",
     zh: "让敦煌壁画中的音乐与舞蹈重现。",
   },
-  "series:infected": {
-    en: "The old world imploded from within. A new world awaits new instructions to begin.",
-    zh: "旧世界从内部崩塌了。新世界等待新的指令来开启。",
-  },
   "series:soliloquy": {
     en: "A temple for meditation and reflection.",
     zh: "一座冥想与自我反思的庙宇。",
@@ -1080,7 +1076,7 @@ const CatalogBook = () => {
       "spirit", "remains", "residuals", "stillthings", "road", "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography", "series:nostalgia",
       "shop",
       "series:immemory", "series:negotiated", "series:unfinished", "series:google",
-      "series:feedscanner", "series:cavedance", "series:infected",
+      "series:feedscanner", "series:cavedance",
       "series:soliloquy", "series:artempath",
       "series:interview",
     ];
