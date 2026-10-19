@@ -586,7 +586,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
               {paras.map((p, i) => (
                 <p
                   key={i}
-                  className={[ctx.editMode ? "bk-editable" : "", /^<p><strong>[\s\S]*<\/strong><\/p>$/.test(it.html.trim()) ? "bk-essay-q" : ""].filter(Boolean).join(" ") || undefined}
+                  className={ctx.editMode ? "bk-editable" : undefined}
                   onDoubleClick={ctx.editMode ? () => ctx.openEditor(p.edit, `${b.preface} · ${spec.chunk + 1}-${i + 1}`, p.text) : undefined}
                 >
                   {p.text}
@@ -1050,7 +1050,7 @@ const CatalogBook = () => {
     const elOtroItems = photoItems.filter((p) => !usedPhoto.has(p));
     const photoChapters: Chapter[] = photoParent
       ? [
-          { key: "innerwilderness", number: 0, title: "Inner Wilderness · 内在荒原", descriptionHtml: "", years: "2017 – 2025", items: [], seriesTextId: "innerwilderness" },
+          { key: "innerwilderness", number: 0, title: "Inner Wilderness 内在荒原", descriptionHtml: "", years: "2017 – 2025", items: [], seriesTextId: "innerwilderness" },
           { key: "deathvalley", number: 0, title: "Death Valley 死亡谷", descriptionHtml: "", years: yrOf(dvItems), items: dvItems, seriesTextId: "deathvalley" },
           { key: "sahara", number: 0, title: "Sahara 撒哈拉", descriptionHtml: "", years: saharaItem?.year ?? "", items: saharaItem ? [{ item: saharaItem, plate: 0 }] : [], seriesTextId: "sahara" },
           { key: "highlands", number: 0, title: "Scottish Highlands 苏格兰高地", descriptionHtml: "", years: yrOf(hgItems), items: hgItems, seriesTextId: "highlands" },
