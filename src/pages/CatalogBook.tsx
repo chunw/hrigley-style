@@ -41,7 +41,6 @@ interface Chapter {
 }
 
 type PageSpec =
-  | { kind: "half-title" }
   | { kind: "title" }
   | { kind: "colophon" }
   | { kind: "contents"; chunk: number }
@@ -216,7 +215,6 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
   const specs: PageSpec[] = [];
   const nextIsVerso = () => (specs.length + 1) % 2 === 0;
 
-  specs.push({ kind: "half-title" });
   specs.push({ kind: "title" });
   specs.push({ kind: "colophon" });
   const tocPages = Math.max(1, Math.ceil((chapters.length + 3) / 9));
@@ -418,19 +416,20 @@ interface BookContext {
 }
 
 function FrontCoverFace({ ctx }: { ctx: BookContext }) {
-  // Nauman-style cover (her direction, 2026-10-18, replacing the Canva band
-  // layout): white paper, Remains No.3 whole at the centre, and the lettering
-  // walking the four edges — Chun across the top, Wang down the right side,
-  // Remains up the left side, 遗迹 at the lower right. Set in HTML/CSS, no baked image.
-  const art = ctx.chapters.find((c) => c.key === "remains")?.items[2]?.item ?? ctx.coverFront;
+  // Final cover (her direction, 2026-10-18): a full rust-brown field, the David
+  // still life from the Still Things section whole at the centre on its black
+  // ground, and cream serif lettering walking the four edges — Chun across the
+  // top, Wang down the right side, Remains up the left side, 遗迹 at lower right.
+  const still = ctx.chapters.find((c) => c.key === "stillthings");
+  const art = still?.items.find(({ item }) => item.title === "Still Things")?.item ?? still?.items[0]?.item ?? ctx.coverFront;
   return (
-    <div className="bk-face bk-face-front bk-face-nauman">
+    <div className="bk-face bk-face-front bk-face-rust">
       <span className="bk-cover-word bk-cover-top">Chun</span>
       <span className="bk-cover-word bk-cover-right">Wang</span>
       <span className="bk-cover-word bk-cover-left">Remains</span>
       {art && (
         <div className="bk-cover-art">
-          <BookImage src={art.image_url} fallback={art.fallback_image_url} alt="Remains No.3" />
+          <BookImage src={art.image_url} fallback={art.fallback_image_url} alt="Still Things" />
         </div>
       )}
       <span className="bk-cover-word bk-cover-zh">{"遗迹"}</span>
@@ -492,16 +491,6 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
   const bookHead = `${author} — ${b.title}`;
 
   switch (spec.kind) {
-    case "half-title":
-      return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-center">
-          <div className="bk-half-block">
-            <div className="bk-half-title shop-title">{translations.en.catalogBook.title}</div>
-            <div className="bk-half-title-zh shop-title">{"遗迹"}</div>
-          </div>
-        </Page>
-      );
-
     case "title":
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-title-page">
