@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+  <rect width="1200" height="900" fill="#FAF5EA"/>
+  <rect x="28" y="28" width="1144" height="844" fill="none" stroke="#2b2b2b" stroke-opacity="0.35" stroke-width="2"/>
+  <text x="600" y="318" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif, sans-serif" font-size="30" letter-spacing="6" fill="#C8402A">图片占位 · IMAGE PLACEHOLDER</text>
+  <text x="600" y="408" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif, sans-serif" font-size="56" fill="#2b2b2b">Feed Scanner</text>
+  <text x="600" y="486" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif, sans-serif" font-size="40" fill="#2b2b2b">Feed Scanner</text>
+  <text x="600" y="552" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif, sans-serif" font-size="32" fill="#2b2b2b" fill-opacity="0.75">2018</text>
+  <text x="600" y="648" text-anchor="middle" font-family="'Courier New', monospace, sans-serif" font-size="29" fill="#2b2b2b">目标文件 Target: /book/feedscanner/poster.jpg</text>
+  <text x="600" y="828" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif, sans-serif" font-size="24" fill="#2b2b2b" fill-opacity="0.55">真实图到位后按目标文件名一对一替换 · To be replaced 1:1 by the real image</text>
+</svg>
