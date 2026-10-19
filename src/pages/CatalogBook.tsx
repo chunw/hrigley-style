@@ -9,6 +9,7 @@ import { getCombinedCatalogSections, type CatalogItem, type CatalogSection, type
 import { translations, type Translations } from "@/lib/translations";
 import { PAGE_BACKGROUNDS, type PageBgKind } from "@/lib/pageBackgrounds";
 import { BOOK_SERIES } from "@/lib/bookSeries";
+import { SERIES_PLATES, DEATH_VALLEY_PLATES } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS } from "@/lib/exhibitions";
@@ -49,8 +50,8 @@ type PageSpec =
   | { kind: "opener"; half: "left" | "right"; chapter: Chapter }
   | { kind: "essay"; chapter: Chapter; chunk: number }
   | { kind: "exhibitions"; chapter: Chapter }
-  | { kind: "chapter-title"; chapter: Chapter }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
+  | { kind: "aphorism"; half: "left" | "right"; aphorism: Aphorism }
   | { kind: "about"; chunk: number }
   | { kind: "blank" }
   | { kind: "end" };
@@ -87,45 +88,12 @@ const pad2 = (n: number) => String(n).padStart(2, "0");
 const plainText = (html: string) => html.replace(/<br\s*\/?>/gi, " ").replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
 const hasCjk = (s: string) => /[\u4e00-\u9fff]/.test(s);
 
-/** Chapter colours (her direction, 2026-10-18): one colour per part of the book.
- *  Body pages share one paper (#FAF5EA, in the CSS); opener spreads wear the
- *  colour of the part they belong to. Chapter title pages are always black
- *  with white type (her direction, 2026-10-18: the standalone colour divider
- *  pages are gone, one title page per chapter is enough). */
-const CHAPTER_COLOR: Record<string, string> = {
-  spirit: "#DFA79B",
-  remains: "#DFA79B",
-  residuals: "#DFA79B",
-  stillthings: "#DFA79B",
-  road: "#DFA79B",
-  innerwilderness: "#9FB2BE",
-  deathvalley: "#9FB2BE",
-  sahara: "#9FB2BE",
-  highlands: "#9FB2BE",
-  theater: "#9FB2BE",
-  photography: "#9FB2BE",
-  "series:nostalgia": "#9FB2BE",
-  shop: "#D8BE8C",
-  "series:immemory": "#1F2226",
-  "series:negotiated": "#1F2226",
-  "series:unfinished": "#1F2226",
-  "series:google": "#1F2226",
-  "series:feedscanner": "#1F2226",
-  "series:cavedance": "#1F2226",
-  "series:infected": "#1F2226",
-  "series:soliloquy": "#2E2C2A",
-  "series:artempath": "#2E2C2A",
-  "series:pingpong": "#2E2C2A",
-  "series:interview": "#DFA79B",
-};
-const DARK_CHAPTERS = new Set(
-  Object.entries(CHAPTER_COLOR)
-    .filter(([, c]) => c === "#1F2226" || c === "#2E2C2A")
-    .map(([k]) => k),
-);
-const chapterColor = (key: string) => CHAPTER_COLOR[key] ?? "#DFA79B";
+/** Chapter opener spreads are uniformly black with white type
+ *  (her direction, 2026-10-18); each chapter's epigraph sits in the
+ *  spread's upper field (CHAPTER_EPIGRAPH below). */
 
-/** One short epigraph per chapter, printed small under the chapter title.
+/** One short epigraph per chapter, printed small in the upper field of
+ *  the chapter's opener spread.
  *  Sourcing rule (her discipline): only lines that already stand in this book
  *  for that chapter — the chapter's own text, verbatim — or her own words.
  *  Nothing is written for the slot. Chapters whose book text carries no such
@@ -199,10 +167,6 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     en: "To revive the music and dance depicted in the Dunhuang cave paintings.",
     zh: "让敦煌壁画中的音乐与舞蹈重现。",
   },
-  "series:infected": {
-    en: "The old world imploded from within. A new world awaits new instructions to begin.",
-    zh: "旧世界从内部崩塌了。新世界等待新的指令来开启。",
-  },
   "series:soliloquy": {
     en: "A temple for meditation and reflection.",
     zh: "一座冥想与自我反思的庙宇。",
@@ -210,10 +174,6 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
   "series:artempath": {
     en: "Opening dialogues between the artist and the viewer as well as among viewers themselves.",
     zh: "在艺术家与观众之间、观众与观众之间开启对话。",
-  },
-  "series:pingpong": {
-    en: "Players must decide from three alternative realities.",
-    zh: "玩家必须在三个替代现实之间作出抉择。",
   },
   "series:interview": {
     en: "Art, for me, is not just a form of expression but a mode of exploration and discovery.",
@@ -304,12 +264,48 @@ function chunkItems(items: EssayItem[], maxChars: number): EssayItem[][] {
 
 /** Group a chapter essay's <p> blocks into page-sized chunks by plain-text length. */
 
+/** A "remains" aphorism spread: one sentence of hers alone across two
+ * pages, set between chapters as a pause (her direction, 2026-10-18).
+ * Sentences are verbatim from her own texts (see
+ * remains-book/source-texts/remains-aphorisms.md). */
+interface Aphorism {
+  id: string;
+  en?: string;
+  zh?: string;
+}
+
+const APHORISMS: Record<string, Aphorism> = {
+  "what-remains": { id: "what-remains", en: "What remains?", zh: "留下了什么？" },
+  journeys: { id: "journeys", en: "The journeys end. The moments remain.", zh: "旅程会结束，瞬间留下来。" },
+  keep: { id: "keep", en: "I keep what is about to disappear.", zh: "我存留那些即将消失的东西。" },
+  "human-touch": { id: "human-touch", en: "The 'human touch' remains a refuge, a place machines cannot tread." },
+  theme: {
+    id: "theme",
+    en: "The theme of this book is what remains, and its method is the archive.",
+    zh: "主题是存留，方法是档案。",
+  },
+};
+
+/** Aphorism spreads placed immediately before these chapters. The first
+ * one ("What remains?") goes after the front matter, before chapter one. */
+const APHORISM_BEFORE_CHAPTER: Record<string, string> = {
+  "series:nostalgia": "journeys",
+  shop: "keep",
+  "series:immemory": "human-touch",
+  "series:interview": "theme",
+};
+
 // ── Pagination ────────────────────────────────────────────────────────────────
 // Odd pages are rectos (right-hand), even pages versos. Chapter openers are two-page spreads,
 // so they must start on a verso; a blank is inserted before them whenever needed.
 function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkCount: number, essayChunkCounts: Record<string, number>): InteriorPage[] {
   const specs: PageSpec[] = [];
   const nextIsVerso = () => (specs.length + 1) % 2 === 0;
+  const pushAphorism = (a: Aphorism) => {
+    if (!nextIsVerso()) specs.push({ kind: "blank" });
+    specs.push({ kind: "aphorism", half: "left", aphorism: a });
+    specs.push({ kind: "aphorism", half: "right", aphorism: a });
+  };
 
   specs.push({ kind: "title" });
   specs.push({ kind: "colophon" });
@@ -324,20 +320,19 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
   let firstChapter = true;
   for (const chapter of chapters) {
     if (firstChapter) {
+      pushAphorism(APHORISMS["what-remains"]);
       for (let i = 0; i < paintingChunkCount; i++) specs.push({ kind: "painting-intro", chunk: i });
       firstChapter = false;
     }
-    specs.push({ kind: "chapter-title", chapter });
-    if (chapter.seriesOnly) {
-      const seriesEssayCount = essayChunkCounts[chapter.key] ?? 0;
-      for (let i = 0; i < seriesEssayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
-      if (EXHIBITIONS[chapter.key]?.length) specs.push({ kind: "exhibitions", chapter });
-      continue;
-    }
+    const aphorismId = APHORISM_BEFORE_CHAPTER[chapter.key];
+    if (aphorismId) pushAphorism(APHORISMS[aphorismId]);
+    // One opening per chapter (her direction, 2026-10-18): the big-type
+    // opener spread alone — no separate title page before it. Series-only
+    // chapters open with the same spread; their essay count can be 0.
     if (!nextIsVerso()) specs.push({ kind: "blank" });
     specs.push({ kind: "opener", half: "left", chapter });
     specs.push({ kind: "opener", half: "right", chapter });
-    const essayCount = essayChunkCounts[chapter.key] ?? 1;
+    const essayCount = essayChunkCounts[chapter.key] ?? (chapter.seriesOnly ? 0 : 1);
     for (let i = 0; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
     for (const { item, plate } of chapter.items) specs.push({ kind: "plate", chapter, item, plate });
     if (EXHIBITIONS[chapter.key]?.length) specs.push({ kind: "exhibitions", chapter });
@@ -405,12 +400,12 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `painting:${spec.chunk}`;
     case "essay":
       return `essay:${spec.chapter.key}:${spec.chunk}`;
-    case "chapter-title":
-      return `chapter-title:${spec.chapter.key}`;
     case "exhibitions":
       return `exhibitions:${spec.chapter.key}`;
     case "opener":
       return `opener:${spec.chapter.key}:${spec.half}`;
+    case "aphorism":
+      return `aphorism:${spec.aphorism.id}:${spec.half}`;
     case "plate":
       return `plate:${spec.plate}`;
     case "about":
@@ -719,36 +714,23 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       );
     }
 
-    case "chapter-title": {
-      // One title page per chapter: black page, white type, a short epigraph
-      // under the title where the chapter's own book text carries one.
-      const { chapter } = spec;
-      const epigraph = CHAPTER_EPIGRAPH[chapter.key];
-      return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-chapter-title-page">
-          <div className="bk-chapter-title-block">
-            <span className="bk-num-box">{pad2(chapter.number)}</span>
-            <h2 className="bk-chapter-title shop-title">{chapter.title}</h2>
-            <div className="bk-chapter-title-meta sans-label">{chapter.years}</div>
-            {epigraph && (
-              <p className="bk-chapter-epigraph">
-                {epigraph.en}
-                <span className="bk-chapter-epigraph-zh">{epigraph.zh}</span>
-              </p>
-            )}
-          </div>
-        </Page>
-      );
-    }
-
     case "opener": {
       const { chapter, half } = spec;
-      // Title spread is text only: no artwork appears before the section itself.
-      // The spread wears the chapter's colour (the screen chapter's motto spread
-      // included) instead of the old uniform black.
+      // The chapter's only opening (her direction, 2026-10-18): a black
+      // spread with white type throughout. The big handwritten title runs
+      // across the bottom; the chapter's epigraph, where its own book text
+      // carries one, sits small in the upper field. Text only: no artwork
+      // appears before the section itself.
+      const epigraph = CHAPTER_EPIGRAPH[chapter.key];
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-opener bk-opener-${half}${DARK_CHAPTERS.has(chapter.key) ? " bk-on-dark" : ""}`} style={{ "--chapter-color": chapterColor(chapter.key) } as CSSProperties}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-opener bk-opener-${half}`}>
           <div className="bk-spread-canvas">
+            {epigraph && (
+              <p className="bk-opener-epigraph">
+                {epigraph.en}
+                <span className="bk-opener-epigraph-zh">{epigraph.zh}</span>
+              </p>
+            )}
             <Collage
               title={chapter.title}
               // Two lines across the ~16 in spread at most.
@@ -763,6 +745,20 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
                 </div>
               }
             />
+          </div>
+        </Page>
+      );
+    }
+
+    case "aphorism": {
+      const a = spec.aphorism;
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-aphorism bk-aphorism-${spec.half}`}>
+          <div className="bk-spread-canvas">
+            <div className="bk-aphorism-body">
+              {a.en && <p className="bk-aphorism-en">{a.en}</p>}
+              {a.zh && <p className="bk-aphorism-zh">{a.zh}</p>}
+            </div>
           </div>
         </Page>
       );
@@ -1059,7 +1055,7 @@ const CatalogBook = () => {
       number: 0,
       title: !s.titleZh || s.titleEn === s.titleZh ? s.titleEn : `${s.titleEn} ${s.titleZh}`,
       descriptionHtml: "",
-      items: [],
+      items: (SERIES_PLATES[s.id] ?? []).map((item) => ({ item, plate: 0 })),
       years: s.years,
       seriesOnly: true,
     }));
@@ -1080,9 +1076,8 @@ const CatalogBook = () => {
       "spirit", "remains", "residuals", "stillthings", "road", "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography", "series:nostalgia",
       "shop",
       "series:immemory", "series:negotiated", "series:unfinished", "series:google",
-      "series:feedscanner", "series:cavedance", "series:infected",
+      "series:feedscanner", "series:cavedance",
       "series:soliloquy", "series:artempath",
-      "series:pingpong",
       "series:interview",
     ];
     // Photography, restructured at her direction (2026-10-18): the part is
@@ -1133,7 +1128,7 @@ const CatalogBook = () => {
     const photoChapters: Chapter[] = photoParent
       ? [
           { key: "innerwilderness", number: 0, title: "Inner Wilderness 内在荒原", descriptionHtml: "", years: "2017 – 2025", items: [], seriesTextId: "innerwilderness" },
-          { key: "deathvalley", number: 0, title: "Death Valley 死亡谷", descriptionHtml: "", years: yrOf(dvItems), items: dvItems, seriesTextId: "deathvalley" },
+          { key: "deathvalley", number: 0, title: "Death Valley 死亡谷", descriptionHtml: "", years: yrOf(dvItems), items: [...dvItems, ...DEATH_VALLEY_PLATES.map((item) => ({ item, plate: 0 }))], seriesTextId: "deathvalley" },
           { key: "sahara", number: 0, title: "Sahara 撒哈拉", descriptionHtml: "", years: saharaItem?.year ?? "", items: saharaItem ? [{ item: saharaItem, plate: 0 }] : [], seriesTextId: "sahara" },
           { key: "highlands", number: 0, title: "Scottish Highlands 苏格兰高地", descriptionHtml: "", years: yrOf(hgItems), items: hgItems, seriesTextId: "highlands" },
           { key: "theater", number: 0, title: "Theater 登场", descriptionHtml: "", years: yrOf(thItems), items: thItems, seriesTextId: "theater" },
