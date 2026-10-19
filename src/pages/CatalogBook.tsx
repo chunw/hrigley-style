@@ -9,6 +9,7 @@ import { getCombinedCatalogSections, type CatalogItem, type CatalogSection, type
 import { translations, type Translations } from "@/lib/translations";
 import { PAGE_BACKGROUNDS, type PageBgKind } from "@/lib/pageBackgrounds";
 import { BOOK_SERIES } from "@/lib/bookSeries";
+import { SERIES_PLATES, DEATH_VALLEY_PLATES } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS } from "@/lib/exhibitions";
@@ -1006,7 +1007,7 @@ const CatalogBook = () => {
       number: 0,
       title: !s.titleZh || s.titleEn === s.titleZh ? s.titleEn : `${s.titleEn} ${s.titleZh}`,
       descriptionHtml: "",
-      items: [],
+      items: (SERIES_PLATES[s.id] ?? []).map((item) => ({ item, plate: 0 })),
       years: s.years,
       seriesOnly: true,
     }));
@@ -1080,7 +1081,7 @@ const CatalogBook = () => {
     const photoChapters: Chapter[] = photoParent
       ? [
           { key: "innerwilderness", number: 0, title: "Inner Wilderness 内在荒原", descriptionHtml: "", years: "2017 – 2025", items: [], seriesTextId: "innerwilderness" },
-          { key: "deathvalley", number: 0, title: "Death Valley 死亡谷", descriptionHtml: "", years: yrOf(dvItems), items: dvItems, seriesTextId: "deathvalley" },
+          { key: "deathvalley", number: 0, title: "Death Valley 死亡谷", descriptionHtml: "", years: yrOf(dvItems), items: [...dvItems, ...DEATH_VALLEY_PLATES.map((item) => ({ item, plate: 0 }))], seriesTextId: "deathvalley" },
           { key: "sahara", number: 0, title: "Sahara 撒哈拉", descriptionHtml: "", years: saharaItem?.year ?? "", items: saharaItem ? [{ item: saharaItem, plate: 0 }] : [], seriesTextId: "sahara" },
           { key: "highlands", number: 0, title: "Scottish Highlands 苏格兰高地", descriptionHtml: "", years: yrOf(hgItems), items: hgItems, seriesTextId: "highlands" },
           { key: "theater", number: 0, title: "Theater 登场", descriptionHtml: "", years: yrOf(thItems), items: thItems, seriesTextId: "theater" },
