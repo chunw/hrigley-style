@@ -15,11 +15,12 @@
   --m-outer: 0.85in;
   --col-pad: calc(var(--bleed) + 0.55in);
 
-  --paper: #ffffff;
+  --paper: #FAF5EA;
   --text: #111111;
   --muted: #767066;
   --rule: #ddd8ce;
   --accent: hsl(328 85% 72%);
+  --red: #C8402A;
 
   min-height: 100vh;
   background: #d8d4cb;
@@ -32,7 +33,7 @@
 /* Paper stock choices (toolbar): white is the default above, cream is the warm stock,
    black inverts the text variables on paper pages only (ink and accent pages keep theirs) */
 .bk-paper-cream {
-  --paper: hsl(48 45% 95%);
+  --paper: #FAF5EA;
 }
 
 .bk-paper-black {
@@ -132,13 +133,14 @@
 .bk-divider-page {
   --text: #26221c;
   --muted: rgba(38, 34, 28, 0.62);
-  background: var(--accent);
+  background: var(--chapter-color, #DFA79B);
   align-items: center;
   justify-content: center;
 }
 
 /* Chapter title page: the page right after the pink separator carries the title */
 .bk-chapter-title-page {
+  background: var(--chapter-color, var(--paper));
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -183,11 +185,11 @@
 }
 
 .bk-page.bk-bg-cream {
-  --paper: hsl(48 45% 95%);
+  --paper: #FAF5EA;
   --text: #111111;
   --muted: #767066;
   --rule: #ddd8ce;
-  background: hsl(48 45% 95%);
+  background: #FAF5EA;
 }
 
 .bk-page.bk-bg-black {
@@ -529,12 +531,13 @@
 
 .bk-back-body {
   position: absolute;
-  top: calc(var(--bleed) + 2in);
+  top: calc(var(--bleed) + 0.85in);
   left: var(--face-pad-l, var(--col-pad));
   right: var(--face-pad-r, var(--col-pad));
 }
 
 .bk-back-blurb {
+  font-family: var(--serif);
   max-width: 4.8in;
   font-size: 10pt;
   line-height: 1.7;
@@ -566,6 +569,10 @@
   position: absolute;
   bottom: calc(var(--bleed) + 0.55in);
   left: var(--face-pad-l, var(--col-pad));
+  right: var(--face-pad-r, var(--col-pad));
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
 }
 
 .bk-back-mark {
@@ -630,7 +637,7 @@
 }
 
 .bk-spine-dot {
-  color: var(--accent);
+  color: var(--red);
 }
 
 /* ── Chapter opener spread ─────────────────────────────────────────────────── */
@@ -832,8 +839,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: 32% 50%;
+  object-fit: contain;
 }
 
 .bk-chapter-epigraph {
@@ -1139,4 +1145,42 @@
     break-after: auto;
     page-break-after: auto;
   }
+}
+
+/* Dark chapter colours (screen & archive, live) take cream type for legibility;
+   the deep red accent is not used on them. */
+.bk-on-dark {
+  --text: #FFF3C2;
+  --muted: rgba(255, 243, 194, 0.62);
+  --rule: rgba(255, 243, 194, 0.28);
+}
+
+/* Opener spreads wear their chapter colour. */
+.bk-opener {
+  background: var(--chapter-color, #1F2226);
+}
+
+/* Back cover: blank white barcode box (placeholder until the ISBN arrives). */
+.bk-back-barcode {
+  width: 2.2in;
+  height: 1.05in;
+  background: #fff;
+  flex: none;
+}
+
+.bk-back-blurb + .bk-back-blurb {
+  margin-top: 0.28in;
+}
+
+/* Interview questions / spirit background group heads stand as their own blocks. */
+.bk-essay-q {
+  margin-top: 1.6em;
+  font-weight: 600;
+}
+
+/* Small source credit lines (spirit chapter background texts). */
+.bk-credit {
+  font-size: 8pt;
+  color: var(--muted);
+  letter-spacing: 0.04em;
 }
