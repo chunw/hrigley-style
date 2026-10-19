@@ -86,14 +86,6 @@ export const BOOK_SERIES: BookSeries[] = [
     textZh: "《窟舞》（www.cavedance.art）是一件受哈佛 CAMLab 委托的网站作品。能与一群出色的研究者和创作者合作是我的荣幸，他们致力于把人文研究与前沿技术和设计结合，探索展示艺术、文化与历史的创新方式。\n\n作为一种沉浸式装置体验，《窟舞》曾在哈佛 CAMLab 的公众开放参观中呈现。这是一个跨学科项目，使用人机协作、动作捕捉、人工智能与 CG 等数字技术，让敦煌壁画中的音乐与舞蹈重现。这个线上空间既是探索基于学术数据库的艺术表达可能性的方式，也是观众阅读、重读作品，或理解与审视创作过程的场所。",
   },
   {
-    id: "infected",
-    titleEn: "Infected Instructions",
-    titleZh: "被感染的指令",
-    years: "2020",
-    textEn: "\"Infected Instructions\" is an online archive where people share their creative responses to the changing crisis through instructional art following the legacy of Fluxus event scores in the 1960s.\n\nIts prompt: \"The old world imploded from within. A new world awaits new instructions to begin. 'Infected' with a sense of urgency and a desire for change, we welcome instructional art that can help us reflect on our past errors, respond to the present crises, and envision a different future.\"",
-    textZh: "《被感染的指令》是一个线上档案，人们通过指令艺术分享自己对不断变化的危机的创造性回应，延续 1960 年代激浪派事件乐谱（event scores）的传统。\n\n它的征集题面写道：“旧世界从内部崩塌了。新世界等待新的指令来开启。带着紧迫感与改变的渴望——被‘感染’——我们欢迎这样的指令艺术：帮助我们反思过去的错误，回应当下的危机，并设想一个不同的未来。”",
-  },
-  {
     id: "soliloquy",
     titleEn: "Soliloquy",
     titleZh: "独白",
