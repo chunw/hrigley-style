@@ -53,6 +53,7 @@ type PageSpec =
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
   | { kind: "aphorism"; half: "left" | "right"; aphorism: Aphorism }
   | { kind: "about"; chunk: number }
+  | { kind: "collage"; chunk: number }
   | { kind: "blank" }
   | { kind: "end" };
 
@@ -295,6 +296,15 @@ const APHORISM_BEFORE_CHAPTER: Record<string, string> = {
   "series:interview": "theme",
 };
 
+/** "Collage as Method" — a short front-matter essay standing right after
+ * About the Artist and before the first chapter (her direction, 2026-10-20).
+ * Her own text, verbatim; English page first, Chinese page second, like the
+ * preface. */
+const COLLAGE_METHOD = {
+  en: "Collage is how I think. A pottery figurine made to accompany the dead stands in a museum case; I cut it loose and set it down in a video meeting, next to a toilet, beside a limousine, and the two thousand years between them collapse into one flat, funny surface. A search history, that small pile of electronic waste, is cut out of the browser and pasted next to a stranger's testimony from the other side of a pandemic. Portraits of others and self-portraits take turns on the same page, lending each other a self. Nothing keeps its original context. Everything keeps its edges. I do not blend the fragments into one smooth voice. I let them stand side by side, seam showing, until the spark of continuity jumps across the gap. That is what an archive is, the way I make one: not a box where the past is stored, but a table where what is about to disappear is laid out next to what has already survived, so they can keep each other company.",
+  zh: "拼贴是我思考的方式。一个为陪伴逝者而做的陶俑，站在博物馆的玻璃柜里；我把它剪下来，放进一场视频会议，放在一只马桶旁边，一辆豪车旁边，它们之间的两千年，就塌成了一个扁平的、好笑的表面。搜索记录，那一小堆电子垃圾，从浏览器里剪出来，贴在一份来自疫情另一端的陌生人证言旁边。他人的肖像与自画像在同一页上轮流出现，互相借出一个自我。没有什么还留在原来的语境里。每一块都留着自己的边缘。我不把这些碎片融成一个光滑的声音。我让它们并排站着，接缝露在外面，直到连续性的火花从缝隙里跳过去。这就是档案，按我的做法：不是一只收纳过去的箱子，而是一张桌子，即将消失的东西被摆在已经幸存下来的东西旁边，让它们彼此做伴。",
+};
+
 // ── Pagination ────────────────────────────────────────────────────────────────
 // Odd pages are rectos (right-hand), even pages versos. Chapter openers are two-page spreads,
 // so they must start on a verso; a blank is inserted before them whenever needed.
@@ -309,13 +319,17 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
 
   specs.push({ kind: "title" });
   specs.push({ kind: "colophon" });
-  const tocPages = Math.max(1, Math.ceil((chapters.length + 3) / 9));
+  const tocPages = Math.max(1, Math.ceil((chapters.length + 4) / 9));
   for (let i = 0; i < tocPages; i++) specs.push({ kind: "contents", chunk: i });
   for (let i = 0; i < prefaceChunkCount; i++) specs.push({ kind: "preface", chunk: i });
   // About the Artist stands at the front of the book, right after the preface
   // (her direction, 2026-10-18).
   specs.push({ kind: "about", chunk: 0 });
   specs.push({ kind: "about", chunk: 1 });
+  // Collage as Method follows About the Artist, before chapter one and its
+  // "What remains?" aphorism spread: English page, then Chinese page.
+  specs.push({ kind: "collage", chunk: 0 });
+  specs.push({ kind: "collage", chunk: 1 });
 
   let firstChapter = true;
   for (const chapter of chapters) {
@@ -410,6 +424,8 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `plate:${spec.plate}`;
     case "about":
       return `about:${spec.chunk}`;
+    case "collage":
+      return `collage:${spec.chunk}`;
     default:
       return spec.kind;
   }
@@ -619,6 +635,7 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
       const rows = [
         { num: "", title: `${translations.en.catalogBook.preface} · ${translations.zh.catalogBook.preface}`, sub: "", page: startOf((s) => s.kind === "preface") },
         { num: "", title: `${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`, sub: "", page: startOf((s) => s.kind === "about") },
+        { num: "", title: "Collage as Method · 拼贴作为方法", sub: "", page: startOf((s) => s.kind === "collage") },
         { num: "", title: `${translations.en.catalogBook.paintingIntro} · ${translations.zh.catalogBook.paintingIntro}`, sub: "", page: startOf((s) => s.kind === "painting-intro") },
         ...chapters.map((c) => ({
           num: pad2(c.number),
@@ -833,6 +850,25 @@ function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookC
             <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: spec.chunk === 0 ? artistBioHTML("en") : artistBioHTML("zh") }} />
           </div>
           <Folio number={number} tag={`${b.title} | ${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`} />
+        </Page>
+      );
+
+    case "collage":
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
+          <RunningHead side={side} left={bookHead} right="Collage as Method · 拼贴作为方法" />
+          <div className="bk-essay">
+            {spec.chunk === 0 && (
+              <div className="bk-essay-head">
+                <div className="bk-essay-meta sans-label">Collage as Method · 拼贴作为方法</div>
+                <h2 className="bk-section-title shop-title gloria-title">Collage as Method 拼贴作为方法</h2>
+              </div>
+            )}
+            <div className="bk-essay-text description-html">
+              <p>{spec.chunk === 0 ? COLLAGE_METHOD.en : COLLAGE_METHOD.zh}</p>
+            </div>
+          </div>
+          <Folio number={number} tag={`${b.title} | Collage as Method · 拼贴作为方法`} />
         </Page>
       );
 
