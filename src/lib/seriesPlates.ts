@@ -323,3 +323,167 @@ export const DEATH_VALLEY_PLATES: CatalogItem[] = [1, 2, 3].map((n) => ({
   image_url: `/book/sfmoma/death-valley-${n}.jpg`,
   fallback_image_url: `/book/sfmoma/death-valley-${n}.jpg`,
 }));
+
+/**
+ * Exhibition photographs the artist selected on 2026-10-19 (selection board),
+ * appended at the end of their sections as plates. Files live under
+ * public/book/exhibitions/ (longest side 1500px, from her exhibition records).
+ * Captions are bilingual, two lines: exhibition name and year, per the list.
+ * Two further selections are NOT here: their sections are undecided
+ * (Global Auspicious Zodiac exhibition; One Day at Stanford Arts Experimental
+ * Media Lab) — they join once placement is decided.
+ */
+export const EXHIBITION_PLATES: Record<string, CatalogItem[]> = {
+  spirit: [
+    plate(
+      "LIC-A@Atlantic 2020", "2020", "2020",
+      "In the Spirit of the 21st Century at LIC-A@Atlantic 2020, Atlantic Gallery, New York.",
+      "《21 世纪精神》参展 LIC-A@Atlantic 2020，Atlantic Gallery，纽约。",
+      "/book/exhibitions/1c622639-08.jpg",
+    ),
+    plate(
+      "LIC-A@Atlantic 2020", "2020", "2020",
+      "In the Spirit of the 21st Century at LIC-A@Atlantic 2020, Atlantic Gallery, New York.",
+      "《21 世纪精神》参展 LIC-A@Atlantic 2020，Atlantic Gallery，纽约。",
+      "/book/exhibitions/1c622639-11.jpg",
+    ),
+  ],
+  photography: [
+    plate(
+      "Personality: Contemporary Portraiture", "2024", "2024",
+      "El Otro, El Mismo (Hours, Minutes) at Personality: Contemporary Portraiture, PH21 Gallery, Budapest.",
+      "《另一个，同一个》（《时，分》）参展《个性：当代肖像》，PH21 Gallery，布达佩斯。",
+      "/book/exhibitions/1dd89a10-01.jpg",
+    ),
+    plate(
+      "Personality: Contemporary Portraiture", "2022", "2022",
+      "El Otro, El Mismo at Personality: Contemporary Portraiture, PH21 Gallery, Budapest.",
+      "《另一个，同一个》参展《个性：当代肖像》，PH21 Gallery，布达佩斯。",
+      "/book/exhibitions/26b45f99-01.jpg",
+    ),
+    plate(
+      "Significant Colour", "2025", "2025",
+      "El Otro, El Mismo at Significant Colour, PH21 Gallery, Budapest.",
+      "《另一个，同一个》参展《重要的色彩》，PH21 Gallery，布达佩斯。",
+      "/book/exhibitions/808bb2d0-03.jpg",
+    ),
+  ],
+  "series:soliloquy": [
+    plate(
+      "LIC-A@Atlantic Spring 2021", "2021", "2021",
+      "Soliloquy at LIC-A@Atlantic Spring 2021, Atlantic Gallery, New York.",
+      "《独白》参展 LIC-A@Atlantic 2021 春季展，Atlantic Gallery，纽约。",
+      "/book/exhibitions/25360e06-03.jpg",
+    ),
+  ],
+  "series:negotiated": [
+    plate(
+      "Negotiated Intelligence Pavilion", "2025", "2025",
+      "The Negotiated Intelligence pavilion, The Wrong Biennale 2025-2026 Edition.",
+      "《协商智能》展亭，The Wrong Biennale 2025–2026。",
+      "/book/exhibitions/2b289a10-01.jpg",
+    ),
+  ],
+  "series:artempath": [
+    plate(
+      "Art.empath.io", "2018", "2018",
+      "Art.empath.io at the San Francisco Museum of Modern Art, May 2018.",
+      "Art.empath.io 在旧金山现代艺术博物馆，2018 年 5 月。",
+      "/book/exhibitions/2fae4986-01.jpg",
+    ),
+    plate(
+      "Art.empath.io", "2018", "2018",
+      "Art.empath.io at the San Francisco Museum of Modern Art, May 2018.",
+      "Art.empath.io 在旧金山现代艺术博物馆，2018 年 5 月。",
+      "/book/exhibitions/2fae4986-02.jpg",
+    ),
+    plate(
+      "Art.empath.io", "2018", "2018",
+      "Art.empath.io at the San Francisco Museum of Modern Art, May 2018.",
+      "Art.empath.io 在旧金山现代艺术博物馆，2018 年 5 月。",
+      "/book/exhibitions/2fae4986-03.jpg",
+    ),
+    plate(
+      "Art.empath.io", "2018", "2018",
+      "Art.empath.io at the San Francisco Museum of Modern Art, May 2018.",
+      "Art.empath.io 在旧金山现代艺术博物馆，2018 年 5 月。",
+      "/book/exhibitions/2fae4986-04.jpg",
+    ),
+  ],
+  shop: [
+    plate(
+      "Leaky Boundaries @ LIC Arts Open Festival 2026", "2026", "2026",
+      "Visions in Ceramics at Leaky Boundaries, LIC Arts Open Festival, Long Island City, New York.",
+      "《陶之视界》参展《泄漏的边界》，LIC Arts Open Festival，长岛市，纽约。",
+      "/book/exhibitions/35389a10-11.jpg",
+    ),
+    plate(
+      "Leaky Boundaries @ LIC Arts Open Festival 2026", "2026", "2026",
+      "Visions in Ceramics at Leaky Boundaries, LIC Arts Open Festival, Long Island City, New York.",
+      "《陶之视界》参展《泄漏的边界》，LIC Arts Open Festival，长岛市，纽约。",
+      "/book/exhibitions/35389a10-12.jpg",
+    ),
+  ],
+  residuals: [
+    plate(
+      "Forms Before Dissolving", "2026", "2026",
+      "Breakfast Residuals at Forms Before Dissolving, Apsara Studio Gallery, London.",
+      "《早餐残留》参展 Forms Before Dissolving，Apsara Studio Gallery，伦敦。",
+      "/book/exhibitions/35389a10-01.jpg",
+    ),
+  ],
+  "series:cavedance": [
+    plate(
+      "Harvard CAMLab Cave Dance", "2022", "2022",
+      "Cave Dance at the Harvard CAMLab Cave, Harvard University.",
+      "《窟舞》在哈佛大学 CAMLab Cave。",
+      "/book/exhibitions/6e13792f-01.jpg",
+    ),
+    plate(
+      "Harvard CAMLab Cave Dance", "2022", "2022",
+      "Cave Dance at the Harvard CAMLab Cave, Harvard University.",
+      "《窟舞》在哈佛大学 CAMLab Cave。",
+      "/book/exhibitions/6e13792f-02.jpg",
+    ),
+    plate(
+      "Harvard CAMLab Cave Dance", "2022", "2022",
+      "Cave Dance at the Harvard CAMLab Cave, Harvard University.",
+      "《窟舞》在哈佛大学 CAMLab Cave。",
+      "/book/exhibitions/6e13792f-05.jpg",
+    ),
+  ],
+  sfmoma: [
+    plate(
+      "San Francisco Museum of Modern Art", "2016 – 2019", "2016",
+      "Featured Artist, SFMOMA Submission Friday: one of the seven works featured between 2016 and 2019.",
+      "SFMOMA Submission Friday 特选艺术家：2016 至 2019 年间七次特选作品之一。",
+      "/book/exhibitions/952df356-02.jpg",
+    ),
+    plate(
+      "San Francisco Museum of Modern Art", "2016 – 2019", "2016",
+      "Featured Artist, SFMOMA Submission Friday: one of the seven works featured between 2016 and 2019.",
+      "SFMOMA Submission Friday 特选艺术家：2016 至 2019 年间七次特选作品之一。",
+      "/book/exhibitions/952df356-03.jpg",
+    ),
+    plate(
+      "San Francisco Museum of Modern Art", "2016 – 2019", "2016",
+      "Featured Artist, SFMOMA Submission Friday: one of the seven works featured between 2016 and 2019.",
+      "SFMOMA Submission Friday 特选艺术家：2016 至 2019 年间七次特选作品之一。",
+      "/book/exhibitions/952df356-04.jpg",
+    ),
+    plate(
+      "San Francisco Museum of Modern Art", "2016 – 2019", "2016",
+      "Featured Artist, SFMOMA Submission Friday: one of the seven works featured between 2016 and 2019.",
+      "SFMOMA Submission Friday 特选艺术家：2016 至 2019 年间七次特选作品之一。",
+      "/book/exhibitions/952df356-05.jpg",
+    ),
+  ],
+  "series:feedscanner": [
+    plate(
+      "Stanford Arts Departmental Show", "2018", "2018",
+      "Feed Scanner at the Stanford Arts Departmental Show, Stanford Art Gallery.",
+      "Feed Scanner 参展斯坦福艺术系展，Stanford Art Gallery。",
+      "/book/exhibitions/cf14d2e1-01.jpg",
+    ),
+  ],
+};

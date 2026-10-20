@@ -9,7 +9,7 @@ import { getCombinedCatalogSections, type CatalogItem, type CatalogSection, type
 import { translations, type Translations } from "@/lib/translations";
 import { PAGE_BACKGROUNDS, type PageBgKind } from "@/lib/pageBackgrounds";
 import { BOOK_SERIES } from "@/lib/bookSeries";
-import { SERIES_PLATES, DEATH_VALLEY_PLATES } from "@/lib/seriesPlates";
+import { SERIES_PLATES, DEATH_VALLEY_PLATES, EXHIBITION_PLATES } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS } from "@/lib/exhibitions";
@@ -349,6 +349,11 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     const essayCount = essayChunkCounts[chapter.key] ?? (chapter.seriesOnly ? 0 : 1);
     for (let i = 0; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
     for (const { item, plate } of chapter.items) specs.push({ kind: "plate", chapter, item, plate });
+    // Exhibition photographs she selected (2026-10-19) close out their sections as plates;
+    // their keys are chapter keys, with "sfmoma" a virtual group hung at the end of
+    // the El Otro, El Mismo chapter (the photography chapter's close).
+    const exhPlates = chapter.key === "photography" ? [...(EXHIBITION_PLATES["photography"] ?? []), ...(EXHIBITION_PLATES["sfmoma"] ?? [])] : (EXHIBITION_PLATES[chapter.key] ?? []);
+    for (const item of exhPlates) specs.push({ kind: "plate", chapter, item, plate: 0 });
     if (EXHIBITIONS[chapter.key]?.length) specs.push({ kind: "exhibitions", chapter });
   }
 
