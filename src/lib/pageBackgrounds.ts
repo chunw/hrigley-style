@@ -7,4 +7,6 @@ export type PageBgKind = "white" | "cream" | "black" | "pink";
  * Pages not listed follow the toolbar paper choice.
  * Written by the book editor's 生成PR flow (api/book-pr.js); edit by hand if needed.
  */
-export const PAGE_BACKGROUNDS: Record<string, PageBgKind> = {};
+export const PAGE_BACKGROUNDS: Record<string, PageBgKind> = {
+  contents: "white",
+};
