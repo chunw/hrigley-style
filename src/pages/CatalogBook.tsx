@@ -25,7 +25,7 @@ const PX_PER_IN = 96;
 const SIGNATURE = 4;
 // Spine width estimate for a perfect-bound paperback on ~80# (120gsm) uncoated stock:
 // pages / 444 in + 0.06 in for the cover board. Swap in your printer's own formula.
-const spineWidth = (pages: number) => Math.round((pages / 444 + 0.06) * 1000) / 1000;
+export const spineWidth = (pages: number) => Math.round((pages / 444 + 0.06) * 1000) / 1000;
 
 type Part = "complete" | "interior" | "cover";
 type Side = "verso" | "recto" | "single";
@@ -57,7 +57,7 @@ type PageSpec =
   | { kind: "blank" }
   | { kind: "end" };
 
-interface InteriorPage {
+export interface InteriorPage {
   spec: PageSpec;
   number: number;
 }
@@ -500,7 +500,7 @@ function Collage({ front, back, title, titleSize, above, below }: { front?: Cata
 }
 
 // ── Covers ────────────────────────────────────────────────────────────────────
-interface BookContext {
+export interface BookContext {
   t: Translations;
   lang: "en" | "zh";
   chapters: Chapter[];
@@ -517,7 +517,7 @@ interface BookContext {
   paintingChunks: { paras: ParaItem[] }[];
 }
 
-function FrontCoverFace({ ctx }: { ctx: BookContext }) {
+export function FrontCoverFace({ ctx }: { ctx: BookContext }) {
   // Final cover (her direction, 2026-10-18): a full rust-brown field, the David
   // still life from the Still Things section whole at the centre on its black
   // ground, and cream serif lettering walking the four edges — Chun across the
@@ -540,7 +540,7 @@ function FrontCoverFace({ ctx }: { ctx: BookContext }) {
 }
 
 
-function BackCoverFace() {
+export function BackCoverFace() {
   // Back cover, after the Nauman-style reference she chose (2026-10-18): one text
   // block high on the page, a large quiet field below, the studio line at lower
   // left and a blank white barcode box at lower right (the ISBN is still to come).
@@ -564,7 +564,7 @@ function BackCoverFace() {
 }
 
 
-function SpineFace({ ctx, width }: { ctx: BookContext; width: number }) {
+export function SpineFace({ ctx, width }: { ctx: BookContext; width: number }) {
   // Below ~1/4 in most printers won't allow spine text.
   if (width < 0.25) return <div className="bk-spine" />;
   return (
@@ -579,7 +579,7 @@ function SpineFace({ ctx, width }: { ctx: BookContext; width: number }) {
 }
 
 // ── Interior pages ────────────────────────────────────────────────────────────
-function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookContext; pages: InteriorPage[] }) {
+export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx: BookContext; pages: InteriorPage[] }) {
   const { spec, number } = page;
   const { t, chapters, years } = ctx;
   const b = t.catalogBook;
@@ -954,88 +954,25 @@ async function waitForAssets(root: HTMLElement) {
   }
 }
 
-const CatalogBook = () => {
-  // The book is one bilingual edition: its labels never follow the site's
-  // language toggle, so the book page reads English first, Chinese right after.
+
+// ── Book model ─────────────────────────────────────────────────────────────
+// The book's chapters, page contents and pagination, built once and shared:
+// the book page itself lays the volume out from this model, and read-only
+// presentation pages (the physical-object view at /catalogs/book/object)
+// render the same pages and cover faces from it.
+const EMPTY_TEXT_EDITS: Record<string, string> = {};
+const EMPTY_BG_EDITS: Record<string, PageBgKind | "global"> = {};
+
+function useBookModel(args: {
+  editMode: boolean;
+  textEdits: Record<string, string>;
+  pageBgEdits: Record<string, PageBgKind | "global">;
+  pageBgFor: BookContext["pageBgFor"];
+  setPageBg: BookContext["setPageBg"];
+  openEditor: BookContext["openEditor"];
+}): { ctx: BookContext; pages: InteriorPage[] } {
+  const { editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, openEditor } = args;
   const t = translations.en;
-  const lang = "en" as const;
-  const b = t.catalogBook;
-  const [part, setPart] = useState<Part>("complete");
-  const [bleed, setBleed] = useState(false);
-  const [paper, setPaper] = useState<"white" | "cream" | "black">("cream");
-  const [preparing, setPreparing] = useState(false);
-  const [zoom, setZoom] = useState(1);
-  // ── Book editor (edit mode): staged text edits + per-page backgrounds ──
-  const loadJSON = <T,>(key: string, fallback: T): T => {
-    try {
-      const raw = localStorage.getItem(key);
-      return raw ? (JSON.parse(raw) as T) : fallback;
-    } catch {
-      return fallback;
-    }
-  };
-  const [editMode, setEditMode] = useState(false);
-  const [textEdits, setTextEdits] = useState<Record<string, string>>(() => loadJSON("remains-book-text-edits", {}));
-  const [pageBgEdits, setPageBgEdits] = useState<Record<string, PageBgKind | "global">>(() => loadJSON("remains-book-page-bg", {}));
-  const [savedSnapshot, setSavedSnapshot] = useState(() =>
-    JSON.stringify({ t: loadJSON("remains-book-text-edits", {}), b: loadJSON("remains-book-page-bg", {}) }),
-  );
-  const [panel, setPanel] = useState<{ edit: string; label: string; value: string } | null>(null);
-  const [prMsg, setPrMsg] = useState("");
-  const editorDirty = JSON.stringify({ t: textEdits, b: pageBgEdits }) !== savedSnapshot;
-  const openEditor = (edit: string, label: string, current: string) => setPanel({ edit, label, value: current });
-  const pageBgFor = (key: string | null): PageBgKind | undefined => {
-    if (!key) return undefined;
-    const e = pageBgEdits[key];
-    if (e && e !== "global") return e;
-    return PAGE_BACKGROUNDS[key];
-  };
-  const setPageBg = (key: string, kind: PageBgKind | "global") => setPageBgEdits((prev) => ({ ...prev, [key]: kind }));
-  const saveAllEdits = () => {
-    localStorage.setItem("remains-book-text-edits", JSON.stringify(textEdits));
-    localStorage.setItem("remains-book-page-bg", JSON.stringify(pageBgEdits));
-    setSavedSnapshot(JSON.stringify({ t: textEdits, b: pageBgEdits }));
-    setPrMsg(lang === "zh" ? "已保存到本机浏览器。" : "Saved in this browser.");
-  };
-  const generatePR = async () => {
-    setPrMsg(lang === "zh" ? "正在生成 PR…" : "Creating PR…");
-    const pageBg: Record<string, PageBgKind> = { ...PAGE_BACKGROUNDS };
-    for (const [k, v] of Object.entries(pageBgEdits)) {
-      if (v === "global") delete pageBg[k];
-      else pageBg[k] = v;
-    }
-    const payload = { textEdits, pageBg };
-    try {
-      const res = await fetch("/api/book-pr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-      const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
-      if (res.ok && data.url) {
-        setPrMsg(`PR: ${data.url}`);
-        return;
-      }
-      throw new Error(data.error || `HTTP ${res.status}`);
-    } catch (err) {
-      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "book-edits.json";
-      a.click();
-      URL.revokeObjectURL(a.href);
-      setPrMsg(
-        lang === "zh"
-          ? `自动生成失败（${err instanceof Error ? err.message : "网络问题"}），已下载 book-edits.json，把它发给 Beignet 即可生成同样的 PR。`
-          : "Automatic PR failed; book-edits.json downloaded instead — send it to Beignet.",
-      );
-    }
-  };
-  const stageRef = useRef<HTMLDivElement>(null);
-
-  usePageMeta({
-    title: `${b.title} — ${b.cta}`,
-    description: "Remains, a print-ready art book by Chun Wang. Covers and interior pages laid out for PDF export.",
-    path: "/catalogs/book",
-    noindex: true,
-  });
-
   const ctx = useMemo<BookContext>(() => {
     let plate = 0;
     // The book is one bilingual edition (print-book rule): English first, Chinese immediately
@@ -1322,8 +1259,103 @@ const CatalogBook = () => {
       coverBack: byKey("photography")[0] ?? chapters[0]?.items[1]?.item,
     };
   }, [textEdits, editMode, pageBgEdits]);
-
   const pages = useMemo(() => paginate(ctx.chapters, ctx.prefaceChunks.length, ctx.paintingChunks.length, Object.fromEntries(Object.entries(ctx.essayChunks).map(([k, v]) => [k, v.length]))), [ctx]);
+  return { ctx, pages };
+}
+
+/** The book model with the editor off and no staged edits — for pages that
+ *  present the finished book rather than lay it out. Page backgrounds still
+ *  honour the settled per-page overrides in src/lib/pageBackgrounds.ts. */
+export function useBookModelReadOnly(): { ctx: BookContext; pages: InteriorPage[] } {
+  const pageBgFor = (key: string | null): PageBgKind | undefined => (key ? PAGE_BACKGROUNDS[key] : undefined);
+  const setPageBg = () => {};
+  const openEditor = () => {};
+  return useBookModel({ editMode: false, textEdits: EMPTY_TEXT_EDITS, pageBgEdits: EMPTY_BG_EDITS, pageBgFor, setPageBg, openEditor });
+}
+
+const CatalogBook = () => {
+  // The book is one bilingual edition: its labels never follow the site's
+  // language toggle, so the book page reads English first, Chinese right after.
+  const t = translations.en;
+  const lang = "en" as const;
+  const b = t.catalogBook;
+  const [part, setPart] = useState<Part>("complete");
+  const [bleed, setBleed] = useState(false);
+  const [paper, setPaper] = useState<"white" | "cream" | "black">("cream");
+  const [preparing, setPreparing] = useState(false);
+  const [zoom, setZoom] = useState(1);
+  // ── Book editor (edit mode): staged text edits + per-page backgrounds ──
+  const loadJSON = <T,>(key: string, fallback: T): T => {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? (JSON.parse(raw) as T) : fallback;
+    } catch {
+      return fallback;
+    }
+  };
+  const [editMode, setEditMode] = useState(false);
+  const [textEdits, setTextEdits] = useState<Record<string, string>>(() => loadJSON("remains-book-text-edits", {}));
+  const [pageBgEdits, setPageBgEdits] = useState<Record<string, PageBgKind | "global">>(() => loadJSON("remains-book-page-bg", {}));
+  const [savedSnapshot, setSavedSnapshot] = useState(() =>
+    JSON.stringify({ t: loadJSON("remains-book-text-edits", {}), b: loadJSON("remains-book-page-bg", {}) }),
+  );
+  const [panel, setPanel] = useState<{ edit: string; label: string; value: string } | null>(null);
+  const [prMsg, setPrMsg] = useState("");
+  const editorDirty = JSON.stringify({ t: textEdits, b: pageBgEdits }) !== savedSnapshot;
+  const openEditor = (edit: string, label: string, current: string) => setPanel({ edit, label, value: current });
+  const pageBgFor = (key: string | null): PageBgKind | undefined => {
+    if (!key) return undefined;
+    const e = pageBgEdits[key];
+    if (e && e !== "global") return e;
+    return PAGE_BACKGROUNDS[key];
+  };
+  const setPageBg = (key: string, kind: PageBgKind | "global") => setPageBgEdits((prev) => ({ ...prev, [key]: kind }));
+  const saveAllEdits = () => {
+    localStorage.setItem("remains-book-text-edits", JSON.stringify(textEdits));
+    localStorage.setItem("remains-book-page-bg", JSON.stringify(pageBgEdits));
+    setSavedSnapshot(JSON.stringify({ t: textEdits, b: pageBgEdits }));
+    setPrMsg(lang === "zh" ? "已保存到本机浏览器。" : "Saved in this browser.");
+  };
+  const generatePR = async () => {
+    setPrMsg(lang === "zh" ? "正在生成 PR…" : "Creating PR…");
+    const pageBg: Record<string, PageBgKind> = { ...PAGE_BACKGROUNDS };
+    for (const [k, v] of Object.entries(pageBgEdits)) {
+      if (v === "global") delete pageBg[k];
+      else pageBg[k] = v;
+    }
+    const payload = { textEdits, pageBg };
+    try {
+      const res = await fetch("/api/book-pr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+      const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
+      if (res.ok && data.url) {
+        setPrMsg(`PR: ${data.url}`);
+        return;
+      }
+      throw new Error(data.error || `HTTP ${res.status}`);
+    } catch (err) {
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "book-edits.json";
+      a.click();
+      URL.revokeObjectURL(a.href);
+      setPrMsg(
+        lang === "zh"
+          ? `自动生成失败（${err instanceof Error ? err.message : "网络问题"}），已下载 book-edits.json，把它发给 Beignet 即可生成同样的 PR。`
+          : "Automatic PR failed; book-edits.json downloaded instead — send it to Beignet.",
+      );
+    }
+  };
+  const stageRef = useRef<HTMLDivElement>(null);
+
+  usePageMeta({
+    title: `${b.title} — ${b.cta}`,
+    description: "Remains, a print-ready art book by Chun Wang. Covers and interior pages laid out for PDF export.",
+    path: "/catalogs/book",
+    noindex: true,
+  });
+
+  const { ctx, pages } = useBookModel({ editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, openEditor });
   const spine = spineWidth(pages.length);
 
   const bleedIn = bleed ? BLEED : 0;
