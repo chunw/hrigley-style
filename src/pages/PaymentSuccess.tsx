@@ -73,9 +73,18 @@ const PaymentSuccess = () => {
                 {s.receiptNote} {s.nextNote}
               </p>
 
-              <div className="border-t border-dashed border-foreground/30 mt-8 pt-6 text-center">
+              <div className="border-t border-dashed border-foreground/30 mt-8 pt-6 text-center space-y-1.5">
                 <p className="text-sm text-muted-foreground">
-                  {s.questions}{" "}
+                  {s.orderQuestions}{" "}
+                  <a
+                    href="mailto:chunwang.me@gmail.com"
+                    className="text-primary underline underline-offset-4"
+                  >
+                    chunwang.me@gmail.com
+                  </a>
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {s.updatesLine}{" "}
                   <a
                     href="https://www.instagram.com/chunwang.art"
                     target="_blank"
