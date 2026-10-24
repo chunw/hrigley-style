@@ -97,18 +97,6 @@ const WatercolorDetail = () => {
       ? shopOrderNavigableItems[currentIndex + 1]
       : undefined;
 
-  const effectivePaylink = work?.series === "III" ? studioCardPayLink(work.title) : (work?.paylink ?? PRINT_9X12_PAYLINK);
-
-  const handleBuyNow = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    window.open(effectivePaylink, "_blank");
-  };
-
-  const handleBuyOriginal = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (work?.multiOptionsPaylink) window.open(work.multiOptionsPaylink, "_blank");
-  };
-
   // Purchasable options for the cart. Works with a two-price label
   // (e.g. "$10 / $35") offer the 9×12" print at the first price and the
   // framed original at the second; everything else is a single option at
@@ -244,14 +232,6 @@ const WatercolorDetail = () => {
               imageUrl={`/watercolors/${paddedId}/main.jpg`}
               options={purchaseOptions}
               soldOut={work.soldOut}
-              buyNowLabel={
-                work.multiOptionsPaylink
-                  ? lang === "zh"
-                    ? "多种选择可选"
-                    : "Various options available"
-                  : t.watercolor.buyNow
-              }
-              onBuyNow={work.multiOptionsPaylink ? handleBuyOriginal : handleBuyNow}
             />
           </div>
         </div>

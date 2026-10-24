@@ -95,12 +95,6 @@ const RemainsDetail = () => {
     ? shopOrderNavigableItems[currentIndex + 1]
     : undefined;
 
-  const paylink4x6 = work.paylink ?? studioCardPayLink(work.title);
-  const paylink9x12 = PRINT_9X12_PAYLINK;
-
-  const handleBuy4x6 = (e: React.MouseEvent) => { e.stopPropagation(); window.open(paylink4x6, "_blank"); };
-  const handleBuy9x12 = (e: React.MouseEvent) => { e.stopPropagation(); window.open(paylink9x12, "_blank"); };
-
   const title = lang === "zh" && work.titleZh ? work.titleZh : work.title;
 
   return (
@@ -207,8 +201,6 @@ const RemainsDetail = () => {
                   price: work.price ?? 4,
                 },
               ]}
-              buyNowLabel={t.watercolor.buyNow}
-              onBuyNow={handleBuy4x6}
             />
           </div>
         </div>

@@ -88,36 +88,6 @@ const ProductDetails = () => {
 
   const INQUIRY_EMAIL = "chunwang.me@gmail.com";
 
-  const handleOrderNow = (e: React.MouseEvent) => {
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'click_paypal_link', {
-        'event_category': 'ecommerce',
-        'event_label': 'Chun Wang Shop Item - ' + (product.title || product.name),
-        'value': 1
-      });
-    }
-    e.stopPropagation();
-
-    if (product.paylink) {
-      window.open(product.paylink, '_blank');
-      return;
-    }
-
-    // Fallback: open mail client and copy contact email to clipboard
-    const subject = encodeURIComponent(`Order inquiry: ${product.title || product.name}`);
-    const body = encodeURIComponent(`Hello,%0D%0A%0D%0AI would like to order: ${product.title || product.name} (product id: ${product.id}).%0D%0A%0D%0APlease advise the next steps.%0D%0A%0D%0AThanks.`);
-    try {
-      navigator.clipboard?.writeText(INQUIRY_EMAIL).then(() => {
-        toast('Email copied to clipboard', { description: INQUIRY_EMAIL });
-      }).catch(() => {
-        // ignore clipboard errors
-      });
-    } catch (err) {
-      // ignore
-    }
-    window.location.href = `mailto:${INQUIRY_EMAIL}?subject=${subject}&body=${body}`;
-  };
-
   const handleAddToCart = () => {
     addItem({
       id: product.id,
@@ -312,25 +282,7 @@ const ProductDetails = () => {
               </div>
             )}
 
-            {(product.paylink || product.is_active) && (
-              <div className={product.soldOut ? "pt-4" : "pt-3"}>
-                <Button
-                  variant="outline-pink"
-                  size="lg"
-                  onClick={product.soldOut ? undefined : handleOrderNow}
-                  className={`order-now-button w-full rounded-none text-sm px-8 py-6 transition-colors ${product.soldOut ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-                  asChild
-                >
-                  <span>
-                    {product.soldOut
-                      ? t.productDetails.soldOut
-                      : `${t.productDetails.orderNow} - ${formatPrice(product.price)}`}
-                  </span>
-                </Button>
-
-                <p className="pt-4 w-full text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>
-              </div>
-            )}
+            <p className="pt-4 w-full text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>
           </div>
         </div>
       </main>

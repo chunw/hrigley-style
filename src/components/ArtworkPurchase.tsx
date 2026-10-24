@@ -19,14 +19,12 @@ interface ArtworkPurchaseProps {
   imageUrl: string | null;
   options: ArtworkCartOption[];
   soldOut?: boolean;
-  buyNowLabel: string;
-  onBuyNow: (e: React.MouseEvent) => void;
 }
 
 // Purchase block for artwork detail pages: option selector (when a work has
 // more than one purchasable option), Add to Cart for the selected option,
-// and the page's existing single-item Buy Now link kept as the secondary path.
-const ArtworkPurchase = ({ baseId, title, imageUrl, options, soldOut, buyNowLabel, onBuyNow }: ArtworkPurchaseProps) => {
+// Checkout is cart-only (owner decision, Oct 2026): no single-item Buy Now links.
+const ArtworkPurchase = ({ baseId, title, imageUrl, options, soldOut }: ArtworkPurchaseProps) => {
   const { t, lang } = useLanguage();
   const { addItem } = useCart();
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -84,14 +82,6 @@ const ArtworkPurchase = ({ baseId, title, imageUrl, options, soldOut, buyNowLabe
         className={`sans-label gloria-button-label inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center ${soldOut ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
       >
         {soldOut ? t.productDetails.soldOut : zh ? "加入购物车" : "Add to Cart"}
-      </button>
-
-      <button
-        onClick={soldOut ? undefined : onBuyNow}
-        disabled={soldOut}
-        className={`sans-label gloria-button-label inline-block w-full border-2 border-primary text-primary px-8 py-3 text-lg font-bold hover:bg-primary/10 transition-colors text-center ${soldOut ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-      >
-        {buyNowLabel}
       </button>
 
       <p className="text-xs text-muted-foreground font-mono">
