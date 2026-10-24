@@ -185,6 +185,17 @@ export const translations = {
       spine: "spine",
       printHint: "In the print dialog choose “Save as PDF”, set Margins to None and turn on Background graphics.",
     },
+    paymentSuccess: {
+      thankYou: "thank you!",
+      tagline: "NEW PIECES FIND THEIR PEOPLE",
+      supportLine: "Thanks for supporting an independent artist.",
+      paid: "PAID",
+      orderConfirmed: "ORDER CONFIRMED",
+      receiptNote: "PayPal will email your receipt to you shortly.",
+      nextNote: "Your piece will be wrapped in the studio and shipped from New York.",
+      questions: "Questions, or just want to say hi — find me on Instagram",
+      continueShopping: "CONTINUE SHOPPING",
+    },
   },
   zh: {
     header: {
@@ -370,6 +381,17 @@ export const translations = {
       pagesShort: "页",
       spine: "书脊",
       printHint: "在打印对话框中选择“另存为 PDF”，边距设为“无”，并勾选“背景图形”。",
+    },
+    paymentSuccess: {
+      thankYou: "谢谢！",
+      tagline: "每一件作品，都找到了它的人",
+      supportLine: "谢谢你支持独立艺术家。",
+      paid: "已付款",
+      orderConfirmed: "订单已确认",
+      receiptNote: "PayPal 会把收据发到你的邮箱。",
+      nextNote: "你的作品会在工作室打包好，从纽约寄出。",
+      questions: "有问题，或只是想打个招呼 — 在 Instagram 上找我",
+      continueShopping: "继续购物",
     },
   },
 } as const;
