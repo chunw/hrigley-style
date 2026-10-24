@@ -95,12 +95,6 @@ const PhotographyDetail = () => {
       ? shopOrderNavigableItems[shopIndex + 1]
       : undefined;
 
-  const paylink9x12 = work?.paylink ?? PRINT_9X12_PAYLINK;
-  const paylink12x18 = work?.paylink12x18 ?? null;
-
-  const handleBuy9x12 = (e: React.MouseEvent) => { e.stopPropagation(); window.open(paylink9x12, "_blank"); };
-  const handleBuy12x18 = (e: React.MouseEvent) => { e.stopPropagation(); window.open(paylink12x18!, "_blank"); };
-
   // Purchasable options for the cart: the 9×12" print at the price the
   // PayPal link charges, plus the 12×18" print where the work has one.
   const purchaseOptions: ArtworkCartOption[] = [
@@ -249,14 +243,6 @@ const PhotographyDetail = () => {
               title={work.title}
               imageUrl={`/photography/${paddedId}/main.jpg`}
               options={purchaseOptions}
-              buyNowLabel={
-                paylink12x18
-                  ? lang === "zh"
-                    ? "多种尺寸可选"
-                    : "Various sizes available"
-                  : t.watercolor.buyNow
-              }
-              onBuyNow={handleBuy9x12}
             />
           </div>
         </div>
