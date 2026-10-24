@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { buildArtworkJsonLd } from "@/lib/seo";
 import { catalogMeta } from "@/lib/remains";
+import ArtworkPurchase from "@/components/ArtworkPurchase";
 
 const INQUIRY_EMAIL = "chunwang.me@gmail.com";
 const MAX_DETAIL_IMAGES = 20;
@@ -194,19 +195,21 @@ const RemainsDetail = () => {
               <p>{lang === "zh" ? "现提供4×6英寸精细艺术哑光纸印刷品" : `Available as 4×6" fine art matte paper print`}</p>
             </div>
 
-            <div className="border-t border-border pt-8 space-y-4">
-              <>
-                <button
-                  onClick={handleBuy4x6}
-                  className="sans-label gloria-button-label inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
-                >
-                  {t.watercolor.buyNow}
-                </button>
-                <p className="text-xs text-muted-foreground font-mono">
-                  {t.watercolor.shippingIncluded}
-                </p>
-              </>
-            </div>
+            <ArtworkPurchase
+              baseId={`remains-${work.id}`}
+              title={work.title}
+              imageUrl={`/remains/${paddedId}/main.jpg`}
+              options={[
+                {
+                  key: "print-4x6",
+                  labelEn: '4×6" fine art print',
+                  labelZh: "4×6英寸艺术微喷印刷品",
+                  price: work.price ?? 4,
+                },
+              ]}
+              buyNowLabel={t.watercolor.buyNow}
+              onBuyNow={handleBuy4x6}
+            />
           </div>
         </div>
       </main>

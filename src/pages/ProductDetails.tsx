@@ -298,7 +298,6 @@ const ProductDetails = () => {
               </div>
             )}
 
-            {/* Add to Cart hidden until checkout API is ready
             {!product.soldOut && (
               <div className="pt-4">
                 <Button
@@ -312,7 +311,6 @@ const ProductDetails = () => {
                 </Button>
               </div>
             )}
-            */}
 
             {(product.paylink || product.is_active) && (
               <div className={product.soldOut ? "pt-4" : "pt-3"}>

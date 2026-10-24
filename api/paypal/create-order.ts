@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getAccessToken, PAYPAL_API_BASE } from "../_lib/paypal";
+import { getAccessToken, PAYPAL_API_BASE } from "../_lib/paypal.js";
 
 interface CartItemInput {
   id: string;

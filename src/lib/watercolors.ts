@@ -107,7 +107,7 @@ export const watercolors: Watercolor[] = [
     descriptionZh: "",
     printInfo: `4×6" print on matte fine art paper`,
     printInfoZh: "4×6英寸哑光艺术微喷",
-    price: 4,
+    price: 1,
   },
   {
     id: "45",
@@ -125,7 +125,7 @@ export const watercolors: Watercolor[] = [
     descriptionZh: "",
     printInfo: `4×6" print on matte fine art paper`,
     printInfoZh: "4×6英寸哑光艺术微喷",
-    price: 4,
+    price: 1,
   },
   {
     id: "46",
@@ -143,7 +143,7 @@ export const watercolors: Watercolor[] = [
     descriptionZh: "",
     printInfo: `4×6" print on matte fine art paper`,
     printInfoZh: "4×6英寸哑光艺术微喷",
-    price: 4,
+    price: 1,
   },
   {
     id: "47",
@@ -161,7 +161,7 @@ export const watercolors: Watercolor[] = [
     descriptionZh: "",
     printInfo: `4×6" print on matte fine art paper`,
     printInfoZh: "4×6英寸哑光艺术微喷",
-    price: 4,
+    price: 1,
   },
 
   // 残留
