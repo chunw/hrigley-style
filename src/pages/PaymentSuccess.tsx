@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import deliveryGif from "@/assets/delivery.gif";
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
@@ -39,60 +40,52 @@ const PaymentSuccess = () => {
             <p className="sans-label text-xs text-muted-foreground mt-4">
               {s.tagline}
             </p>
+            <p className="text-sm text-muted-foreground mt-2">{s.supportLine}</p>
           </div>
 
           {/* Studio receipt card */}
-          <div className="relative border border-foreground/20 bg-card px-6 py-8 md:px-10 shadow-[6px_6px_0_0_hsl(var(--primary)/0.15)]">
+          <div className="relative border border-foreground/20 bg-card shadow-[6px_6px_0_0_hsl(var(--primary)/0.15)]">
             {/* Paid stamp */}
-            <div className="absolute -top-4 right-6 rotate-[-10deg] rounded-full border-2 border-primary px-4 py-1 bg-background">
+            <div className="absolute -top-4 right-6 z-10 rotate-[-10deg] rounded-full border-2 border-primary px-4 py-1 bg-background">
               <span className="sans-label text-primary text-sm font-bold tracking-[0.25em]">
                 {s.paid}
               </span>
             </div>
 
-            <h1 className="shop-title text-2xl md:text-3xl text-center">
-              {s.orderConfirmed}
-            </h1>
+            {/* Illustration — the same delivery artwork as the About page backdrop */}
+            <img
+              src={deliveryGif}
+              alt=""
+              className="w-full h-44 md:h-52 object-cover border-b border-dashed border-foreground/30"
+            />
 
-            <div className="border-t border-dashed border-foreground/30 mt-8 pt-6 space-y-5">
+            <div className="px-6 py-8 md:px-10">
+              <h1 className="shop-title text-2xl md:text-3xl text-center">
+                {s.orderConfirmed}
+              </h1>
               {orderId && (
-                <div className="flex items-baseline justify-between gap-4">
-                  <span className="sans-label text-xs text-muted-foreground">
-                    {s.orderNo}
-                  </span>
-                  <span className="font-mono text-lg tracking-widest">
-                    No. {orderId.slice(-8).toUpperCase()}
-                  </span>
-                </div>
+                <p className="text-center font-mono text-sm tracking-widest text-muted-foreground mt-2">
+                  No. {orderId.slice(-8).toUpperCase()}
+                </p>
               )}
 
-              <div className="flex items-baseline justify-between gap-4">
-                <span className="sans-label text-xs text-muted-foreground">
-                  {s.receipt}
-                </span>
-                <span className="text-sm text-right">{s.receiptNote}</span>
-              </div>
-
-              <div className="flex items-baseline justify-between gap-4">
-                <span className="sans-label text-xs text-muted-foreground">
-                  {s.next}
-                </span>
-                <span className="text-sm text-right">{s.nextNote}</span>
-              </div>
-            </div>
-
-            <div className="border-t border-dashed border-foreground/30 mt-8 pt-6 text-center">
-              <p className="text-sm text-muted-foreground">
-                {s.questions}{" "}
-                <a
-                  href="https://www.instagram.com/chunwang.art"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-primary underline underline-offset-4"
-                >
-                  @chunwang.art
-                </a>
+              <p className="text-center leading-relaxed mt-8">
+                {s.receiptNote} {s.nextNote}
               </p>
+
+              <div className="border-t border-dashed border-foreground/30 mt-8 pt-6 text-center">
+                <p className="text-sm text-muted-foreground">
+                  {s.questions}{" "}
+                  <a
+                    href="https://www.instagram.com/chunwang.art"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-primary underline underline-offset-4"
+                  >
+                    @chunwang.art
+                  </a>
+                </p>
+              </div>
             </div>
           </div>
 
