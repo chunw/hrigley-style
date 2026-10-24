@@ -32,10 +32,16 @@ const Cart = () => {
   };
 
   const createOrder = async () => {
+    // Fold the chosen option into the item name PayPal shows the buyer and
+    // records on the order, e.g. "Residuals #1 (Framed original)".
+    const items = state.items.map((item) => ({
+      ...item,
+      title: item.variant ? `${item.title || item.name} (${item.variant})` : item.title,
+    }));
     const response = await fetch("/api/paypal/create-order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: state.items }),
+      body: JSON.stringify({ items }),
     });
 
     if (!response.ok) {
@@ -140,6 +146,9 @@ const Cart = () => {
                         <h3 className="handwritten product-title text-lg font-medium truncate">
                           {item.title || item.name}
                         </h3>
+                        {item.variant && (
+                          <p className="sans-label text-xs text-muted-foreground">{item.variant}</p>
+                        )}
                         <p className="sans-label text-lg text-primary font-bold">
                           {formatPrice(item.price, item.currency)}
                         </p>

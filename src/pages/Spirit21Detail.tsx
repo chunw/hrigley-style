@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { buildArtworkJsonLd } from "@/lib/seo";
 import { catalogMeta } from "@/lib/21spirit";
+import ArtworkPurchase, { type ArtworkCartOption } from "@/components/ArtworkPurchase";
 
 const INQUIRY_EMAIL = "chunwang.me@gmail.com";
 const MAX_DETAIL_IMAGES = 20;
@@ -99,6 +100,28 @@ const Spirit21Detail = () => {
 
   const handleBuy4x6 = (e: React.MouseEvent) => { e.stopPropagation(); window.open(paylink4x6, "_blank"); };
   const handleBuy9x12 = (e: React.MouseEvent) => { e.stopPropagation(); window.open(paylink9x12, "_blank"); };
+
+  // Purchasable options for the cart. The one work with its own paylink has
+  // a two-price label ("$4 / $10"): the 4×6" print at the first price and
+  // the 9×12" print at the second. Every other work is the 4×6" print only,
+  // at the same $4 the studio-card PayPal link charges.
+  const priceLabelPrices = work.priceLabel
+    ? [...work.priceLabel.matchAll(/\$(\d+(?:\.\d+)?)/g)].map((m) => parseFloat(m[1]))
+    : [];
+  const purchaseOptions: ArtworkCartOption[] =
+    work.paylink && priceLabelPrices.length === 2
+      ? [
+          { key: "print-4x6", labelEn: '4×6" fine art print', labelZh: "4×6英寸艺术微喷印刷品", price: priceLabelPrices[0] },
+          { key: "print-9x12", labelEn: '9×12" fine art print', labelZh: "9×12英寸艺术微喷印刷品", price: priceLabelPrices[1] },
+        ]
+      : [
+          {
+            key: "print-4x6",
+            labelEn: '4×6" fine art print',
+            labelZh: "4×6英寸艺术微喷印刷品",
+            price: work.price ?? 4,
+          },
+        ];
 
   const title = lang === "zh" && work.titleZh ? work.titleZh : work.title;
 
@@ -193,21 +216,20 @@ const Spirit21Detail = () => {
               }</p>
             </div>
 
-            <div className="border-t border-border pt-8 space-y-4">
-              <>
-                <button
-                  onClick={handleBuy4x6}
-                  className="sans-label gloria-button-label inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
-                >
-                  {work.paylink
-                    ? (lang === "zh" ? "多种尺寸可选" : "Various sizes available")
-                    : t.watercolor.buyNow}
-                </button>
-                <p className="text-xs text-muted-foreground font-mono">
-                  {t.watercolor.shippingIncluded}
-                </p>
-              </>
-            </div>
+            <ArtworkPurchase
+              baseId={`spirit-${work.id}`}
+              title={work.title}
+              imageUrl={`/21spirit/${paddedId}/main.jpg`}
+              options={purchaseOptions}
+              buyNowLabel={
+                work.paylink
+                  ? lang === "zh"
+                    ? "多种尺寸可选"
+                    : "Various sizes available"
+                  : t.watercolor.buyNow
+              }
+              onBuyNow={handleBuy4x6}
+            />
           </div>
         </div>
       </main>

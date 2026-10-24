@@ -10,6 +10,7 @@ import { ZoomableImage } from "@/components/ZoomableImage";
 import { toast } from "sonner";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { buildArtworkJsonLd } from "@/lib/seo";
+import ArtworkPurchase, { type ArtworkCartOption } from "@/components/ArtworkPurchase";
 
 const INQUIRY_EMAIL = "chunwang.me@gmail.com";
 const MAX_DETAIL_IMAGES = 20;
@@ -108,6 +109,40 @@ const WatercolorDetail = () => {
     if (work?.multiOptionsPaylink) window.open(work.multiOptionsPaylink, "_blank");
   };
 
+  // Purchasable options for the cart. Works with a two-price label
+  // (e.g. "$10 / $35") offer the 9×12" print at the first price and the
+  // framed original at the second; everything else is a single option at
+  // the price the page already charges through its PayPal link.
+  const priceLabelPrices = work.priceLabel
+    ? [...work.priceLabel.matchAll(/\$(\d+(?:\.\d+)?)/g)].map((m) => parseFloat(m[1]))
+    : [];
+  const isMultiOption = Boolean(work.multiOptionsPaylink) || priceLabelPrices.length === 2;
+  let purchaseOptions: ArtworkCartOption[];
+  if (isMultiOption) {
+    const [firstPrice, secondPrice] =
+      priceLabelPrices.length === 2
+        ? (priceLabelPrices as [number, number])
+        : [work.price ?? 10, work.printPrice ?? 35];
+    purchaseOptions = [
+      { key: "print-9x12", labelEn: '9×12" fine art print', labelZh: "9×12英寸艺术微喷印刷品", price: firstPrice },
+      { key: "framed-original", labelEn: "Framed original", labelZh: "原作（已装裱）", price: secondPrice },
+    ];
+  } else {
+    const price = work.price ?? work.printPrice ?? 10;
+    const isStudioCard = work.series === "III";
+    const labelEn = isStudioCard
+      ? "Studio card"
+      : price === 25
+        ? "Framed print"
+        : (work.printInfo ?? (price === 4 ? '4×6" fine art print' : '9×12" fine art print'));
+    const labelZh = isStudioCard
+      ? "工作室卡片"
+      : price === 25
+        ? "装裱印刷品"
+        : (work.printInfoZh ?? (price === 4 ? "4×6英寸艺术微喷印刷品" : "9×12英寸艺术微喷印刷品"));
+    purchaseOptions = [{ key: "standard", labelEn, labelZh, price }];
+  }
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
@@ -203,43 +238,21 @@ const WatercolorDetail = () => {
               <p>{lang === "zh" ? (work.availabilityTextZh ?? `现提供${work.printInfoZh ?? '9×12英寸精细艺术哑光纸印刷品'}`) : (work.availabilityText ?? `Available as ${work.printInfo ?? '9×12" fine art matte paper print'}`)}</p>
             </div>
 
-            <div className="border-t border-border pt-8 space-y-4">
-              {work.multiOptionsPaylink ? (
-                <>
-                  <button
-                    onClick={handleBuyOriginal}
-                    className="sans-label gloria-button-label inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center cursor-pointer"
-                  >
-                    {lang === "zh" ? "多种选择可选" : "Various options available"}
-                  </button>
-                  <p className="text-xs text-muted-foreground font-mono">
-                    {t.watercolor.shippingIncluded}
-                  </p>
-                </>
-              ) : (
-                (() => {
-                  const displayPrice = work.price ?? work.printPrice ?? 10;
-                  if (displayPrice != null) {
-                    return (
-                      <>
-                        <p className="sans-label text-2xl font-bold">${displayPrice}</p>
-                        <button
-                          onClick={work.soldOut ? undefined : (effectivePaylink ? handleBuyNow : handleInquire)}
-                          disabled={work.soldOut}
-                          className={`sans-label gloria-button-label inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center ${work.soldOut ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-                        >
-                          {work.soldOut ? t.productDetails.soldOut : t.watercolor.buyNow}
-                        </button>
-                        <p className="text-xs text-muted-foreground font-mono">
-                          {t.watercolor.shippingIncluded}
-                        </p>
-                      </>
-                    );
-                  }
-                  return null;
-                })()
-              )}
-            </div>
+            <ArtworkPurchase
+              baseId={`watercolor-${work.id}`}
+              title={work.title}
+              imageUrl={`/watercolors/${paddedId}/main.jpg`}
+              options={purchaseOptions}
+              soldOut={work.soldOut}
+              buyNowLabel={
+                work.multiOptionsPaylink
+                  ? lang === "zh"
+                    ? "多种选择可选"
+                    : "Various options available"
+                  : t.watercolor.buyNow
+              }
+              onBuyNow={work.multiOptionsPaylink ? handleBuyOriginal : handleBuyNow}
+            />
           </div>
         </div>
       </main>

@@ -8,6 +8,10 @@ interface CartItem {
   currency: string;
   image_url: string | null;
   quantity: number;
+  // Chosen option for multi-option works, e.g. '9×12" fine art print' or
+  // 'Framed original'. Null/absent for single-option items. The cart id is
+  // unique per option, so the same work in two sizes stays two line items.
+  variant?: string | null;
 }
 
 interface CartState {

@@ -11,6 +11,7 @@ import { ZoomableImage } from "@/components/ZoomableImage";
 import { toast } from "sonner";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { buildArtworkJsonLd } from "@/lib/seo";
+import ArtworkPurchase, { type ArtworkCartOption } from "@/components/ArtworkPurchase";
 
 const INQUIRY_EMAIL = "chunwang.me@gmail.com";
 const MAX_DETAIL_IMAGES = 20;
@@ -99,6 +100,27 @@ const PhotographyDetail = () => {
 
   const handleBuy9x12 = (e: React.MouseEvent) => { e.stopPropagation(); window.open(paylink9x12, "_blank"); };
   const handleBuy12x18 = (e: React.MouseEvent) => { e.stopPropagation(); window.open(paylink12x18!, "_blank"); };
+
+  // Purchasable options for the cart: the 9×12" print at the price the
+  // PayPal link charges, plus the 12×18" print where the work has one.
+  const purchaseOptions: ArtworkCartOption[] = [
+    {
+      key: "print-9x12",
+      labelEn: '9×12" fine art print',
+      labelZh: "9×12英寸艺术微喷印刷品",
+      price: work.printPrice ?? work.price ?? 10,
+    },
+    ...(work.printPrice12x18
+      ? [
+          {
+            key: "print-12x18",
+            labelEn: '12×18" fine art print',
+            labelZh: "12×18英寸艺术微喷印刷品",
+            price: work.printPrice12x18,
+          } as ArtworkCartOption,
+        ]
+      : []),
+  ];
 
   const title = lang === "zh" && work.titleZh ? work.titleZh : work.title;
 
@@ -222,26 +244,20 @@ const PhotographyDetail = () => {
               <p>{lang === "zh" ? `现提供${work.printInfoZh ?? '9×12英寸精细艺术哑光纸印刷品'}` : `Available as ${work.printInfo ?? '9×12" fine art matte paper print'}`}</p>
             </div>
 
-            <div className="border-t border-border pt-8 space-y-4">
-              {paylink12x18 ? (
-                <button
-                  onClick={handleBuy9x12}
-                  className="sans-label gloria-button-label inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
-                >
-                  {lang === "zh" ? "多种尺寸可选" : "Various sizes available"}
-                </button>
-              ) : (
-                <button
-                  onClick={handleBuy9x12}
-                  className="sans-label gloria-button-label inline-block w-full bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center"
-                >
-                  {t.watercolor.buyNow}
-                </button>
-              )}
-              <p className="text-xs text-muted-foreground font-mono">
-                {t.watercolor.shippingIncluded}
-              </p>
-            </div>
+            <ArtworkPurchase
+              baseId={`photography-${work.id}`}
+              title={work.title}
+              imageUrl={`/photography/${paddedId}/main.jpg`}
+              options={purchaseOptions}
+              buyNowLabel={
+                paylink12x18
+                  ? lang === "zh"
+                    ? "多种尺寸可选"
+                    : "Various sizes available"
+                  : t.watercolor.buyNow
+              }
+              onBuyNow={handleBuy9x12}
+            />
           </div>
         </div>
       </main>

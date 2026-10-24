@@ -138,6 +138,26 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
     window.location.href = `mailto:${INQUIRY_EMAIL}?subject=${subject}&body=${body}`;
   };
 
+  // Default purchasable option for catalog works, matching the first price
+  // shown in priceLabel and the first option on the detail page, so a card
+  // add and a detail-page add of the same option share one cart line.
+  const cartVariantLabel = (() => {
+    const en = lang !== "zh";
+    if (id.startsWith("remains-") || id.startsWith("spirit-")) {
+      return en ? '4×6" fine art print' : "4×6英寸艺术微喷印刷品";
+    }
+    if (id.startsWith("photography-")) {
+      return en ? '9×12" fine art print' : "9×12英寸艺术微喷印刷品";
+    }
+    if (id.startsWith("watercolor-")) {
+      if (category === "Cards") return en ? "Studio card" : "工作室卡片";
+      if (price === 4) return en ? '4×6" fine art print' : "4×6英寸艺术微喷印刷品";
+      if (price === 25) return en ? "Framed print" : "装裱印刷品";
+      return en ? '9×12" fine art print' : "9×12英寸艺术微喷印刷品";
+    }
+    return null;
+  })();
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     addItem({
@@ -147,6 +167,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
       price,
       currency,
       image_url,
+      variant: cartVariantLabel,
     });
     toast(`${title || name} added to cart`);
   };
@@ -199,7 +220,6 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
                   {renderHighlightedText(priceLabel ?? `${currency === 'gbp' ? '£' : '$'}${price.toFixed(2)}`)}
                 </p>
                 {!hideShippingLabel && <p className="text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>}
-                {/* Add to Cart hidden until checkout API is ready
                 {!hideOrderButton && !soldOut && (
                   <Button
                     variant="outline"
@@ -211,7 +231,6 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
                     ADD TO CART
                   </Button>
                 )}
-                */}
                 {!hideOrderButton && (paylink || is_active) && (
                   <Button
                     variant="outline-pink"
