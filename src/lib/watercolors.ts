@@ -92,24 +92,6 @@ export const watercolors: Watercolor[] = [
   // 行旅拾记 / Notes from the Road
 
   {
-    id: "44",
-    title: "Notes from the Road #1",
-    titleZh: "行旅拾记 其一",
-    series: "IV",
-    printInCatalog: false,
-    showInStorefront: false,
-    year: "2026",
-    medium: "Watercolor on paper",
-    mediumZh: "纸本水彩",
-    dimensions: "",
-    dimensionsZh: "",
-    description: "",
-    descriptionZh: "",
-    printInfo: `4×6" print on matte fine art paper`,
-    printInfoZh: "4×6英寸哑光艺术微喷",
-    price: 1,
-  },
-  {
     id: "45",
     title: "Notes from the Road #2",
     titleZh: "行旅拾记 其二",
@@ -125,7 +107,7 @@ export const watercolors: Watercolor[] = [
     descriptionZh: "",
     printInfo: `4×6" print on matte fine art paper`,
     printInfoZh: "4×6英寸哑光艺术微喷",
-    price: 1,
+    price: 4,
   },
   {
     id: "46",
@@ -143,7 +125,7 @@ export const watercolors: Watercolor[] = [
     descriptionZh: "",
     printInfo: `4×6" print on matte fine art paper`,
     printInfoZh: "4×6英寸哑光艺术微喷",
-    price: 1,
+    price: 4,
   },
   {
     id: "47",
@@ -161,7 +143,7 @@ export const watercolors: Watercolor[] = [
     descriptionZh: "",
     printInfo: `4×6" print on matte fine art paper`,
     printInfoZh: "4×6英寸哑光艺术微喷",
-    price: 1,
+    price: 4,
   },
 
   // 残留
