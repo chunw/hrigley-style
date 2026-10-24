@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getAccessToken, PAYPAL_API_BASE } from "../_lib/paypal";
+import { getAccessToken, PAYPAL_API_BASE } from "../_lib/paypal.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
