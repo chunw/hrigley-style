@@ -1237,6 +1237,16 @@
   color: rgba(43, 43, 43, 0.72);
 }
 
+/* Longer breathing texts set smaller so the whole paragraph fits the spread */
+.bk-aphorism-long .bk-aphorism-en {
+  font-size: 0.32in;
+  line-height: 1.45;
+}
+.bk-aphorism-long .bk-aphorism-zh {
+  font-size: 0.23in;
+  line-height: 1.6;
+}
+
 /* Back cover: blank white barcode box (placeholder until the ISBN arrives). */
 .bk-back-barcode {
   width: 2.2in;
