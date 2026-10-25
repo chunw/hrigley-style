@@ -540,7 +540,7 @@ All colors MUST be HSL.
   line-height: 0.9;
   font-style: italic;
   color: hsl(var(--primary));
-  margin: 0 0 1.6rem 0;
+  margin: 0 0 3.2rem 0;
   text-transform: none;
   letter-spacing: 0.02em;
 }
