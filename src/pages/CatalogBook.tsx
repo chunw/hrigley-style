@@ -1186,13 +1186,34 @@ function useBookModel(args: {
           fieldTexts[`series:${s.id}:en`] = enT;
           fieldTexts[`series:${s.id}:zh`] = zhT;
         }
-        essayChunks[chapter.key] =
-          !enT && !zhT
-            ? []
-            : langChunks(
-                enT ? pBlocks(asParas(enT)).map((html) => ({ html, edit: `series:${s?.id}:en` })) : [],
-                zhT ? pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s?.id}:zh` })) : [],
-              );
+        if (s?.id === "earlyline" && (enT || zhT)) {
+          // The placeholder section's plate — a full-page screenshot of the
+          // Loss of Childhood series website — stands between the two works:
+          // the Mundane Details text, from its heading on, is held back and
+          // emitted right after the plate (see Chapter.essayAfterPlate). The
+          // split is computed from the field text itself, so inline text
+          // edits keep the arrangement.
+          const splitAtMundane = (t: string, edit: string) => {
+            const blocks = t ? pBlocks(asParas(t)).map((html) => ({ html, edit })) : [];
+            const idx = blocks.findIndex((b) => b.html.includes("<strong>The Mundane Details of Life</strong>"));
+            return idx < 0 ? { lead: blocks, tail: [] as typeof blocks } : { lead: blocks.slice(0, idx), tail: blocks.slice(idx) };
+          };
+          const enSplit = splitAtMundane(enT, "series:earlyline:en");
+          const zhSplit = splitAtMundane(zhT, "series:earlyline:zh");
+          const trailing = langChunks(enSplit.tail, zhSplit.tail);
+          essayChunks[chapter.key] = [...langChunks(enSplit.lead, zhSplit.lead), ...trailing];
+          if (enSplit.tail.length > 0 || zhSplit.tail.length > 0) {
+            chapter.essayAfterPlate = { imageUrl: "/book/earlyline/lost-series-page.png", trailingChunks: trailing.length };
+          }
+        } else {
+          essayChunks[chapter.key] =
+            !enT && !zhT
+              ? []
+              : langChunks(
+                  enT ? pBlocks(asParas(enT)).map((html) => ({ html, edit: `series:${s?.id}:en` })) : [],
+                  zhT ? pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s?.id}:zh` })) : [],
+                );
+        }
       } else if (chapter.key === "remains") {
         const paras = txParas("remainsEssayBody");
         const leadEn: EssayItem = { html: "<p>Remains was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions.</p>" };
