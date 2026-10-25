@@ -222,7 +222,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
                 {!hideShippingLabel && <p className="text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>}
                 {!hideOrderButton && !soldOut && (
                   <Button
-                    variant="outline"
+                    variant="default"
                     className="w-full rounded-none text-xs transition-colors"
                     size="sm"
                     onClick={handleAddToCart}
