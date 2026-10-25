@@ -110,34 +110,6 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
     navigate(detailPath || `/product/${id}`);
   };
 
-  const handleOrderNow = (e: React.MouseEvent) => {
-    const INQUIRY_EMAIL = "chunwang.me@gmail.com";
-
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'click_paypal_link', {
-        'event_category': 'ecommerce',
-        'event_label': 'Chun Wang Shop Item - ' + (title || name),
-        'value': 1
-      });
-    }
-    e.stopPropagation();
-    if (paylink) {
-      window.open(paylink, '_blank');
-      return;
-    }
-
-    // fallback to opening a mailto and copying email
-    try {
-      navigator.clipboard?.writeText(INQUIRY_EMAIL).then(() => {
-        toast('Email copied to clipboard', { description: INQUIRY_EMAIL });
-      }).catch(() => {});
-    } catch (err) {}
-
-    const subject = encodeURIComponent(`Order inquiry: ${title || name}`);
-    const body = encodeURIComponent(`Hello,%0D%0A%0D%0AI would like to order: ${title || name} (id: ${id}).%0D%0A%0D%0APlease advise the next steps.%0D%0A%0D%0AThanks.`);
-    window.location.href = `mailto:${INQUIRY_EMAIL}?subject=${subject}&body=${body}`;
-  };
-
   // Default purchasable option for catalog works, matching the first price
   // shown in priceLabel and the first option on the detail page, so a card
   // add and a detail-page add of the same option share one cart line.
@@ -229,16 +201,6 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
                   >
                     <ShoppingBag className="h-3.5 w-3.5 mr-1.5" />
                     ADD TO CART
-                  </Button>
-                )}
-                {!hideOrderButton && (paylink || is_active) && (
-                  <Button
-                    variant="outline-pink"
-                    className="order-now-button w-full rounded-none text-xs transition-colors"
-                    size="sm"
-                    onClick={handleOrderNow}
-                  >
-                    {t.productDetails.orderNow}
                   </Button>
                 )}
               </>
