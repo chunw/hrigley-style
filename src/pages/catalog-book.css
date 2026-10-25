@@ -15,7 +15,7 @@
   --m-outer: 0.85in;
   --col-pad: calc(var(--bleed) + 0.55in);
 
-  --paper: #FAF5EA;
+  --paper: #ffffff;
   --text: #111111;
   --muted: #767066;
   --rule: #ddd8ce;
@@ -30,8 +30,14 @@
   background: #161616;
 }
 
-/* Paper stock choices (toolbar): white is the default above, cream is the warm stock,
-   black inverts the text variables on paper pages only (ink and accent pages keep theirs) */
+/* Paper stock choices (toolbar): white is the default (her direction,
+   2026-10-24: every page is white unless that page overrides its ground);
+   cream is the warm stock, black inverts the text variables on paper pages
+   only (ink and accent pages keep theirs) */
+.bk-paper-white {
+  --paper: #ffffff;
+}
+
 .bk-paper-cream {
   --paper: #FAF5EA;
 }

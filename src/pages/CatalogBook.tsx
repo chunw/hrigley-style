@@ -1281,7 +1281,7 @@ const CatalogBook = () => {
   const b = t.catalogBook;
   const [part, setPart] = useState<Part>("complete");
   const [bleed, setBleed] = useState(false);
-  const [paper, setPaper] = useState<"white" | "cream" | "black">("cream");
+  const [paper, setPaper] = useState<"white" | "cream" | "black">("white");
   const [preparing, setPreparing] = useState(false);
   const [zoom, setZoom] = useState(1);
   // ── Book editor (edit mode): staged text edits + per-page backgrounds ──
