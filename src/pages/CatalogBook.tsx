@@ -10,7 +10,7 @@ import { translations, type Translations } from "@/lib/translations";
 import { PAGE_BACKGROUNDS, type PageBgKind } from "@/lib/pageBackgrounds";
 import { BOOK_SERIES } from "@/lib/bookSeries";
 import { SERIES_PLATES, DEATH_VALLEY_PLATES } from "@/lib/seriesPlates";
-import { SPIRIT_BACKGROUNDS } from "@/lib/spiritBackgrounds";
+import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS } from "@/lib/exhibitions";
 
@@ -1229,7 +1229,15 @@ function useBookModel(args: {
           })),
           ...(g.credit ? [{ html: `<p><span class="bk-credit">${g.credit}</span></p>`, edit: `spiritbg:${g.id}` }] : []),
         ]);
-        essayChunks[chapter.key] = langChunks([...fieldItems("spirit", "en"), ...bgItems], fieldItems("spirit", "zh"));
+        // Her own first-person post on the painting Inundated (WeChat
+        // Moments, March 28, 2018) stands right after the series overview,
+        // ahead of the borrowed background texts: her voice first, then the
+        // texts the paintings answer to. Bilingual, like her other texts.
+        const momentItems = (which: "en" | "zh"): EssayItem[] => [
+          { html: `<p><span class="bk-credit">${which === "en" ? SPIRIT_MOMENT.labelEn : SPIRIT_MOMENT.labelZh}</span></p>`, edit: "spiritmoment:inundated" },
+          { html: `<p>${which === "en" ? SPIRIT_MOMENT.textEn : SPIRIT_MOMENT.textZh}</p>`, edit: "spiritmoment:inundated" },
+        ];
+        essayChunks[chapter.key] = langChunks([...fieldItems("spirit", "en"), ...momentItems("en"), ...bgItems], [...fieldItems("spirit", "zh"), ...momentItems("zh")]);
       } else if (fieldText(chapter.key, "en") || fieldText(chapter.key, "zh")) {
         essayChunks[chapter.key] = langChunks(fieldItems(chapter.key, "en"), fieldItems(chapter.key, "zh"));
       } else if (chapter.key === "watercolor") {
