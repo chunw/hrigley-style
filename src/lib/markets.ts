@@ -38,7 +38,7 @@ export const MARKET_EVENTS: MarketEvent[] = [
     nameZh: "Lately Cafe 本地市集",
     venueEn: "Lately Cafe, Long Island City",
     venueZh: "Lately Cafe · 长岛市",
-    timeEn: "from 2:30pm",
-    timeZh: "14:30 开始",
+    timeEn: "2:30\u20136pm",
+    timeZh: "14:30\u201318:00",
   },
 ];
