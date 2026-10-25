@@ -305,6 +305,19 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
       "/book/google/exhibition-2.jpg",
     ),
   ],
+  // Placeholder section for the two 2018 works (The Loss of Childhood · The
+  // Mundane Details of Life): for now its only plate is a full-page screenshot
+  // of the Loss of Childhood series website, standing between the two works'
+  // texts — CatalogBook holds the Mundane Details text back and emits it
+  // right after this plate (see Chapter.essayAfterPlate).
+  earlyline: [
+    plate(
+      "The Loss of Childhood", "2017 – 2018 · chunw.github.io/lost", "2018",
+      "The Loss of Childhood, series website (chunw.github.io/lost), full-page screenshot, captured 2026. Nine works, 2017–2018.",
+      "《消失的童年》系列网站（chunw.github.io/lost）全页截图，2026 年截取。系列共九件，2017–2018。",
+      "/book/earlyline/lost-series-page.png",
+    ),
+  ],
   // Slightly Useful Objects opens the "shop" chapter (Visions in Ceramics is
   // merged into it). Unlike the other keys in this record, this array is not
   // rendered as its own series chapter: CatalogBook prepends it to the shop
