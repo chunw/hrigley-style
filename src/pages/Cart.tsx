@@ -90,11 +90,10 @@ const Cart = () => {
           <div className="max-w-2xl mx-auto text-center">
             <h1 className="shop-title text-3xl md:text-4xl mb-6">YOUR CART</h1>
             <div className="space-y-6">
-              <p className="handwritten text-lg text-muted-foreground">YOUR CART IS EMPTY</p>
+              <p className="product-title text-lg text-muted-foreground">YOUR CART IS EMPTY</p>
               <Button
                 onClick={() => navigate("/")}
                 variant="outline"
-                className="sans-label"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 CONTINUE SHOPPING
@@ -118,7 +117,6 @@ const Cart = () => {
             <Button
               onClick={() => navigate("/")}
               variant="ghost"
-              className="sans-label"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               CONTINUE SHOPPING
@@ -143,13 +141,13 @@ const Cart = () => {
 
                       {/* Product Info */}
                       <div className="flex-1 min-w-0">
-                        <h3 className="handwritten product-title text-lg font-medium truncate">
+                        <h3 className="product-title text-lg leading-snug truncate">
                           {item.title || item.name}
                         </h3>
                         {item.variant && (
-                          <p className="sans-label text-xs text-muted-foreground">{item.variant}</p>
+                          <p className="font-helvetica text-[11px] uppercase tracking-[0.15em] text-muted-foreground">{item.variant}</p>
                         )}
-                        <p className="sans-label text-lg text-primary font-bold">
+                        <p className="font-helvetica text-lg tracking-wide text-primary">
                           {formatPrice(item.price, item.currency)}
                         </p>
                       </div>
@@ -164,7 +162,7 @@ const Cart = () => {
                         >
                           <Minus className="h-4 w-4" />
                         </Button>
-                        <span className="handwritten text-lg w-8 text-center">{item.quantity}</span>
+                        <span className="font-helvetica text-base w-8 text-center">{item.quantity}</span>
                         <Button
                           variant="outline"
                           size="icon"
@@ -188,8 +186,9 @@ const Cart = () => {
 
                     {/* Subtotal for this item */}
                     <div className="mt-2 text-right">
-                      <span className="sans-label text-sm text-muted-foreground">
-                        Subtotal: {formatPrice(item.price * item.quantity, item.currency)}
+                      <span className="font-helvetica text-sm text-muted-foreground">
+                        <span className="uppercase tracking-[0.15em]">Subtotal:</span>{" "}
+                        <span className="tracking-wide text-foreground">{formatPrice(item.price * item.quantity, item.currency)}</span>
                       </span>
                     </div>
                   </CardContent>
@@ -201,32 +200,32 @@ const Cart = () => {
             <div className="lg:col-span-1">
               <Card className="border-2 border-border sticky top-4">
                 <CardContent className="p-6">
-                  <h2 className="handwritten text-xl font-bold mb-4">ORDER SUMMARY</h2>
-                  
+                  <h2 className="product-title text-xl mb-4">ORDER SUMMARY</h2>
+
                   <div className="space-y-3 mb-6">
-                    <div className="flex justify-between sans-label">
-                      <span>Items ({state.itemCount}):</span>
-                      <span>${state.total.toFixed(2)}</span>
+                    <div className="flex justify-between items-baseline font-helvetica text-sm">
+                      <span className="uppercase tracking-[0.15em] text-muted-foreground">Items ({state.itemCount}):</span>
+                      <span className="tracking-wide">${state.total.toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between sans-label">
-                      <span>Shipping:</span>
-                      <span>Included</span>
+                    <div className="flex justify-between items-baseline font-helvetica text-sm">
+                      <span className="uppercase tracking-[0.15em] text-muted-foreground">Shipping:</span>
+                      <span className="tracking-wide">Included</span>
                     </div>
                     <div className="border-t border-border pt-3">
-                      <div className="flex justify-between sans-label text-lg font-bold">
-                        <span>Total:</span>
-                        <span>${state.total.toFixed(2)}</span>
+                      <div className="flex justify-between items-baseline font-helvetica text-lg">
+                        <span className="uppercase tracking-[0.12em] font-medium">Total:</span>
+                        <span className="tracking-wide font-medium">${state.total.toFixed(2)}</span>
                       </div>
                     </div>
                   </div>
 
                   <div className="space-y-3">
                     {state.total < MINIMUM_ORDER_AMOUNT ? (
-                      <p className="text-sm text-muted-foreground text-center sans-label">
+                      <p className="text-sm text-muted-foreground text-center font-helvetica">
                         Add at least {formatPrice(MINIMUM_ORDER_AMOUNT, "usd")} to check out.
                       </p>
                     ) : !PAYPAL_CLIENT_ID ? (
-                      <p className="text-sm text-destructive text-center sans-label">
+                      <p className="text-sm text-destructive text-center font-helvetica">
                         PayPal checkout isn't configured yet.
                       </p>
                     ) : (
@@ -243,7 +242,7 @@ const Cart = () => {
                     <Button
                       onClick={clearCart}
                       variant="ghost"
-                      className="w-full sans-label text-sm"
+                      className="w-full text-sm"
                     >
                       CLEAR CART
                     </Button>
