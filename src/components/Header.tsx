@@ -48,9 +48,8 @@ const Header = () => {
                 <Link
                   to="/about"
                   aria-label={t.index.ctaAbout}
-                  className={`nav-link relative transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
+                  className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
                 >
-                  <img src="/cartoon_finger_cutout.png" alt="" aria-hidden="true" className="nav-finger" />
                   {t.index.ctaAbout}
                 </Link>
               </TooltipTrigger>
@@ -62,9 +61,8 @@ const Header = () => {
                 <Link
                   to="/catalogs"
                   aria-label={t.index.ctaCatalog}
-                  className={`nav-link relative transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
+                  className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
                 >
-                  <img src="/cartoon_finger_cutout.png" alt="" aria-hidden="true" className="nav-finger" />
                   {t.index.ctaCatalog}
                 </Link>
               </TooltipTrigger>
@@ -80,9 +78,8 @@ const Header = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Follow on Instagram"
-                  className={`nav-link relative transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
+                  className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
                 >
-                  <img src="/cartoon_finger_cutout.png" alt="" aria-hidden="true" className="nav-finger" />
                   {t.index.ctaInstagram}
                 </a>
               </TooltipTrigger>
