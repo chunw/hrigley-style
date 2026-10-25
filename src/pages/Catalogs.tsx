@@ -149,10 +149,10 @@ const Catalogs = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <Link
             to="/"
+            aria-label="Back to shop"
             className="sans-label font-normal inline-flex items-center gap-2 text-xs uppercase tracking-widest transition-colors hover:text-primary"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            Chun Wang Studio Shop
           </Link>
 
           <div className="flex items-center gap-2">

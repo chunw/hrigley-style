@@ -248,7 +248,7 @@ const Header = () => {
                 />
               </Link>
             ) : (
-              !location.pathname.startsWith("/catalogs") && (
+              (
                 <div className="shop-title gloria-title text-2xl leading-none transition-colors header-shop-scale">
                   <Link to="/" className="header-brand-link block cursor-pointer">
                     {t.shopTitle.line1}
