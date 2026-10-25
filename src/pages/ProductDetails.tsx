@@ -271,7 +271,7 @@ const ProductDetails = () => {
             {!product.soldOut && (
               <div className="pt-4">
                 <Button
-                  variant="outline"
+                  variant="default"
                   size="lg"
                   onClick={handleAddToCart}
                   className="w-full rounded-none text-sm px-8 py-6 transition-colors"
