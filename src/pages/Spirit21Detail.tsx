@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { spiritWorks } from "@/lib/21spirit";
@@ -13,6 +13,7 @@ import { usePageMeta } from "@/hooks/usePageMeta";
 import { buildArtworkJsonLd } from "@/lib/seo";
 import { catalogMeta } from "@/lib/21spirit";
 import ArtworkPurchase, { type ArtworkCartOption } from "@/components/ArtworkPurchase";
+import { Badge } from "@/components/ui/badge";
 
 const INQUIRY_EMAIL = "chunwang.me@gmail.com";
 const MAX_DETAIL_IMAGES = 20;
@@ -119,6 +120,8 @@ const Spirit21Detail = () => {
 
   const title = lang === "zh" && work.titleZh ? work.titleZh : work.title;
 
+  const detailChips: { en: string; zh: string }[] = [{ en: "Fine Art Prints", zh: "版画 · 限量版号" }];
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
@@ -187,6 +190,15 @@ const Spirit21Detail = () => {
                 In The Spirit of the 21st Century {paddedId}
               </p>
               <h1 className="shop-title product-title text-4xl leading-none">{title}</h1>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-3">
+              {detailChips.map((chip) => (
+                <Link key={chip.en} to={`/?category=${encodeURIComponent(chip.en)}`}>
+                  <Badge variant="outline" className="rounded-none font-helvetica text-[11px] uppercase tracking-[0.1em] border-foreground/30 text-muted-foreground hover:border-foreground hover:text-foreground cursor-pointer transition-colors">
+                    {lang === "zh" ? chip.zh : chip.en}
+                  </Badge>
+                </Link>
+              ))}
             </div>
 
             {(work.description || work.descriptionZh) && (

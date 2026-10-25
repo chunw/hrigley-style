@@ -22,6 +22,8 @@ const PRINT_PACKET_SERIES_IMAGES: Record<string, string[]> = {
 // Reference these when tagging a product as framed, to keep the name consistent.
 export const FRAMED_ART_CATEGORY = "Framed Art";
 export const FRAMED_ART_CATEGORY_ZH = "装裱艺术品";
+export const ORIGINAL_ART_CATEGORY = "Original Art";
+export const ORIGINAL_ART_CATEGORY_ZH = "原创艺术";
 
 // A product's category is `category` by default. To put a product in more than
 // one category (e.g. an original painting that's also framed), set `categories`
@@ -801,7 +803,7 @@ Set of 2 original paintings.</p>`.trim(),
     image_url: new URL("../assets/products/eggbaconmagnets/main.jpg", import.meta.url).href,
     is_active: true,
     printInCatalog: false,
-    showInStorefront: false,
+    showInStorefront: true,
     category: "Home Decor",
     collections: ["Slightly Useful Object"],
     created_at: new Date().toISOString(),
