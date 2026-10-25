@@ -85,7 +85,6 @@ const HeroSection = ({
         <div className="hero-message-card-bottom-wrap">
           <div className="hero-message-card hero-message-card-tight">
             <div className="hero-dialog-textbox">
-              <h2 className="hero-dialog-title">{t.hero.dialogTitle}</h2>
               <p className="hero-dialog-sub font-helvetica">
                 {t.hero.smallStudioPrefix}
                 <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
