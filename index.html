@@ -26,6 +26,17 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#f47bbc">
+    <script>
+      // Apply the saved theme (default: dark) before first paint, so the
+      // page never flashes the light background for dark-default visitors.
+      try {
+        if (localStorage.getItem("cw-theme") !== "light") {
+          document.documentElement.classList.add("theme-dark");
+        }
+      } catch (e) {
+        document.documentElement.classList.add("theme-dark");
+      }
+    </script>
     <meta name="apple-mobile-web-app-title" content="Chun Wang Studio">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">

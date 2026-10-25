@@ -17,7 +17,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setTheme] = useState<Theme>(() => {
     const saved = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
     if (saved === "light" || saved === "dark") return saved;
-    return "light";
+    return "dark";
   });
   const [forceDarkCount, setForceDarkCount] = useState(0);
 
