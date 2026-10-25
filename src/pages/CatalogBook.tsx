@@ -299,6 +299,8 @@ interface Aphorism {
   id: string;
   en?: string;
   zh?: string;
+  /** Longer breathing texts (a short paragraph, not one sentence) set smaller. */
+  long?: boolean;
 }
 
 const APHORISMS: Record<string, Aphorism> = {
@@ -311,6 +313,13 @@ const APHORISMS: Record<string, Aphorism> = {
     en: "The theme of this book is what remains, and its method is the archive.",
     zh: "主题是存留，方法是档案。",
   },
+,
+  "cover-story": {
+    id: "cover-story",
+    long: true,
+    en: "Ah — the glamorous cover being the story they sell: AI for humanity, curing disease, abundance for all. The shinier the mission looks, the less anyone asks what's underneath it — the capex machine, the credit, the concentration of compute and power in a handful of hands. Profit extraction works best when it looks like salvation.",
+    zh: "啊——光鲜的封面正是他们兜售的故事：AI 为了人类，治愈疾病，人人富足。使命看上去越闪亮，越没有人追问它底下盖着什么——资本开支的机器、信贷、集中在一小撮人手里的算力和权力。利润的榨取，在看起来像救赎的时候，最为奏效。",
+  },
 };
 
 /** Aphorism spreads placed immediately before these chapters. The first
@@ -320,6 +329,7 @@ const APHORISM_BEFORE_CHAPTER: Record<string, string> = {
   shop: "keep",
   "series:immemory": "human-touch",
   "series:interview": "theme",
+  "series:negotiated": "cover-story",
 };
 
 /** "Collage as Method" — a short front-matter essay standing right after
@@ -836,7 +846,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
     case "aphorism": {
       const a = spec.aphorism;
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-aphorism bk-aphorism-${spec.half}`}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-aphorism bk-aphorism-${spec.half}${a.long ? " bk-aphorism-long" : ""}`}>
           <div className="bk-spread-canvas">
             <div className="bk-aphorism-body">
               {a.en && <p className="bk-aphorism-en">{a.en}</p>}
