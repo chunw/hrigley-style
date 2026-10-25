@@ -310,30 +310,39 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
   // rendered as its own series chapter: CatalogBook prepends it to the shop
   // chapter's catalog plates, in this order, at the artist's request
   // (2026-10-24). Images are from her own Instagram posts and reels.
+  // Captions carry each work's name, medium and exhibition facts wherever
+  // her posts and shop records give them (her rule, 2026-10-24); where no
+  // formal title is on record the plate keeps the series name.
   shop: [
     plate(
       "Slightly Useful Objects", "2026 · Video still", "2026",
-      "A melting clock drapes over the counter of a miniature café built from clay. Video still from the artist's Instagram reel, September 29, 2026.",
-      "一只融化的钟搭在陶土做的微型咖啡馆柜台上。视频截图，取自艺术家的 Instagram 短片，2026 年 9 月 29 日。",
+      "A melting clock drapes over the counter of a miniature café, hand-built in polymer clay. Video still from the artist's Instagram reel, September 29, 2026.",
+      "一只融化的钟搭在聚合物粘土手工捏制的微型咖啡馆柜台上。视频截图，取自艺术家的 Instagram 短片，2026 年 9 月 29 日。",
       "/book/suo/clock-frame.jpg",
     ),
     plate(
       "Slightly Useful Objects", "2026 · Photograph", "2026",
-      "A strawberry shortcake earring from the Slightly Useful Objects series, worn. Photograph from the artist's Instagram post, October 10, 2026.",
-      "Slightly Useful Objects 系列的草莓短蛋糕耳环佩戴图。照片取自艺术家的 Instagram 帖子，2026 年 10 月 10 日。",
+      "A strawberry shortcake earring from the Slightly Useful Objects series, worn. Hand-sculpted polymer clay. Photograph from the artist's Instagram post, October 10, 2026.",
+      "Slightly Useful Objects 系列的草莓短蛋糕耳环佩戴图，手工捏制的聚合物粘土。照片取自艺术家的 Instagram 帖子，2026 年 10 月 10 日。",
       "/book/suo/earring.jpg",
     ),
     plate(
       "Slightly Useful Objects", "2026 · Photograph", "2026",
-      "Two clay rings held in hand: a bacon-and-egg ring and a strawberry shortcake ring. Photograph from the artist's Instagram post, September 12, 2026.",
-      "手里托着的两枚陶戒指：一枚培根蛋，一枚草莓短蛋糕。照片取自艺术家的 Instagram 帖子，2026 年 9 月 12 日。",
+      "Two hand-sculpted polymer clay rings, worn: a bacon-and-egg ring and a strawberry shortcake ring. From the post that introduced the Slightly Useful Objects series, September 12, 2026.",
+      "两枚手工捏制的聚合物粘土戒指，佩戴中：一枚培根蛋，一枚草莓短蛋糕。出自介绍 Slightly Useful Objects 系列的那条帖子，2026 年 9 月 12 日。",
       "/book/suo/hands.jpg",
     ),
     plate(
       "Slightly Useful Objects", "2026 · Video still", "2026",
-      "Strawberry shortcake earrings resting on oyster shells, ready for the afternoon market. Video still from the artist's Instagram reel, October 10, 2026.",
-      "草莓短蛋糕耳环放在牡蛎壳上，准备下午出摊。视频截图，取自艺术家的 Instagram 短片，2026 年 10 月 10 日。",
+      "Strawberry shortcake earrings resting on oyster shells at the artist's stall, Lately Cafe local market near Court Square station, October 10, 2026. Video still from the artist's Instagram reel.",
+      "草莓短蛋糕耳环放在牡蛎壳上，在艺术家的摊位上。Lately Cafe 本地市集（Court Square 站附近），2026 年 10 月 10 日。视频截图，取自艺术家的 Instagram 短片。",
       "/book/suo/market-still.jpg",
+    ),
+    plate(
+      "Leaky Boundaries: After Hours Altar 渗漏的边界 — 下班后的祭坛", "2026 · Stoneware", "2026",
+      "A tiny worker asleep beside his computer, beneath a leaning pink candle. Hand-built stoneware with glaze, candle, dried grass and miniature figures, approx. 5 × 8 × 18 in. Exhibited in Leaky Boundaries, the ceramics group exhibition of the 13th LIC Open Art Festival, New York. Photograph from the artist's Instagram post, September 24, 2026.",
+      "一个小职员在电脑旁睡去，头顶斜倚着一支粉色蜡烛。手建炻器，施釉，配蜡烛、干草与微型人偶，约 5 × 8 × 18 英寸。曾展于纽约第 13 届 LIC Open Art Festival 的陶瓷群展《Leaky Boundaries》。照片取自艺术家的 Instagram 帖子，2026 年 9 月 24 日。",
+      "/book/suo/candle.jpg",
     ),
   ],
 };
