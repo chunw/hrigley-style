@@ -9,7 +9,7 @@ import { getCombinedCatalogSections, type CatalogItem, type CatalogSection, type
 import { translations, type Translations } from "@/lib/translations";
 import { PAGE_BACKGROUNDS, type PageBgKind } from "@/lib/pageBackgrounds";
 import { BOOK_SERIES } from "@/lib/bookSeries";
-import { SERIES_PLATES, DEATH_VALLEY_PLATES } from "@/lib/seriesPlates";
+import { SERIES_PLATES, DEATH_VALLEY_PLATES, REMAINS_ORIGIN_PLATES } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS } from "@/lib/exhibitions";
@@ -1165,6 +1165,16 @@ function useBookModel(args: {
       suoChapter.items = [
         ...(SERIES_PLATES.shop ?? []).map((item) => ({ item, plate: 0 })),
         ...suoChapter.items,
+      ];
+    }
+    // The Remains chapter closes with its origin: a 2018 collage of cut and
+    // reassembled fragments, five years before the figurines (see
+    // REMAINS_ORIGIN_PLATES in seriesPlates.ts).
+    const remainsChapter = chapters.find((ch) => ch.key === "remains");
+    if (remainsChapter) {
+      remainsChapter.items = [
+        ...remainsChapter.items,
+        ...REMAINS_ORIGIN_PLATES.map((item) => ({ item, plate: 0 })),
       ];
     }
     // Plates are numbered in book order across the whole volume.

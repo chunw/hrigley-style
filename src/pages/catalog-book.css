@@ -1023,6 +1023,14 @@
   padding-top: 0.13in;
 }
 
+/* No plate number is rendered in the caption, so the number gutter would
+   otherwise squeeze the caption body into its 0.75in column: lines wrap
+   every few words and the 5-line clamp cuts longer captions mid-sentence.
+   The body spans the full caption width instead. */
+.bk-caption-body {
+  grid-column: 1 / -1;
+}
+
 .bk-caption-num {
   padding-top: 3px;
   font-size: 6.5pt;

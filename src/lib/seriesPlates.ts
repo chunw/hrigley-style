@@ -376,3 +376,19 @@ export const DEATH_VALLEY_PLATES: CatalogItem[] = [1, 2, 3].map((n) => ({
   image_url: `/book/sfmoma/death-valley-${n}.jpg`,
   fallback_image_url: `/book/sfmoma/death-valley-${n}.jpg`,
 }));
+
+/**
+ * Extra plate appended to the Remains chapter: an untitled collage dated
+ * February 14, 2018, cut fragments reassembled on a single sheet. It
+ * predates the Remains figurines by five years and shows the book's archive
+ * method already at work, so it closes the chapter as the series' origin.
+ * The artist asked for it in the book on 2026-10-25.
+ */
+export const REMAINS_ORIGIN_PLATES: CatalogItem[] = [
+  plate(
+    "Untitled (Collage)", "2018 · Ink and watercolor on paper", "2018",
+    "Cut fragments, faces, a slumped figure, a hand, a knife, reassembled on a single sheet. Five years before the Remains figurines, the archive method of this book was already at work.",
+    "剪下的碎片——面孔、瘫倒的人、一只手、一把刀——重新拼在一张纸上。比《遗迹》的陶俑早五年，本书的档案方法已经在这里了。",
+    "/book/remains/collage-2018.jpg",
+  ),
+];
