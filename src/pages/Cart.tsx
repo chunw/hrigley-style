@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCart } from "@/contexts/CartContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Minus, Plus, Trash2, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -16,6 +17,7 @@ const Cart = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { state, updateQuantity, removeItem, clearCart } = useCart();
+  const { lang } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
 
   const formatPrice = (price: number, currency: string) => {
@@ -90,7 +92,12 @@ const Cart = () => {
           <div className="max-w-2xl mx-auto text-center">
             <h1 className="shop-title text-3xl md:text-4xl mb-6">YOUR CART</h1>
             <div className="space-y-6">
-              <p className="product-title text-lg text-muted-foreground">YOUR CART IS EMPTY</p>
+              <p className="product-title text-lg text-foreground">
+                {lang === "zh" ? "购物车是空的，工作室是满的。" : "Your cart is empty, but the studio is full."}
+              </p>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {lang === "zh" ? "这里的每一件都是手工孤品，作品会找到它的人——你的那一件，还在等你。" : "Everything here is handmade and one of a kind, and pieces find their people. Yours is still out there."}
+              </p>
               <Button
                 onClick={() => navigate("/")}
                 variant="outline"
