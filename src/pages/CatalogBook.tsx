@@ -231,31 +231,52 @@ interface EssayChunk {
   items: EssayItem[];
 }
 
-/** Chunk paragraphs (carrying their source edit ids) by plain length. */
-function chunkParas(paras: ParaItem[], maxChars: number): { paras: ParaItem[] }[] {
+/** Chunk paragraphs (carrying their source edit ids) by plain length.
+ * Each paragraph also pays `overhead` characters for the vertical space its
+ * paragraph break takes on the page (the essay paragraph gap is ~0.56 of a
+ * line); counting characters alone under-measures many-paragraph texts and
+ * lets the last chunk overflow the page (see chunkItems). */
+function chunkParas(paras: ParaItem[], maxChars: number, overhead = 0): { paras: ParaItem[] }[] {
   const out: { paras: ParaItem[] }[] = [];
   let cur: ParaItem[] = [];
   let len = 0;
   for (const p of paras) {
-    if (cur.length > 0 && len + p.text.length > maxChars) {
+    if (cur.length > 0 && len + p.text.length + overhead > maxChars) {
       out.push({ paras: cur });
       cur = [];
       len = 0;
     }
     cur.push(p);
-    len += p.text.length;
+    len += p.text.length + overhead;
   }
   if (cur.length > 0) out.push({ paras: cur });
   return out.length > 0 ? out : [{ paras: [] }];
 }
 
-/** Chunk essay items (paragraph blocks carrying their edit ids) by plain-text length. */
-function chunkItems(items: EssayItem[], maxChars: number): EssayItem[][] {
+/** Chunk essay items (paragraph blocks carrying their edit ids) by cost.
+ * The old rule counted plain characters only, which silently assumed every
+ * character costs the same page space. It does not: a paragraph break costs
+ * ~0.56 of a line, each <br /> costs a full line, and a first chunk shares
+ * its page with the chapter head. Many-paragraph essays (the interview,
+ * Negotiated Intelligence, Art.empath.io) therefore overflowed their last
+ * page: text ran into the folio band and the tail of a paragraph was
+ * clipped off the sheet (seen on the interview's first Chinese page,
+ * 2026-10-25). The cost model below charges for breaks and line breaks,
+ * and `headSeed` pre-charges the first chunk for the chapter head. */
+interface ChunkCost {
+  /** Characters charged per paragraph for its paragraph break. */
+  overhead: number;
+  /** Characters charged per <br /> (one full line). */
+  brCost: number;
+  /** Cost pre-charged to the first chunk (the chapter head shares its page). */
+  headSeed?: number;
+}
+function chunkItems(items: EssayItem[], maxChars: number, cost: ChunkCost): EssayItem[][] {
   const out: EssayItem[][] = [];
   let cur: EssayItem[] = [];
-  let len = 0;
+  let len = cost.headSeed ?? 0;
   for (const it of items) {
-    const n = plainText(it.html).length;
+    const n = plainText(it.html).length + cost.overhead + (it.html.match(/<br/g) ?? []).length * cost.brCost;
     if (cur.length > 0 && len + n > maxChars) {
       out.push(cur);
       cur = [];
@@ -1193,8 +1214,8 @@ function useBookModel(args: {
     const paraItems = (paras: ParaItem[]): EssayItem[] => paras.map((p) => ({ html: `<p>${p.text}</p>`, edit: p.edit }));
     const langChunks = (en: EssayItem[], zh: EssayItem[]): EssayChunk[] => {
       const all = [
-        ...chunkItems(en, 1500).map((items) => ({ lang: "en" as const, items })),
-        ...chunkItems(zh, 1000).map((items) => ({ lang: "zh" as const, items })),
+        ...chunkItems(en, 1500, { overhead: 20, brCost: 68 }).map((items) => ({ lang: "en" as const, items })),
+        ...chunkItems(zh, 880, { overhead: 22, brCost: 34, headSeed: 160 }).map((items) => ({ lang: "zh" as const, items })),
       ];
       return all.length > 0 ? all : [{ lang: "en", items: [] }];
     };
@@ -1361,12 +1382,12 @@ function useBookModel(args: {
       t,
       chapters,
       prefaceChunks: [
-        ...chunkParas(prefaceParas.filter((p) => !hasCjk(p.text)), 1500),
-        ...chunkParas(prefaceParas.filter((p) => hasCjk(p.text)), 1000),
+        ...chunkParas(prefaceParas.filter((p) => !hasCjk(p.text)), 1500, 20),
+        ...chunkParas(prefaceParas.filter((p) => hasCjk(p.text)), 880, 22),
       ],
       paintingChunks: [
-        ...chunkParas(paintingParas.filter((p) => !hasCjk(p.text)), 1500),
-        ...chunkParas(paintingParas.filter((p) => hasCjk(p.text)), 1000),
+        ...chunkParas(paintingParas.filter((p) => !hasCjk(p.text)), 1500, 20),
+        ...chunkParas(paintingParas.filter((p) => hasCjk(p.text)), 880, 22),
       ],
       essayChunks,
       editMode,
