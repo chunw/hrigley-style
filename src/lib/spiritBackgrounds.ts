@@ -110,3 +110,17 @@ export const SPIRIT_BACKGROUNDS: SpiritBackground[] = [
     ],
   },
 ];
+/**
+ * Her own first-person text for this chapter: a WeChat Moments post on the
+ * painting Inundated (mixed media), written while reading Homo Deus
+ * (March 28, 2018). Unlike the Portfolio background texts above, this one is
+ * hers, so it is kept bilingual: her Chinese original, with a faithful
+ * English translation on the English pages.
+ */
+export const SPIRIT_MOMENT = {
+  id: "inundated",
+  labelEn: "WeChat Moments · March 28, 2018",
+  labelZh: "朋友圈 · 2018 年 3 月 28 日",
+  textEn: "Inundated (mixed media). Homo Deus, which I read today, makes this point: in the 21st century, the way to block thought and speech is to drown people in irrelevant information. We have already been inundated by vast amounts of data, ideas, promises and threats, and we do not know what to pay attention to, so we often waste time debating issues that do not matter. Because we cannot process that much data, we are gradually handing the power in our hands over to the free market and to external algorithms. In the end, this will make us as fragile as a fetus in the womb, and the news that has broken in recent days seems to be providing evidence for it.",
+  textZh: "Inundated (mixed media). 今日读Homo Deus当中提到：到了21世纪，想阻挡思想言论，靠的是用不相关的信息把人淹没 — 我们已被海量的数据、想法、承诺和威胁淹没，不知道该注意什么，常常浪费时间辩论无关紧要的议题。因为无法处理大量的数据，我们正逐渐将手中的权力移交给自由市场和外部算法。— 这终会使得我们像胞衣中的胎儿一样脆弱不堪，近日爆出的新闻似乎也在为此提供论据。",
+};
