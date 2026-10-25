@@ -151,7 +151,7 @@ const Footer = () => {
 
       {/* Giant cropped wordmark, after the Miu Miu footer */}
       <div aria-hidden className="select-none overflow-hidden px-1">
-        <div className="translate-y-[13%] whitespace-nowrap text-center font-display text-[18.5vw] uppercase leading-[0.8] tracking-[0.01em] text-foreground">
+        <div className="footer-wordmark translate-y-[13%] whitespace-nowrap text-center text-[18.5vw] uppercase text-foreground">
           Chun Wang
         </div>
       </div>
