@@ -604,7 +604,6 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             <h1 className="bk-title-main shop-title gloria-title" style={{ fontSize: displaySize(translations.en.catalogBook.title, 6.8, 1.35) }}>
               {translations.en.catalogBook.title}
             </h1>
-            <div className="bk-title-zh shop-title">{"遗迹"}</div>
             <div className="bk-rule" />
             <div className="bk-title-meta">
               <span>{years}</span>
