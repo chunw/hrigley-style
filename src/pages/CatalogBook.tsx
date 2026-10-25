@@ -313,7 +313,6 @@ const APHORISMS: Record<string, Aphorism> = {
     en: "The theme of this book is what remains, and its method is the archive.",
     zh: "主题是存留，方法是档案。",
   },
-,
   "cover-story": {
     id: "cover-story",
     long: true,
