@@ -72,7 +72,16 @@ const Footer = () => {
             </ul>
           </div>
         </div>
+      </div>
 
+      {/* Giant wordmark at the very bottom, after Miu Miu — full width, never cropped */}
+      <div aria-hidden className="select-none px-2 pb-2 pt-2">
+        <div className="footer-wordmark whitespace-nowrap text-center text-[11.5vw] text-foreground">
+          Chun Wang Studio Shop
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-[1600px] px-4 sm:px-5 lg:px-7">
         <div className="flex flex-col gap-2 border-t border-border py-5 text-[11px] uppercase tracking-[0.18em] text-foreground/60 sm:flex-row sm:items-center sm:justify-between">
           <div>© Chun Wang Studio Shop 2026 · {t.footer.copyright}</div>
           <a
