@@ -623,6 +623,22 @@ export const watercolors: Watercolor[] = [
     descriptionZh: "",
   },
 
+  {
+    id: "48",
+    title: "Still Things",
+    titleZh: "静物",
+    series: "II",
+    printInCatalog: true,
+    showInStorefront: false,
+    year: "2026",
+    medium: "Watercolor",
+    mediumZh: "水彩",
+    dimensions: "",
+    dimensionsZh: "",
+    description: "",
+    descriptionZh: "",
+  },
+
 
   // {
   //   id: "23",

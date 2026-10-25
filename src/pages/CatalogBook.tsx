@@ -524,7 +524,11 @@ export function FrontCoverFace({ ctx }: { ctx: BookContext }) {
   // top, Wang down the right side, Remains up the left side. No Chinese on
   // the front cover (her call, 2026-10-18): English lettering only.
   const still = ctx.chapters.find((c) => c.key === "stillthings");
-  const art = still?.items.find(({ item }) => item.title === "Still Things")?.item ?? still?.items[0]?.item ?? ctx.coverFront;
+  // The cover piece is pinned by image, not by title: the plain title
+  // "Still Things" is shared by more than one plate in the section (a
+  // portrait variant under that title joined the section in 2026), and
+  // the cover keeps the piece it was settled with (watercolors/43).
+  const art = still?.items.find(({ item }) => item.image_url.includes("/watercolors/43/"))?.item ?? still?.items[0]?.item ?? ctx.coverFront;
   return (
     <div className="bk-face bk-face-front bk-face-rust">
       <span className="bk-cover-word bk-cover-top">Chun</span>
