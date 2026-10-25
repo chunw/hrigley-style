@@ -519,16 +519,16 @@ export interface BookContext {
 
 export function FrontCoverFace({ ctx }: { ctx: BookContext }) {
   // Final cover (her direction, 2026-10-18): a full rust-brown field, the David
-  // still life from the Still Things section whole at the centre on its black
-  // ground, and cream serif lettering walking the four edges — Chun across the
+  // still life from the Still Things section whole at the centre, and cream serif lettering walking the four edges — Chun across the
   // top, Wang down the right side, Remains up the left side. No Chinese on
   // the front cover (her call, 2026-10-18): English lettering only.
   const still = ctx.chapters.find((c) => c.key === "stillthings");
   // The cover piece is pinned by image, not by title: the plain title
-  // "Still Things" is shared by more than one plate in the section (a
-  // portrait variant under that title joined the section in 2026), and
-  // the cover keeps the piece it was settled with (watercolors/43).
-  const art = still?.items.find(({ item }) => item.image_url.includes("/watercolors/43/"))?.item ?? still?.items[0]?.item ?? ctx.coverFront;
+  // "Still Things" is shared by more than one plate in the section. It
+  // was originally settled with the landscape plate (watercolors/43);
+  // on 2026-10-24 she asked to try the portrait plate that joined the
+  // section in 2026 (watercolors/48) as the cover centre instead.
+  const art = still?.items.find(({ item }) => item.image_url.includes("/watercolors/48/"))?.item ?? still?.items[0]?.item ?? ctx.coverFront;
   return (
     <div className="bk-face bk-face-front bk-face-rust">
       <span className="bk-cover-word bk-cover-top">Chun</span>
