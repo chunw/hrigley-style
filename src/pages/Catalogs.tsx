@@ -149,28 +149,13 @@ const Catalogs = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <Link
             to="/"
+            aria-label="Back to shop"
             className="sans-label font-normal inline-flex items-center gap-2 text-xs uppercase tracking-widest transition-colors hover:text-primary"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            Chun Wang Studio Shop
           </Link>
 
           <div className="flex items-center gap-2">
-            <Link
-              to="/catalogs/book"
-              className="sans-label font-normal inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 hover:text-primary"
-            >
-              <BookImage className="h-4 w-4" />
-              {t.catalogBook.cta}
-            </Link>
-
-            <Link
-              to="/book"
-              className="sans-label font-normal inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 hover:text-primary"
-            >
-              <BookOpen className="h-4 w-4" />
-              {lang === "zh" ? "读整本书" : "Read the book"}
-            </Link>
             <div className="relative">
               {openMenu === "shop" && (
                 <div className="fixed inset-0 z-10" onClick={() => setOpenMenu(null)} />
