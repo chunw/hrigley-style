@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Sun, Moon, User, Menu, ShoppingBag } from "lucide-react";
+import { Sun, Moon, User, Menu, ShoppingBag, ChevronDown } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Lang } from "@/lib/translations";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -48,8 +48,9 @@ const Header = () => {
                 <Link
                   to="/about"
                   aria-label={t.index.ctaAbout}
-                  className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
+                  className={`nav-link relative transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
                 >
+                  <img src="/cartoon_finger_cutout.png" alt="" aria-hidden="true" className="nav-finger" />
                   {t.index.ctaAbout}
                 </Link>
               </TooltipTrigger>
@@ -61,8 +62,9 @@ const Header = () => {
                 <Link
                   to="/catalogs"
                   aria-label={t.index.ctaCatalog}
-                  className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
+                  className={`nav-link relative transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
                 >
+                  <img src="/cartoon_finger_cutout.png" alt="" aria-hidden="true" className="nav-finger" />
                   {t.index.ctaCatalog}
                 </Link>
               </TooltipTrigger>
@@ -78,8 +80,9 @@ const Header = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Follow on Instagram"
-                  className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
+                  className={`nav-link relative transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
                 >
+                  <img src="/cartoon_finger_cutout.png" alt="" aria-hidden="true" className="nav-finger" />
                   {t.index.ctaInstagram}
                 </a>
               </TooltipTrigger>
@@ -92,11 +95,12 @@ const Header = () => {
                 value={lang}
                 onChange={(e) => setLang(e.target.value as Lang)}
                 aria-label="Select language"
-                className={`transition-colors text-sm px-2 py-1 hover:text-primary bg-transparent border-none appearance-none ${controlColor}`}
+                className={`cursor-pointer appearance-none rounded-full border bg-transparent py-1 pl-3 pr-8 text-sm transition-colors hover:border-primary hover:text-primary ${headerIsLight ? "border-foreground/30" : "border-white/30"} ${controlColor}`}
               >
                 <option value="en">English</option>
                 <option value="zh">中文</option>
               </select>
+              <ChevronDown className={`pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 ${controlColor}`} />
             </div>
 
             <Tooltip>
