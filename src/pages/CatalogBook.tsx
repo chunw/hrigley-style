@@ -39,6 +39,11 @@ interface Chapter {
   years: string;
   seriesOnly?: boolean;
   seriesTextId?: string;
+  /** A chapter may hold back this many trailing essay chunks so paginate()
+   * emits them right after the plate whose image_url matches, instead of
+   * with the chapter's leading essays. Set where the chapter's essay chunks
+   * are built (shop chapter only: the ceramics method note). */
+  essayAfterPlate?: { imageUrl: string; trailingChunks: number };
 }
 
 type PageSpec =
@@ -347,8 +352,23 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     specs.push({ kind: "opener", half: "left", chapter });
     specs.push({ kind: "opener", half: "right", chapter });
     const essayCount = essayChunkCounts[chapter.key] ?? (chapter.seriesOnly ? 0 : 1);
-    for (let i = 0; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
-    for (const { item, plate } of chapter.items) specs.push({ kind: "plate", chapter, item, plate });
+    // Held-back trailing essay chunks (see Chapter.essayAfterPlate) are
+    // emitted right after their marked plate; if that plate is absent they
+    // close the plate sequence instead, so no text is ever dropped.
+    const holdBack = chapter.essayAfterPlate;
+    const leadCount = holdBack ? Math.max(0, essayCount - holdBack.trailingChunks) : essayCount;
+    for (let i = 0; i < leadCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
+    let heldBackEmitted = false;
+    for (const { item, plate } of chapter.items) {
+      specs.push({ kind: "plate", chapter, item, plate });
+      if (holdBack && !heldBackEmitted && item.image_url === holdBack.imageUrl) {
+        for (let i = leadCount; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
+        heldBackEmitted = true;
+      }
+    }
+    if (holdBack && !heldBackEmitted) {
+      for (let i = leadCount; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
+    }
     if (EXHIBITIONS[chapter.key]?.length) specs.push({ kind: "exhibitions", chapter });
   }
 
@@ -1221,16 +1241,41 @@ function useBookModel(args: {
         // split into <p> blocks and chunked by length, English pages first,
         // then Chinese pages (see langChunks). The series text now carries a
         // full essay, which no longer fits the old single page per language.
-        essayChunks[chapter.key] = langChunks(
-          [
-            ...(cerEn ? pBlocks(asParas(cerEn)).map((html) => ({ html, edit: "series:ceramics:en" })) : []),
-            { html: `<p>${fieldTexts["tx:heroDesc:en"]}</p>`, edit: "tx:heroDesc:en" },
-          ],
-          [
-            ...(cerZh ? pBlocks(asParas(cerZh)).map((html) => ({ html, edit: "series:ceramics:zh" })) : []),
-            { html: `<p>${fieldTexts["tx:heroDesc:zh"]}</p>`, edit: "tx:heroDesc:zh" },
-          ],
-        );
+        //
+        // One exception, at the artist's direction (2026-10-24): the first
+        // paragraph of the ceramics text is the method note ("My ceramics
+        // begin as functional forms…"). It leaves the introduction and
+        // stands as its own essay page pair right after the After Hours
+        // Altar plate — the work first, then the note on how the ceramics
+        // are made. The two method chunks are appended after the leading
+        // chunks and paginate() emits them at the marked plate (see
+        // Chapter.essayAfterPlate); the split is computed from the field
+        // text itself, so inline text edits keep the arrangement.
+        const cerEnBlocks = cerEn ? pBlocks(asParas(cerEn)) : [];
+        const cerZhBlocks = cerZh ? pBlocks(asParas(cerZh)) : [];
+        const methodEn = cerEnBlocks[0];
+        const methodZh = cerZhBlocks[0];
+        essayChunks[chapter.key] = [
+          ...langChunks(
+            [
+              ...cerEnBlocks.slice(1).map((html) => ({ html, edit: "series:ceramics:en" })),
+              { html: `<p>${fieldTexts["tx:heroDesc:en"]}</p>`, edit: "tx:heroDesc:en" },
+            ],
+            [
+              ...cerZhBlocks.slice(1).map((html) => ({ html, edit: "series:ceramics:zh" })),
+              { html: `<p>${fieldTexts["tx:heroDesc:zh"]}</p>`, edit: "tx:heroDesc:zh" },
+            ],
+          ),
+          ...(methodEn && methodZh
+            ? [
+                { lang: "en" as const, items: [{ html: methodEn, edit: "series:ceramics:en" }] },
+                { lang: "zh" as const, items: [{ html: methodZh, edit: "series:ceramics:zh" }] },
+              ]
+            : []),
+        ];
+        if (methodEn && methodZh) {
+          chapter.essayAfterPlate = { imageUrl: "/book/suo/candle.jpg", trailingChunks: 2 };
+        }
       } else {
         essayChunks[chapter.key] = [{ lang: "en", items: [] }];
       }
