@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, BookImage, BookOpen, Store } from "lucide-react";
+import { BookImage, BookOpen, Store } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -147,13 +147,6 @@ const Catalogs = () => {
 
       <div className="border-t border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <Link
-            to="/"
-            aria-label="Back to shop"
-            className="sans-label font-normal inline-flex items-center gap-2 text-xs uppercase tracking-widest transition-colors hover:text-primary"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-          </Link>
 
           <div className="flex items-center gap-2">
             <div className="relative">

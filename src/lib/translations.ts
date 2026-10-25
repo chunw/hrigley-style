@@ -30,10 +30,10 @@ export const translations = {
     index: {
       tagline: "Unique works",
       catalogsTitle: "Catalogs",
-      ctaAbout: "about",
-      ctaInstagram: "follow on instagram",
+      ctaAbout: "About",
+      ctaInstagram: "Follow on Instagram",
       ctaCatalogs: "view Catalogs",
-      ctaCatalog: "catalog",
+      ctaCatalog: "Catalog",
     },
     footer: {
       copyright: "All rights reserved.",
