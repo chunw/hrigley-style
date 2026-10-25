@@ -1072,7 +1072,7 @@ function useBookModel(args: {
       "spirit", "remains", "residuals", "stillthings", "road", "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography", "series:nostalgia",
       "shop",
       "series:immemory", "series:negotiated", "series:unfinished", "series:google",
-      "series:feedscanner", "series:cavedance",
+      "series:feedscanner", "series:cavedance", "series:earlyline",
       "series:soliloquy", "series:artempath",
       "series:interview",
     ];

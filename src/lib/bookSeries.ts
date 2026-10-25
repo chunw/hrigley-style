@@ -86,6 +86,14 @@ export const BOOK_SERIES: BookSeries[] = [
     textZh: "《窟舞》（www.cavedance.art）是一件受哈佛 CAMLab 委托的网站作品。能与一群出色的研究者和创作者合作是我的荣幸，他们致力于把人文研究与前沿技术和设计结合，探索展示艺术、文化与历史的创新方式。\n\n作为一种沉浸式装置体验，《窟舞》曾在哈佛 CAMLab 的公众开放参观中呈现。这是一个跨学科项目，使用人机协作、动作捕捉、人工智能与 CG 等数字技术，让敦煌壁画中的音乐与舞蹈重现。这个线上空间既是探索基于学术数据库的艺术表达可能性的方式，也是观众阅读、重读作品，或理解与审视创作过程的场所。",
   },
   {
+    id: "earlyline",
+    titleEn: "The Loss of Childhood · The Mundane Details of Life (placeholder)",
+    titleZh: "消失的童年 · 日常的细节（占位）",
+    years: "2018",
+    textEn: "Placeholder (editor's note): this section gathers two early works from 2018 into a single line. The section title, the order of the two works and the plates are all still to be decided. What follows is a translation of what she wrote about the two works at the time.\n\n<strong>The Loss of Childhood</strong>\n\n\"The Loss of Childhood\" is a theme I have been working on in recent weeks, made up of a set of paintings, photographs and Processing sketches. The theme keeps circling in my mind, generating one image or another, and I have to put them all into practice and line them up as a series before I can let it rest. Sometimes I truly long to return to the carefree years of childhood, when, in memory, there was nothing boring, and fantasy had not yet turned into a derogatory activity.\n\n(Follow-up comment, her own) The series is placed here: chunw.github.io/lost (open on a computer). The scale of the works and the white space around them... (the rest was cut off in the screenshot)\n\n<strong>The Mundane Details of Life</strong>\n\nThe Mundane Details of Life (1 hour of looped video)\n\nAn hour of footage of the mundane details of everyday life, living in a simple space constructed from a box. It deliberately creates an estrangement from the self as subject. Although it makes for a strange viewing experience, it seems that only in this way can one look directly at the most minute yet wholly unadorned details of life, and even catch sight of something naturally sincere and beautiful.",
+    textZh: "占位（编辑注）：本节把两件 2018 年的早期作品收成一条线。节名、两件作品的顺序与图版都还没有定。以下为两件作品当年的原文。\n\n<strong>消失的童年</strong>\n\n\"消失的童年\" 是近几周在做的一个主题，由一组绘画、摄影和 Processing sketch 构成。这个主题不断在我脑海里盘旋，生成或这或那的图像，非得都付诸实践，排个系列才能罢休。有时真想回到童年无忧的岁月 — 记忆中没有无聊的事，幻想也还没沦为贬义的活动。\n\n（跟评，她本人）这个系列放在这里了：chunw.github.io/lost（电脑上打开）作品的尺幅和它周围白色空间的……（后半句截图未拍到，缺）\n\n<strong>The Mundane Details of Life</strong>\n\nThe Mundane Details of Life (1 hour of looped video)\n\n一小时对于日常琐碎的录影，住在盒子所构建的简易空间。刻意制造与自我主体的疏离，虽然带来奇怪的观感，但仿佛只有这样才能直视生活中极微末却毫无矫饰的细节，乃至看见某种自然真诚美好的东西。",
+  },
+  {
     id: "soliloquy",
     titleEn: "Soliloquy",
     titleZh: "独白",
