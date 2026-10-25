@@ -310,6 +310,19 @@ const COLLAGE_METHOD = {
   zh: "拼贴是我思考的方式。一个为陪伴逝者而做的陶俑，站在博物馆的玻璃柜里；我把它剪下来，放进一场视频会议，放在一只马桶旁边，一辆豪车旁边，它们之间的两千年，就塌成了一个扁平的、好笑的表面。搜索记录，那一小堆电子垃圾，从浏览器里剪出来，贴在一份来自疫情另一端的陌生人证言旁边。他人的肖像与自画像在同一页上轮流出现，互相借出一个自我。没有什么还留在原来的语境里。每一块都留着自己的边缘。我不把这些碎片融成一个光滑的声音。我让它们并排站着，接缝露在外面，直到连续性的火花从缝隙里跳过去。这就是档案，按我的做法：不是一只收纳过去的箱子，而是一张桌子，即将消失的东西被摆在已经幸存下来的东西旁边，让它们彼此做伴。",
 };
 
+/** Print rule (her direction, 2026-10-25): website links are written out in
+ * the book so print readers can look works up online. Works with a site of
+ * their own carry the URL at the end of their essay (see the essayChunks
+ * assembly below), and the colophon lists them all. Only verified URLs are
+ * printed; the rest wait for her confirmation (book board note, 2026-10-25). */
+const ONLINE_URLS: Record<string, string> = {
+  remains: "chunwangshop.com/remains-catalog",
+  immemory: "covid-immemory.com",
+  cavedance: "cavedance.art",
+  artempath: "art.empath.io",
+  interview: "shoutoutatlanta.com/meet-chun-wang-artist",
+};
+
 // ── Pagination ────────────────────────────────────────────────────────────────
 // Odd pages are rectos (right-hand), even pages versos. Chapter openers are two-page spreads,
 // so they must start on a verso; a blank is inserted before them whenever needed.
@@ -647,6 +660,15 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             </p>
             <p>
               {translations.en.catalogBook.edition}, {year} · {translations.zh.catalogBook.edition}，{year}
+            </p>
+            <p>
+              Online · 在线查阅
+              <br />
+              IMMEMORY — covid-immemory.com · Cave Dance — cavedance.art
+              <br />
+              Art.empath.io — art.empath.io · Remains — chunwangshop.com/remains-catalog
+              <br />
+              Artist Interview · 艺术家访谈 — shoutoutatlanta.com/meet-chun-wang-artist
             </p>
           </div>
         </Page>
@@ -1297,6 +1319,19 @@ function useBookModel(args: {
       } else {
         essayChunks[chapter.key] = [{ lang: "en", items: [] }];
       }
+    }
+    // Written-out website links (print rule above): the URL goes on the last
+    // essay page of each language, in the small credit style.
+    for (const chapter of chapters) {
+      const oid = chapter.key.startsWith("series:") ? chapter.key.slice("series:".length) : chapter.key;
+      const url = ONLINE_URLS[oid];
+      const chunks = essayChunks[chapter.key];
+      if (!url || !chunks) continue;
+      const lastOf = (lang: "en" | "zh") => chunks.filter((c) => c.lang === lang).pop();
+      const enC = lastOf("en");
+      const zhC = lastOf("zh");
+      if (enC && enC.items.length > 0) enC.items.push({ html: `<p><span class="bk-credit">Online · ${url}</span></p>` });
+      if (zhC && zhC.items.length > 0) zhC.items.push({ html: `<p><span class="bk-credit">在线查阅 · ${url}</span></p>` });
     }
     const byKey = (key: CatalogSectionKey) => chapters.find((c) => c.key === key)?.items.map((i) => i.item) ?? [];
     const prefaceParas = txParas("prefaceBody");
