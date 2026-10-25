@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { products, FRAMED_ART_CATEGORY, FRAMED_ART_CATEGORY_ZH } from "@/lib/products";
+import { products, FRAMED_ART_CATEGORY, FRAMED_ART_CATEGORY_ZH, ORIGINAL_ART_CATEGORY, ORIGINAL_ART_CATEGORY_ZH } from "@/lib/products";
 import { watercolors, studioCardPayLink, PRINT_9X12_PAYLINK } from "@/lib/watercolors";
 import { photographyWorks } from "@/lib/photography";
 import { remainsWorks } from "@/lib/remains";
@@ -117,8 +117,18 @@ function buildCatalogProducts(showAll: boolean) {
         secondImageUrl: `/watercolors/${paddedId}/1.jpg`,
         category: baseCategory,
         category_zh: baseCategoryZh,
-        categories: w.framed ? [baseCategory, FRAMED_ART_CATEGORY] : undefined,
-        categories_zh: w.framed ? [baseCategoryZh, FRAMED_ART_CATEGORY_ZH] : undefined,
+        categories: (() => {
+          const cats = [baseCategory];
+          if (w.framed) cats.push(FRAMED_ART_CATEGORY);
+          if ((w.priceLabel?.match(/\$/g) ?? []).length >= 2) cats.push(ORIGINAL_ART_CATEGORY);
+          return cats.length > 1 ? cats : undefined;
+        })(),
+        categories_zh: (() => {
+          const cats = [baseCategoryZh];
+          if (w.framed) cats.push(FRAMED_ART_CATEGORY_ZH);
+          if ((w.priceLabel?.match(/\$/g) ?? []).length >= 2) cats.push(ORIGINAL_ART_CATEGORY_ZH);
+          return cats.length > 1 ? cats : undefined;
+        })(),
         paylink: w.series === "III" ? studioCardPayLink(w.title) : (w.paylink ?? w.multiOptionsPaylink ?? PRINT_9X12_PAYLINK),
         showInStorefront: w.showInStorefront !== false,
         soldOut: w.soldOut,
