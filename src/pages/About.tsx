@@ -4,6 +4,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AboutSection from "@/components/AboutSection";
+import MarketsSection from "@/components/MarketsSection";
 import { usePageMeta } from "@/hooks/usePageMeta";
 
 const About = () => {
@@ -26,6 +27,8 @@ const About = () => {
       <Header />
 
       <AboutSection />
+
+      <MarketsSection />
 
       <Footer />
     </div>
