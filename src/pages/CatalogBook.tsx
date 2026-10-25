@@ -1115,6 +1115,16 @@ function useBookModel(args: {
     const chapters = SECTION_ORDER.map((k) => byChapterKey.get(k))
       .filter((ch): ch is Chapter => !!ch)
       .map((ch, i) => ({ ...ch, number: i + 1 }));
+    // Slightly Useful Objects opens the shop chapter (Visions in Ceramics is
+    // merged into it): the artist's Instagram images go ahead of the shop
+    // catalog plates, in the order registered in SERIES_PLATES.shop.
+    const suoChapter = chapters.find((ch) => ch.key === "shop");
+    if (suoChapter) {
+      suoChapter.items = [
+        ...(SERIES_PLATES.shop ?? []).map((item) => ({ item, plate: 0 })),
+        ...suoChapter.items,
+      ];
+    }
     // Plates are numbered in book order across the whole volume.
     let plateSeq = 0;
     for (const ch of chapters) ch.items = ch.items.map(({ item }) => ({ item, plate: ++plateSeq }));
