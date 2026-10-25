@@ -75,8 +75,8 @@ const Footer = () => {
       </div>
 
       {/* Giant wordmark at the very bottom, after Miu Miu — full width, never cropped */}
-      <div aria-hidden className="select-none px-2 pb-2 pt-2">
-        <div className="footer-wordmark whitespace-nowrap text-center text-[11.5vw] text-foreground">
+      <div aria-hidden className="select-none overflow-hidden px-1 pb-[3vw] pt-2">
+        <div className="footer-wordmark whitespace-nowrap text-center text-[15.5vw] [line-height:0.85] text-foreground">
           Chun Wang Studio Shop
         </div>
       </div>
