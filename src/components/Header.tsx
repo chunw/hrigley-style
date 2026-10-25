@@ -45,26 +45,6 @@ const Header = () => {
           <div className="absolute inset-y-0 right-0 hidden md:inline-flex items-center gap-8 text-sm fangsong-nav">
             <Tooltip>
               <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  onClick={toggleTheme}
-                  aria-label="Toggle dark/light mode"
-                  className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
-                >
-                  {theme === "light" ? (
-                    <Moon className={`h-4 w-4 ${controlColor}`} />
-                  ) : (
-                    <Sun className={`h-4 w-4 ${controlColor}`} />
-                  )}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>
-                {theme === "light" ? "switch to dark mode" : "switch to light mode"}
-              </TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
                 <Link
                   to="/about"
                   aria-label={t.index.ctaAbout}
@@ -114,10 +94,30 @@ const Header = () => {
                 aria-label="Select language"
                 className={`transition-colors text-sm px-2 py-1 hover:text-primary bg-transparent border-none appearance-none ${controlColor}`}
               >
-                <option value="en">EN</option>
+                <option value="en">English</option>
                 <option value="zh">中文</option>
               </select>
             </div>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  aria-label="Toggle dark/light mode"
+                  className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
+                >
+                  {theme === "light" ? (
+                    <Moon className={`h-4 w-4 ${controlColor}`} />
+                  ) : (
+                    <Sun className={`h-4 w-4 ${controlColor}`} />
+                  )}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {theme === "light" ? "switch to dark mode" : "switch to light mode"}
+              </TooltipContent>
+            </Tooltip>
 
             <Tooltip>
               <TooltipTrigger asChild>
@@ -140,6 +140,18 @@ const Header = () => {
 
           {/* Mobile - show compact drawer trigger */}
           <div className="absolute inset-y-0 right-0 flex items-center gap-1 md:hidden">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label="Toggle dark/light mode"
+              className={`transition-colors p-2 hover:text-primary ${controlColor}`}
+            >
+              {theme === "light" ? (
+                <Moon className={`h-5 w-5 ${controlColor}`} />
+              ) : (
+                <Sun className={`h-5 w-5 ${controlColor}`} />
+              )}
+            </button>
             <Link
               to="/cart"
               aria-label="View cart"
@@ -210,7 +222,7 @@ const Header = () => {
                       aria-label="Select language"
                       className="w-full text-sm p-2 bg-transparent border rounded text-foreground"
                     >
-                      <option value="en">EN</option>
+                      <option value="en">English</option>
                       <option value="zh">中文</option>
                     </select>
                   </div>
