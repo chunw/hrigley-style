@@ -305,6 +305,31 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
       "/book/google/exhibition-2.jpg",
     ),
   ],
+  // Slightly Useful Objects opens the "shop" chapter (Visions in Ceramics is
+  // merged into it). Unlike the other keys in this record, this array is not
+  // rendered as its own series chapter: CatalogBook prepends it to the shop
+  // chapter's catalog plates, in this order, at the artist's request
+  // (2026-10-24). Images are from her own Instagram posts and reels.
+  shop: [
+    plate(
+      "Slightly Useful Objects", "2026 · Video still", "2026",
+      "A melting clock drapes over the counter of a miniature café built from clay. Video still from the artist's Instagram reel, September 29, 2026.",
+      "一只融化的钟搭在陶土做的微型咖啡馆柜台上。视频截图，取自艺术家的 Instagram 短片，2026 年 9 月 29 日。",
+      "/book/suo/clock-frame.jpg",
+    ),
+    plate(
+      "Slightly Useful Objects", "2026 · Photograph", "2026",
+      "A strawberry shortcake earring from the Slightly Useful Objects series, worn. Photograph from the artist's Instagram post, October 10, 2026.",
+      "Slightly Useful Objects 系列的草莓短蛋糕耳环佩戴图。照片取自艺术家的 Instagram 帖子，2026 年 10 月 10 日。",
+      "/book/suo/earring.jpg",
+    ),
+    plate(
+      "Slightly Useful Objects", "2026 · Video still", "2026",
+      "Strawberry shortcake earrings resting on oyster shells, ready for the afternoon market. Video still from the artist's Instagram reel, October 10, 2026.",
+      "草莓短蛋糕耳环放在牡蛎壳上，准备下午出摊。视频截图，取自艺术家的 Instagram 短片，2026 年 10 月 10 日。",
+      "/book/suo/market-still.jpg",
+    ),
+  ],
 };
 
 /**
