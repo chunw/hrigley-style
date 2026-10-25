@@ -374,8 +374,8 @@ export const DEATH_VALLEY_PLATES: CatalogItem[] = [1, 2, 3].map((n) => ({
 export const REMAINS_ORIGIN_PLATES: CatalogItem[] = [
   plate(
     "Untitled (Collage)", "2018 · Ink and watercolor on paper", "2018",
-    "Cut fragments, faces, a slumped figure, a hand, a knife, reassembled on a single sheet. Five years before the Remains figurines, the archive method of this book was already at work.",
-    "剪下的碎片——面孔、瘫倒的人、一只手、一把刀——重新拼在一张纸上。比《遗迹》的陶俑早五年，本书的档案方法已经在这里了。",
+    "Cut fragments reassembled on one sheet: the archive method, five years before Remains.",
+    "剪下的碎片重拼成一页：早于《遗迹》五年的档案方法。",
     "/book/remains/collage-2018.jpg",
   ),
 ];
