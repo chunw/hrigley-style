@@ -411,8 +411,8 @@ export const watercolors: Watercolor[] = [
     price: 4,
   },{
     id: "43",
-    title: "Still Things #15",
-    titleZh: "静物 其十五",
+    title: "Still Things #14",
+    titleZh: "静物 其十四",
     series: "II",
     includeInArtbox: false,
     printInCatalog: true,
