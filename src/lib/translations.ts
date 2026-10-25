@@ -15,6 +15,10 @@ export const translations = {
       smallStudioSuffix: ".",
       shopCta: "View Collection",
     },
+    markets: {
+      title: "Markets & Pop-ups",
+      upcoming: "Upcoming",
+    },
     about: {
       title: "About",
       body: "\n\n<blockquote class=\"about-quote\">Everything starts from small, weird, everyday things I can't help but notice and overthink, then turned into whimsical, handmade pieces you can use, gift, or just sit with in existential curiosity.\n\nEach piece is one of a kind, designed and made by hand in my NYC studio. Ships worldwide.</blockquote>\n\n- Chun",
@@ -215,6 +219,10 @@ export const translations = {
       smallStudioLinkText: "纽约的一个小工作室",
       smallStudioSuffix: "。",
       shopCta: "查看系列",
+    },
+    markets: {
+      title: "市集与快闪",
+      upcoming: "即将到来",
     },
     about: {
       title: "关于",

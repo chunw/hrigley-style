@@ -539,7 +539,7 @@ All colors MUST be HSL.
   line-height: 0.9;
   font-style: italic;
   color: hsl(var(--primary));
-  margin: 0 0 1.6rem 0;
+  margin: 0 0 5rem 0;
   text-transform: none;
   letter-spacing: 0.02em;
 }
@@ -636,8 +636,7 @@ All colors MUST be HSL.
 }
 .about-bio-text a {
   color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  text-decoration: none;
 }
 @media (max-width: 1023px) {
   .about-columns {
