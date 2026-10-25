@@ -324,6 +324,12 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
       "/book/suo/earring.jpg",
     ),
     plate(
+      "Slightly Useful Objects", "2026 · Photograph", "2026",
+      "Two clay rings held in hand: a bacon-and-egg ring and a strawberry shortcake ring. Photograph from the artist's Instagram post, September 12, 2026.",
+      "手里托着的两枚陶戒指：一枚培根蛋，一枚草莓短蛋糕。照片取自艺术家的 Instagram 帖子，2026 年 9 月 12 日。",
+      "/book/suo/hands.jpg",
+    ),
+    plate(
       "Slightly Useful Objects", "2026 · Video still", "2026",
       "Strawberry shortcake earrings resting on oyster shells, ready for the afternoon market. Video still from the artist's Instagram reel, October 10, 2026.",
       "草莓短蛋糕耳环放在牡蛎壳上，准备下午出摊。视频截图，取自艺术家的 Instagram 短片，2026 年 10 月 10 日。",
