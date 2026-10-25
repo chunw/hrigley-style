@@ -34,8 +34,8 @@ export const BOOK_SERIES: BookSeries[] = [
     titleEn: "Visions in Ceramics",
     titleZh: "陶之视界",
     years: "2026",
-    textEn: "My ceramics begin as functional forms - a candle holder, a cup, a bowl - then leak into surreal landscapes.",
-    textZh: "我的陶艺从功能性的形态开始，一只烛台、一只杯子、一只碗，然后渗漏成超现实的风景。",
+    textEn: "My ceramics begin as functional forms - a candle holder, a cup, a bowl - then leak into surreal landscapes.\n\nWhy, after all, make food into a necklace?\n\nBecause nothing disappears faster than food, and nothing is remembered less. A painting can wait a century for its viewer. A photograph fades over decades. Breakfast is gone by noon, rinsed off the plate, kept by no one. So I make the meal in clay and metal first, and I hang it against the skin, the one archive we carry everywhere.\n\nThe figurines in Remains survived by accident, buried and forgotten for two thousand years. My small objects survive on purpose. A toaster shrunk to a pendant. A shortcake made of clay. The remains of a breakfast, fixed before the plate is cleared. A candle holder for the hour after hours. What was soft becomes hard. What was about to be thrown away gets worn, used, kept in the hand.\n\nThe paintings keep traces on paper. The photographs keep them in light. The objects keep them on the body. They are the only remains in this book that can still be lost, and that is the point. A thing that can still be lost is still alive. To keep something is not to freeze it. It is to let it circulate a little longer, carrying its small history from one person to the next.",
+    textZh: "我的陶艺从功能性的形态开始，一只烛台、一只杯子、一只碗，然后渗漏成超现实的风景。\n\n说到底，为什么要把食物做成项链呢？\n\n因为没有什么比食物消失得更快，也没有什么比食物更不被记住。一幅画可以等一百年，等它的观众；一张照片要几十年才褪色；而早餐中午之前就没了，从盘子上冲掉，没有人会留它。所以我先用陶和金属把这一餐做出来，挂在皮肤上，那是我们随身带着的唯一的档案。\n\n《遗迹》里的陶俑是靠意外留下来的，被埋住、被忘记，过了两千年。我做的小物件是靠故意留下来的。一台缩成吊坠的烤面包机。一块陶做的短蛋糕。一顿早餐在盘子被收走之前定格的残留。一个为深夜之后那一小时准备的烛台。软的变硬，快要被扔掉的，被戴起来、用起来、拿在手里。\n\n绘画把痕迹留在纸上，摄影把痕迹留在光里，物件把痕迹留在身体上。这本书里所有的存留，只有它们还可能被弄丢，而这正是关键。一件还能被弄丢的东西，就还活着。留下一件东西不是把它冻住，是让它多流转一阵，带着它小小的历史，从一个人到下一个人。",
   },
   {
     id: "immemory",

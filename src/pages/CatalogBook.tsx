@@ -1227,22 +1227,20 @@ function useBookModel(args: {
           fieldTexts["series:ceramics:en"] = cerEn;
           fieldTexts["series:ceramics:zh"] = cerZh;
         }
-        essayChunks[chapter.key] = [
-          {
-            lang: "en",
-            items: [
-              ...(cerEn ? [{ html: `<p>${cerEn}</p>`, edit: "series:ceramics:en" }] : []),
-              { html: `<p>${fieldTexts["tx:heroDesc:en"]}</p>`, edit: "tx:heroDesc:en" },
-            ],
-          },
-          {
-            lang: "zh",
-            items: [
-              ...(cerZh ? [{ html: `<p>${cerZh}</p>`, edit: "series:ceramics:zh" }] : []),
-              { html: `<p>${fieldTexts["tx:heroDesc:zh"]}</p>`, edit: "tx:heroDesc:zh" },
-            ],
-          },
-        ];
+        // Paginated exactly like every other series text: paragraphs are
+        // split into <p> blocks and chunked by length, English pages first,
+        // then Chinese pages (see langChunks). The series text now carries a
+        // full essay, which no longer fits the old single page per language.
+        essayChunks[chapter.key] = langChunks(
+          [
+            ...(cerEn ? pBlocks(asParas(cerEn)).map((html) => ({ html, edit: "series:ceramics:en" })) : []),
+            { html: `<p>${fieldTexts["tx:heroDesc:en"]}</p>`, edit: "tx:heroDesc:en" },
+          ],
+          [
+            ...(cerZh ? pBlocks(asParas(cerZh)).map((html) => ({ html, edit: "series:ceramics:zh" })) : []),
+            { html: `<p>${fieldTexts["tx:heroDesc:zh"]}</p>`, edit: "tx:heroDesc:zh" },
+          ],
+        );
       } else {
         essayChunks[chapter.key] = [{ lang: "en", items: [] }];
       }
