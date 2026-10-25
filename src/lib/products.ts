@@ -638,17 +638,17 @@ Set of 2 original paintings.</p>`.trim(),
   {
     id: "notes-from-the-road-postcard-packet",
     imageFolder: "notes-postcard-packet",
-    title: "Notes from the Road: Mexico Postcard Packet (Set of 4)",
-    name: "Notes from the Road: Mexico Postcard Packet (Set of 4)",
-    title_zh: "《行旅拾记》明信片套装·墨西哥（4张一套）",
-    description_zh: "一套四张《行旅拾记》明信片，全部画于墨西哥途中——随手画下的小小观察，寄给别人，或者留给自己。",
-    detailed_description_html_zh: `<p><i>行旅拾记</i>是一组在途中完成的水彩速记——车窗边、路旁小桌、一个途经却未曾真正抵达的地方。每一幅都是旅途中间某处撕下的一页。</p><p>本套装收录四张精选画面，全部取材于墨西哥之旅，印制成明信片，背面留白可书写与邮寄。适合寄给远方的人，或者留在自己的桌上。</p>`,
+    title: "Notes from the Road Postcard Packet (Set of 4)",
+    name: "Notes from the Road Postcard Packet (Set of 4)",
+    title_zh: "《行旅拾记》明信片套装（4张一套）",
+    description_zh: "一套《行旅拾记》明信片——途中随手画下的小小观察，寄给别人，或者留给自己。",
+    detailed_description_html_zh: `<p><i>行旅拾记</i>是一组在途中完成的水彩速记——车窗边、路旁小桌、一个途经却未曾真正抵达的地方。每一幅都是旅途中间某处撕下的一页。</p><p>本套装收录多张精选画面，印制成明信片，背面留白可书写与邮寄。适合寄给远方的人，或者留在自己的桌上。</p>`,
     category_zh: "文具",
     edition_info_zh: "",
     price: 12,
     currency: "USD",
-    description: "A packet of four postcards from Mexico — small watercolor observations from the road, ready to mail or keep.",
-    detailed_description_html: `<p><i>Notes from the Road</i> is a set of small watercolor observations made in transit — a window seat, a corner table, a place passed through and not quite arrived at. Each piece is a page torn from somewhere in between.</p><p>This packet gathers four images from the series — all of them made in Mexico — printed as postcards with a blank, writable back. Send them, or keep them for yourself.</p>`,
+    description: "A packet of postcards from the road — small watercolor observations, ready to mail or keep.",
+    detailed_description_html: `<p><i>Notes from the Road</i> is a set of small watercolor observations made in transit — a window seat, a corner table, a place passed through and not quite arrived at. Each piece is a page torn from somewhere in between.</p><p>This packet gathers a selection of images from the series, printed as postcards with a blank, writable back. Send them, or keep them for yourself.</p>`,
     dimensions: `Set of 4 postcards, 4×6"`,
     dimensions_zh: "4张一套，4×6英寸",
     edition_info: null,
@@ -703,7 +703,7 @@ Set of 2 original paintings.</p>`.trim(),
     category_zh: "首饰",
     collections_zh: ["小用之物"],
     edition_info_zh: "",
-    price: 55,
+    price: 45,
     currency: "USD",
     description: "Piled high with strawberries and cream, guarded by a ring of silver spikes.",
     detailed_description_html: `<p>A hand-sculpted clay strawberry shortcake charm, dolloped in white frosting and topped with plump strawberry slices, hangs from a collar of silver spikes.</p><p>Stainless steel chain with adjustable extender, polymer clay pendant. Adjustable to fit most necks.</p>`,
@@ -888,7 +888,7 @@ Set of 2 original paintings.</p>`.trim(),
     image_url: "/watercolors/24/main.jpg",
     is_active: true,
     printInCatalog: false,
-    showInStorefront: true,
+    showInStorefront: false,
     category: "Fine Art Prints",
     categories: ["Fine Art Prints", FRAMED_ART_CATEGORY],
     created_at: new Date().toISOString(),
@@ -935,13 +935,6 @@ export const productImages = products.flatMap((product) => {
     const coverIndex = images.indexOf(product.image_url)
     if (coverIndex > 0) {
       images = [images[coverIndex], ...images.slice(0, coverIndex), ...images.slice(coverIndex + 1)]
-    } else if (coverIndex === -1 && seriesImages.length > 0) {
-      // A print packet's cover can point at a series image that has since
-      // been removed from the series list (e.g. the Notes from the Road
-      // postcard packet's cover, watercolor #44, after that work was taken
-      // out of the catalog) — the cover still belongs at the front of the
-      // gallery instead of disappearing from the product page.
-      images = [product.image_url, ...images]
     }
   }
   return images.map((url, i) => ({
