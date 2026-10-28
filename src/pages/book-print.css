@@ -1,9 +1,9 @@
-/* ── Chun Wang Paintings 2019–2026 — print-ready book ─────────────────────
+/* ── Chun Wang Paintings 2019–2026 - print-ready book ─────────────────────
    Trim: 6 × 6 in square (152 × 152 mm), matching the physical softcover
    sold in the shop. Every .book-page is exactly one trim page. Covers are
    full-bleed: artwork runs to the trim edge; live text stays inside the
    0.35 in safe zone. For a press PDF with 0.125 in bleed, export at
-   6.25 × 6.25 in and allow cover backgrounds to extend — see Colophon. */
+   6.25 × 6.25 in and allow cover backgrounds to extend, see Colophon. */
 
 @page {
   size: 6in 6in;
@@ -238,7 +238,7 @@
   [data-noprint] { display: none !important; }
 
   /* Zero every screen-only offset (main padding, stack gaps, spread
-     wrappers) — any stray pixel before a 6in page in a 6in page box
+     wrappers), any stray pixel before a 6in page in a 6in page box
      pushes it onto an extra blank sheet. */
   .book-root main, .book-spread, .book-stack, .book-stack > div {
     display: block !important;
