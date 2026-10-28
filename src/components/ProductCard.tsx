@@ -43,7 +43,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
   const { addItem } = useCart();
   const { imgRef, imgStyle, hovered, hoverHandlers, wrapperHoverClassName } = useImageHoverExpand("contain");
 
-  // Preload the second photo (if any) so hovering can flip to it instantly —
+  // Preload the second photo (if any) so hovering can flip to it instantly -
   // never shown until confirmed loadable, so a missing "if available" image
   // never flashes a broken-image icon.
   const [secondImageReady, setSecondImageReady] = useState(false);
