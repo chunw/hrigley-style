@@ -4,7 +4,7 @@ import { spiritWorks } from "./21spirit";
 import { products } from "./products";
 
 /**
- * Print-ready book data — "Chun Wang Paintings 2019–2026"
+ * Print-ready book data - "Chun Wang Paintings 2019–2026"
  * The physical edition this page lays out is the book already sold in the
  * shop (see products.ts → id "book-paintings-2019-2026"):
  *   Full colour · 40 pages · 6 × 6 inches · Softcover · Soft-touch matte.
@@ -31,7 +31,7 @@ export function bookProduct() {
   return products.find((p) => p.id === BOOK.productId);
 }
 
-/* Image helpers — same public-folder convention as printCatalog.ts.
+/* Image helpers - same public-folder convention as printCatalog.ts.
    Always main.jpg: verified on disk for every plate folder. (Some works
    carry a printInCatalogImage hint whose numbered file does not exist in
    public/, e.g. all Remains/Spirit folders ship main.jpg only.) */
@@ -148,7 +148,7 @@ export const allPlates: Plate[] = [
   ...spiritPlates,
 ];
 
-/** Cover pair — echoes the /catalogs tiles (left image over title, right behind). */
+/** Cover pair - echoes the /catalogs tiles (left image over title, right behind). */
 export const coverImages = {
   frontLeft: wcImg("1"),
   frontRight: remainsImg("1"),
@@ -165,8 +165,8 @@ export interface TocRow {
 }
 
 export const CONTENTS: TocRow[] = [
-  { id: "book-p8", n: "", en: "Foreword — The kind of looking", zh: "序言 — 凝视之道", page: 8 },
-  { id: "book-p9", n: "", en: "Introduction — Seven years, four series", zh: "导言 — 七年，四组系列", page: 9 },
+  { id: "book-p8", n: "", en: "Foreword，The kind of looking", zh: "序言，凝视之道", page: 8 },
+  { id: "book-p9", n: "", en: "Introduction，Seven years, four series", zh: "导言，七年，四组系列", page: 9 },
   { id: "book-p11", n: "I", en: "Residuals", zh: "残留", page: 11 },
   { id: "book-p17", n: "II", en: "Still Things", zh: "静物", page: 17 },
   { id: "book-p23", n: "III", en: "Remains", zh: "遗迹", page: 23 },
@@ -191,13 +191,13 @@ export const spiritThemes = {
 
 export const honours = {
   en: [
-    "London International Creative Competition — Remains, Official Selection, Create/Art (2024); In the Spirit of the 21st Century, Finalist, Create/Art (2021).",
+    "London International Creative Competition, Remains, Official Selection, Create/Art (2024); In the Spirit of the 21st Century, Finalist, Create/Art (2021).",
     "Exhibited internationally, including the United Nations Headquarters, New York; San Francisco Museum of Modern Art; Harvard University CAMLab; Anderson Collection at Stanford University.",
     "International recognition including the International Photography Awards, Siena International Photo Awards, International Color Awards, and Moscow International Foto Awards.",
     "Curator & developer of Negotiated Intelligence (Wrong Biennale 2025–2026 official pavilion; w3 Awards Silver, Arts & Culture Websites) and IMMEMORY: On COVID-19 (2021 Webby Awards Official Nominee, Best Cultural Website).",
   ],
   zh: [
-    "伦敦国际创意大赛（LICC）——《遗迹》官方入选·艺术创作类（2024）；《21世纪精神》决赛入围·艺术创作类（2021）。",
+    "伦敦国际创意大赛（LICC），《遗迹》官方入选·艺术创作类（2024）；《21世纪精神》决赛入围·艺术创作类（2021）。",
     "作品曾在纽约联合国总部、旧金山现代艺术博物馆、哈佛大学 CAMLab、斯坦福大学安德森收藏馆等机构展出。",
     "曾获国际摄影奖（IPA）、锡耶纳国际摄影奖、国际色彩奖、莫斯科国际摄影奖等多项国际荣誉。",
     "《Negotiated Intelligence》（Wrong Biennale 2025–2026 官方展馆；w3 Awards 银奖）与《IMMEMORY: On COVID-19》（2021年韦比奖最佳文化网站官方提名）的策展人与开发者。",
