@@ -51,7 +51,7 @@ export interface CatalogItem {
   dimensions?: string | null;
   category: string;
   image_url: string;
-  /** Used when image_url (a work's printInCatalogImage) is missing — falls back to its main.jpg. */
+  /** Used when image_url (a work's printInCatalogImage) is missing - falls back to its main.jpg. */
   fallback_image_url?: string;
 }
 
