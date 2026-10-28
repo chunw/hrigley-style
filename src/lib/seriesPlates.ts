@@ -308,7 +308,7 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
   // Placeholder section for the two 2018 works (The Loss of Childhood · The
   // Mundane Details of Life): for now its only plate is a full-page screenshot
   // of the Loss of Childhood series website, standing between the two works'
-  // texts — CatalogBook holds the Mundane Details text back and emits it
+  // texts - CatalogBook holds the Mundane Details text back and emits it
   // right after this plate (see Chapter.essayAfterPlate).
   earlyline: [
     plate(
@@ -352,7 +352,7 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
       "/book/suo/market-still.jpg",
     ),
     plate(
-      "Leaky Boundaries: After Hours Altar 渗漏的边界 — 下班后的祭坛", "2026 · Stoneware", "2026",
+      "Leaky Boundaries: After Hours Altar 渗漏的边界，下班后的祭坛", "2026 · Stoneware", "2026",
       "A tiny worker asleep beside his computer, beneath a leaning pink candle. Hand-built stoneware with glaze, candle, dried grass and miniature figures, approx. 5 × 8 × 18 in. Exhibited in Leaky Boundaries, the ceramics group exhibition of the 13th LIC Open Art Festival, New York. Photograph from the artist's Instagram post, September 24, 2026.",
       "一个小职员在电脑旁睡去，头顶斜倚着一支粉色蜡烛。手建炻器，施釉，配蜡烛、干草与微型人偶，约 5 × 8 × 18 英寸。曾展于纽约第 13 届 LIC Open Art Festival 的陶瓷群展《Leaky Boundaries》。照片取自艺术家的 Instagram 帖子，2026 年 9 月 24 日。",
       "/book/suo/candle.jpg",
@@ -388,7 +388,7 @@ export const REMAINS_ORIGIN_PLATES: CatalogItem[] = [
   plate(
     "Untitled (Collage)", "2018 · Ink and watercolor on paper", "2018",
     "Cut fragments, faces, a slumped figure, a hand, a knife, reassembled on a single sheet. Five years before the Remains figurines, the archive method of this book was already at work.",
-    "剪下的碎片——面孔、瘫倒的人、一只手、一把刀——重新拼在一张纸上。比《遗迹》的陶俑早五年，本书的档案方法已经在这里了。",
+    "剪下的碎片，面孔、瘫倒的人、一只手、一把刀，重新拼在一张纸上。比《遗迹》的陶俑早五年，本书的档案方法已经在这里了。",
     "/book/remains/collage-2018.jpg",
   ),
 ];
