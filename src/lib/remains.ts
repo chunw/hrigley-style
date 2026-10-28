@@ -4,7 +4,7 @@ export const catalogMeta = {
   medium: "Mixed Media",
   mediumZh: "综合媒材",
   description: `<p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank">2024 London International Creative Competition (LICC) Official Selection · Create/Art</a>. The Remains series borrows its visual grammar from museum-collected figurines such as terracotta soldiers, grave goods, archaeological clay forms from different civilizations and historical periods, and drops them without explanation into the theater of contemporary daily life: the office, the quarterly review, the performance metric.</p>`,
-  descriptionZh: `<p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank">2024年伦敦国际创意大赛（LICC）官方入选 · 艺术创作类</a>。《遗迹》系列从博物馆馆藏人俑中借取视觉语法——陶俑兵马、随葬器物、来自不同文明与历史时期的考古陶土形态——将它们不加解释地投入当代日常生活的剧场：办公室、季度述职、绩效指标。</p>`,
+  descriptionZh: `<p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank">2024年伦敦国际创意大赛（LICC）官方入选 · 艺术创作类</a>。《遗迹》系列从博物馆馆藏人俑中借取视觉语法，陶俑兵马、随葬器物、来自不同文明与历史时期的考古陶土形态，将它们不加解释地投入当代日常生活的剧场：办公室、季度述职、绩效指标。</p>`,
 };
 
 export interface RemainsWork {
