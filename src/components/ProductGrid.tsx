@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 
-// Fixed display order for the Collections sidebar section — deliberately curated
+// Fixed display order for the Collections sidebar section - deliberately curated
 // rather than derived from product array order. Anything not listed here falls in
 // after these, in whatever order it's first encountered.
 const COLLECTION_ORDER = ["Slightly Useful Object", "Remains"];
@@ -167,7 +167,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
         </div>
 
         <div className="lg:flex lg:items-start lg:gap-14 pb-20 lg:pb-28">
-          {/* Filters — left sidebar on desktop, collapsible panel on mobile */}
+          {/* Filters - left sidebar on desktop, collapsible panel on mobile */}
           {!lockedCategory && (
             <aside className="mb-6 lg:mb-0 lg:w-56 lg:shrink-0 lg:sticky lg:top-24">
               <button
