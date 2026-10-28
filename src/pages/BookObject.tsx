@@ -19,7 +19,7 @@ import { translations } from "@/lib/translations";
 // ── The printed book, presented as an object ─────────────────────────────────
 // This page shows Remains as the physical hardcover it will become: closed
 // (cover, spine, page block) and open (real interior spreads). Nothing here
-// re-draws the book — cover faces and interior pages are the very components
+// re-draws the book - cover faces and interior pages are the very components
 // of /catalogs/book, driven by the same book model (useBookModelReadOnly),
 // so what a visitor sees is the book itself, not a mock-up of it.
 
@@ -94,7 +94,7 @@ function pageLabel(p: InteriorPage): string {
     case "essay":
       return s.chapter.title;
     case "plate":
-      return `${s.chapter.title} — ${s.item.title}`;
+      return `${s.chapter.title}, ${s.item.title}`;
     case "exhibitions":
       return `${s.chapter.title} · 相关展览 Exhibitions`;
     case "aphorism":
@@ -132,7 +132,7 @@ const BookObject = () => {
   const spine = spineWidth(total);
 
   usePageMeta({
-    title: `${b.title} — The Printed Book · 实体书`,
+    title: `${b.title}：The Printed Book · 实体书`,
     description: "Remains as a physical hardcover: the finished book from the outside, and open at any page.",
     path: "/catalogs/book/object",
     noindex: true,
@@ -142,7 +142,7 @@ const BookObject = () => {
   const closedZoom = useFitZoom(940, 1);
   const openZoom = useFitZoom(1760, 0.78);
 
-  // Default opening: the first chapter-opener spread — the book's own
+  // Default opening: the first chapter-opener spread - the book's own
   // designed two-page moment.
   const defaultAnchor = useMemo(
     () => pages.find((p) => p.spec.kind === "opener" && p.spec.half === "left")?.number ?? 3,
@@ -204,7 +204,7 @@ const BookObject = () => {
           {b.title} <span className="bo-title-zh">遗迹</span>
         </h1>
         <p className="bo-sub">
-          The printed book · 实体书预览 — a hardcover that does not exist yet, shown at full size from the
+          The printed book · 实体书预览，a hardcover that does not exist yet, shown at full size from the
           book&rsquo;s own pages and cover.
         </p>
         <p className="bo-specs sans-label">
@@ -227,7 +227,7 @@ const BookObject = () => {
         </div>
         <p className="bo-caption">
           Case binding in the book&rsquo;s settled cover: rust-brown cloth colour field, the David still life at
-          the centre, cream serif lettering on the four edges — no Chinese on the front. The spine carries the
+          the centre, cream serif lettering on the four edges, no Chinese on the front. The spine carries the
           title bilingually, and the page block is {spine.toFixed(2)} in of printed paper.
           <span className="bo-caption-zh">
             封面用的是已经定版的设计：锈棕满底、中央大卫静物、四边奶油衬线字，正面无中文；书脊双语题名；书页侧能看到{" "}
@@ -271,9 +271,9 @@ const BookObject = () => {
         </form>
         {error && <p className="bo-error">{error}</p>}
         <p className="bo-spreadmeta sans-label">
-          Pages 页 {spread.left ? spread.left.number : "—"} · {spread.right ? spread.right.number : "—"} of{" "}
+          Pages 页 {spread.left ? spread.left.number : "，"} · {spread.right ? spread.right.number : "，"} of{" "}
           {total}
-          {spread.left && <span> — {pageLabel(spread.left)}</span>}
+          {spread.left && <span>, {pageLabel(spread.left)}</span>}
           {spread.right && <span> · {pageLabel(spread.right)}</span>}
         </p>
 
@@ -303,7 +303,7 @@ const BookObject = () => {
         </div>
 
         <p className="bo-caption">
-          Every spread is rendered live from the book&rsquo;s own interior — the same pages, in the same order,
+          Every spread is rendered live from the book&rsquo;s own interior, the same pages, in the same order,
           as the print file. Type a page number above to open the book there.
           <span className="bo-caption-zh">每一个跨页都直接取自书的内页模型，与印刷文件同一套页面、同一个顺序。</span>
         </p>
