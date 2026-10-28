@@ -43,7 +43,7 @@ async function main() {
 
   await server.close();
 
-  // Only public, storefront-listed items belong in the sitemap — items marked
+  // Only public, storefront-listed items belong in the sitemap - items marked
   // showInStorefront: false are intentionally unlisted (see HiddenItems page).
   const urls = [
     ...STATIC_ROUTES,
