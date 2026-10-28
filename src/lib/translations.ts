@@ -42,6 +42,7 @@ export const translations = {
     footer: {
       copyright: "All rights reserved.",
       locationShipping: "Designed & shipped from New York City. Ships worldwide.",
+      pricesUsd: "All prices in USD.",
       exploreTitle: "Explore",
       contactTitle: "Contact",
       navShop: "Shop",
@@ -247,6 +248,7 @@ export const translations = {
     footer: {
       copyright: "版权所有。",
       locationShipping: "所有作品在纽约市设计并发货，全球配送。",
+      pricesUsd: "所有价格均为美元（USD）。",
       exploreTitle: "导航",
       contactTitle: "联系",
       navShop: "商店",

@@ -223,6 +223,9 @@ const Cart = () => {
                         <span className="tracking-wide font-medium">${state.total.toFixed(2)}</span>
                       </div>
                     </div>
+                    <p className="text-xs text-muted-foreground font-helvetica text-right">
+                      {lang === "zh" ? "所有价格均为美元（USD）" : "All prices in USD"}
+                    </p>
                   </div>
 
                   <div className="space-y-3">

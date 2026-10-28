@@ -30,6 +30,9 @@ const Footer = () => {
             </div>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-foreground/70">
               {t.footer.locationShipping}
+            </p>
+            <p className="mt-2 text-sm text-foreground/70">
+              {t.footer.pricesUsd}
             </p>          </div>
 
           <nav aria-label="Footer">
