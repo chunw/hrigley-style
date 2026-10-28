@@ -41,7 +41,7 @@ const SlightlyUsefulObject = () => {
             <h2 className="hero-dialog-title">{t.hero.dialogTitle}</h2>
             <p className="hero-dialog-sub font-helvetica">
               {t.hero.smallStudioPrefix}
-              <a href="https://www.chunwang.art" target="_blank" rel="noreferrer">
+              <a href="https://www.chunwang.art/about.html" target="_blank" rel="noreferrer">
                 <span className="text-primary">{t.hero.smallStudioLinkText}</span>
               </a>
               {t.hero.smallStudioSuffix}

@@ -56,19 +56,6 @@ const Header = () => {
               <TooltipContent>{t.index.ctaAbout}</TooltipContent>
             </Tooltip>
 
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  to="/catalogs"
-                  aria-label={t.index.ctaCatalog}
-                  className={`transition-colors text-sm px-2 py-1 hover:text-primary ${controlColor}`}
-                >
-                  {t.index.ctaCatalog}
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent>{t.index.ctaCatalogs}</TooltipContent>
-            </Tooltip>
-
             {/* Removed link to /all-items per request */}
 
             <Tooltip>
@@ -205,7 +192,6 @@ const Header = () => {
                   </button>
 
                   <Link to="/about" className="text-sm p-2 text-foreground">{t.index.ctaAbout}</Link>
-                  <Link to="/catalogs" className="text-sm p-2 text-foreground">{t.index.ctaCatalog}</Link>
                   <a
                     href={INSTAGRAM_URL}
                     target="_blank"

@@ -8,11 +8,11 @@ export const translations = {
       contactEmailCopyFailedDescription: "Please copy manually:",
     },
     hero: {
-      description: "Sculptural planters, clay pendants, and original paintings — each one designed and made entirely by hand, one at a time, in a small NYC studio. Plus fine art prints of the work, for every budget.",
+      description: "Sculptural planters, clay pendants, and original paintings, each one designed and made entirely by hand, one at a time, in a small NYC studio. Plus fine art prints of the work, for every budget.",
       dialogTitle: "Handmade & One of a kind",
       smallStudioPrefix: "designed and made entirely by hand, one at a time, in ",
       smallStudioLinkText: "a small NYC studio",
-      smallStudioSuffix: ".",
+      smallStudioSuffix: "",
       shopCta: "View Collection",
     },
     markets: {
@@ -94,7 +94,7 @@ export const translations = {
       printCatalog: "Print Complete Catalog",
       printVendorCatalog: "Print Shop Catalog",
       noteLabel: "NOTE",
-      noteText: "Watercolor remains a pursuit of materiality — especially now",
+      noteText: "Watercolor remains a pursuit of materiality, especially now",
       artistStatement: "Artist Statement",
       artistLocation: "CHUN WANG · NEW YORK",
       uploadImage: "Upload Image",
@@ -217,7 +217,7 @@ export const translations = {
       dialogTitle: "手工制作，独一无二。",
       smallStudioPrefix: "每一件都纯手工设计制作，诞生于",
       smallStudioLinkText: "纽约的一个小工作室",
-      smallStudioSuffix: "。",
+      smallStudioSuffix: "",
       shopCta: "查看系列",
     },
     markets: {
