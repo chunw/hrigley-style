@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCart } from "@/contexts/CartContext";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Minus, Plus, Trash2, ArrowLeft } from "lucide-react";
+import { Minus, Plus, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const MINIMUM_ORDER_AMOUNT = 0.5;
@@ -98,9 +98,8 @@ const Cart = () => {
               <button
                 type="button"
                 onClick={() => navigate("/")}
-                className="sans-label gloria-button-label inline-flex items-center justify-center bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center cursor-pointer w-full"
+                className="sans-label gloria-button-label inline-flex items-center justify-center bg-primary text-primary-foreground px-6 py-2.5 text-base font-bold hover:bg-primary/90 transition-colors text-center cursor-pointer"
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
                 CONTINUE SHOPPING
               </button>
             </div>
@@ -122,9 +121,8 @@ const Cart = () => {
             <button
               type="button"
               onClick={() => navigate("/")}
-              className="sans-label gloria-button-label inline-flex items-center justify-center bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center cursor-pointer"
+              className="sans-label gloria-button-label inline-flex items-center justify-center bg-primary text-primary-foreground px-6 py-2.5 text-base font-bold hover:bg-primary/90 transition-colors text-center cursor-pointer"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
               CONTINUE SHOPPING
             </button>
           </div>
