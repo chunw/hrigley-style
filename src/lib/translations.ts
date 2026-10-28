@@ -12,7 +12,7 @@ export const translations = {
       dialogTitle: "Handmade & One of a kind",
       smallStudioPrefix: "designed and made entirely by hand, one at a time, in ",
       smallStudioLinkText: "a small NYC studio",
-      smallStudioSuffix: ".",
+      smallStudioSuffix: "",
       shopCta: "View Collection",
     },
     markets: {
@@ -217,7 +217,7 @@ export const translations = {
       dialogTitle: "手工制作，独一无二。",
       smallStudioPrefix: "每一件都纯手工设计制作，诞生于",
       smallStudioLinkText: "纽约的一个小工作室",
-      smallStudioSuffix: "。",
+      smallStudioSuffix: "",
       shopCta: "查看系列",
     },
     markets: {

@@ -95,16 +95,14 @@ const Cart = () => {
               <p className="product-title text-lg text-foreground">
                 {lang === "zh" ? "购物车是空的，工作室是满的。" : "Your cart is empty, but the studio is full."}
               </p>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {lang === "zh" ? "这里的每一件都是手工孤品，作品会找到它的人——你的那一件，还在等你。" : "Everything here is handmade and one of a kind, and pieces find their people. Yours is still out there."}
-              </p>
-              <Button
+              <button
+                type="button"
                 onClick={() => navigate("/")}
-                variant="outline"
+                className="sans-label gloria-button-label inline-flex items-center justify-center bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center cursor-pointer w-full"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 CONTINUE SHOPPING
-              </Button>
+              </button>
             </div>
           </div>
         </main>
@@ -121,13 +119,14 @@ const Cart = () => {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <h1 className="shop-title text-3xl md:text-4xl">YOUR CART</h1>
-            <Button
+            <button
+              type="button"
               onClick={() => navigate("/")}
-              variant="ghost"
+              className="sans-label gloria-button-label inline-flex items-center justify-center bg-primary text-primary-foreground px-8 py-3 text-lg font-bold hover:bg-primary/90 transition-colors text-center cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               CONTINUE SHOPPING
-            </Button>
+            </button>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
