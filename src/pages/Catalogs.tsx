@@ -63,14 +63,14 @@ const CatalogTile = ({
       onMouseEnter={() => { rightImage.hoverHandlers.onMouseEnter(); leftImage.hoverHandlers.onMouseEnter(); }}
       onMouseLeave={() => { rightImage.hoverHandlers.onMouseLeave(); leftImage.hoverHandlers.onMouseLeave(); }}
     >
-      {/* ── Layer 1 (back): RIGHT image — BEHIND the title text ── */}
+      {/* ── Layer 1 (back): RIGHT image - BEHIND the title text ── */}
       <div
         className="absolute top-0 right-0 overflow-hidden"
         style={{
           width: "38%",
           height: "50%",
           zIndex: 5,
-          // soft right and bottom edges — organic, not rigid
+          // soft right and bottom edges - organic, not rigid
           maskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
           WebkitMaskImage: "linear-gradient(to bottom, black 55%, transparent 100%)",
         }}
@@ -85,7 +85,7 @@ const CatalogTile = ({
         />
       </div>
 
-      {/* ── Layer 2 (middle): TITLE — in front of right image, behind left image ── */}
+      {/* ── Layer 2 (middle): TITLE - in front of right image, behind left image ── */}
       {/* spans the full row width */}
       <div
         className="absolute bottom-0 left-0 right-0 px-5 pb-5"
@@ -96,7 +96,7 @@ const CatalogTile = ({
         </h2>
       </div>
 
-      {/* ── Layer 3 (front): LEFT image — ON TOP of the title, rests on the text ── */}
+      {/* ── Layer 3 (front): LEFT image - ON TOP of the title, rests on the text ── */}
       {/* natural gap on the right side; bottom mask lets title peek through */}
       <div
         className="absolute top-0 left-0 overflow-hidden"
@@ -126,8 +126,8 @@ const Catalogs = () => {
   const [openMenu, setOpenMenu] = useState<"art" | "shop" | null>(null);
 
   usePageMeta({
-    title: "Catalogs — Fine Art Prints & Wall Art",
-    description: "Browse Chun Wang's fine Catalogs — original watercolor, mixed-media, and photography wall art and prints, from Watercolors, Remains, In the Spirit of the 21st Century, and Photography.",
+    title: "Catalogs: Fine Art Prints & Wall Art",
+    description: "Browse Chun Wang's fine Catalogs, original watercolor, mixed-media, and photography wall art and prints, from Watercolors, Remains, In the Spirit of the 21st Century, and Photography.",
     path: "/catalogs",
   });
 
@@ -220,7 +220,7 @@ const Catalogs = () => {
             isLeftColumn={index % 2 === 0}
           />
         ))}
-        {/* The printed book — same tile language, linking to the full print-ready edition */}
+        {/* The printed book - same tile language, linking to the full print-ready edition */}
         <CatalogTile
           to="/book"
           images={["/watercolors/01/main.jpg", "/remains/01/main.jpg"]}
