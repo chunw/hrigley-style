@@ -156,6 +156,8 @@ One size.</p>
     printInCatalog: true,
     showInStorefront: true,
     category: "Apparel",
+    collections: ["Remains"],
+    collections_zh: ["遗迹"],
     created_at: new Date().toISOString(),
     paylink: 'https://www.paypal.com/ncp/payment/47BGDH4F3QUS6'
   },
