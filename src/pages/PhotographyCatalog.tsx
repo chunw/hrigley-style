@@ -156,10 +156,10 @@ const PhotographyCatalog = () => {
   const [uniformHeight, setUniformHeight] = useState(true);
 
   usePageMeta({
-    title: lang === "zh" ? catalogMeta.zh : `${catalogMeta.en} — Fine Art Photography Prints`,
+    title: lang === "zh" ? catalogMeta.zh : `${catalogMeta.en}: Fine Art Photography Prints`,
     description: lang === "zh"
       ? catalogMeta.descriptionZh
-      : "Inner Wilderness — fine art photography prints exploring solitude, time, and landscape. Original wall art and limited-edition prints by Chun Wang.",
+      : "Inner Wilderness, fine art photography prints exploring solitude, time, and landscape. Original wall art and limited-edition prints by Chun Wang.",
     image: "/photography/01/main.jpg",
     path: "/photography-catalog",
   });
