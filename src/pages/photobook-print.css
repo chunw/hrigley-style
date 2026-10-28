@@ -1,22 +1,22 @@
-/* ── Photography Photobook — Print styles ───────────────────────────────────── */
+/* ── Photography Photobook - Print styles ───────────────────────────────────── */
 
 /* Page box: US Letter portrait, zero margin for full-bleed photography.
    The inner binding gutter is created via :left/:right page rules so that
    left (verso) pages have more margin on the right and right (recto) pages
-   have more margin on the left — matching how a bound book opens. */
+   have more margin on the left, matching how a bound book opens. */
 
 @page {
   size: letter portrait;
   margin: 0.4in 0.45in;
 }
 
-/* Recto (odd, right-hand) pages — extra left margin toward the spine */
+/* Recto (odd, right-hand) pages - extra left margin toward the spine */
 @page :right {
   margin-left: 0.65in;
   margin-right: 0.35in;
 }
 
-/* Verso (even, left-hand) pages — extra right margin toward the spine */
+/* Verso (even, left-hand) pages - extra right margin toward the spine */
 @page :left {
   margin-right: 0.65in;
   margin-left: 0.35in;
