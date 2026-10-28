@@ -52,7 +52,7 @@ const PaymentSuccess = () => {
               </span>
             </div>
 
-            {/* Illustration — the same delivery artwork as the About page backdrop */}
+            {/* Illustration - the same delivery artwork as the About page backdrop */}
             <img
               src={deliveryGif}
               alt=""
