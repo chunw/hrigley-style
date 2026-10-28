@@ -133,7 +133,7 @@ const Cart = () => {
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">
               {state.items.map((item) => (
-                <Card key={item.id} className="border-2 border-border">
+                <Card key={item.id} className="border border-border">
                   <CardContent className="p-4">
                     <div className="flex items-center space-x-4">
                       {/* Product Image */}
