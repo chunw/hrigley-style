@@ -78,10 +78,10 @@ const RemainsCatalog = () => {
   const { lang, t } = useLanguage();
 
   usePageMeta({
-    title: lang === "zh" ? catalogMeta.zh : `${catalogMeta.en} — Surreal Mixed-Media Wall Art & Prints`,
+    title: lang === "zh" ? catalogMeta.zh : `${catalogMeta.en}: Surreal Mixed-Media Wall Art & Prints`,
     description: lang === "zh"
       ? catalogMeta.descriptionZh
-      : "Remains — a humorous, surreal mixed-media series recombining ancient terracotta figures into contemporary life. Original art and fine art prints, perfect as a unique gift.",
+      : "Remains, a humorous, surreal mixed-media series recombining ancient terracotta figures into contemporary life. Original art and fine art prints, perfect as a unique gift.",
     image: "/remains/01/main.jpg",
     path: "/remains-catalog",
   });
