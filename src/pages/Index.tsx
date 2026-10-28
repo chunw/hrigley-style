@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "@/components/Header";
-import HeroSection from "@/components/HeroSection";
 import ProductGrid from "@/components/ProductGrid";
 import Footer from "@/components/Footer";
 import { SITE_URL, SHOP_URL, INSTAGRAM_URL } from "@/lib/constants";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePageMeta } from "@/hooks/usePageMeta";
-import handsBg from "@/assets/hands_clay_objects_clean_skin.jpg";
 
 const Index = () => {
   const { lang, t } = useLanguage();
@@ -42,7 +40,6 @@ const Index = () => {
       
       <Header />
 
-      <HeroSection bgImageSrc={handsBg} showMessageCard hideAboutLink hideDescription />
 
       <section id="products">
         <ProductGrid
