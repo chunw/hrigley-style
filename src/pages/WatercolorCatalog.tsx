@@ -94,8 +94,8 @@ const WatercolorCatalog = () => {
   const { lang, t } = useLanguage();
 
   usePageMeta({
-    title: lang === "zh" ? catalogMeta.zh : `${catalogMeta.en} — Original Watercolor Fine Art Prints`,
-    description: "Original watercolor paintings and fine art prints by Chun Wang — whimsical, one-of-a-kind wall art from the Residuals, Still Things, and Notes from the Road series.",
+    title: lang === "zh" ? catalogMeta.zh : `${catalogMeta.en}: Original Watercolor Fine Art Prints`,
+    description: "Original watercolor paintings and fine art prints by Chun Wang, whimsical, one-of-a-kind wall art from the Residuals, Still Things, and Notes from the Road series.",
     image: "/watercolors/01/main.jpg",
     path: "/watercolor-catalog",
   });
