@@ -323,7 +323,7 @@ function ChapterHeader({
   );
 }
 
-// ── El Otro, El Mismo — Intro ─────────────────────────────────────────────────
+// ── El Otro, El Mismo - Intro ─────────────────────────────────────────────────
 function ElOtroIntro() {
   return (
     <section
@@ -344,11 +344,11 @@ function ElOtroIntro() {
         >
           "I aim to capture the essence of human experience in my photographs,
           exploring fundamental concerns such as mortality, solitude, freedom,
-          and meaning of life — truths of life that shape our existential
+          and meaning of life, truths of life that shape our existential
           conflicts."
         </blockquote>
 
-        <p className="font-mono text-[10px] text-white/30 mb-16">— Chun Wang</p>
+        <p className="font-mono text-[10px] text-white/30 mb-16">,  Chun Wang</p>
 
         <div
           className="space-y-8 text-white/65 leading-relaxed"
@@ -370,11 +370,11 @@ function ElOtroIntro() {
             {[
               {
                 label: "Death.",
-                text: 'We exist now, but one day, this existence will end. Death will arrive as scheduled, with no escape. In the words of Spinoza, "Every thing strives to persist in its own being" — and a core conflict of existence is the tension between the awareness of the inevitability of death and the desire to continue living.',
+                text: 'We exist now, but one day, this existence will end. Death will arrive as scheduled, with no escape. In the words of Spinoza, "Every thing strives to persist in its own being", and a core conflict of existence is the tension between the awareness of the inevitability of death and the desire to continue living.',
               },
               {
                 label: "Freedom.",
-                text: "Freedom, paradoxically, implies a terrifying responsibility: we have no pre-given structure, no design, no purpose — we are the sole authors of our own existence.",
+                text: "Freedom, paradoxically, implies a terrifying responsibility: we have no pre-given structure, no design, no purpose, we are the sole authors of our own existence.",
               },
               {
                 label: "Isolation.",
@@ -382,7 +382,7 @@ function ElOtroIntro() {
               },
               {
                 label: "Meaninglessness.",
-                text: "If we must die, if we are each alone, if we have no pre-given purpose — then what meaning does life have? We must construct our own meaning.",
+                text: "If we must die, if we are each alone, if we have no pre-given purpose, then what meaning does life have? We must construct our own meaning.",
               },
             ].map(({ label, text }) => (
               <div key={label}>
@@ -793,7 +793,7 @@ export default function PhotographyPhotobook() {
 
   return (
     <div className="bg-black text-white min-h-screen">
-      {/* Fixed nav — hidden in print */}
+      {/* Fixed nav - hidden in print */}
       <nav data-noprint className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-4 bg-black/70 backdrop-blur-md border-b border-white/5">
         <Link
           to="/photography-catalog"
@@ -849,7 +849,7 @@ export default function PhotographyPhotobook() {
               Doppelgänger, where our identities blurred and intertwined,
               revealing the profound interconnectedness and duality of our
               beings. In the vast array of symbols that populate our visual
-              landscape, mirrors and doubles particularly resonate with me —
+              landscape, mirrors and doubles particularly resonate with me , 
               they reflect the idea that we are not isolated beings.
             </p>
           </>
@@ -959,7 +959,7 @@ export default function PhotographyPhotobook() {
               In ancient Egypt, pharaohs crossed their arms diagonally when
               they were mummified, symbolizing Osiris, the king of the
               netherworld or god of the dead. Crossed arms indicated the
-              mummy's gender — only males were mummified with their arms
+              mummy's gender, only males were mummified with their arms
               crossed.
             </p>
             <p className="mb-4">
@@ -1002,7 +1002,7 @@ export default function PhotographyPhotobook() {
               forge a clock upon pensive visages.
             </p>
             <p className="mb-4">
-              This imagery subtly alludes to our profound bond with time — each
+              This imagery subtly alludes to our profound bond with time, each
               face a ticking clock, etched by life's flux.
             </p>
             <blockquote className="pl-4 border-l border-white/15 text-white/40 italic mb-4">
@@ -1012,11 +1012,11 @@ export default function PhotographyPhotobook() {
               nauseous because you realize it has always been here."
               <br />
               <span className="not-italic text-white/25 text-xs mt-2 block">
-                — Jean-Paul Sartre, <em>Nausea</em>
+               , Jean-Paul Sartre, <em>Nausea</em>
               </span>
             </blockquote>
             <p className="font-mono text-[10px] text-white/25">
-              Exhibition: <em>El Otro, El Mismo — Hours, Minutes</em>. PH21
+              Exhibition: <em>El Otro, El Mismo, Hours, Minutes</em>. PH21
               Gallery, Budapest, 2024.
             </p>
             <p className="font-mono text-xs text-white/40 tracking-widest mt-4">
@@ -1076,7 +1076,7 @@ export default function PhotographyPhotobook() {
         layout="two-col"
         description={
           <p>
-            There is no loneliness here. New York, 2019 — the city as stage,
+            There is no loneliness here. New York, 2019, the city as stage,
             the street as theater. Every corner a cast of characters, every
             crowd a confirmation: you are never truly alone.
           </p>
@@ -1092,7 +1092,7 @@ export default function PhotographyPhotobook() {
         layout="grid"
         description={
           <p>
-            Sahara from 6 to 10: An Archive. Morocco, 2021 — light changes
+            Sahara from 6 to 10: An Archive. Morocco, 2021, light changes
             slowly in the desert. From the blue hour before dawn through the
             burning midday, each frame in this archive captures the passage of
             time across a vast, ancient silence.
@@ -1110,8 +1110,8 @@ export default function PhotographyPhotobook() {
         description={
           <>
             <p className="mb-4">
-              Death Valley, 2017. At Badwater Basin — the lowest point in North
-              America — the salt flats become mirrors at dawn, doubling the sky
+              Death Valley, 2017. At Badwater Basin, the lowest point in North
+              America, the salt flats become mirrors at dawn, doubling the sky
               and dissolving the boundary between earth and atmosphere. To stand
               here is to stand at the threshold of something larger than
               oneself.
