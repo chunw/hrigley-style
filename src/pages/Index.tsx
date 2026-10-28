@@ -14,7 +14,7 @@ const Index = () => {
   const location = useLocation();
 
   usePageMeta({
-    title: "Handmade Jewelry & Art Objects",
+    title: "Jewelry, Objects & Original Art",
     description: "Handmade jewelry, Slightly Useful Objects, original paintings and prints by New York artist Chun Wang. Shop clay necklaces, charms, earrings and planters.",
     path: "/",
     jsonLd: {
