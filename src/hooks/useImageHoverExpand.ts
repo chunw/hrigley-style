@@ -38,7 +38,7 @@ export function useImageHoverExpand(objectFit: "cover" | "contain" = "cover") {
 
         // Bias the growth toward whichever side of the viewport has more
         // room, so a card sitting flush against the left/top edge still
-        // gets to expand — instead of being capped by a symmetric,
+        // gets to expand - instead of being capped by a symmetric,
         // center-anchored margin it can't actually use on the tight side.
         const originXPct = rect.left < window.innerWidth / 3 ? 0 : rect.right > (window.innerWidth * 2) / 3 ? 100 : 50;
         const originYPct = rect.top < window.innerHeight / 3 ? 0 : rect.bottom > (window.innerHeight * 2) / 3 ? 100 : 50;
