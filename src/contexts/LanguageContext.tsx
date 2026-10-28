@@ -28,7 +28,7 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
   });
 
   // useSearchParams' setSearchParams drops location.hash, which would break deep links
-  // like /#products — build the next URL from location manually so the hash survives.
+  // like /#products - build the next URL from location manually so the hash survives.
   const setLangParam = (next: Lang) => {
     const params = new URLSearchParams(location.search);
     params.set("lang", next);
