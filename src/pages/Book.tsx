@@ -266,13 +266,13 @@ function frontPages(lang: Lang2): ReactNode[] {
         <Eyebrow>{zh ? "序言" : "Foreword"}</Eyebrow>
         <h2 className="shop-title mt-[4%] leading-none" style={{ fontSize: "calc(var(--book-page-w) * 0.072)" }}>{zh ? "凝视之道" : "The kind of looking"}</h2>
         <blockquote className="book-body-serif mt-[7%] italic" style={{ fontSize: "calc(var(--book-page-w) * 0.034)" }}>
-          {zh ? "“水彩依然是对物质性的追寻，尤其是在当下。”" : "“Watercolor remains a pursuit of materiality，especially now.”"}
+          {zh ? "“水彩依然是对物质性的追寻——尤其是在当下。”" : "“Watercolor remains a pursuit of materiality, especially now.”"}
         </blockquote>
         <div className="book-body-serif mt-[6%] space-y-[5%]">
-          <p>{zh ? "这本书请您慢下来。水彩拒绝匆忙：水把颜料带到手没有安排的地方，纸面记住每一次迟疑。综合媒材同样留下了制作的痕迹，层层叠加、修改与保留，都在表面可读。" : "This book asks for slowness. Watercolour refuses haste: water carries pigment where the hand did not plan, and the paper remembers every hesitation. The mixed-media works keep their making visible too，layered, revised, and left legible on the surface."}</p>
-          <p>{zh ? "七年间，四个系列以不同方式回到同一件事：日常生活在被使用之后、消失之前，还留下了什么。请把图版当作原作来观看，先看整体，再看边缘，最后才读说明。" : "Across seven years, four series return in different ways to one question: what does everyday life leave behind, just after it has been used and just before it disappears? Treat each plate as an original，look first at the whole, then at the edges, and only then at the caption."}</p>
+          <p>{zh ? "这本书请您慢下来。水彩拒绝匆忙：水把颜料带到手没有安排的地方，纸面记住每一次迟疑。综合媒材同样留下了制作的痕迹——层层叠加、修改与保留，都在表面可读。" : "This book asks for slowness. Watercolour refuses haste: water carries pigment where the hand did not plan, and the paper remembers every hesitation. The mixed-media works keep their making visible too, layered, revised, and left legible on the surface."}</p>
+          <p>{zh ? "七年间，四个系列以不同方式回到同一件事：日常生活在被使用之后、消失之前，还留下了什么。请把图版当作原作来观看——先看整体，再看边缘，最后才读说明。" : "Across seven years, four series return in different ways to one question: what does everyday life leave behind, just after it has been used and just before it disappears? Treat each plate as an original, look first at the whole, then at the edges, and only then at the caption."}</p>
         </div>
-        <p className="book-eyebrow mt-auto">， {zh ? "王淳，纽约" : "Chun Wang, New York"}</p>
+        <p className="book-eyebrow mt-auto">— {zh ? "王淳，纽约" : "Chun Wang, New York"}</p>
       </div>
     </Page>,
 
@@ -283,7 +283,7 @@ function frontPages(lang: Lang2): ReactNode[] {
         <h2 className="shop-title mt-[4%] leading-none" style={{ fontSize: "calc(var(--book-page-w) * 0.072)" }}>{zh ? "七年，四组系列" : "Seven years, four series"}</h2>
         <div className="book-body-serif mt-[7%] space-y-[5%]">
           <p>{plain(seriesIntro[lang].split("\n\n")[0])}</p>
-          <p>{zh ? "在纸上，《残留》与《静物》先行：它们是安静的练习，看残留的痕迹与静置的物件。随后，《遗迹》与《21世纪精神》把视线转向社会本身，前者以冷面荒诞，后者以研究为据，完成同一个诊断。" : "On the page, Residuals and Still Things come first: quiet studies of what remains and of objects at rest. Remains and In the Spirit of the 21st Century then turn the same attention outward to society itself，one through deadpan absurdity, the other through research."}</p>
+          <p>{zh ? "在纸上，《残留》与《静物》先行：它们是安静的练习，看残留的痕迹与静置的物件。随后，《遗迹》与《21世纪精神》把视线转向社会本身——前者以冷面荒诞，后者以研究为据，完成同一个诊断。" : "On the page, Residuals and Still Things come first: quiet studies of what remains and of objects at rest. Remains and In the Spirit of the 21st Century then turn the same attention outward to society itself, one through deadpan absurdity, the other through research."}</p>
         </div>
         <div className="book-rule mt-auto grid grid-cols-4 gap-[4%] pt-[4%] text-center">
           {["I", "II", "III", "IV"].map((n) => <span key={n} className="book-eyebrow">{n}</span>)}
@@ -397,20 +397,20 @@ function chapterPages(lang: Lang2): ReactNode[] {
     <ChapterDivider key="p11" n={11} roman="I" lang={lang} titleEn="Residuals" titleZh="残留" subEn="Watercolor on paper" subZh="纸本水彩" left={R[1].src} right={R[2].src} plateRange="01–07" />,
     <EssayPage key="p12" n={12} side="verso" runhead={rhI} eyebrow={zh ? "第一章 · 残留" : "Chapter I · Residuals"} title={zh ? "被使用之后" : "Just after use"}
       footer={<p className="book-caption border-t pt-[4%]" style={{ borderColor: "var(--book-rule)" }}>{zh ? "图版 01（卷首）–07 · 纸本水彩" : "Plates 01 (frontispiece)–07 · Watercolor on paper"}</p>}>
-      <p>{zh ? "《残留》捕捉日常在被用过之后、消失之前的样子：痕迹、余渍与未干的边缘。水彩的不可逆性正合题意，一旦落笔，纸就记住了。" : "Residuals catches the everyday just after it has been used, just before it disappears: traces, stains, and edges not yet dry. Watercolour's irreversibility suits the subject，once a mark lands, the paper remembers."}</p>
-      <p>{zh ? "这些作品以 9×12 英寸档案哑光艺术纸印制版画与装裱原作形式发售，收于《王淳艺术礼盒 02》。阅读时请留意白色：那不是空白，而是被留下的光。" : "Works from this series are issued as 9×12 in archival matte fine-art prints and framed originals, gathered in Chun Wang Artbox 02. As you read, watch the whites: they are not empty，they are light, left behind."}</p>
+      <p>{zh ? "《残留》捕捉日常在被用过之后、消失之前的样子：痕迹、余渍与未干的边缘。水彩的不可逆性正合题意——一旦落笔，纸就记住了。" : "Residuals catches the everyday just after it has been used, just before it disappears: traces, stains, and edges not yet dry. Watercolour's irreversibility suits the subject, once a mark lands, the paper remembers."}</p>
+      <p>{zh ? "这些作品以 9×12 英寸档案哑光艺术纸印制版画与装裱原作形式发售，收于《王淳艺术礼盒 02》。阅读时请留意白色：那不是空白，而是被留下的光。" : "Works from this series are issued as 9×12 in archival matte fine-art prints and framed originals, gathered in Chun Wang Artbox 02. As you read, watch the whites: they are not empty, they are light, left behind."}</p>
     </EssayPage>,
     <FullPlatePage key="p13" n={13} side="recto" runhead={rhI} plate={R[1]} lang={lang} />,
     <TwoUpPage key="p14" n={14} side="verso" runhead={rhI} a={R[2]} b={R[3]} lang={lang} />,
     <TwoUpPage key="p15" n={15} side="recto" runhead={rhI} a={R[4]} b={R[5]} lang={lang} />,
     <FullPlatePage key="p16" n={16} side="verso" runhead={rhI} plate={R[6]} lang={lang}
-      noteEn="End of Chapter I. The everyday, used，and still present." noteZh="第一章终。日常被用过，却仍在场。" />,
+      noteEn="End of Chapter I. The everyday, used, and still present." noteZh="第一章终。日常被用过，却仍在场。" />,
 
     /* II - Still Things (17–22) */
     <ChapterDivider key="p17" n={17} roman="II" lang={lang} titleEn="Still Things" titleZh="静物" subEn="Watercolor on paper" subZh="纸本水彩" left={S[0].src} right={S[1].src} plateRange="08–14" />,
     <EssayPage key="p18" n={18} side="verso" runhead={rhII} eyebrow={zh ? "第二章 · 静物" : "Chapter II · Still Things"} title={zh ? "静置之物" : "Objects at rest"}
       footer={<p className="book-caption border-t pt-[4%]" style={{ borderColor: "var(--book-rule)" }}>{zh ? "图版 08–14 · 纸本水彩" : "Plates 08–14 · Watercolor on paper"}</p>}>
-      <p>{zh ? "若《残留》看的是痕迹，《静物》看的是物本身在无人打扰时的状态。杯、器与日常小物不表演，只是在场，水彩以薄涂与留白让它们获得呼吸的空间。" : "Where Residuals looks at traces, Still Things looks at things themselves, undisturbed. Cups, vessels, and small daily objects do not perform; they are simply present，thin washes and reserved whites give them room to breathe."}</p>
+      <p>{zh ? "若《残留》看的是痕迹，《静物》看的是物本身在无人打扰时的状态。杯、器与日常小物不表演，只是在场——水彩以薄涂与留白让它们获得呼吸的空间。" : "Where Residuals looks at traces, Still Things looks at things themselves, undisturbed. Cups, vessels, and small daily objects do not perform; they are simply present, thin washes and reserved whites give them room to breathe."}</p>
       <p>{zh ? "静物画是最古老的耐心练习。在屏幕以秒计时的年代，把一页留给一件静物，本身就是一种主张。" : "Still life is the oldest exercise in patience. In an age timed in seconds, giving a full page to a single quiet object is itself a position."}</p>
     </EssayPage>,
     <TwoUpPage key="p19" n={19} side="recto" runhead={rhII} a={S[0]} b={S[1]} lang={lang} />,
@@ -433,7 +433,7 @@ function chapterPages(lang: Lang2): ReactNode[] {
       <div className="book-safe">
         <Eyebrow>{zh ? "从绘画到物件" : "From painting to object"}</Eyebrow>
         <h2 className="book-plate-title mt-[4%]" style={{ fontSize: "calc(var(--book-page-w) * 0.045)" }}>{zh ? "《遗迹》走入日常" : "Remains in daily life"}</h2>
-        <p className="book-body-serif mt-[5%]">{zh ? "《遗迹》的人俑离开了画布，登上托特包、T恤、贴纸与浴室地垫，企业超现实主义，陪你通勤。绘画批评日常，物件则把这批评带回日常之中。" : "The Remains figures leave the canvas for tote bags, tees, stickers, and bath mats：corporate surrealism for the daily commute. The paintings critique daily life; the objects carry that critique back into it."}</p>
+        <p className="book-body-serif mt-[5%]">{zh ? "《遗迹》的人俑离开了画布，登上托特包、T恤、贴纸与浴室地垫——企业超现实主义，陪你通勤。绘画批评日常，物件则把这批评带回日常之中。" : "The Remains figures leave the canvas for tote bags, tees, stickers, and bath mats, corporate surrealism for the daily commute. The paintings critique daily life; the objects carry that critique back into it."}</p>
         <div className="book-rule mt-auto pt-[5%]">
           <p className="book-eyebrow mb-[3%]">{zh ? "同系列物件" : "Also in this series"}</p>
           {(zh ? ["《遗迹》托特包", "《遗迹》中性宽松T恤", "《遗迹》贴纸套装", "“每次冲水都是新的开始”浴室地垫"] : ["Remains Tote Bag", "The Meeting Has Begun Tee", "Remains Sticker Packet", "Every Flush Is a New Beginning Bath Mat"]).map((t) => (
@@ -455,16 +455,16 @@ function chapterPages(lang: Lang2): ReactNode[] {
           <p className="book-caption">{spiritThemes[lang].join(" · ")}</p>
         </div>}>
       <p>{plain(zh ? spiritMeta.descriptionZh : spiritMeta.description).slice(0, 520)}{"…"}</p>
-      <p>{zh ? "每件作品都建立在一项学术或新闻研究之上。图版之后的文字保持简短，论点已在画面里，页面请留给观看。" : "Each painting is built on a piece of academic or journalistic research. The texts that follow stay short，the argument is already in the image, and the page is left for looking."}</p>
+      <p>{zh ? "每件作品都建立在一项学术或新闻研究之上。图版之后的文字保持简短——论点已在画面里，页面请留给观看。" : "Each painting is built on a piece of academic or journalistic research. The texts that follow stay short, the argument is already in the image, and the page is left for looking."}</p>
     </EssayPage>,
     <FullPlatePage key="p31" n={31} side="recto" runhead={rhIV} plate={P[0]} lang={lang}
-      noteEn="Alone together: digital life's central paradox，constant contact, fundamental solitude." noteZh="孤独在一起：数字生活的核心悖论，时刻相连，根本孤独。" />,
+      noteEn="Alone together: digital life's central paradox, constant contact, fundamental solitude." noteZh="孤独在一起：数字生活的核心悖论——时刻相连，根本孤独。" />,
     <FullPlatePage key="p32" n={32} side="verso" runhead={rhIV} plate={P[1]} lang={lang}
-      noteEn="Climate collapse, drawn as a negotiation that power keeps winning，for now." noteZh="气候崩溃，被画成一场权力暂时仍在赢得谈判。" />,
+      noteEn="Climate collapse, drawn as a negotiation that power keeps winning, for now." noteZh="气候崩溃，被画成一场权力暂时仍在赢得谈判。" />,
     <FullPlatePage key="p33" n={33} side="recto" runhead={rhIV} plate={P[2]} lang={lang}
       noteEn="A portrait assembled the way platforms assemble us: from data, in profile, without asking." noteZh="一幅以平台拼凑我们的方式拼成的画像：来自数据、呈侧面、无需征询。" />,
     <FullPlatePage key="p34" n={34} side="verso" runhead={rhIV} plate={P[3]} lang={lang}
-      noteEn="Captured，attention as the century's scarce resource, and its most traded one. End of Chapter IV." noteZh="被俘，注意力是本世纪最稀缺、也最被交易的资源。第四章终。" />,
+      noteEn="Captured, attention as the century's scarce resource, and its most traded one. End of Chapter IV." noteZh="被俘——注意力是本世纪最稀缺、也最被交易的资源。第四章终。" />,
   ];
 }
 
@@ -529,7 +529,7 @@ function backPages(lang: Lang2): ReactNode[] {
             </div>
           ))}
         </div>
-        <p className="book-body-serif mt-auto italic">{zh ? "致谢：感谢每一位愿意慢下来观看的人，这本书是为你们印的。" : "With thanks to everyone willing to slow down and look：this book was printed for you."}</p>
+        <p className="book-body-serif mt-auto italic">{zh ? "致谢：感谢每一位愿意慢下来观看的人——这本书是为你们印的。" : "With thanks to everyone willing to slow down and look, this book was printed for you."}</p>
       </div>
     </Page>,
 
@@ -594,7 +594,7 @@ function backPages(lang: Lang2): ReactNode[] {
             {zh ? "“它们需要那种当代生活鲜少容许的凝视。”" : "“Demanding the kind of looking that contemporary life rarely permits.”"}
           </p>
           <p className="book-caption mt-[4%]" style={{ color: "rgba(255,255,255,0.65)" }}>
-            {zh ? "七年绘画，四个系列：残留 · 静物 · 遗迹 · 21世纪精神。《遗迹》2024 LICC 官方入选；《21世纪精神》2021 LICC 决赛入围。" : "Seven years of painting in four series: Residuals · Still Things · Remains · In the Spirit of the 21st Century. Remains，LICC Official Selection 2024. Spirit，LICC Finalist 2021."}
+            {zh ? "七年绘画，四个系列：残留 · 静物 · 遗迹 · 21世纪精神。《遗迹》2024 LICC 官方入选；《21世纪精神》2021 LICC 决赛入围。" : "Seven years of painting in four series: Residuals · Still Things · Remains · In the Spirit of the 21st Century. Remains, LICC Official Selection 2024. Spirit, LICC Finalist 2021."}
           </p>
           <div className="mt-[6%] flex items-end justify-between gap-4 border-t border-white/20 pt-[4%]">
             <div>
@@ -629,7 +629,7 @@ export default function Book() {
   const product = bookProduct();
 
   usePageMeta({
-    title: zh ? "王淳绘画集 2019–2026：印刷版整书" : "Chun Wang Paintings 2019–2026：The Book",
+    title: zh ? "王淳绘画集 2019–2026 — 印刷版整书" : "Chun Wang Paintings 2019–2026: The Book",
     description: "Read and print Chun Wang Paintings 2019–2026, a 40-page, 6×6 in full-colour book collecting Residuals, Still Things, Remains, and In the Spirit of the 21st Century. Print-ready PDF layout with covers, folios, and production notes.",
     path: "/book",
     image: product?.image_url,
@@ -771,7 +771,7 @@ export default function Book() {
         <div data-noprint className="mx-auto mt-16 max-w-2xl border border-white/15 bg-black/40 px-6 py-6 text-center text-white">
           <p className="shop-title gloria-title text-2xl leading-none">{zh ? "读完了？" : "Finished reading?"}</p>
           <p className="mt-3 font-mono text-[11px] leading-relaxed text-white/65">
-            {zh ? "把印刷版带回家（$40，全球发货），或继续浏览四个系列的完整目录与原作、版画。" : "Take the printed book home ($40, ships worldwide), or keep browsing the full catalogs，originals and prints included."}
+            {zh ? "把印刷版带回家（$40，全球发货），或继续浏览四个系列的完整目录与原作、版画。" : "Take the printed book home ($40, ships worldwide), or keep browsing the full catalogs, originals and prints included."}
           </p>
           <div className="mt-5 flex flex-wrap justify-center gap-2">
             <Link to="/product/book-paintings-2019-2026" className="inline-flex items-center gap-1.5 bg-[hsl(328_85%_72%)] px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-widest text-black hover:opacity-85">
