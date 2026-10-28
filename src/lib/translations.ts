@@ -8,7 +8,7 @@ export const translations = {
       contactEmailCopyFailedDescription: "Please copy manually:",
     },
     hero: {
-      description: "Sculptural planters, clay pendants, and original paintings — each one designed and made entirely by hand, one at a time, in a small NYC studio. Plus fine art prints of the work, for every budget.",
+      description: "Sculptural planters, clay pendants, and original paintings, each one designed and made entirely by hand, one at a time, in a small NYC studio. Plus fine art prints of the work, for every budget.",
       dialogTitle: "Handmade & One of a kind",
       smallStudioPrefix: "designed and made entirely by hand, one at a time, in ",
       smallStudioLinkText: "a small NYC studio",
@@ -21,7 +21,7 @@ export const translations = {
     },
     about: {
       title: "About",
-      body: "\n\n<blockquote class=\"about-quote\">Everything starts from small, weird, everyday things I can't help but notice and overthink, then turned into whimsical, handmade pieces you can use, gift, or just sit with in existential curiosity.\n\nEach piece is one of a kind, designed and made by hand in my NYC studio. Ships worldwide.</blockquote>\n\n- Chun",
+      body: "<blockquote class=\"about-quote\">Everything starts from small, weird, everyday things I can't help but notice and overthink, then turned into whimsical, handmade pieces you can use, gift, or just sit with in existential curiosity.\n\nEach piece is one of a kind, designed and made by hand in my NYC studio. Ships worldwide.</blockquote>\n\n- Chun",
       bio: "<a style=\"color:hsl(var(--primary))\" class=\"text-primary\" href=\"https://chunwang.art\" target=\"_blank\" rel=\"noopener noreferrer\">Chun Wang</a> is a multidisciplinary artist, technologist, and curator based in New York City. Her practice spans photography, painting, art objects, and digital works. With the archive as her method, she moves among ancient remains, everyday remnants, and digital records, tracing how things are preserved, forgotten, and reactivated. She was previously Lead Creative Technologist and Strategy Researcher at Harvard University's FAS CAMLab.\n\n<em>Negotiated Intelligence: Unearthing Power Dynamics in Human-AI Co-Creation</em> and <em>IMMEMORY: On COVID-19</em>, both initiated, curated, and produced by her, have received international recognition: the former is an official pavilion of the seventh edition of the Wrong Biennale and received a Silver Award in the Arts and Culture Websites category at the <a href=\"https://www.w3award.com/\" target=\"_blank\" rel=\"noreferrer\">21st w3 Awards</a>; the latter was an Official Nominee in the Cultural Blog/Website category at the 25th Webby Awards. Her curatorial work consistently centers on individuals in the midst of the upheavals of their time, tracing how they comprehend, absorb, and transform the disruption around them.\n\nHer photography has also won recognition from the International Photography Awards (IPA), the London International Creative Competition (LICC), the Siena International Photo Awards, the International Color Awards, and the Moscow International Foto Awards, among others. Her work has also been featured in print, including Artsin Square's 5x7 Photobook (Vol. 1, 2025; Vol. 2, 2026) and the Passepartout Photo Prize Catalogue. Her work has been exhibited at the United Nations Headquarters in New York, SFMOMA, Harvard University, and the Anderson Collection at Stanford University, and has also been presented in Shanghai, London, Istanbul, and Kitakyushu, among other places.",
       artistLabel: "About the Artist",
       backToShop: "Back to Shop",
@@ -94,7 +94,7 @@ export const translations = {
       printCatalog: "Print Complete Catalog",
       printVendorCatalog: "Print Shop Catalog",
       noteLabel: "NOTE",
-      noteText: "Watercolor remains a pursuit of materiality — especially now",
+      noteText: "Watercolor remains a pursuit of materiality, especially now",
       artistStatement: "Artist Statement",
       artistLocation: "CHUN WANG · NEW YORK",
       uploadImage: "Upload Image",
@@ -213,7 +213,7 @@ export const translations = {
       contactEmailCopyFailedDescription: "请手动复制：",
     },
     hero: {
-      description: "雕塑感花器、粘土吊坠、原创绘画——每一件都在纽约的小工作室里，从头到尾纯手工制作，独一无二；此外还提供作品的艺术微喷版画，价格更亲民。",
+      description: "雕塑感花器、粘土吊坠、原创绘画，每一件都在纽约的小工作室里，从头到尾纯手工制作，独一无二；此外还提供作品的艺术微喷版画，价格更亲民。",
       dialogTitle: "手工制作，独一无二。",
       smallStudioPrefix: "每一件都纯手工设计制作，诞生于",
       smallStudioLinkText: "纽约的一个小工作室",
@@ -226,7 +226,7 @@ export const translations = {
     },
     about: {
       title: "关于",
-      body: "一切始于那些微小古怪的日常小事——我总是忍不住多看一眼、多想一层——最终变成了那些奇趣的手工物件：可以用、可以送人，也可以静静摆在那里，供你生出一点存在主义式的好奇。\n\n每一件作品都独一无二，由我亲手在纽约工作室设计制作，全球发货。",
+      body: "一切始于那些微小古怪的日常小事，我总是忍不住多看一眼、多想一层，最终变成了那些奇趣的手工物件：可以用、可以送人，也可以静静摆在那里，供你生出一点存在主义式的好奇。\n\n每一件作品都独一无二，由我亲手在纽约工作室设计制作，全球发货。",
       bio: "<a style=\"color:hsl(var(--primary))\" class=\"text-primary\" href=\"https://chunwang.art\" target=\"_blank\" rel=\"noopener noreferrer\">王淳</a>是一位多学科艺术家、工程师与策展人，现居纽约。她的创作横跨摄影、绘画、艺术物件与数字作品。她以档案为方法，在古代遗存、日常残余与数字记录之间，追踪事物如何被保存、遗忘，又被重新激活。她曾任哈佛大学文理学院 CAMLab 首席创意技术专家与战略研究员。\n\n她发起、策展并制作的《<em>Negotiated Intelligence: Unearthing Power Dynamics in Human-AI Co-Creation</em>》与《<em>IMMEMORY: On COVID-19</em>》均获国际奖项：前者为 The Wrong Biennale 第七届官方展馆，并获第 21 届 w3 Awards 艺术与文化类网站银奖；后者获第 25 届 Webby 奖文化类网站官方提名。她的策展工作始终以时代动荡中的个体为核心，记录他们理解、吸纳并转化外部冲击的历程。\n\n其摄影多次获奖，包括国际摄影奖（IPA）、伦敦国际创意大赛（LICC）、锡耶纳国际摄影奖、国际色彩奖与莫斯科国际摄影奖等。她的作品还收录于 Artsin Square《5x7 Photobook》（2025、2026 两辑）与 Passepartout 摄影奖图录等出版物。作品曾在纽约联合国总部、旧金山现代艺术博物馆（SFMOMA）、哈佛大学与斯坦福大学安德森收藏馆展出，并在上海、伦敦、伊斯坦布尔与北九州等地呈现。",
       artistLabel: "关于艺术家",
       backToShop: "返回商店",
@@ -298,7 +298,7 @@ export const translations = {
       printCatalog: "打印完整目录",
       printVendorCatalog: "打印店铺目录",
       noteLabel: "注",
-      noteText: "水彩依然是对物质性的追寻——尤其是在当下",
+      noteText: "水彩依然是对物质性的追寻，尤其是在当下",
       artistStatement: "艺术家自述",
       artistLocation: "王淳 · 纽约",
       uploadImage: "上传图片",
