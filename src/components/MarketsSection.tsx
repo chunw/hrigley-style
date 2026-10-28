@@ -1,7 +1,7 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { MARKET_EVENTS } from "@/lib/markets";
 
-/** Playful flyer palette for the market cards — warm paper tones, cycled. */
+/** Playful flyer palette for the market cards - warm paper tones, cycled. */
 const CARD_STYLES = [
   { bg: "#f6efe0", tilt: "-1.6deg" },
   { bg: "#fbe3dd", tilt: "1.2deg" },
@@ -10,7 +10,7 @@ const CARD_STYLES = [
 ];
 
 /** Markets & pop-ups on the About page: where the studio sets up a booth.
- * New dates are announced here — upcoming dates come first with a badge,
+ * New dates are announced here - upcoming dates come first with a badge,
  * then past dates newest first. Data lives in src/lib/markets.ts.
  * Cards are styled as little taped-up paper flyers. */
 const MarketsSection = () => {
@@ -33,7 +33,7 @@ const MarketsSection = () => {
       : d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
   return (
-    <section className="relative py-16 md:py-24">
+    <section className="relative pt-8 pb-16 md:pt-12 md:pb-24">
       <div className="mx-auto max-w-5xl px-6">
         <h2 className="shop-title -rotate-1 text-center text-3xl md:text-4xl">{t.markets.title}</h2>
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
