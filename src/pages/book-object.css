@@ -1,7 +1,7 @@
 /* ── Remains · The Printed Book (/catalogs/book/object) ──────────────────────
    A product view of the finished hardcover, built from the book's own cover
    faces and interior pages (see CatalogBook.tsx). The closed book is a CSS 3D
-   box at true size — 8.5 × 11 in, spine width from the book's own formula —
+   box at true size, 8.5 × 11 in, spine width from the book's own formula , 
    and the open book is two real .bk-page faces side by side under a gentle
    table tilt. Studio backdrop, warm and quiet, in the site's design language:
    Aileron labels tracked uppercase, Cormorant serif display, ink on warm paper. */
@@ -15,7 +15,7 @@
 }
 
 /* When book components are reused outside the book page, they still need the
-   book's CSS variables (paper, margins, bleed) — but not its full-height grey
+   book's CSS variables (paper, margins, bleed), but not its full-height grey
    stage. */
 .bk-root.bo-bkvars {
   min-height: 0;
