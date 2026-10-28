@@ -38,7 +38,7 @@ const Useful = () => {
 
   usePageMeta({
     title: "Handmade & One of a Kind",
-    description: "All the good stuff created and sold by Chun Wang — original paintings, photography prints, ceramics, and handmade objects.",
+    description: "All the good stuff created and sold by Chun Wang, original paintings, photography prints, ceramics, and handmade objects.",
     path: "/slightlyusefulobject",
   });
 
