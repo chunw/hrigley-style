@@ -4,7 +4,7 @@ import { SHOP_URL, SITE_NAME } from "@/lib/constants";
 const DEFAULT_OG_IMAGE = "/og-image.jpg";
 
 interface PageMetaOptions {
-  /** Page-specific title. Rendered as "Chun Wang Studio Shop — {title}". */
+  /** Page-specific title. Rendered as "Chun Wang Studio Shop | {title}". */
   title: string;
   /** Plain-text description (HTML tags are stripped automatically). */
   description?: string;
@@ -56,19 +56,19 @@ function upsertLink(rel: string, href: string) {
 /**
  * Sets per-page <title>, meta description, canonical link, OG tags, and
  * (optionally) JSON-LD structured data. Needed because this is a client-only
- * SPA with a single static index.html — without this every route shares the
+ * SPA with a single static index.html - without this every route shares the
  * same generic title/description.
  */
 export function usePageMeta({ title, description, image, path, type = "website", jsonLd, noindex = false }: PageMetaOptions) {
   useEffect(() => {
-    document.title = `${SITE_NAME} — ${title}`;
+    document.title = `${SITE_NAME} | ${title}`;
 
     const cleanDescription = description ? truncate(stripHtml(description), 160) : undefined;
     if (cleanDescription) upsertMeta("name", "description", cleanDescription);
     upsertMeta("name", "robots", noindex ? "noindex, nofollow" : "index, follow");
 
     const url = resolveUrl(path);
-    upsertMeta("property", "og:title", `${SITE_NAME} — ${title}`);
+    upsertMeta("property", "og:title", `${SITE_NAME} | ${title}`);
     if (cleanDescription) upsertMeta("property", "og:description", cleanDescription);
     upsertMeta("property", "og:type", type);
     upsertMeta("property", "og:url", url);
