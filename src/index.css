@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Instrument+Serif&display=swap');
 @import '@fontsource/aileron/400.css';
 @import '@fontsource/aileron/700.css';
-/* 朱雀仿宋 (Zhuque Fangsong) — free, SIL OFL-licensed Fangsong webfont covering both CJK and
+/* 朱雀仿宋 (Zhuque Fangsong) - free, SIL OFL-licensed Fangsong webfont covering both CJK and
    Latin via its own per-character unicode-range slices, served from ZeoSeven's FontsAPI CDN.
-   Loaded from index.html via a <link>, not @import here — see the comment there. */
+   Loaded from index.html via a <link>, not @import here, see the comment there. */
 
 @tailwind base;
 @tailwind components;
@@ -136,7 +136,7 @@ All colors MUST be HSL.
 
   /* English: Aileron everywhere except titles (see .shop-title), which use 朱雀仿宋/Zhuque
      Fangsong. Chinese always falls through to Zhuque Fangsong, since Aileron has no CJK
-     glyphs — no unicode-range hackery needed, plain font-family fallback handles it. */
+     glyphs, no unicode-range hackery needed, plain font-family fallback handles it. */
   body {
     @apply bg-background text-foreground;
     font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -166,7 +166,7 @@ All colors MUST be HSL.
     font-family: 'Zhuque Fangsong (technical preview)', 'Aileron', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   }
 
-  /* Titles — the one place English renders in 朱雀仿宋/Zhuque Fangsong instead of Aileron */
+  /* Titles - the one place English renders in 朱雀仿宋/Zhuque Fangsong instead of Aileron */
   .shop-title {
     font-family: 'Zhuque Fangsong (technical preview)', 'Gloria Hallelujah', 'Comic Sans MS';
     font-weight: bold;
@@ -175,7 +175,7 @@ All colors MUST be HSL.
     line-height: 0.9;
   }
 
-  /* Header brand title only (on detail pages) — Gloria Hallelujah for English, falling through
+  /* Header brand title only (on detail pages) - Gloria Hallelujah for English, falling through
      to 朱雀仿宋/Zhuque Fangsong for Chinese (Gloria Hallelujah has no CJK glyphs, so the browser
      skips to the next font automatically). Product titles use .shop-title instead, so they
      render in Zhuque Fangsong for English too. */
@@ -246,7 +246,7 @@ All colors MUST be HSL.
     text-transform: none;
   }
 
-  /* Product titles (cards, cart line items, detail-page headings) — Zhuque Fangsong for English
+  /* Product titles (cards, cart line items, detail-page headings) - Zhuque Fangsong for English
      like .shop-title, but rendered in the title's own mixed case rather than forced uppercase. */
   .product-title {
     font-family: 'Zhuque Fangsong (technical preview)', 'Aileron', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -260,13 +260,13 @@ All colors MUST be HSL.
     letter-spacing: 0.04em;
   }
 
-  /* Slightly Useful Object page only — product titles in Instrument Serif instead of the
+  /* Slightly Useful Object page only - product titles in Instrument Serif instead of the
      site-wide Zhuque Fangsong, tried as a more premium-feeling display face for this page. */
   .useful-page .product-title {
     font-family: '"Instrument Serif"', 'Zhuque Fangsong (technical preview)', Georgia, serif;
   }
 
-  /* Slightly Useful Object page only — product grid prices in Instrument Serif, matching
+  /* Slightly Useful Object page only - product grid prices in Instrument Serif, matching
      the product-title treatment above. */
   .useful-page .product-price {
     font-family: '"Instrument Serif"', 'Cormorant Garamond', Georgia, serif;
@@ -274,7 +274,7 @@ All colors MUST be HSL.
     letter-spacing: 0.01em;
   }
 
-  /* Category filter labels (product grid sidebar) — Aileron for English, matching other
+  /* Category filter labels (product grid sidebar) - Aileron for English, matching other
      functional UI copy, instead of the cursive Gloria Hallelujah used for page/brand titles. */
   .category-label {
     font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -320,7 +320,7 @@ All colors MUST be HSL.
     opacity: 0.8;
   }
 
-  /* Catalog/product descriptions — plain readable copy, never the cursive handwritten face */
+  /* Catalog/product descriptions - plain readable copy, never the cursive handwritten face */
   .description-html {
     font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   }
@@ -433,7 +433,7 @@ All colors MUST be HSL.
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Hidden by default — the photo is designed against a dark backdrop and doesn't suit
+  /* Hidden by default - the photo is designed against a dark backdrop and doesn't suit
      the light theme; shown once .theme-dark is on, or always on the homepage's hero
      (see .cargo-hero-adaptive below), which is dark-styled regardless of site theme. */
   display: none;
@@ -444,7 +444,7 @@ All colors MUST be HSL.
 }
 
 /* Useful page hero (.cargo-hero-theme-aware): shown in both themes, unlike the
-   generic theme-aware default above — this hero's photo reads fine on light too. */
+   generic theme-aware default above, this hero's photo reads fine on light too. */
 .cargo-hero-theme-aware .cargo-hero-bg-img {
   display: block;
 }
@@ -453,7 +453,7 @@ All colors MUST be HSL.
   display: block;
 }
 
-/* Homepage hero brand lines ("Chun Wang" / "Studio") — always white, since the homepage
+/* Homepage hero brand lines ("Chun Wang" / "Studio") - always white, since the homepage
    hero is dark-styled regardless of the site-wide light/dark toggle. */
 .cargo-hero-adaptive .hero-title-brand {
   color: #fff;
@@ -557,7 +557,7 @@ All colors MUST be HSL.
   max-width: 600px;
   margin: 0 auto;
   background: #fbf6e8;
-  padding: 2.25rem 2.5rem;
+  padding: 1.5rem 2.5rem;
   border-radius: 2px;
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.25);
   transform: rotate(-1.1deg);
@@ -591,13 +591,13 @@ All colors MUST be HSL.
   text-decoration: none;
 }
 
-/* Intro bio line — plain readable copy, not the cursive handwritten face */
+/* Intro bio line - plain readable copy, not the cursive handwritten face */
 .handwritten-note-text em {
   font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-style: normal;
 }
 
-/* About page — two columns: handwritten note (left) + artist bio (right) */
+/* About page - two columns: handwritten note (left) + artist bio (right) */
 .about-columns {
   display: flex;
   gap: 2.5rem;
@@ -651,7 +651,7 @@ All colors MUST be HSL.
 .about-quote {
   display: block;
   position: relative;
-  margin: 1.25em 0;
+  margin: 0.5em 0;
   padding-left: 1.25rem;
   border-left: 2px solid rgba(43, 43, 43, 0.35);
   font-style: italic;
@@ -740,7 +740,7 @@ All colors MUST be HSL.
   border: 4px solid #111;
 }
 
-/* Hero dialog — always rendered in its own light card styling, independent of the
+/* Hero dialog - always rendered in its own light card styling, independent of the
    site-wide light/dark theme toggle (.theme-dark on <html>), so the card doesn't end up
    with light-on-light or dark-mode-inverted text when the toggle changes. */
 .hero-message-card {
