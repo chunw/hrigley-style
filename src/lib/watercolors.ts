@@ -68,13 +68,13 @@ export interface Watercolor {
   printPrice?: number;
   price?: number;
   // Shown instead of `price` on the product grid / vendor catalog when a piece
-  // has more than one price (e.g. print vs. framed original) — e.g. "$10 / $35".
+  // has more than one price (e.g. print vs. framed original) - e.g. "$10 / $35".
   priceLabel?: string;
   paylink?: string;
   framed?: boolean;
   soldOut?: boolean;
   // When set, the detail page shows one "Various options available" button
-  // linking here instead of a single price — e.g. print vs. framed original.
+  // linking here instead of a single price - e.g. print vs. framed original.
   multiOptionsPaylink?: string;
 }
 
@@ -668,7 +668,7 @@ export const watercolors: Watercolor[] = [
   //   mediumZh: "纸本水彩",
   //   dimensions: "",
   //   dimensionsZh: "",
-  //   description: "Exploring the dual qualities of everyday objects — simultaneously grotesque and tender.",
+  //   description: "Exploring the dual qualities of everyday objects - simultaneously grotesque and tender.",
   //   descriptionZh: "探索日常物件兼具怪诞与温柔的双重气质。",
   // },
 
