@@ -1031,12 +1031,8 @@ async function waitForAssets(root: HTMLElement) {
 
 
 // ── Book model ─────────────────────────────────────────────────────────────
-// The book's chapters, page contents and pagination, built once and shared:
-// the book page itself lays the volume out from this model, and read-only
-// presentation pages (the physical-object view at /catalogs/book/object)
-// render the same pages and cover faces from it.
-const EMPTY_TEXT_EDITS: Record<string, string> = {};
-const EMPTY_BG_EDITS: Record<string, PageBgKind | "global"> = {};
+// The book's chapters, page contents and pagination, built once: the book
+// page lays the volume out from this model.
 
 function useBookModel(args: {
   editMode: boolean;
@@ -1421,16 +1417,6 @@ function useBookModel(args: {
   }, [textEdits, editMode, pageBgEdits]);
   const pages = useMemo(() => paginate(ctx.chapters, ctx.prefaceChunks.length, ctx.paintingChunks.length, Object.fromEntries(Object.entries(ctx.essayChunks).map(([k, v]) => [k, v.length]))), [ctx]);
   return { ctx, pages };
-}
-
-/** The book model with the editor off and no staged edits — for pages that
- *  present the finished book rather than lay it out. Page backgrounds still
- *  honour the settled per-page overrides in src/lib/pageBackgrounds.ts. */
-export function useBookModelReadOnly(): { ctx: BookContext; pages: InteriorPage[] } {
-  const pageBgFor = (key: string | null): PageBgKind | undefined => (key ? PAGE_BACKGROUNDS[key] : undefined);
-  const setPageBg = () => {};
-  const openEditor = () => {};
-  return useBookModel({ editMode: false, textEdits: EMPTY_TEXT_EDITS, pageBgEdits: EMPTY_BG_EDITS, pageBgFor, setPageBg, openEditor });
 }
 
 const CatalogBook = () => {
