@@ -46,7 +46,7 @@ const SlightlyUsefulObject = () => {
               </a>
               {t.hero.smallStudioSuffix}
             </p>
-            <a className="hero-dialog-btn" href="#products">{t.hero.shopCta}</a>
+            <a className="hero-dialog-btn" href="/#products">{t.hero.shopCta}</a>
           </div>
         </div>
       </section>

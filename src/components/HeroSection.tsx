@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { useLocation } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface HeroSectionProps {
@@ -37,6 +38,11 @@ const HeroSection = ({
   showMessageCard = false,
 }: HeroSectionProps = {}) => {
   const { t, lang } = useLanguage();
+  // "#products" only exists on the homepage. From any other page (e.g. About,
+  // which renders this hero at its bottom), the View Collection button must
+  // deep-link to "/#products" — the homepage scrolls to the grid on arrival.
+  const { pathname } = useLocation();
+  const shopCtaHref = pathname === "/" ? "#products" : "/#products";
   const heroThemeClass = logoSrc && !forceDarkHero ? "cargo-hero-theme-aware" : "cargo-hero-adaptive";
 
   return (
@@ -92,7 +98,7 @@ const HeroSection = ({
                 </a>
                 {t.hero.smallStudioSuffix}
               </p>
-              <a className="hero-dialog-btn" href="#products">{t.hero.shopCta}</a>
+              <a className="hero-dialog-btn" href={shopCtaHref}>{t.hero.shopCta}</a>
             </div>
           </div>
         </div>
