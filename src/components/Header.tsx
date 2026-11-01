@@ -152,7 +152,7 @@ const Header = () => {
                 </span>
               )}
             </Link>
-            <Drawer>
+            <Drawer modal={false}>
               <DrawerTrigger asChild>
                 <button
                   type="button"
@@ -166,6 +166,7 @@ const Header = () => {
               <DrawerContent>
                 <DrawerHeader className="text-left">
                   <DrawerTitle className="shop-title gloria-title text-lg font-bold leading-tight tracking-wide text-left pl-2">
+                    <DrawerClose asChild>
                     <Link to="/" className="block cursor-pointer">
                       {t.shopTitle.line1}
                       <br />
@@ -173,6 +174,7 @@ const Header = () => {
                       <br />
                       <span className="text-primary">{t.shopTitle.line3}</span>
                     </Link>
+                    </DrawerClose>
                   </DrawerTitle>
                 </DrawerHeader>
 
@@ -191,7 +193,8 @@ const Header = () => {
                     {theme === "light" ? "Dark" : "Light"}
                   </button>
 
-                  <Link to="/about" className="text-sm p-2 text-foreground">{t.index.ctaAbout}</Link>
+                  <DrawerClose asChild><Link to="/about" className="text-sm p-2 text-foreground">{t.index.ctaAbout}</Link></DrawerClose>
+<DrawerClose asChild>
                   <a
                     href={INSTAGRAM_URL}
                     target="_blank"
@@ -200,6 +203,7 @@ const Header = () => {
                   >
                     {t.index.ctaInstagram}
                   </a>
+                  </DrawerClose>
 
                   <div>
                     <label className="sr-only">Language</label>
@@ -231,7 +235,7 @@ const Header = () => {
                 <img
                   src={slightlyUsefulLogo}
                   alt="Slightly Useful Object"
-                  className="h-36 w-auto object-contain"
+                  className="h-36 w-auto object-contain transition-transform duration-300 ease-out group-hover:scale-110 group-hover:-rotate-6"
                 />
               </Link>
             ) : (
