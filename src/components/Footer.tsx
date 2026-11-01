@@ -74,7 +74,7 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col gap-2 border-t border-border py-5 text-[11px] uppercase tracking-[0.18em] text-foreground/60 sm:flex-row sm:items-center sm:justify-between">
-          <div>© Chun Wang Studio Shop 2026 · {t.footer.copyright}</div>
+          <div>© Chun Wang Studio 2026 · {t.footer.copyright}</div>
         </div>
       </div>
     </footer>
