@@ -1,6 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { CONTACT_EMAIL, INSTAGRAM_URL, SITE_URL } from "@/lib/constants";
+import { CONTACT_EMAIL, INSTAGRAM_URL } from "@/lib/constants";
 
 const LINKEDIN_URL = "https://www.linkedin.com/company/107686784/";
 
@@ -74,15 +74,7 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col gap-2 border-t border-border py-5 text-[11px] uppercase tracking-[0.18em] text-foreground/60 sm:flex-row sm:items-center sm:justify-between">
-          <div>© Chun Wang Studio Shop 2026 · {t.footer.copyright}</div>
-          <a
-            href={SITE_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="text-sm normal-case tracking-normal underline-offset-4 hover:text-foreground hover:underline"
-          >
-            {t.footer.artistSiteLabel}
-          </a>
+          <div>© Chun Wang Studio 2026 · {t.footer.copyright}</div>
         </div>
       </div>
     </footer>

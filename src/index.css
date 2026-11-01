@@ -222,15 +222,11 @@ All colors MUST be HSL.
     text-transform: none;
   }
 
-  /* Scale the header shop title block by 1.5x for emphasis */
+  /* Header shop title block, scaled down slightly for emphasis. No hover/tap
+     animation — the logo must sit still when clicked (removed at the artist's request). */
   .header-shop-scale {
     transform: scale(0.9);
     transform-origin: left center;
-    transition: transform 0.3s ease-out;
-  }
-
-  .header-shop-scale:hover {
-    transform: scale(1) rotate(-4deg);
   }
 
   .header-shop-scale:hover,
