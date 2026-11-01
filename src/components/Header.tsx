@@ -231,7 +231,7 @@ const Header = () => {
                 <img
                   src={slightlyUsefulLogo}
                   alt="Slightly Useful Object"
-                  className="h-36 w-auto object-contain transition-transform duration-300 ease-out group-hover:scale-110 group-hover:-rotate-6"
+                  className="h-36 w-auto object-contain"
                 />
               </Link>
             ) : (
