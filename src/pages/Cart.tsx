@@ -90,9 +90,9 @@ const Cart = () => {
         <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
         <main className="container mx-auto px-4 py-8">
           <div className="max-w-2xl mx-auto text-center">
-            <h1 className="shop-title text-3xl md:text-4xl mb-6">YOUR CART</h1>
+            <h1 className="font-helvetica font-bold uppercase tracking-[0.1em] leading-[0.9] text-3xl md:text-4xl mb-6">YOUR CART</h1>
             <div className="space-y-6">
-              <p className="product-title text-lg text-foreground">
+              <p className="font-helvetica text-lg text-foreground">
                 {lang === "zh" ? "购物车是空的，工作室是满的。" : "Your cart is empty, but the studio is full."}
               </p>
               <button
@@ -117,7 +117,7 @@ const Cart = () => {
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
-            <h1 className="shop-title text-3xl md:text-4xl">YOUR CART</h1>
+            <h1 className="font-helvetica font-bold uppercase tracking-[0.1em] leading-[0.9] text-3xl md:text-4xl">YOUR CART</h1>
             <button
               type="button"
               onClick={() => navigate("/")}
