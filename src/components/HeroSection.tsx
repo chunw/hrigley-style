@@ -40,7 +40,7 @@ const HeroSection = ({
   const { t, lang } = useLanguage();
   // "#products" only exists on the homepage. From any other page (e.g. About,
   // which renders this hero at its bottom), the View Collection button must
-  // deep-link to "/#products" — the homepage scrolls to the grid on arrival.
+  // deep-link to "/#products", the homepage scrolls to the grid on arrival.
   const { pathname } = useLocation();
   const shopCtaHref = pathname === "/" ? "#products" : "/#products";
   const heroThemeClass = logoSrc && !forceDarkHero ? "cargo-hero-theme-aware" : "cargo-hero-adaptive";
