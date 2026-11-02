@@ -501,7 +501,7 @@ const deliveryHtml = `<!DOCTYPE html>
         </div>
 
         <div class="footer-text">
-        <!--Great news — your package has left our facility and is making its way to you across the tundra. 
+        <!--Great news, your package has left our facility and is making its way to you across the tundra. 
        -->
         Any questions about your order? Please reply directly to this email.
         </div>

@@ -29,7 +29,7 @@ const WatercolorDetail = () => {
 
   usePageMeta({
     title: work ? work.title : "Watercolor",
-    description: work?.description || `${work?.title ?? ""} — ${work?.medium ?? "Watercolor"}, ${work?.year ?? ""}. Original watercolor painting by Chun Wang.`,
+    description: work?.description || `${work?.title ?? ""} - ${work?.medium ?? "Watercolor"}, ${work?.year ?? ""}. Original watercolor painting by Chun Wang.`,
     image: work ? `/watercolors/${paddedId}/main.jpg` : undefined,
     path: `/watercolors/${id ?? ""}`,
     type: "product",

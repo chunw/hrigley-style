@@ -1,4 +1,4 @@
-/* ── Catalogs Art Book — screen preview + print ─────────────────────────────────
+/* ── Catalogs Art Book, screen preview + print ─────────────────────────────────
    Every .bk-page is sized in inches to the exact PDF page (trim + optional bleed), so the
    browser's "Save as PDF" with Margins: None produces one PDF page per .bk-page. The @page
    size itself is injected by CatalogBook.tsx since it depends on the selected part/bleed.

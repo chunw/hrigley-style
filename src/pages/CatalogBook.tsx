@@ -101,7 +101,7 @@ const hasCjk = (s: string) => /[\u4e00-\u9fff]/.test(s);
 /** One short epigraph per chapter, printed small in the upper field of
  *  the chapter's opener spread.
  *  Sourcing rule (her discipline): only lines that already stand in this book
- *  for that chapter — the chapter's own text, verbatim — or her own words.
+ *  for that chapter, the chapter's own text, verbatim, or her own words.
  *  Nothing is written for the slot. Chapters whose book text carries no such
  *  line (Still Things, Unfinished Archive) get none. */
 const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
@@ -122,16 +122,16 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     zh: "旅程会结束，瞬间留下来。",
   },
   innerwilderness: {
-    en: "The land comes first — before language, before the self.",
-    zh: "土地在先——在语言之前，在自我之前。",
+    en: "The land comes first, before language, before the self.",
+    zh: "土地在先，在语言之前，在自我之前。",
   },
   deathvalley: {
     en: "The salt flats become mirrors at dawn, doubling the sky.",
     zh: "盐滩在黎明时分成为镜子，复制天空。",
   },
   sahara: {
-    en: "An archive of the desert kept by the clock — hour by hour, from 6 to 10.",
-    zh: "按钟点保存的沙漠档案——逐小时，从 6 点到 10 点。",
+    en: "An archive of the desert kept by the clock, hour by hour, from 6 to 10.",
+    zh: "按钟点保存的沙漠档案，逐小时，从 6 点到 10 点。",
   },
   highlands: {
     en: "Scottish Highlands: Heroism of the Vista.",
@@ -316,8 +316,8 @@ const APHORISMS: Record<string, Aphorism> = {
   "cover-story": {
     id: "cover-story",
     long: true,
-    en: "Ah — the glamorous cover being the story they sell: AI for humanity, curing disease, abundance for all. The shinier the mission looks, the less anyone asks what's underneath it — the capex machine, the credit, the concentration of compute and power in a handful of hands. Profit extraction works best when it looks like salvation.",
-    zh: "啊——光鲜的封面正是他们兜售的故事：AI 为了人类，治愈疾病，人人富足。使命看上去越闪亮，越没有人追问它底下盖着什么——资本开支的机器、信贷、集中在一小撮人手里的算力和权力。利润的榨取，在看起来像救赎的时候，最为奏效。",
+    en: "Ah, the glamorous cover being the story they sell: AI for humanity, curing disease, abundance for all. The shinier the mission looks, the less anyone asks what's underneath it: the capex machine, the credit, the concentration of compute and power in a handful of hands. Profit extraction works best when it looks like salvation.",
+    zh: "啊，光鲜的封面正是他们兜售的故事：AI 为了人类，治愈疾病，人人富足。使命看上去越闪亮，越没有人追问它底下盖着什么：资本开支的机器、信贷、集中在一小撮人手里的算力和权力。利润的榨取，在看起来像救赎的时候，最为奏效。",
   },
 };
 
@@ -331,7 +331,7 @@ const APHORISM_BEFORE_CHAPTER: Record<string, string> = {
   "series:negotiated": "cover-story",
 };
 
-/** "Collage as Method" — a short front-matter essay standing right after
+/** "Collage as Method", a short front-matter essay standing right after
  * About the Artist and before the first chapter (her direction, 2026-10-20).
  * Her own text, verbatim; English page first, Chinese page second, like the
  * preface. */
@@ -389,7 +389,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     const aphorismId = APHORISM_BEFORE_CHAPTER[chapter.key];
     if (aphorismId) pushAphorism(APHORISMS[aphorismId]);
     // One opening per chapter (her direction, 2026-10-18): the big-type
-    // opener spread alone — no separate title page before it. Series-only
+    // opener spread alone, no separate title page before it. Series-only
     // chapters open with the same spread; their essay count can be 0.
     if (!nextIsVerso()) specs.push({ kind: "blank" });
     specs.push({ kind: "opener", half: "left", chapter });
@@ -582,7 +582,7 @@ export interface BookContext {
 
 export function FrontCoverFace({ ctx }: { ctx: BookContext }) {
   // Final cover (her direction, 2026-10-18): a full rust-brown field, the David
-  // still life from the Still Things section whole at the centre, and cream serif lettering walking the four edges — Chun across the
+  // still life from the Still Things section whole at the centre, and cream serif lettering walking the four edges, Chun across the
   // top, Wang down the right side, Remains up the left side. No Chinese on
   // the front cover (her call, 2026-10-18): English lettering only.
   const still = ctx.chapters.find((c) => c.key === "stillthings");
@@ -657,7 +657,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
   const ctl =
     ctx.editMode && pageKey ? <PageBgCtl current={bg} onPick={(kind) => ctx.setPageBg(pageKey, kind)} /> : null;
   const author = "Chun Wang · 王淳";
-  const bookHead = `${author} — ${b.title}`;
+  const bookHead = `${author} - ${b.title}`;
 
   switch (spec.kind) {
     case "title":
@@ -694,11 +694,11 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             <p>
               Online · 在线查阅
               <br />
-              IMMEMORY — covid-immemory.com · Cave Dance — cavedance.art
+              IMMEMORY: covid-immemory.com · Cave Dance: cavedance.art
               <br />
-              Art.empath.io — art.empath.io · Remains — chunwangshop.com/remains-catalog
+              Art.empath.io: art.empath.io · Remains: chunwangshop.com/remains-catalog
               <br />
-              Artist Interview · 艺术家访谈 — shoutoutatlanta.com/meet-chun-wang-artist
+              Artist Interview · 艺术家访谈: shoutoutatlanta.com/meet-chun-wang-artist
             </p>
           </div>
         </Page>
@@ -1125,8 +1125,8 @@ function useBookModel(args: {
       "series:interview",
     ];
     // Photography, restructured at her direction (2026-10-18): the part is
-    // "Inner Wilderness 内在荒原" — an opening text chapter carrying the
-    // landscape statement — then each series stands as its own section with
+    // "Inner Wilderness 内在荒原", an opening text chapter carrying the
+    // landscape statement, then each series stands as its own section with
     // its own text: Death Valley, Sahara, Scottish Highlands, Theater, and
     // El Otro, El Mismo (the old mixed photography chapter) closing the part.
     // Sahara and Theater #2/#3 are printInCatalog=false on the site, so they
@@ -1245,8 +1245,8 @@ function useBookModel(args: {
           fieldTexts[`series:${s.id}:zh`] = zhT;
         }
         if (s?.id === "earlyline" && (enT || zhT)) {
-          // The placeholder section's plate — a full-page screenshot of the
-          // Loss of Childhood series website — stands between the two works:
+          // The placeholder section's plate, a full-page screenshot of the
+          // Loss of Childhood series website, stands between the two works:
           // the Mundane Details text, from its heading on, is held back and
           // emitted right after the plate (see Chapter.essayAfterPlate). The
           // split is computed from the field text itself, so inline text
@@ -1343,7 +1343,7 @@ function useBookModel(args: {
         // paragraph of the ceramics text is the method note ("My ceramics
         // begin as functional forms…"). It leaves the introduction and
         // stands as its own essay page pair right after the After Hours
-        // Altar plate — the work first, then the note on how the ceramics
+        // Altar plate, the work first, then the note on how the ceramics
         // are made. The two method chunks are appended after the leading
         // chunks and paginate() emits them at the marked plate (see
         // Chapter.essayAfterPlate); the split is computed from the field
@@ -1488,14 +1488,14 @@ const CatalogBook = () => {
       setPrMsg(
         lang === "zh"
           ? `自动生成失败（${err instanceof Error ? err.message : "网络问题"}），已下载 book-edits.json，把它发给 Beignet 即可生成同样的 PR。`
-          : "Automatic PR failed; book-edits.json downloaded instead — send it to Beignet.",
+          : "Automatic PR failed; book-edits.json downloaded instead, send it to Beignet.",
       );
     }
   };
   const stageRef = useRef<HTMLDivElement>(null);
 
   usePageMeta({
-    title: `${b.title} — ${b.cta}`,
+    title: `${b.title} - ${b.cta}`,
     description: "Remains, a print-ready art book by Chun Wang. Covers and interior pages laid out for PDF export.",
     path: "/catalogs/book",
     noindex: true,
