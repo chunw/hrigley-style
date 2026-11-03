@@ -1,7 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Sun, Moon, User, Menu, ShoppingBag, ChevronDown } from "lucide-react";
+import { Sun, Moon, User, Menu, ShoppingBag } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import type { Lang } from "@/lib/translations";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useCart } from "@/contexts/CartContext";
 import {
@@ -73,18 +72,26 @@ const Header = () => {
               <TooltipContent>{t.index.ctaInstagram}</TooltipContent>
             </Tooltip>
 
-            <div className="relative">
-              <label className="sr-only">Language</label>
-              <select
-                value={lang}
-                onChange={(e) => setLang(e.target.value as Lang)}
-                aria-label="Select language"
-                className={`cursor-pointer appearance-none rounded-full border bg-transparent py-1 pl-3 pr-8 text-sm transition-colors hover:border-primary hover:text-primary ${headerIsLight ? "border-foreground/30" : "border-white/30"} ${controlColor}`}
+            <div className="inline-flex items-center gap-1.5" role="group" aria-label="Language">
+              <button
+                type="button"
+                onClick={() => setLang("en")}
+                aria-label="Switch to English"
+                aria-pressed={lang === "en"}
+                className={`transition-opacity ${controlColor} ${lang === "en" ? "underline underline-offset-4 decoration-2" : "opacity-60 hover:opacity-100"}`}
               >
-                <option value="en">English</option>
-                <option value="zh">中文</option>
-              </select>
-              <ChevronDown className={`pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 ${controlColor}`} />
+                EN
+              </button>
+              <span aria-hidden="true" className={`${controlColor} opacity-40`}>/</span>
+              <button
+                type="button"
+                onClick={() => setLang("zh")}
+                aria-label="切换到中文"
+                aria-pressed={lang === "zh"}
+                className={`transition-opacity ${controlColor} ${lang === "zh" ? "underline underline-offset-4 decoration-2" : "opacity-60 hover:opacity-100"}`}
+              >
+                中文
+              </button>
             </div>
 
             <Tooltip>
@@ -205,17 +212,26 @@ const Header = () => {
                   </a>
                   </DrawerClose>
 
-                  <div>
-                    <label className="sr-only">Language</label>
-                    <select
-                      value={lang}
-                      onChange={(e) => setLang(e.target.value as Lang)}
-                      aria-label="Select language"
-                      className="w-full text-sm p-2 bg-transparent border rounded text-foreground"
+                  <div className="flex items-center gap-2 p-2 text-sm" role="group" aria-label="Language">
+                    <button
+                      type="button"
+                      onClick={() => setLang("en")}
+                      aria-label="Switch to English"
+                      aria-pressed={lang === "en"}
+                      className={`transition-opacity text-foreground ${lang === "en" ? "font-semibold underline underline-offset-4 decoration-2" : "opacity-60 hover:opacity-100"}`}
                     >
-                      <option value="en">English</option>
-                      <option value="zh">中文</option>
-                    </select>
+                      EN
+                    </button>
+                    <span aria-hidden="true" className="text-foreground opacity-40">/</span>
+                    <button
+                      type="button"
+                      onClick={() => setLang("zh")}
+                      aria-label="切换到中文"
+                      aria-pressed={lang === "zh"}
+                      className={`transition-opacity text-foreground ${lang === "zh" ? "font-semibold underline underline-offset-4 decoration-2" : "opacity-60 hover:opacity-100"}`}
+                    >
+                      中文
+                    </button>
                   </div>
                 </div>
 
