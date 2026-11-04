@@ -27,6 +27,7 @@ import Catalogs from "./pages/Catalogs";
 import CatalogBook from "./pages/CatalogBook";
 import AllItems from "./pages/AllItems";
 import HiddenItems from "./pages/HiddenItems";
+import WallPreview from "./pages/WallPreview";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +56,7 @@ const App = () => (
             <Route path="/photography/:id" element={<PhotographyDetail />} />
             <Route path="/photography-photobook" element={<PhotographyPhotobook />} />
             <Route path="/catalogs" element={<Catalogs />} />
+            <Route path="/wall-preview" element={<WallPreview />} />
             <Route path="/catalogs/book" element={<CatalogBook />} />
               <Route path="/all-items" element={<AllItems />} />
             <Route path="/hidden-items" element={<HiddenItems />} />
