@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { BookImage, BookOpen, Store } from "lucide-react";
+import { BookImage, BookOpen, Frame, Store } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -207,6 +207,14 @@ const Catalogs = () => {
               )}
             </div>
           </div>
+
+          <Link
+            to="/wall-preview"
+            className="sans-label font-normal inline-flex items-center gap-2 transition-colors text-xs uppercase tracking-widest px-3 py-2 hover:text-primary"
+          >
+            <Frame className="h-4 w-4" />
+            {lang === "zh" ? "在墙上看看" : "View on Your Wall"}
+          </Link>
         </div>
       </div>
 
