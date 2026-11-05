@@ -1132,7 +1132,17 @@ function useBookModel(args: {
       fallback_image_url: "/book/residuals/forms-before-dissolving.jpg",
     };
     const residualsChapter = splitChapters.find((ch) => ch.key === "residuals");
-    if (residualsChapter) residualsChapter.items = [{ item: fbdItem, plate: 0 }, ...residualsChapter.items];
+    if (residualsChapter) {
+      // Her direction (2026-11-04): the works open with Residuals #1, right
+      // after the exhibition poster plate above; the poster is front matter
+      // for the section, not a numbered work. The remaining works keep
+      // their catalog order.
+      const firstIdx = residualsChapter.items.findIndex(({ item }) => item.title === "Residuals #1");
+      const works = firstIdx > 0
+        ? [residualsChapter.items[firstIdx], ...residualsChapter.items.filter((_, i) => i !== firstIdx)]
+        : residualsChapter.items;
+      residualsChapter.items = [{ item: fbdItem, plate: 0 }, ...works];
+    }
     const SECTION_ORDER = [
       "spirit", "remains", "residuals", "stillthings", "road", "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography", "series:nostalgia",
       "shop",
