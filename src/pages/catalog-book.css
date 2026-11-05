@@ -991,6 +991,14 @@
   padding-left: 0.28in;
 }
 
+/* Contents titles print English and Chinese on separate lines. */
+.bk-contents-title .bk-title-zh-line {
+  margin-top: 3px;
+  font-size: 10.5pt;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
 /* ── Essay / about pages ───────────────────────────────────────────────────── */
 .bk-essay {
   display: flex;
