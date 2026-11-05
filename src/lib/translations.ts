@@ -153,14 +153,8 @@ export const translations = {
         "慢慢读。这本书里没有什么在赶时间，而且其中大多数东西，已经等了很久很久了。",
       ],
       remainsEssayBody: [
-        "Remains is an ongoing series of mixed media illustrations drawing inspiration from museums around the world. Through these artworks, I seek to ignite a spark of continuity between modern art and the diverse aesthetics of past civilizations.",
-        "The figures in these six paintings are ancient pottery figurines, the kind made to accompany the dead. In the museum they stand in rows, patient and identically lit, as if history were a waiting room. I kept wondering what they were waiting for. So I gave them the present day. One studies a toilet with the gravity of a philosopher. Three attend a video meeting, in the posture anyone who has survived remote work will recognize, present in body and absent in every other way. Their faces do not change. That is the point. The expressions were fixed two thousand years ago, and they fit our meetings, our bathrooms, and our small daily despairs without any adjustment at all.",
-        "People ask whether the series is a joke about the past. It is not. It is a joke about the present, told by the only witnesses who have seen enough of both to compare. The figurines have outlasted an empire. They will probably outlast the video call. Painting them is my way of keeping them on the record, and of asking what, in our own moment, is built to stay.",
-        "The series was named an Official Selection of the London International Creative Competition in 2024.",
-        "《Remains》是一个持续中的综合材料绘画系列，灵感来自世界各地的博物馆。我希望通过这些作品，在现代艺术与往昔文明多样的美学之间，点起一点连续性的火花。",
-        "这六幅画里的主角是古代陶俑，就是那种做出来陪伴逝者的陶俑。在博物馆里，它们成排站着，有耐心，灯光均匀，仿佛历史是一间候诊室。我一直想知道它们在等什么。于是我把当下给了它们。一个以哲学家的庄重研究一只马桶。三个参加视频会议，姿势是任何熬过远程工作的人都认得的，人在，心不在。它们的表情不变。这正是关键所在。那些表情在两千年前就定型了，而它们配我们的会议、我们的卫生间、我们日常的小绝望，严丝合缝，不需要任何调整。",
-        "有人问，这个系列是不是在拿过去开玩笑。不是。它是在拿当下开玩笑，而讲笑话的，是唯一见过两边、有资格比较的见证者。陶俑熬过了一个帝国。它们大概也将熬过视频会议。画它们，是我把它们留在记录里的方式，也是我在问：在我们自己的时代里，有什么东西是造出来为了留下来的？",
-        "本系列入选 2024 年伦敦国际创意大赛（LICC）Official Selection。",
+        "Rivera's museum can be called a model institution for the continuation of cultural heritage. The collector, in his enthusiasm, excavated those fragments so rich in symbolism, and proclaimed their existence in a language people today can understand. As the transformation of history continues to accelerate, the past itself has become the most surreal of subjects. It makes it possible for us to find new beauty in things that are disappearing.",
+        "里维拉的这间博物馆可谓存续文化遗产的典范机构，收藏家凭热心发掘那些富象征性的碎片，并以当代人理解的语汇宣告其存在。随着历史转变的继续加速，过去本身也成为最超现实的题材——使我们有可能在消失的事物中发现新的美。",
       ],
       elOtroEssayBody: [
         "Lacan wrote that the self is born in a mirror: an image more whole than the body that claims it. We never meet ourselves directly. We arrive by way of other faces. In this series, portraits of others and self-portraits take turns, and the turn matters more than the likeness. A stranger holds still and returns my looking. Then I step into the frame and become the stranger. Other, then same, then other again. If identity is a recognition borrowed from outside, then a portrait is not a record of who someone is. It is the moment two people lend each other a self.",
@@ -355,14 +349,8 @@ export const translations = {
         "慢慢读。这本书里没有什么在赶时间，而且其中大多数东西，已经等了很久很久了。",
       ],
       remainsEssayBody: [
-        "Remains is an ongoing series of mixed media illustrations drawing inspiration from museums around the world. Through these artworks, I seek to ignite a spark of continuity between modern art and the diverse aesthetics of past civilizations.",
-        "The figures in these six paintings are ancient pottery figurines, the kind made to accompany the dead. In the museum they stand in rows, patient and identically lit, as if history were a waiting room. I kept wondering what they were waiting for. So I gave them the present day. One studies a toilet with the gravity of a philosopher. Three attend a video meeting, in the posture anyone who has survived remote work will recognize, present in body and absent in every other way. Their faces do not change. That is the point. The expressions were fixed two thousand years ago, and they fit our meetings, our bathrooms, and our small daily despairs without any adjustment at all.",
-        "People ask whether the series is a joke about the past. It is not. It is a joke about the present, told by the only witnesses who have seen enough of both to compare. The figurines have outlasted an empire. They will probably outlast the video call. Painting them is my way of keeping them on the record, and of asking what, in our own moment, is built to stay.",
-        "The series was named an Official Selection of the London International Creative Competition in 2024.",
-        "《Remains》是一个持续中的综合材料绘画系列，灵感来自世界各地的博物馆。我希望通过这些作品，在现代艺术与往昔文明多样的美学之间，点起一点连续性的火花。",
-        "这六幅画里的主角是古代陶俑，就是那种做出来陪伴逝者的陶俑。在博物馆里，它们成排站着，有耐心，灯光均匀，仿佛历史是一间候诊室。我一直想知道它们在等什么。于是我把当下给了它们。一个以哲学家的庄重研究一只马桶。三个参加视频会议，姿势是任何熬过远程工作的人都认得的，人在，心不在。它们的表情不变。这正是关键所在。那些表情在两千年前就定型了，而它们配我们的会议、我们的卫生间、我们日常的小绝望，严丝合缝，不需要任何调整。",
-        "有人问，这个系列是不是在拿过去开玩笑。不是。它是在拿当下开玩笑，而讲笑话的，是唯一见过两边、有资格比较的见证者。陶俑熬过了一个帝国。它们大概也将熬过视频会议。画它们，是我把它们留在记录里的方式，也是我在问：在我们自己的时代里，有什么东西是造出来为了留下来的？",
-        "本系列入选 2024 年伦敦国际创意大赛（LICC）Official Selection。",
+        "Rivera's museum can be called a model institution for the continuation of cultural heritage. The collector, in his enthusiasm, excavated those fragments so rich in symbolism, and proclaimed their existence in a language people today can understand. As the transformation of history continues to accelerate, the past itself has become the most surreal of subjects. It makes it possible for us to find new beauty in things that are disappearing.",
+        "里维拉的这间博物馆可谓存续文化遗产的典范机构，收藏家凭热心发掘那些富象征性的碎片，并以当代人理解的语汇宣告其存在。随着历史转变的继续加速，过去本身也成为最超现实的题材——使我们有可能在消失的事物中发现新的美。",
       ],
       elOtroEssayBody: [
         "Lacan wrote that the self is born in a mirror: an image more whole than the body that claims it. We never meet ourselves directly. We arrive by way of other faces. In this series, portraits of others and self-portraits take turns, and the turn matters more than the likeness. A stranger holds still and returns my looking. Then I step into the frame and become the stranger. Other, then same, then other again. If identity is a recognition borrowed from outside, then a portrait is not a record of who someone is. It is the moment two people lend each other a self.",

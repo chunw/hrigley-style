@@ -1291,9 +1291,16 @@ function useBookModel(args: {
         }
       } else if (chapter.key === "remains") {
         const paras = txParas("remainsEssayBody");
-        const leadEn: EssayItem = { html: "<p>Remains was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions.</p>" };
-        const leadZh: EssayItem = { html: "<p>《遗迹》是一个源于微妙荒诞感的综合媒材系列。研读古代陶俑时，我被它们那种熟悉、笨拙、僵在无所事事半途的表情迷住了。</p>" };
-        essayChunks[chapter.key] = langChunks([leadEn, ...paraItems(paras.filter((p) => !hasCjk(p.text)))], [leadZh, ...paraItems(paras.filter((p) => hasCjk(p.text)))]);
+        const leadEn: EssayItem = { html: "<p>In the profound atmosphere of the Anahuacalli Museum, I gaze at these ancient handmade works, following Diego Rivera's vision as I look for a spark of continuity between modern art and pre-Columbian aesthetics. The figures in these works of the ancient civilizations of the Americas are strikingly artless and strange. Though carved in a refined, stylized manner, they are simple and powerful.</p>" };
+        const leadZh: EssayItem = { html: "<p>在 Anahuacalli 博物馆的深邃氛围中，我凝视这些远古的手作，按照迭戈·里维拉的构想，在现代艺术与前哥伦布时期美学之间寻找延续的火花。这些美洲古文明的作品形象格外憨朴奇崛，尽管是以洗练的风格化手法雕成，却简洁有力。</p>" };
+        // The two paragraphs are her own Facebook post (July 12, 2023); as with
+        // her other diary-like texts in this book, a small source line closes
+        // the text, in the bk-credit style. Place per the post's own
+        // location tag: Mexico · Azcapotzalco. No URL is printed, per her
+        // rule for source lines in the book.
+        const noteEn: EssayItem = { html: "<p><span class=\"bk-credit\">July 12, 2023, Mexico · Azcapotzalco</span></p>" };
+        const noteZh: EssayItem = { html: "<p><span class=\"bk-credit\">2023 年 7 月 12 日，墨西哥 · Azcapotzalco</span></p>" };
+        essayChunks[chapter.key] = langChunks([leadEn, ...paraItems(paras.filter((p) => !hasCjk(p.text))), noteEn], [leadZh, ...paraItems(paras.filter((p) => hasCjk(p.text))), noteZh]);
       } else if (chapter.key === "photography") {
         const head: EssayItem = { html: "<p>El Otro, El Mismo</p>" };
         const otro = txParas("elOtroEssayBody");
