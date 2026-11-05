@@ -1145,7 +1145,8 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         const p = PART_OF[c.key];
         if (p) {
           pushPart(p);
-          if (c.titleZh && c.titleZh === partTitlePair(p).zh) continue;
+          const pz = partTitlePair(p).zh;
+          if (pz && c.titleZh && (c.titleZh === pz || c.titleZh.startsWith(pz + "：") || c.titleZh.startsWith(pz + ":"))) continue;
         }
         rows.push({ ...chapterRow(c), inPart: p ? true : undefined });
       }
@@ -1714,12 +1715,12 @@ function useBookModel(args: {
     const elOtroItems = photoItems.filter((p) => !usedPhoto.has(p));
     const photoChapters: Chapter[] = photoParent
       ? [
-          { key: "innerwilderness", number: 0, title: "Inner Wilderness 内在荒原", descriptionHtml: "", years: "2017 – 2025", items: [], seriesTextId: "innerwilderness", partHead: true },
-          { key: "deathvalley", number: 0, title: "Death Valley 死亡谷", descriptionHtml: "", years: yrOf(dvItems), items: [...dvItems, ...DEATH_VALLEY_PLATES.map((item) => ({ item, plate: 0 }))], seriesTextId: "deathvalley" },
-          { key: "sahara", number: 0, title: "Sahara 撒哈拉", descriptionHtml: "", years: saharaItem?.year ?? "", items: saharaItem ? [{ item: saharaItem, plate: 0 }] : [], seriesTextId: "sahara" },
-          { key: "highlands", number: 0, title: "Scottish Highlands 苏格兰高地", descriptionHtml: "", years: yrOf(hgItems), items: hgItems, seriesTextId: "highlands" },
-          { key: "theater", number: 0, title: "Theater 登场", descriptionHtml: "", years: yrOf(thItems), items: thItems, seriesTextId: "theater" },
-          { ...photoParent, title: "El Otro, El Mismo 另一个，同一个", descriptionHtml: "", years: yrOf(elOtroItems), items: elOtroItems },
+          { key: "innerwilderness", number: 0, title: "Inner Wilderness 内在荒原", titleEn: "Inner Wilderness", titleZh: "内在荒原", descriptionHtml: "", years: "2017 – 2025", items: [], seriesTextId: "innerwilderness", partHead: true },
+          { key: "deathvalley", number: 0, title: "Death Valley 死亡谷", titleEn: "Death Valley", titleZh: "死亡谷", descriptionHtml: "", years: yrOf(dvItems), items: [...dvItems, ...DEATH_VALLEY_PLATES.map((item) => ({ item, plate: 0 }))], seriesTextId: "deathvalley" },
+          { key: "sahara", number: 0, title: "Sahara 撒哈拉", titleEn: "Sahara", titleZh: "撒哈拉", descriptionHtml: "", years: saharaItem?.year ?? "", items: saharaItem ? [{ item: saharaItem, plate: 0 }] : [], seriesTextId: "sahara" },
+          { key: "highlands", number: 0, title: "Scottish Highlands 苏格兰高地", titleEn: "Scottish Highlands", titleZh: "苏格兰高地", descriptionHtml: "", years: yrOf(hgItems), items: hgItems, seriesTextId: "highlands" },
+          { key: "theater", number: 0, title: "Theater 登场", titleEn: "Theater", titleZh: "登场", descriptionHtml: "", years: yrOf(thItems), items: thItems, seriesTextId: "theater" },
+          { ...photoParent, title: "El Otro, El Mismo 另一个，同一个", titleEn: "El Otro, El Mismo", titleZh: "另一个，同一个", descriptionHtml: "", years: yrOf(elOtroItems), items: elOtroItems },
         ]
       : [];
     const byChapterKey = new Map([...catalogChapters, ...photoChapters, ...seriesChapters, ...splitChapters].map((ch) => [ch.key, ch]));
