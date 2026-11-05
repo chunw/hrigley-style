@@ -236,6 +236,48 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
       "展亭网站在 Awwwards 提名页上的呈现：“当机器学会做艺术时，我们还能成为谁？”",
       "/book/negotiated/awwwards-nominee.jpg",
     ),
+    plate(
+      "Elsewhere Gallery", "Daria Belkina · The Wrong Biennale, 7th Edition", "2025",
+      "Elsewhere Gallery by Daria Belkina: the tiled gallery interior that holds her moving-image work, as the pavilion's 3D archive presents it.",
+      "Daria Belkina 的《Elsewhere Gallery》：一间瓷砖画廊的内部，陈列着艺术家的影像作品，是它在展亭 3D 档案中的样子。",
+      "/book/negotiated/work-elsewhere.jpg",
+    ),
+    plate(
+      "Ave Maria", "Marie Le Moigne · The Wrong Biennale, 7th Edition", "2025",
+      "Ave Maria by Marie Le Moigne: the work's process layers in the archive, from self-portrait and AI prompt to print and embroidery.",
+      "Marie Le Moigne 的《Ave Maria》：作品在档案中的流程图层，从自拍、AI 提示词，一路到打印与刺绣。",
+      "/book/negotiated/work-ave-maria.jpg",
+    ),
+    plate(
+      "Fractured Star Projections", "Aaron Oldenburg · The Wrong Biennale, 7th Edition", "2025",
+      "Fractured Star Projections by Aaron Oldenburg: the artist's handwritten notes and star-projection diagrams, layered in the archive.",
+      "Aaron Oldenburg 的《Fractured Star Projections》：艺术家的手写笔记与星图投影，在档案里层层叠放。",
+      "/book/negotiated/work-fractured-star.jpg",
+    ),
+    plate(
+      "Silence is not the Absence of Speech", "Margarita Wenzel · The Wrong Biennale, 7th Edition", "2025",
+      "Silence is not the Absence of Speech by Margarita Wenzel: a one-channel soundpiece performed by a designed voice, its phrases radiating across the archive layer.",
+      "Margarita Wenzel 的《Silence is not the Absence of Speech》：一件由设计出的声音演绎的单声道声音作品，语句在档案图层上放射开来。",
+      "/book/negotiated/work-silence.jpg",
+    ),
+    plate(
+      "Chimera Haiku", "Marcie Begleiter · The Wrong Biennale, 7th Edition", "2025",
+      "Chimera Haiku by Marcie Begleiter: the work's dated haiku journal pages and images, layered in the archive.",
+      "Marcie Begleiter 的《Chimera Haiku》：作品里带日期的俳句日志页与影像，在档案中层层展开。",
+      "/book/negotiated/work-chimera-haiku.jpg",
+    ),
+    plate(
+      "Dierenleven", "Vero Szűcs and Max Noichl · The Wrong Biennale, 7th Edition", "2025",
+      "Dierenleven by Vero Szűcs and Max Noichl: the vintage animal book Dierenleven in Artis, set beside the work's prompt layers in the archive.",
+      "Vero Szűcs 与 Max Noichl 的《Dierenleven》：老动物图鉴《Dierenleven in Artis》的原书，与作品的提示词层并置在档案里。",
+      "/book/negotiated/work-dierenleven.jpg",
+    ),
+    plate(
+      "Mythology", "Slitrobo · The Wrong Biennale, 7th Edition", "2025",
+      "Mythology by Slitrobo: thirty audiovisual pieces arranged as a wheel of spherical specimens, the robot artist's work as it sits in the archive.",
+      "Slitrobo 的《Mythology》：30 件视听作品排成一圈球体标本，这位机器人艺术家的作品在档案中的样子。",
+      "/book/negotiated/work-mythology.jpg",
+    ),
   ],
   feedscanner: [
     plate(
