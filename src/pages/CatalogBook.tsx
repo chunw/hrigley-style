@@ -44,6 +44,16 @@ interface Chapter {
    * with the chapter's leading essays. Set where the chapter's essay chunks
    * are built (shop chapter only: the ceramics method note). */
   essayAfterPlate?: { imageUrl: string; trailingChunks: number };
+  /** Illustrated long-text chapters (her direction, 2026-11-05): the essay
+   * runs in English/Chinese paragraph pairs and specific plates belong at
+   * specific points inside that flow. Maps a plate's image_url to the
+   * number of essay chunks paginate() emits before that plate. Plates of
+   * the chapter that are not listed are emitted after the essay flow, in
+   * their original order. Set where the chapter's essay chunks are built. */
+  plateBreaks?: Record<string, number>;
+  /** Anchor order for plates that share the same break chunk (they are
+   * emitted as a group after that chunk, in this order). */
+  plateAnchorOrder?: string[];
 }
 
 type PageSpec =
@@ -228,6 +238,7 @@ interface EssayItem {
 }
 
 interface EssayChunk {
+  lang?: "en" | "zh" | "mixed";
   items: EssayItem[];
 }
 
@@ -287,6 +298,90 @@ function chunkItems(items: EssayItem[], maxChars: number, cost: ChunkCost): Essa
   }
   if (cur.length > 0) out.push(cur);
   return out;
+}
+
+/** Build the interleaved item stream for an illustrated long-text chapter
+ * (her direction, 2026-11-05): each English paragraph is immediately
+ * followed by its Chinese counterpart, instead of the whole English text
+ * first and the whole Chinese text after. zhItems must be index-aligned
+ * with enItems; zhExtrasAfter maps an English paragraph index to extra
+ * Chinese-only items that belong right after that pair (e.g. a diary post
+ * kept whole on the Chinese side). Returns the stream plus, for each
+ * paragraph pair, the stream index of its last item. */
+function pairStream(
+  enItems: EssayItem[],
+  zhItems: EssayItem[],
+  zhExtrasAfter?: Map<number, EssayItem[]>,
+): { stream: EssayItem[]; pairEnd: number[] } {
+  const stream: EssayItem[] = [];
+  const pairEnd: number[] = [];
+  enItems.forEach((en, i) => {
+    stream.push(en);
+    if (zhItems[i]) stream.push(zhItems[i]);
+    const extras = zhExtrasAfter?.get(i);
+    if (extras) stream.push(...extras);
+    pairEnd.push(stream.length - 1);
+  });
+  for (let j = enItems.length; j < zhItems.length; j++) stream.push(zhItems[j]);
+  return { stream, pairEnd };
+}
+
+/** Chunk a mixed-language item stream into pages. A Chinese character
+ * costs ~1.7 English ones (the ratio between the two single-language
+ * budgets, 1500 and 880); paragraph breaks and <br />s are charged as in
+ * chunkItems, and the first chunk is pre-charged for the chapter head.
+ * Pairs normally stay on one page; a pair wider than a whole page splits
+ * across the page turn, with the Chinese still immediately after its
+ * English paragraph. A subheading is never left as a page's last item.
+ * Returns the chunks plus, for each stream item, its chunk index (used to
+ * anchor plates inside the flow). */
+function chunkMixed(
+  items: EssayItem[],
+  maxCost = 1500,
+  headSeed = 160,
+): { chunks: EssayChunk[]; itemChunk: number[] } {
+  const cost = (it: EssayItem) => {
+    const text = plainText(it.html);
+    const weighted = hasCjk(text) ? text.length * 1.7 : text.length;
+    return weighted + 21 + (it.html.match(/<br/g) ?? []).length * 64;
+  };
+  const isHead = (it: EssayItem) =>
+    /^<p><strong>[\s\S]*<\/strong><\/p>$/.test(it.html.trim()) && plainText(it.html).length < 120;
+  const chunks: EssayChunk[] = [];
+  const itemChunk: number[] = [];
+  let cur: EssayItem[] = [];
+  let curIdx: number[] = [];
+  let len = headSeed;
+  const flush = () => {
+    if (cur.length === 0) return;
+    const ci = chunks.length;
+    chunks.push({ lang: "mixed", items: cur });
+    for (const ix of curIdx) itemChunk[ix] = ci;
+    cur = [];
+    curIdx = [];
+    len = 0;
+  };
+  items.forEach((it, ix) => {
+    const n = cost(it);
+    if (cur.length > 0 && len + n > maxCost) {
+      const last = cur[cur.length - 1];
+      if (cur.length > 1 && isHead(last)) {
+        const headItem = cur.pop()!;
+        const headIx = curIdx.pop()!;
+        flush();
+        cur = [headItem];
+        curIdx = [headIx];
+        len = cost(headItem);
+      } else {
+        flush();
+      }
+    }
+    cur.push(it);
+    curIdx.push(ix);
+    len += n;
+  });
+  flush();
+  return { chunks: chunks.length > 0 ? chunks : [{ lang: "mixed" as const, items: [] }], itemChunk };
 }
 
 /** Group a chapter essay's <p> blocks into page-sized chunks by plain-text length. */
@@ -353,6 +448,68 @@ const ONLINE_URLS: Record<string, string> = {
   interview: "shoutoutatlanta.com/meet-chun-wang-artist",
 };
 
+/** In-text plate anchors for the illustrated long-text chapters (her
+ * direction, 2026-11-05): each listed plate is emitted right after the
+ * essay paragraph pair it belongs to (indexes are 0-based into the
+ * section's English text), restoring the image to the spot its own text
+ * refers to. Plates of these chapters that are not listed keep the
+ * plates-after-text position, in their original order. */
+const SERIES_PLATE_ANCHORS: Record<string, { image: string; afterPair: number }[]> = {
+  // Art.empath.io: every image is referred to inside the text — the
+  // responses and interface figures sit under their own caption lines.
+  artempath: [
+    { image: "/book/artempath/printer.jpg", afterPair: 13 }, // after the system description
+    { image: "/book/artempath/sfmoma-bench.jpg", afterPair: 15 }, // with the SFMOMA bench photo paragraph
+    { image: "/book/artempath/interface-sf.jpg", afterPair: 15 },
+    { image: "/book/artempath/responses-rothko.jpg", afterPair: 17 }, // under the Responses figure caption
+    { image: "/book/artempath/anderson-wide.jpg", afterPair: 19 }, // with the Anderson Collection paragraph
+    { image: "/book/artempath/interface-and.jpg", afterPair: 19 },
+    { image: "/book/artempath/responses-mitchell.jpg", afterPair: 25 }, // under the Visualization caption
+    { image: "/book/artempath/visualization.jpg", afterPair: 27 }, // end of the visualization account
+    { image: "/book/artempath/sfmoma-grid.jpg", afterPair: 28 }, // the closing works paragraph
+    { image: "/book/artempath/anderson-grid.jpg", afterPair: 28 },
+  ],
+  // IMMEMORY: only the Webby nominees screenshot is referred to in the
+  // text (the nomination paragraph). The open-call poster and the journal
+  // pages are not tied to a paragraph and stay after the text.
+  immemory: [{ image: "/book/immemory/webby-nominees.jpg", afterPair: 3 }],
+  // Negotiated Intelligence handbook: the diary page belongs to its own
+  // dated entry, the pavilion photograph to the review passage that
+  // describes the entrance, the nominee badge to the closing question.
+  negotiated: [
+    { image: "/book/negotiated/diary-page.jpg", afterPair: 6 },
+    { image: "/book/negotiated/pavilion-entrance.jpg", afterPair: 49 },
+    { image: "/book/negotiated/awwwards-nominee.jpg", afterPair: 52 },
+  ],
+  // Feed Scanner: interfaces 1–2 show the homepage walkthrough, interface
+  // 3 the font-size control walkthrough. Poster and installation views
+  // are not tied to a paragraph and stay after the text.
+  feedscanner: [
+    { image: "/book/feedscanner/interface-1.jpg", afterPair: 0 },
+    { image: "/book/feedscanner/interface-2.jpg", afterPair: 0 },
+    { image: "/book/feedscanner/interface-3.jpg", afterPair: 2 },
+  ],
+  // "My Google Search History …": the film still and interface belong to
+  // the reading-aloud film account, the instructions image to the
+  // instruction booklet paragraph. Poster and exhibition views stay after.
+  google: [
+    { image: "/book/google/film-still.jpg", afterPair: 1 },
+    { image: "/book/google/interface.jpg", afterPair: 1 },
+    { image: "/book/google/instructions.jpg", afterPair: 2 },
+  ],
+};
+
+/** Which Spirit sub-series have a painting in the book, and where its
+ * image lives. Four of the eight background groups have no painting
+ * (consumerism, blackmirror, covid, genai — their works are not among
+ * this chapter's plates), so only these four anchor into the text flow. */
+const SPIRIT_GROUP_PLATES: Record<string, string> = {
+  climate: "/21spirit/02/main.jpg",
+  attention: "/21spirit/04/main.jpg",
+  alonetogether: "/21spirit/01/main.jpg",
+  surveillance: "/21spirit/03/main.jpg",
+};
+
 // ── Pagination ────────────────────────────────────────────────────────────────
 // Odd pages are rectos (right-hand), even pages versos. Chapter openers are two-page spreads,
 // so they must start on a verso; a blank is inserted before them whenever needed.
@@ -395,22 +552,56 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     specs.push({ kind: "opener", half: "left", chapter });
     specs.push({ kind: "opener", half: "right", chapter });
     const essayCount = essayChunkCounts[chapter.key] ?? (chapter.seriesOnly ? 0 : 1);
-    // Held-back trailing essay chunks (see Chapter.essayAfterPlate) are
-    // emitted right after their marked plate; if that plate is absent they
-    // close the plate sequence instead, so no text is ever dropped.
-    const holdBack = chapter.essayAfterPlate;
-    const leadCount = holdBack ? Math.max(0, essayCount - holdBack.trailingChunks) : essayCount;
-    for (let i = 0; i < leadCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
-    let heldBackEmitted = false;
-    for (const { item, plate } of chapter.items) {
-      specs.push({ kind: "plate", chapter, item, plate });
-      if (holdBack && !heldBackEmitted && item.image_url === holdBack.imageUrl) {
-        for (let i = leadCount; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
-        heldBackEmitted = true;
+    // Illustrated chapters with plates anchored inside the essay flow (see
+    // Chapter.plateBreaks): essay chunks and anchored plates are emitted in
+    // one merged sequence; unanchored plates follow the essay, in order.
+    const breaks = chapter.plateBreaks;
+    if (breaks) {
+      let emitted = 0;
+      const anchored = chapter.items
+        .filter(({ item }) => breaks[item.image_url] !== undefined)
+        .sort((a, b) => {
+          const d = (breaks[a.item.image_url] ?? 0) - (breaks[b.item.image_url] ?? 0);
+          if (d !== 0) return d;
+          const order = chapter.plateAnchorOrder ?? [];
+          const ia = order.indexOf(a.item.image_url);
+          const ib = order.indexOf(b.item.image_url);
+          return (ia === -1 ? Number.MAX_SAFE_INTEGER : ia) - (ib === -1 ? Number.MAX_SAFE_INTEGER : ib);
+        });
+      const anchoredUrls = new Set(anchored.map(({ item }) => item.image_url));
+      for (const { item, plate } of anchored) {
+        const target = Math.min(breaks[item.image_url] ?? 0, essayCount);
+        while (emitted < target) {
+          specs.push({ kind: "essay", chapter, chunk: emitted });
+          emitted++;
+        }
+        specs.push({ kind: "plate", chapter, item, plate });
       }
-    }
-    if (holdBack && !heldBackEmitted) {
-      for (let i = leadCount; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
+      while (emitted < essayCount) {
+        specs.push({ kind: "essay", chapter, chunk: emitted });
+        emitted++;
+      }
+      for (const { item, plate } of chapter.items) {
+        if (!anchoredUrls.has(item.image_url)) specs.push({ kind: "plate", chapter, item, plate });
+      }
+    } else {
+      // Held-back trailing essay chunks (see Chapter.essayAfterPlate) are
+      // emitted right after their marked plate; if that plate is absent they
+      // close the plate sequence instead, so no text is ever dropped.
+      const holdBack = chapter.essayAfterPlate;
+      const leadCount = holdBack ? Math.max(0, essayCount - holdBack.trailingChunks) : essayCount;
+      for (let i = 0; i < leadCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
+      let heldBackEmitted = false;
+      for (const { item, plate } of chapter.items) {
+        specs.push({ kind: "plate", chapter, item, plate });
+        if (holdBack && !heldBackEmitted && item.image_url === holdBack.imageUrl) {
+          for (let i = leadCount; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
+          heldBackEmitted = true;
+        }
+      }
+      if (holdBack && !heldBackEmitted) {
+        for (let i = leadCount; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
+      }
     }
     if (EXHIBITIONS[chapter.key]?.length) specs.push({ kind: "exhibitions", chapter });
   }
@@ -1275,7 +1466,38 @@ function useBookModel(args: {
           fieldTexts[`series:${s.id}:en`] = enT;
           fieldTexts[`series:${s.id}:zh`] = zhT;
         }
-        if (s?.id === "earlyline" && (enT || zhT)) {
+        const anchors = s ? SERIES_PLATE_ANCHORS[s.id] : undefined;
+        if (s && anchors && enT && zhT) {
+          // Illustrated long-text chapter (her direction, 2026-11-05):
+          // paragraph pairs instead of language blocks, plates anchored
+          // inside the flow (see SERIES_PLATE_ANCHORS / plateBreaks).
+          const enBlocks = pBlocks(asParas(enT)).map((html) => ({ html, edit: `series:${s.id}:en` }));
+          let zhBlocks = pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s.id}:zh` }));
+          let zhExtras: Map<number, EssayItem[]> | undefined;
+          if (s.id === "artempath" && zhBlocks.length === enBlocks.length + 2) {
+            // The Chinese side carries two extra blocks after paragraph 9:
+            // her Rothko post, kept whole at her direction, plus its date
+            // line. They belong to that paragraph's pair; the rest of the
+            // Chinese text realigns by the same offset.
+            zhExtras = new Map([[9, zhBlocks.slice(10, 12)]]);
+            zhBlocks = [...zhBlocks.slice(0, 10), ...zhBlocks.slice(12)];
+          }
+          if (zhBlocks.length === enBlocks.length) {
+            const { stream, pairEnd } = pairStream(enBlocks, zhBlocks, zhExtras);
+            const { chunks, itemChunk } = chunkMixed(stream);
+            essayChunks[chapter.key] = chunks;
+            chapter.plateBreaks = {};
+            chapter.plateAnchorOrder = anchors.map((a) => a.image);
+            for (const a of anchors) {
+              const endIx = pairEnd[a.afterPair];
+              if (endIx !== undefined && itemChunk[endIx] !== undefined) {
+                chapter.plateBreaks[a.image] = itemChunk[endIx] + 1;
+              }
+            }
+          } else {
+            essayChunks[chapter.key] = langChunks(enBlocks, zhBlocks);
+          }
+        } else if (s?.id === "earlyline" && (enT || zhT)) {
           // The placeholder section's plate, a full-page screenshot of the
           // Loss of Childhood series website, stands between the two works:
           // the Mundane Details text, from its heading on, is held back and
@@ -1334,35 +1556,58 @@ function useBookModel(args: {
           zhT ? pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s?.id}:zh` })) : [],
         );
       } else if (chapter.key === "spirit") {
-        // The series overview, then the sub-series' background texts from her
-        // Portfolio pages, each group headed by its bilingual title and
-        // closed by its source credit in small type. The English pages carry
-        // all eight groups, as published there; the Chinese pages carry the
-        // seven translated groups (parasZh) in the same order and with the
-        // same credit lines. Her GenAI statement stays English only for now.
-        const bgItemsFor = (which: "en" | "zh"): EssayItem[] =>
-          SPIRIT_BACKGROUNDS.flatMap((g) => {
-            const paras = which === "en" ? g.paras : g.parasZh;
-            if (!paras) return [];
-            return [
-              { html: `<p><strong>${g.titleEn} ${g.titleZh}</strong></p>`, edit: `spiritbg:${g.id}` },
-              ...(g.workTitle ? [{ html: `<p><strong>${g.workTitle}</strong></p>`, edit: `spiritbg:${g.id}` }] : []),
-              ...paras.map((para) => ({
-                html: typeof para === "string" ? `<p>${para}</p>` : `<p><strong>${para.head}</strong></p>`,
-                edit: `spiritbg:${g.id}`,
-              })),
-              ...(g.credit ? [{ html: `<p><span class="bk-credit">${g.credit}</span></p>`, edit: `spiritbg:${g.id}` }] : []),
-            ];
-          });
+        // Illustrated-chapter layout (her direction, 2026-11-05): the
+        // series overview, her own Inundated post and the eight sub-series'
+        // background texts run as English/Chinese paragraph pairs — group
+        // headings and source credits print once, bilingually, as part of
+        // the pair flow — and each sub-series' painting stands right after
+        // its own text group instead of in a block after the chapter (see
+        // SPIRIT_GROUP_PLATES / plateBreaks). Her GenAI statement has no
+        // Chinese text (no parasZh) and runs English-only inside the flow.
+        const stream: EssayItem[] = [];
+        const groupEnd = new Map<string, number>();
+        const pushPair = (en: EssayItem, zh?: EssayItem) => {
+          stream.push(en);
+          if (zh) stream.push(zh);
+        };
+        const ovEn = fieldItems("spirit", "en");
+        const ovZh = fieldItems("spirit", "zh");
+        ovEn.forEach((it, i) => pushPair(it, ovZh[i]));
+        for (let j = ovEn.length; j < ovZh.length; j++) stream.push(ovZh[j]);
         // Her own first-person post on the painting Inundated (WeChat
         // Moments, March 28, 2018) stands right after the series overview,
         // ahead of the borrowed background texts: her voice first, then the
         // texts the paintings answer to. Bilingual, like her other texts.
-        const momentItems = (which: "en" | "zh"): EssayItem[] => [
-          { html: `<p><span class="bk-credit">${which === "en" ? SPIRIT_MOMENT.labelEn : SPIRIT_MOMENT.labelZh}</span></p>`, edit: "spiritmoment:inundated" },
-          { html: `<p>${which === "en" ? SPIRIT_MOMENT.textEn : SPIRIT_MOMENT.textZh}</p>`, edit: "spiritmoment:inundated" },
-        ];
-        essayChunks[chapter.key] = langChunks([...fieldItems("spirit", "en"), ...momentItems("en"), ...bgItemsFor("en")], [...fieldItems("spirit", "zh"), ...momentItems("zh"), ...bgItemsFor("zh")]);
+        pushPair(
+          { html: `<p><span class="bk-credit">${SPIRIT_MOMENT.labelEn}</span></p>`, edit: "spiritmoment:inundated" },
+          { html: `<p><span class="bk-credit">${SPIRIT_MOMENT.labelZh}</span></p>`, edit: "spiritmoment:inundated" },
+        );
+        pushPair(
+          { html: `<p>${SPIRIT_MOMENT.textEn}</p>`, edit: "spiritmoment:inundated" },
+          { html: `<p>${SPIRIT_MOMENT.textZh}</p>`, edit: "spiritmoment:inundated" },
+        );
+        for (const g of SPIRIT_BACKGROUNDS) {
+          stream.push({ html: `<p><strong>${g.titleEn} ${g.titleZh}</strong></p>`, edit: `spiritbg:${g.id}` });
+          if (g.workTitle) stream.push({ html: `<p><strong>${g.workTitle}</strong></p>`, edit: `spiritbg:${g.id}` });
+          const toItem = (p: string | { head: string }): EssayItem => ({
+            html: typeof p === "string" ? `<p>${p}</p>` : `<p><strong>${p.head}</strong></p>`,
+            edit: `spiritbg:${g.id}`,
+          });
+          g.paras.forEach((para, i) => pushPair(toItem(para), g.parasZh?.[i] ? toItem(g.parasZh[i]) : undefined));
+          if (g.credit) stream.push({ html: `<p><span class="bk-credit">${g.credit}</span></p>`, edit: `spiritbg:${g.id}` });
+          groupEnd.set(g.id, stream.length - 1);
+        }
+        const { chunks, itemChunk } = chunkMixed(stream);
+        essayChunks[chapter.key] = chunks;
+        chapter.plateBreaks = {};
+        chapter.plateAnchorOrder = SPIRIT_BACKGROUNDS.map((g) => SPIRIT_GROUP_PLATES[g.id]).filter(Boolean);
+        for (const [groupId, suffix] of Object.entries(SPIRIT_GROUP_PLATES)) {
+          const endIx = groupEnd.get(groupId);
+          const found = chapter.items.find(({ item }) => item.image_url.endsWith(suffix));
+          if (endIx !== undefined && itemChunk[endIx] !== undefined && found) {
+            chapter.plateBreaks[found.item.image_url] = itemChunk[endIx] + 1;
+          }
+        }
       } else if (fieldText(chapter.key, "en") || fieldText(chapter.key, "zh")) {
         essayChunks[chapter.key] = langChunks(fieldItems(chapter.key, "en"), fieldItems(chapter.key, "zh"));
       } else if (chapter.key === "watercolor") {
@@ -1430,6 +1675,14 @@ function useBookModel(args: {
       const url = ONLINE_URLS[oid];
       const chunks = essayChunks[chapter.key];
       if (!url || !chunks) continue;
+      // Interleaved chapters (paragraph pairs) carry both lines on their
+      // last mixed chunk.
+      const mixedC = chunks.filter((c) => c.lang === "mixed").pop();
+      if (mixedC && mixedC.items.length > 0) {
+        mixedC.items.push({ html: `<p><span class="bk-credit">Online · ${url}</span></p>` });
+        mixedC.items.push({ html: `<p><span class="bk-credit">在线查阅 · ${url}</span></p>` });
+        continue;
+      }
       const lastOf = (lang: "en" | "zh") => chunks.filter((c) => c.lang === lang).pop();
       const enC = lastOf("en");
       const zhC = lastOf("zh");
