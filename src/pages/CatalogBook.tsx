@@ -44,6 +44,10 @@ interface Chapter {
    * chapter but stands outside the chapter numbering — number 0, and no
    * num-box in the contents, on the opener or on its essay pages. */
   partIntro?: boolean;
+  /** A big chapter's own opening chapter (Inner Wilderness, the objects
+   * chapter): keeps its number and plates, but its opener and essay head
+   * take the part treatment — rust ground, oversized title. */
+  partHead?: boolean;
   seriesTextId?: string;
   /** A chapter may hold back this many trailing essay chunks so paginate()
    * emits them right after the plate whose image_url matches, instead of
@@ -1151,7 +1155,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const paras = ctx.paintingChunks[spec.chunk]?.paras ?? [];
       const long = paras.map((p) => p.text).join("").length > 1400;
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={spec.chunk === 0 ? "bk-part-intro" : undefined}>
           <div className="bk-essay">
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
@@ -1184,7 +1188,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // appears before the section itself.
       const epigraph = CHAPTER_EPIGRAPH[chapter.key];
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-opener bk-opener-${half}`}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-opener bk-opener-${half}${chapter.partIntro || chapter.partHead ? " bk-opener-part" : ""}`}>
           <div className="bk-spread-canvas">
             {epigraph && (
               <p className="bk-opener-epigraph">
@@ -1195,7 +1199,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             <Collage
               title={stackedTitle(chapter)}
               // Two lines across the ~16 in spread at most.
-              titleSize={displaySize(chapter.titleEn ?? chapter.title, 2 * 15.5, 1.9)}
+              titleSize={displaySize(chapter.titleEn ?? chapter.title, 2 * 15.5, chapter.partIntro || chapter.partHead ? 2.6 : 1.9)}
               above={
                 <div className="bk-collage-row">
                   <span className="bk-opener-label">
@@ -1234,7 +1238,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
                 {chapter.number > 0 && <span className="bk-num-box">{pad2(chapter.number)}</span>}
-                <h2 className="bk-section-title shop-title">{stackedTitle(chapter)}</h2>
+                <h2 className={`bk-section-title shop-title${chapter.partIntro || chapter.partHead ? " bk-part-title" : ""}`}>{stackedTitle(chapter)}</h2>
                 <div className="bk-essay-meta sans-label">{chapter.years}</div>
               </div>
             )}
@@ -1489,6 +1493,7 @@ function useBookModel(args: {
         title: bilingualTitle(s.key === "shop" ? "Slightly Useful Objects" : CHAPTER_TITLE[s.key](translations.en), s.key === "shop" ? "不腐" : CHAPTER_TITLE[s.key](translations.zh)),
         titleEn: s.key === "shop" ? "Slightly Useful Objects" : CHAPTER_TITLE[s.key](translations.en),
         titleZh: s.key === "shop" ? "不腐" : CHAPTER_TITLE[s.key](translations.zh),
+        partHead: s.key === "shop",
         // Sections without an essay of their own fall back to the copy the site already uses for them.
         descriptionHtml:
           s.key === "remains"
@@ -1529,6 +1534,7 @@ function useBookModel(args: {
       years: s.years,
       seriesOnly: true,
       partIntro: !!s.partIntro,
+      partHead: !!s.partIntro,
     }));
     // The watercolor catalog dissolves into its three named series (her call:
     // no "Visions in Watercolor" umbrella chapter). Plates split from the
@@ -1634,7 +1640,7 @@ function useBookModel(args: {
     const elOtroItems = photoItems.filter((p) => !usedPhoto.has(p));
     const photoChapters: Chapter[] = photoParent
       ? [
-          { key: "innerwilderness", number: 0, title: "Inner Wilderness 内在荒原", descriptionHtml: "", years: "2017 – 2025", items: [], seriesTextId: "innerwilderness" },
+          { key: "innerwilderness", number: 0, title: "Inner Wilderness 内在荒原", descriptionHtml: "", years: "2017 – 2025", items: [], seriesTextId: "innerwilderness", partHead: true },
           { key: "deathvalley", number: 0, title: "Death Valley 死亡谷", descriptionHtml: "", years: yrOf(dvItems), items: [...dvItems, ...DEATH_VALLEY_PLATES.map((item) => ({ item, plate: 0 }))], seriesTextId: "deathvalley" },
           { key: "sahara", number: 0, title: "Sahara 撒哈拉", descriptionHtml: "", years: saharaItem?.year ?? "", items: saharaItem ? [{ item: saharaItem, plate: 0 }] : [], seriesTextId: "sahara" },
           { key: "highlands", number: 0, title: "Scottish Highlands 苏格兰高地", descriptionHtml: "", years: yrOf(hgItems), items: hgItems, seriesTextId: "highlands" },
