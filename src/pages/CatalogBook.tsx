@@ -1578,7 +1578,7 @@ function useBookModel(args: {
       residualsChapter.items = [{ item: fbdItem, plate: 0 }, ...works];
     }
     // The three websites stand as one big chapter (her direction,
-    // 2026-11-05): a part opening, "Archive, Body, Negotiation", then the
+    // 2026-11-05): a part opening, "Rooms, Scores, Decisions", then the
     // triptych in the order the IMMEMORY text itself names — first panel
     // first: IMMEMORY, Cave Dance, Negotiated Intelligence.
     const SECTION_ORDER = [

@@ -41,8 +41,8 @@ export const BOOK_SERIES: BookSeries[] = [
   {
     id: "triptych",
     partIntro: true,
-    titleEn: "Archive, Body, Negotiation",
-    titleZh: "档案、身体、协商",
+    titleEn: "Rooms, Scores, Decisions",
+    titleZh: "房间、舞谱、决定",
     years: "2020 – 2026",
     textEn: "This chapter sets three websites side by side, made between 2020 and 2026: a triptych. Each asks the book's question in a different place: what remains?\n\nIMMEMORY asks what can be kept in the middle of a catastrophe. While the pandemic was still happening, it gathered testimonies, poems, drawings and diaries from around the world, and kept them in rooms.\n\nCave Dance asks how much of a body that did not survive can be brought back. The dance existed only as murals and notation; motion capture and machine learning propose a body for the score.\n\nNegotiated Intelligence asks what remains of human intention once creation becomes computable. Inside AI-assisted work, it keeps the decisions: the prompts, the drafts, the refusals.\n\nThe subject is what remains. The method is the archive.",
     textZh: "这一章把三个网站并置在一起，做于 2020 到 2026 年之间，是一组三联作。每一个都在不同的地方问这本书的问题：什么能留下？\n\nIMMEMORY 问，一场灾难之中，什么能留住。疫情还在进行时，它收集了世界各地的证言、诗、画和日记，把它们安放在房间里。\n\n窟舞问，没有留下来的身体，能找回多少。那支舞只剩下壁画和舞谱；动作捕捉和机器学习，为舞谱提议一具身体。\n\n协商智能问，当创作变得可以计算，人的意图还剩什么。它把 AI 协作中的决定留下来：提示词、草稿、否决。\n\n主题是存留。方法是档案。",
