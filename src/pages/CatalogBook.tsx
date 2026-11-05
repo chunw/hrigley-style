@@ -1582,8 +1582,9 @@ function useBookModel(args: {
     // triptych in the order the IMMEMORY text itself names — first panel
     // first: IMMEMORY, Cave Dance, Negotiated Intelligence.
     const SECTION_ORDER = [
-      "spirit", "remains", "residuals", "stillthings", "road", "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography", "series:nostalgia",
+      "spirit", "remains", "residuals", "stillthings", "road",
       "series:triptych", "series:immemory", "series:cavedance", "series:negotiated",
+      "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography", "series:nostalgia",
       "series:unfinishedpart", "series:unfinished", "series:google",
       "series:feedscanner", "series:earlyline",
       "series:soliloquy", "series:artempath",
