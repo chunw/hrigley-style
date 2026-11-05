@@ -999,6 +999,12 @@
   color: var(--muted);
 }
 
+/* Part headers: Chinese and English at the same size (her call). */
+.bk-contents li.bk-contents-part .bk-title-zh-line {
+  font-size: inherit;
+  letter-spacing: 0.06em;
+}
+
 /* ── Essay / about pages ───────────────────────────────────────────────────── */
 .bk-essay {
   display: flex;
