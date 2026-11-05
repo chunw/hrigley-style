@@ -1647,3 +1647,136 @@
   letter-spacing: 0.05em;
   color: var(--muted);
 }
+
+/* ── Contents as a map (2026-11-05, from her approved mock) ──────────────
+   One spread, five part clusters in a vertical flow per page; the flow
+   layout makes overlap impossible. Part heads print English and Chinese
+   on separate lines at the same size; numerals are arabic, in rust. */
+.bk-tocmap {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.bk-tocmap-kicker {
+  font-size: 8.5pt;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.16in;
+}
+
+.bk-tocmap-small {
+  font-size: 10.5pt;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+
+.bk-tocmap-small-zh {
+  font-size: 9.5pt;
+  color: var(--muted);
+  margin-left: 8px;
+}
+
+.bk-tocmap-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.18in;
+  cursor: pointer;
+}
+
+.bk-tocmap-num {
+  font-size: 44pt;
+  line-height: 0.82;
+  color: #8A3C00;
+}
+
+.bk-tocmap-pen {
+  display: block;
+  font-size: 16pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.15;
+}
+
+.bk-tocmap-pzh {
+  display: block;
+  font-size: 16pt;
+  line-height: 1.3;
+}
+
+.bk-tocmap-ppage {
+  display: block;
+  font-size: 9pt;
+  letter-spacing: 0.22em;
+  color: #8A3C00;
+  margin-top: 4px;
+}
+
+.bk-tocmap-secs {
+  margin-top: 0.15in;
+}
+
+.bk-tocmap-secs-2col {
+  column-count: 2;
+  column-gap: 0.5in;
+}
+
+.bk-tocmap-sec {
+  display: flex;
+  gap: 0.1in;
+  margin-bottom: 9px;
+  break-inside: avoid;
+  cursor: pointer;
+}
+
+.bk-tocmap-sec-no {
+  font-size: 8.5pt;
+  color: #8A3C00;
+  letter-spacing: 0.08em;
+  padding-top: 2px;
+  min-width: 0.26in;
+}
+
+.bk-tocmap-sec-en {
+  display: block;
+  font-size: 11pt;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.bk-tocmap-sec-zh {
+  display: block;
+  font-size: 9.5pt;
+  color: var(--muted);
+  margin-top: 1px;
+  letter-spacing: 0.05em;
+}
+
+.bk-tocmap-pg {
+  font-size: 8.5pt;
+  color: #8A3C00;
+  margin-left: 8px;
+  letter-spacing: 0.08em;
+}
+
+/* The dotted route is a flow element between clusters, never under text. */
+.bk-tocmap-route {
+  width: 1px;
+  height: 0.34in;
+  margin: 0 auto;
+  background-image: linear-gradient(#b49b6a 55%, transparent 45%);
+  background-size: 1px 7px;
+  background-repeat: repeat-y;
+  opacity: 0.7;
+}
+
+/* Each cluster keeps its own indent, so the two pages read as a field
+   of places rather than a table. */
+.bk-tocmap-p1 { margin-left: 0; }
+.bk-tocmap-p3 { margin-left: 0.55in; }
+.bk-tocmap-p2 { margin-left: 0.3in; }
+.bk-tocmap-p4 { margin-left: 0.85in; }
+.bk-tocmap-p5 { margin-left: 1.5in; }
+.bk-tocmap-tail { margin-left: 0.3in; }
