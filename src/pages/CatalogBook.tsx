@@ -938,8 +938,10 @@ export interface BookContext {
 export function FrontCoverFace({ ctx }: { ctx: BookContext }) {
   // Final cover (her direction, 2026-10-18): a full rust-brown field, the David
   // still life from the Still Things section whole at the centre, and cream serif lettering walking the four edges, Chun across the
-  // top, Wang down the right side, Remains up the left side. No Chinese on
-  // the front cover (her call, 2026-10-18): English lettering only.
+  // top, Wang down the right side, Remains up the left side. The Chinese title
+  // 遗迹 stands at the lower right (removed 2026-10-18 at her call, restored
+  // 2026-11-05 when she settled 遗迹 as the book's Chinese name and directed
+  // it back onto the cover).
   const still = ctx.chapters.find((c) => c.key === "stillthings");
   // The cover piece is pinned by image, not by title: the plain title
   // "Still Things" is shared by more than one plate in the section. It
@@ -952,6 +954,7 @@ export function FrontCoverFace({ ctx }: { ctx: BookContext }) {
       <span className="bk-cover-word bk-cover-top">Chun</span>
       <span className="bk-cover-word bk-cover-right">Wang</span>
       <span className="bk-cover-word bk-cover-left">Remains</span>
+      <span className="bk-cover-word bk-cover-zh">遗迹</span>
       {art && (
         <div className="bk-cover-art">
           <BookImage src={art.image_url} fallback={art.fallback_image_url} alt="Still Things" />
