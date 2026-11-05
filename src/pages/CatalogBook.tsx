@@ -706,16 +706,20 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
   // (her direction, 2026-10-18).
   specs.push({ kind: "about", chunk: 0 });
   specs.push({ kind: "about", chunk: 1 });
-  // Collage as Method follows About the Artist, before chapter one and its
-  // "What remains?" aphorism spread: English page, then Chinese page.
-  specs.push({ kind: "collage", chunk: 0 });
-  specs.push({ kind: "collage", chunk: 1 });
 
   let firstChapter = true;
   for (const chapter of chapters) {
     if (firstChapter) {
       pushAphorism(APHORISMS["what-remains"]);
       for (let i = 0; i < paintingChunkCount; i++) specs.push({ kind: "painting-intro", chunk: i });
+      // Collage as Method stands with its work (her direction, 2026-11-05):
+      // the 2018 Untitled (Collage) plate and the method essay together,
+      // right after the painting part's introduction. The essay leaves the
+      // front matter; the plate leaves the end of the Remains chapter.
+      const collageChapter: Chapter = { key: "collage", number: 0, title: "Collage as Method · 拼贴作为方法", titleEn: "Collage as Method", titleZh: "拼贴作为方法", descriptionHtml: "", items: [], years: "2018" };
+      specs.push({ kind: "plate", chapter: collageChapter, item: REMAINS_ORIGIN_PLATES[0], plate: 0 });
+      specs.push({ kind: "collage", chunk: 0 });
+      specs.push({ kind: "collage", chunk: 1 });
       firstChapter = false;
     }
     const aphorismId = APHORISM_BEFORE_CHAPTER[chapter.key];
@@ -1084,8 +1088,8 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const rows = [
         { num: "", title: `${translations.en.catalogBook.preface} · ${translations.zh.catalogBook.preface}`, sub: "", page: startOf((s) => s.kind === "preface") },
         { num: "", title: `${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`, sub: "", page: startOf((s) => s.kind === "about") },
-        { num: "", title: "Collage as Method · 拼贴作为方法", sub: "", page: startOf((s) => s.kind === "collage") },
         { num: "", title: `${translations.en.catalogBook.paintingIntro} · ${translations.zh.catalogBook.paintingIntro}`, sub: "", page: startOf((s) => s.kind === "painting-intro") },
+        { num: "", title: "Collage as Method · 拼贴作为方法", sub: "", page: startOf((s) => s.kind === "plate" && "chapter" in s && s.chapter.key === "collage") },
         ...chapters.map((c) => ({
           num: c.number > 0 ? pad2(c.number) : "",
           title: c.title,
@@ -1664,16 +1668,6 @@ function useBookModel(args: {
         ...suoChapter.items,
       ];
     }
-    // The Remains chapter closes with its origin: a 2018 collage of cut and
-    // reassembled fragments, five years before the figurines (see
-    // REMAINS_ORIGIN_PLATES in seriesPlates.ts).
-    const remainsChapter = chapters.find((ch) => ch.key === "remains");
-    if (remainsChapter) {
-      remainsChapter.items = [
-        ...remainsChapter.items,
-        ...REMAINS_ORIGIN_PLATES.map((item) => ({ item, plate: 0 })),
-      ];
-    }
     // Plates are numbered in book order across the whole volume.
     let plateSeq = 0;
     for (const ch of chapters) ch.items = ch.items.map(({ item }) => ({ item, plate: ++plateSeq }));
@@ -2193,12 +2187,14 @@ const CatalogBook = () => {
       section === "contents" ||
       section === "preface" ||
       section === "about" ||
-      section === "collage" ||
       section === "painting-intro" ||
       section === "reverse-index"
     ) {
       const kind = section as PageSpec["kind"];
       return pages.find((p) => p.spec.kind === kind)?.number ?? null;
+    }
+    if (section === "collage") {
+      return pages.find((p) => p.spec.kind === "plate" && "chapter" in p.spec && p.spec.chapter.key === "collage")?.number ?? null;
     }
     const chapterStart = (key: string) =>
       pages.find((p) => "chapter" in p.spec && p.spec.chapter.key === key)?.number ?? null;
