@@ -1235,10 +1235,10 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
           <div className="bk-essay">
-            {spec.chunk === 0 && (
+            {spec.chunk === 0 && !chapter.partIntro && !chapter.partHead && (
               <div className="bk-essay-head">
                 {chapter.number > 0 && <span className="bk-num-box">{pad2(chapter.number)}</span>}
-                <h2 className={`bk-section-title shop-title${chapter.partIntro || chapter.partHead ? " bk-part-title" : ""}`}>{stackedTitle(chapter)}</h2>
+                <h2 className="bk-section-title shop-title">{stackedTitle(chapter)}</h2>
                 <div className="bk-essay-meta sans-label">{chapter.years}</div>
               </div>
             )}
