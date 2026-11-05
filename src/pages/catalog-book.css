@@ -1388,7 +1388,14 @@
    and each page's remaining slack is distributed evenly — groups grow
    to share the column, entries grow inside their group, entry text
    sitting at the foot of its slot — so both pages run from the head of
-   the measure to its foot at the same rhythm. */
+   the measure to its foot at the same rhythm. She corrected that the
+   same day: "还不如之前" — filled pages come from more entries, not
+   from stretched leading. The flex spreading and the stepped-up type
+   came back out (phrases 12pt, pointers 11pt, group heads 11.5pt;
+   group gap 0.36in, entry gap 0.065in, group-head gap 0.06in, head
+   margin 0.13in), and the index instead grew from 21 entries to 40,
+   every added remainder drawn from the book itself, so the two pages
+   fill at the natural rhythm. */
 .bk-revindex {
   flex: 1;
   display: flex;
@@ -1398,7 +1405,7 @@
 
 .bk-revindex-head {
   flex: 0 0 auto;
-  margin-bottom: 0.18in;
+  margin-bottom: 0.13in;
 }
 
 .bk-revindex-title {
@@ -1438,10 +1445,7 @@
 }
 
 .bk-revindex-group {
-  flex: 1 0 auto;
-  display: flex;
-  flex-direction: column;
-  margin-top: 0.44in;
+  margin-top: 0.36in;
 }
 
 .bk-revindex-group:first-of-type {
@@ -1450,10 +1454,10 @@
 
 .bk-revindex-group-name {
   flex: 0 0 auto;
-  margin: 0 0 0.09in;
+  margin: 0 0 0.06in;
   display: flex;
   align-items: center;
-  font-size: 12.5pt;
+  font-size: 11.5pt;
   font-weight: 500;
   line-height: 1.3;
 }
@@ -1478,10 +1482,9 @@
 }
 
 .bk-revindex-entry {
-  flex: 1 0 auto;
   display: flex;
   align-items: flex-end;
-  margin-bottom: 0.12in;
+  margin-bottom: 0.065in;
 }
 
 .bk-revindex-entry:last-child {
@@ -1490,7 +1493,7 @@
 
 .bk-revindex-phrase {
   margin: 0;
-  font-size: 13pt;
+  font-size: 12pt;
   font-weight: 500;
   line-height: 1.5;
   white-space: nowrap;
@@ -1513,7 +1516,7 @@
 
 .bk-revindex-to {
   margin: 0;
-  font-size: 12pt;
+  font-size: 11pt;
   font-weight: 500;
   line-height: 1.28;
   white-space: nowrap;

@@ -470,9 +470,14 @@ const COLLAGE_METHOD = {
 /** The reverse index (her idea; sample page approved 2026-11-05): back
  * matter that indexes the book not by page but by what remains — a sound,
  * a temperature, an unfinished sentence. It stands after the last chapter,
- * before the closing page. Entry wording is exactly as approved on the
- * sample page; do not edit the phrases here. Pointers name the chapter or
- * work each remainder lives in, in the book's current names. */
+ * before the closing page. The first 21 entries are exactly as approved
+ * on the sample page; do not edit those phrases. Later the same day she
+ * asked for the index's pages filled by adding entries rather than by
+ * stretching the leading, so 19 more remainders were added at the end of
+ * each group, every one drawn from the book's own contents (series texts,
+ * plate captions, her preface, her diary pages and object texts).
+ * Pointers name the chapter or work each remainder lives in, in the
+ * book's current names. */
 const REVERSE_INDEX = {
   titleZh: "反向索引",
   titleEn: "An Index of What Remains",
@@ -487,6 +492,8 @@ const REVERSE_INDEX = {
         { zh: "陶俑对着电话的喊声", en: "a figurine, shouting into a phone", to: "遗迹 Remains" },
         { zh: "玻璃柜里的安静", en: "the quiet inside a glass case", to: "前言 Preface" },
         { zh: "白立方里的沉默", en: "the silence of the white cube", to: "Art.empath.io" },
+        { zh: "成千上万样东西的尖叫", en: "a thousand things, screaming for attention", to: "信息流扫描仪 Feed Scanner" },
+        { zh: "在巴黎教堂偶然听到的维瓦尔第", en: "Vivaldi, overheard in a Paris church", to: "旅途笔记 Notes from the Road" },
       ],
     },
     {
@@ -496,6 +503,8 @@ const REVERSE_INDEX = {
         { zh: "恶水盆地上热得发亮的盐", en: "salt glittering with heat at Badwater", to: "死亡谷 Death Valley" },
         { zh: "按钟点存下的沙漠的热", en: "desert heat, kept by the hour", to: "撒哈拉 Sahara" },
         { zh: "一趟旅程散掉之后，变了的天气", en: "the weather, changed after a journey ends", to: "前言 Preface" },
+        { zh: "一个没被自动化的决定的温度", en: "the warmth of a decision not automated", to: "协商智能 Negotiated Intelligence" },
+        { zh: "Quiraing 雾里的冷", en: "the cold inside the Quiraing fog", to: "苏格兰高地 Scottish Highlands" },
       ],
     },
     {
@@ -506,6 +515,9 @@ const REVERSE_INDEX = {
         { zh: "画前八英尺的距离", en: "eight feet from the painting", to: "Art.empath.io" },
         { zh: "把陶俑照得像珠宝的灯光", en: "light that makes a figurine look like a jewel", to: "前言 Preface" },
         { zh: "不会再以同样方式回来的光", en: "light that will not come back the same way", to: "前言 Preface" },
+        { zh: "一具由光组成的舞者身体", en: "a dancer's body, made of light", to: "窟舞 Cave Dance" },
+        { zh: "黎明里成为镜子的盐滩", en: "salt flats, turned mirrors at dawn", to: "死亡谷 Death Valley" },
+        { zh: "冰岛纯净到让人落泪的蓝", en: "a blue so pure it made her cry, in Iceland", to: "旅途笔记 Notes from the Road" },
       ],
     },
     {
@@ -516,6 +528,12 @@ const REVERSE_INDEX = {
         { zh: "被清空之前的一小堆搜索记录", en: "a small heap of searches, about to be cleared", to: "谷歌搜索 Google Searches" },
         { zh: "一万份对疫情的回应", en: "ten thousand answers to a pandemic", to: "IMMEMORY" },
         { zh: "一张车票，一块石头", en: "a ticket stub, a stone", to: "前言 Preface" },
+        { zh: "被观众撕下带走的字条", en: "paper slips, torn off and taken away", to: "Art.empath.io" },
+        { zh: "一条从巴塞罗那到马德里的火车票", en: "one search: a train ticket to Madrid", to: "谷歌搜索 Google Searches" },
+        { zh: "在信息流上移动的扫描线", en: "a scan line, moving down the feed", to: "信息流扫描仪 Feed Scanner" },
+        { zh: "剪开又重新拼起的碎片", en: "fragments, cut apart and reassembled", to: "遗迹 Remains" },
+        { zh: "一页 2020 年的疫情日志", en: "one page of a pandemic journal, 2020", to: "IMMEMORY" },
+        { zh: "一份没有身体的舞谱", en: "a dance score, without its body", to: "窟舞 Cave Dance" },
       ],
     },
     {
@@ -525,6 +543,9 @@ const REVERSE_INDEX = {
         { zh: "访谈里一句没说完的话", en: "a sentence in an interview, left unfinished", to: "访谈 The Interview" },
         { zh: "会议上的一句「无可奉告」", en: "“nothing to contribute,” said at a meeting", to: "遗迹 Remains" },
         { zh: "先于陶俑消失的语言", en: "the language that vanished before the figurine did", to: "前言 Preface" },
+        { zh: "机械臂写到一半的「我是人……」", en: "“I am huma—”, by a robot arm", to: "协商智能 Negotiated Intelligence" },
+        { zh: "她自己的跟评，断在半句", en: "her own comment, breaking off mid-sentence", to: "消失的童年 The Loss of Childhood" },
+        { zh: "没人回答的问题：我们还能成为谁", en: "unanswered: who can we still be?", to: "协商智能 Negotiated Intelligence" },
       ],
     },
     {
@@ -534,6 +555,9 @@ const REVERSE_INDEX = {
         { zh: "盘子被收走前的一顿早餐", en: "a breakfast, before the plate is taken away", to: "早餐残留 Breakfast Residuals" },
         { zh: "用陶重做的一顿早餐", en: "a breakfast, remade in clay", to: "Slightly Useful Objects" },
         { zh: "快要被扔掉、又被戴起来的东西", en: "things nearly thrown away, worn again", to: "Slightly Useful Objects" },
+        { zh: "一块陶做的短蛋糕", en: "a shortcake, made of clay", to: "Slightly Useful Objects" },
+        { zh: "一台缩成吊坠的烤面包机", en: "a toaster, shrunk to a pendant", to: "Slightly Useful Objects" },
+        { zh: "悬崖上，金刚鹦鹉的早餐", en: "breakfast on a cliff, at four in the morning", to: "旅途笔记 Notes from the Road" },
       ],
     },
   ],
