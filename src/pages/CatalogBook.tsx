@@ -901,9 +901,9 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           </div>
           <div className="bk-caption">
             <div className="bk-caption-body">
-              <div className="bk-caption-title product-title">{item.title}</div>
-              {(item.metaLine || item.dimensions) && (
-                <div className="bk-caption-meta">{[item.metaLine, item.dimensions].filter(Boolean).join(" · ")}</div>
+              <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
+              {(item.metaLine || item.dimensions || item.mediumZh || item.dimensionsZh) && (
+                <div className="bk-caption-meta">{[item.metaLine, item.dimensions, item.mediumZh && item.mediumZh !== item.medium && !(item.metaLine ?? "").includes(item.mediumZh) ? item.mediumZh : "", item.dimensionsZh && item.dimensionsZh !== item.dimensions ? item.dimensionsZh : ""].filter(Boolean).join(" · ")}</div>
               )}
               {item.description && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: item.description }} />}
             </div>
@@ -1122,6 +1122,7 @@ function useBookModel(args: {
     // right after the series text (the Artist Weekly excerpt).
     const fbdItem: CatalogItem = {
       title: "Breakfast Residuals",
+      titleZh: "早餐残留",
       metaLine: "2026 · Installation view · 展览现场",
       year: "2026",
       medium: "Installation view",
@@ -1179,10 +1180,13 @@ function useBookModel(args: {
         : `/photography/${workId.padStart(2, "0")}/main.jpg`;
       return {
         title: w.title,
+        titleZh: w.titleZh ?? null,
         metaLine: [w.year, w.medium].filter(Boolean).join(" · "),
         year: w.year,
         medium: w.medium,
+        mediumZh: w.mediumZh ?? null,
         dimensions: w.dimensions,
+        dimensionsZh: w.dimensionsZh ?? null,
         description: w.description,
         category: "Inner Wilderness",
         image_url: img,

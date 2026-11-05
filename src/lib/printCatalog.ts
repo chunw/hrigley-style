@@ -44,11 +44,17 @@ function vcFooter(tagText: string, page: number, total: number, muted: string): 
 
 export interface CatalogItem {
   title: string;
+  /** Chinese title from the artist's own records, shown beside the title in the book's bilingual captions. */
+  titleZh?: string | null;
   metaLine?: string | null;
   year?: string | null;
   medium?: string | null;
+  /** Chinese medium from the artist's own records, appended to the book's caption meta line. */
+  mediumZh?: string | null;
   description?: string | null;
   dimensions?: string | null;
+  /** Chinese dimensions from the artist's own records, appended to the book's caption meta line. */
+  dimensionsZh?: string | null;
   category: string;
   image_url: string;
   /** Used when image_url (a work's printInCatalogImage) is missing, falls back to its main.jpg. */
@@ -544,10 +550,13 @@ export function getCombinedCatalogSections(origin: string, lang: "en" | "zh"): C
         : (work.medium || meta.medium);
       return {
         title: isZh ? (work.titleZh ?? work.title) : work.title,
+        titleZh: work.titleZh ?? null,
         metaLine: artMetaLine(work.year, medium),
         year: work.year,
         medium,
+        mediumZh: work.mediumZh || meta.mediumZh || null,
         dimensions: isZh ? (work.dimensionsZh ?? work.dimensions) : work.dimensions,
+        dimensionsZh: work.dimensionsZh ?? null,
         description: isZh ? (work.descriptionZh ?? work.description) : work.description,
         category: isZh ? meta.zh : meta.en,
         image_url: normalizePrintAsset(origin, `/${dir}/${padded}/${work.printInCatalogImage ?? "main"}.jpg`),
@@ -560,7 +569,9 @@ export function getCombinedCatalogSections(origin: string, lang: "en" | "zh"): C
     const imgSrc = imgs.length > 0 ? imgs[0].image_url : p.image_url;
     return {
       title: isZh ? (p.title_zh ?? p.title) : p.title,
+      titleZh: p.title_zh ?? null,
       dimensions: isZh ? (p.dimensions_zh ?? p.dimensions) : p.dimensions,
+      dimensionsZh: p.dimensions_zh ?? null,
       description: isZh ? (p.description_zh ?? p.description) : p.description,
       category: isZh ? "商店" : "Shop",
       image_url: normalizePrintAsset(origin, imgSrc),
