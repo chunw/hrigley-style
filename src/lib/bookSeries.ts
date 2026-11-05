@@ -122,8 +122,8 @@ export const BOOK_SERIES: BookSeries[] = [
     titleEn: "Residuals",
     titleZh: "残留",
     years: "",
-    textEn: "Residuals is a watercolor series about the traces and objects of everyday life, and the beauty found in them.\n\nExhibited in Forms Before Dissolving, Apsara Studio Gallery, London, 2026.",
-    textZh: "《残留》是一个关于日常生活痕迹与物件的水彩系列，记下其中的美。\n\n参展：Forms Before Dissolving，Apsara Studio Gallery，伦敦，2026。",
+    textEn: "××××××××××",
+    textZh: "××××××××××",
     mergedInto: "watercolor-split",
   },
   {

@@ -114,8 +114,8 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     zh: "陶俑熬过了一个帝国。它们大概也将熬过视频会议。",
   },
   residuals: {
-    en: "Residuals is a watercolor series about the traces and objects of everyday life, and the beauty found in them.",
-    zh: "《残留》是一个关于日常生活痕迹与物件的水彩系列，记下其中的美。",
+    en: "××××××××××",
+    zh: "××××××××××",
   },
   road: {
     en: "The journeys end. The moments remain.",
