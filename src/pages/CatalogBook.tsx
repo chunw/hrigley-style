@@ -2118,13 +2118,17 @@ const CatalogBook = () => {
 
   // ── Deep links ────────────────────────────────────────────────────────────
   // A shared link can name the page it opens on: ?page=<folio> jumps to that
-  // printed page, ?section=<key> to a section's first text page. Section
-  // keys: title, contents, preface, about, collage, painting-intro,
-  // reverse-index, or any chapter key (spirit, remains, residuals, shop,
-  // series:immemory, ...).
-  // A chapter resolves to its first essay page, or to its opener when the
-  // chapter carries no essay. With neither parameter nothing changes: the
-  // book still opens at the front, and pagination and print are untouched.
+  // printed page, ?section=<key> to a section's opening page — the same
+  // first page the contents page prints for that chapter. Section keys:
+  // title, contents, preface, about, collage, painting-intro, reverse-index,
+  // or any chapter key (spirit, remains, residuals, shop, ...).
+  // Series-driven chapters are keyed "series:<id>" in the book model while
+  // shared links name them by the bare series id (?section=negotiated), so
+  // both spellings resolve: exact chapter key first, then the series:
+  // namespace. (Before this, the bare id never matched a chapter key and
+  // the link silently opened at the cover.) With neither parameter nothing
+  // changes: the book still opens at the front, and pagination and print
+  // are untouched.
   const deepLinkPage = useMemo(() => {
     if (typeof window === "undefined") return null;
     const q = new URLSearchParams(window.location.search);
@@ -2147,13 +2151,16 @@ const CatalogBook = () => {
       const kind = section as PageSpec["kind"];
       return pages.find((p) => p.spec.kind === kind)?.number ?? null;
     }
-    const essay = pages.find((p) => p.spec.kind === "essay" && p.spec.chapter.key === section);
-    if (essay) return essay.number;
-    return pages.find((p) => "chapter" in p.spec && p.spec.chapter.key === section)?.number ?? null;
+    const chapterStart = (key: string) =>
+      pages.find((p) => "chapter" in p.spec && p.spec.chapter.key === key)?.number ?? null;
+    return chapterStart(section) ?? chapterStart(`series:${section}`);
   }, [pages]);
   useEffect(() => {
     if (deepLinkPage === null) return;
     let cancelled = false;
+    let landedY: number | null = null;
+    const target = () => document.getElementById(`bk-page-${deepLinkPage}`);
+    if (!target()) return;
     const stop = () => {
       cancelled = true;
     };
@@ -2162,17 +2169,35 @@ const CatalogBook = () => {
     window.addEventListener("keydown", stop);
     const jump = () => {
       if (cancelled) return;
-      document.getElementById(`bk-page-${deepLinkPage}`)?.scrollIntoView({ behavior: "auto", block: "start" });
+      target()?.scrollIntoView({ behavior: "auto", block: "start" });
+      landedY = window.scrollY;
     };
-    // The stage is laid out synchronously, but zoom and fonts settle a beat
-    // later; repeat the jump briefly unless the reader takes over scrolling.
-    jump();
-    const raf = requestAnimationFrame(jump);
-    const timers = [300, 900].map((ms) => window.setTimeout(jump, ms));
+    // Jump once the stage has been painted at its final layout: fonts
+    // resolved and two frames in, the inch-sized rows no longer move.
+    // Then correct once after full load, when image decoding has settled
+    // any residual drift — but only if the reader is still where the jump
+    // left them, so a reader who scrolled away is never yanked back.
+    let raf1 = 0;
+    let raf2 = 0;
+    document.fonts?.ready.then(() => {
+      if (cancelled) return;
+      raf1 = requestAnimationFrame(() => {
+        raf2 = requestAnimationFrame(jump);
+      });
+    });
+    const correct = () => {
+      const el = target();
+      if (cancelled || landedY === null || !el) return;
+      if (Math.abs(window.scrollY - landedY) > 4) return;
+      if (Math.abs(el.getBoundingClientRect().top) > 4) jump();
+    };
+    if (document.readyState === "complete") correct();
+    else window.addEventListener("load", correct, { once: true });
     return () => {
       cancelled = true;
-      cancelAnimationFrame(raf);
-      timers.forEach((t) => window.clearTimeout(t));
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      window.removeEventListener("load", correct);
       window.removeEventListener("wheel", stop);
       window.removeEventListener("touchstart", stop);
       window.removeEventListener("keydown", stop);
