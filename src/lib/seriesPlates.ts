@@ -441,3 +441,18 @@ export const REMAINS_ORIGIN_PLATES: CatalogItem[] = [
     "/book/remains/collage-2018.jpg",
   ),
 ];
+
+/**
+ * Full-bleed spread plate for the objects chapter (her direction,
+ * 2026-11-05): Pre-iPhone Era, one of the SFMOMA Submission Friday
+ * works, printed across two pages with no margins. The photograph is
+ * the used-electronics flat lay from her project site (titled there
+ * Pre-iPhone Days); she asked for the spread to be built with this
+ * image and will confirm the identification on the PR.
+ */
+export const PRE_IPHONE_ERA_PLATE: CatalogItem = plate(
+  "Pre-iPhone Era", "2018 · SFMOMA Submission Friday", "2018",
+  "Used electronics, photographed from above: a cassette Walkman, an iPod shuffle, a red compact camera, an electronic dictionary, a keypad phone, a watch and a USB drive, with a black mask at the center, joined by unspooled cassette tape.",
+  "旧电子设备，俯拍：磁带随身听、iPod shuffle、红色卡片相机、电子词典、按键手机、手表和 U 盘，中间一张黑面具，被抽出的磁带连在一起。",
+  "/book/sfmoma/pre-iphone-era.jpg",
+);

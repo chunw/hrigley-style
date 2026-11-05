@@ -9,7 +9,7 @@ import { getCombinedCatalogSections, type CatalogItem, type CatalogSection, type
 import { translations, type Translations } from "@/lib/translations";
 import { PAGE_BACKGROUNDS, type PageBgKind } from "@/lib/pageBackgrounds";
 import { BOOK_SERIES } from "@/lib/bookSeries";
-import { SERIES_PLATES, DEATH_VALLEY_PLATES, REMAINS_ORIGIN_PLATES } from "@/lib/seriesPlates";
+import { SERIES_PLATES, DEATH_VALLEY_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS } from "@/lib/exhibitions";
@@ -76,6 +76,7 @@ type PageSpec =
   | { kind: "essay"; chapter: Chapter; chunk: number }
   | { kind: "exhibitions"; chapter: Chapter }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
+  | { kind: "bleed"; half: "left" | "right"; chapter: Chapter; item: CatalogItem }
   | { kind: "aphorism"; half: "left" | "right"; aphorism: Aphorism }
   | { kind: "about"; chunk: number }
   | { kind: "collage"; chunk: number }
@@ -767,6 +768,15 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       const holdBack = chapter.essayAfterPlate;
       const leadCount = holdBack ? Math.max(0, essayCount - holdBack.trailingChunks) : essayCount;
       for (let i = 0; i < leadCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
+      // The objects chapter carries one full-bleed spread (her direction,
+      // 2026-11-05): Pre-iPhone Era across two pages, edge to edge, after
+      // the chapter's opening text and before its plates, aligned to a
+      // verso like the chapter openers.
+      if (chapter.key === "shop") {
+        if (!nextIsVerso()) specs.push({ kind: "blank" });
+        specs.push({ kind: "bleed", half: "left", chapter, item: PRE_IPHONE_ERA_PLATE });
+        specs.push({ kind: "bleed", half: "right", chapter, item: PRE_IPHONE_ERA_PLATE });
+      }
       let heldBackEmitted = false;
       for (const { item, plate } of chapter.items) {
         specs.push({ kind: "plate", chapter, item, plate });
@@ -860,6 +870,8 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `aphorism:${spec.aphorism.id}:${spec.half}`;
     case "plate":
       return `plate:${spec.plate}`;
+    case "bleed":
+      return `bleed:${spec.chapter.key}:${spec.half}`;
     case "about":
       return `about:${spec.chunk}`;
     case "collage":
@@ -1323,6 +1335,23 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             </div>
           </div>
           <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+        </Page>
+      );
+    }
+
+    case "bleed": {
+      const { item } = spec;
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-bleed bk-bleed-${spec.half}`}>
+          <div className="bk-spread-canvas">
+            <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} className="bk-bleed-img" />
+            {spec.half === "right" && (
+              <div className="bk-bleed-caption">
+                <div className="bk-caption-title product-title">{item.title}</div>
+                <div className="bk-caption-meta">{item.metaLine}</div>
+              </div>
+            )}
+          </div>
         </Page>
       );
     }

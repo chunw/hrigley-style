@@ -647,6 +647,31 @@
   left: calc(-1 * var(--trim-w));
 }
 
+/* Full-bleed spread (Pre-iPhone Era, objects chapter): one image across
+   two pages, edge to edge. The caption sits on the right page, low,
+   near the spine; no folio on either page. */
+.bk-bleed-left .bk-spread-canvas {
+  left: 0;
+}
+
+.bk-bleed-right .bk-spread-canvas {
+  left: calc(-1 * var(--trim-w));
+}
+
+.bk-bleed-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bk-bleed-caption {
+  position: absolute;
+  left: calc(var(--trim-w) + var(--bleed) + 0.45in);
+  bottom: 0.5in;
+  color: #20211d;
+}
+
 .bk-opener-label {
   display: inline-flex;
   align-items: center;
