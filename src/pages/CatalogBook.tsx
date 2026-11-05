@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Printer } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Printer } from "lucide-react";
 import "./catalog-book.css";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { artistBioHTML } from "@/lib/artistBio";
@@ -1429,7 +1429,28 @@ const CatalogBook = () => {
   const [bleed, setBleed] = useState(false);
   const [paper, setPaper] = useState<"white" | "cream" | "black">("white");
   const [preparing, setPreparing] = useState(false);
-  const [zoom, setZoom] = useState(1);
+  // Phone preview (<=768px): one page per row, scaled to the screen width,
+  // with a thumb navigation bar. Desktop keeps the two-page spread layout.
+  const MOBILE_MQ = "(max-width: 768px)";
+  const [isMobile, setIsMobile] = useState<boolean>(
+    () => typeof window !== "undefined" && window.matchMedia(MOBILE_MQ).matches,
+  );
+  useEffect(() => {
+    const mq = window.matchMedia(MOBILE_MQ);
+    const onChange = () => setIsMobile(mq.matches);
+    onChange();
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  // Initial zoom is computed during the first render, not in an effect: at
+  // zoom 1 the inch-wide spreads are ~1632px across, and a phone browser
+  // answers that first paint by widening its layout viewport, after which
+  // every later measurement (and the zoom itself) is off.
+  const [zoom, setZoom] = useState<number>(() => {
+    if (typeof window === "undefined") return 1;
+    const rowIn = window.matchMedia(MOBILE_MQ).matches ? TRIM_W : 2 * TRIM_W;
+    return Math.min(1, (window.innerWidth - 32) / (rowIn * PX_PER_IN));
+  });
   // ── Book editor (edit mode): staged text edits + per-page backgrounds ──
   const loadJSON = <T,>(key: string, fallback: T): T => {
     try {
@@ -1540,15 +1561,53 @@ const CatalogBook = () => {
   }, [part, pages, ctx, spine]);
 
   // Scale the on-screen preview so a full spread (or the cover wrap) fits the viewport width.
+  // On phones the unit is a single page instead, so a page fills the screen width.
   useEffect(() => {
     const update = () => {
-      const rowWidthPx = (part === "cover" ? wrapW : 2 * pageW) * PX_PER_IN;
+      const rowWidthPx = (part === "cover" ? wrapW : isMobile ? pageW : 2 * pageW) * PX_PER_IN;
       setZoom(Math.min(1, (window.innerWidth - 32) / rowWidthPx));
     };
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
-  }, [part, pageW, wrapW]);
+  }, [part, pageW, wrapW, isMobile]);
+
+  // ── Phone page navigation: track the sheet nearest the middle of the
+  // screen and offer prev/next + a jump slider in a fixed bottom bar. ──
+  const [currentSheet, setCurrentSheet] = useState(0);
+  const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
+  useEffect(() => {
+    setCurrentSheet(0);
+  }, [part]);
+  useEffect(() => {
+    if (!isMobile) return;
+    const rows = rowRefs.current;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            const idx = Number((e.target as HTMLElement).dataset.sheetIndex);
+            if (!Number.isNaN(idx)) setCurrentSheet(idx);
+          }
+        }
+      },
+      { rootMargin: "-38% 0px -55% 0px", threshold: 0 },
+    );
+    rows.forEach((el) => el && io.observe(el));
+    return () => io.disconnect();
+  }, [isMobile, sheets, part]);
+  const goToSheet = (idx: number, behavior: ScrollBehavior = "smooth") => {
+    const target = Math.max(0, Math.min(sheets.length - 1, idx));
+    setCurrentSheet(target);
+    rowRefs.current[target]?.scrollIntoView({ behavior, block: "start" });
+  };
+  const sheetLabel = (key: string): string => {
+    if (key === "front") return "Front cover";
+    if (key === "back") return "Back cover";
+    if (key === "wrap") return "Cover wrap";
+    const m = /^p(\d+)$/.exec(key);
+    return m ? `Page ${m[1]} / ${pages.length}` : key;
+  };
 
   const handleSave = async () => {
     if (!stageRef.current) return;
@@ -1575,7 +1634,7 @@ const CatalogBook = () => {
     }`;
 
   return (
-    <div className={`bk-root bk-paper-${paper}`} style={rootStyle}>
+    <div className={`bk-root bk-paper-${paper}${isMobile ? " bk-mobile" : ""}`} style={rootStyle}>
       {/* One @page size per export: interior/complete pages, or the wide cover wrap. */}
       <style>{`@page { size: ${sheetW}in ${pageH}in; margin: 0; }`}</style>
 
@@ -1677,14 +1736,41 @@ const CatalogBook = () => {
       )}
 
       <div ref={stageRef} className="bk-stage" style={{ zoom }}>
-        {toSpreads(sheets).map((row, i) => (
-          <div key={i} className={`bk-spread ${row.length === 1 && row[0]?.side === "single" ? "bk-spread-single" : ""}`}>
+        {(isMobile ? sheets.map((s) => [s]) : toSpreads(sheets)).map((row, i) => (
+          <div
+            key={i}
+            ref={isMobile ? (el) => { rowRefs.current[i] = el; } : undefined}
+            data-sheet-index={isMobile ? i : undefined}
+            className={`bk-spread ${row.length === 1 && row[0]?.side === "single" ? "bk-spread-single" : ""}`}
+          >
             {row.map((sheet, j) =>
               sheet ? <div key={sheet.key} className="bk-sheet">{sheet.node}</div> : <div key={`gap-${j}`} className="bk-sheet bk-sheet-empty" data-noprint />,
             )}
           </div>
         ))}
       </div>
+
+      {isMobile && sheets.length > 1 && (
+        <div data-noprint className="bk-mobilenav">
+          <button type="button" aria-label="Previous page" disabled={currentSheet <= 0} onClick={() => goToSheet(currentSheet - 1)}>
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+          <div className="bk-mobilenav-mid">
+            <span className="bk-mobilenav-label">{sheetLabel(sheets[currentSheet]?.key ?? "")}</span>
+            <input
+              type="range"
+              aria-label="Jump to page"
+              min={0}
+              max={sheets.length - 1}
+              value={currentSheet}
+              onChange={(e) => goToSheet(Number(e.target.value), "auto")}
+            />
+          </div>
+          <button type="button" aria-label="Next page" disabled={currentSheet >= sheets.length - 1} onClick={() => goToSheet(currentSheet + 1)}>
+            <ChevronRight className="h-6 w-6" />
+          </button>
+        </div>
+      )}
     </div>
   );
 };
