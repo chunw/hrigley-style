@@ -122,8 +122,8 @@ export const BOOK_SERIES: BookSeries[] = [
     titleEn: "Residuals",
     titleZh: "残留",
     years: "",
-    textEn: "××××××××××",
-    textZh: "××××××××××",
+    textEn: "In contrast, Chun Wang’s <em>Breakfast Residuals</em> focuses on the minutest remnants of daily life: stains left after breakfast, and marks on tableware and tabletops. These ostensibly insignificant leftovers are transformed by the artist into physical evidence of the passage of time. Through an intensely quiet act of observation, the work allows ‘what remains after disappearance’ to reveal itself step by step.\n\nExcerpted from: Maria Hill, ‘Forms Before Dissolving: An Exhibition on Perceptual Structures,’ Artist Weekly, May 29, 2026.",
+    textZh: "与之相对，王淳的《早餐残留》关注的是日常生活中最细小的残留：早餐过后留下的污渍，餐具和桌面上的痕迹。这些看似微不足道的残余，被艺术家转化成了时间流逝的实物证据。凭借一种极为安静的观察，这件作品让「消失之后还剩下的东西」一步步显现出来。\n\n节选自：Maria Hill《Forms Before Dissolving: An Exhibition on Perceptual Structures》，Artist Weekly，2026年5月29日。",
     mergedInto: "watercolor-split",
   },
   {

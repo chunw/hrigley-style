@@ -114,8 +114,8 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     zh: "陶俑熬过了一个帝国。它们大概也将熬过视频会议。",
   },
   residuals: {
-    en: "××××××××××",
-    zh: "××××××××××",
+    en: "These ostensibly insignificant leftovers are transformed by the artist into physical evidence of the passage of time.",
+    zh: "这些看似微不足道的残余，被艺术家转化成了时间流逝的实物证据。",
   },
   road: {
     en: "The journeys end. The moments remain.",
@@ -1116,6 +1116,23 @@ function useBookModel(args: {
       wcSplit("stillthings", "Still Things 静物", "Still Things"),
       wcSplit("road", "Notes from the Road 旅途笔记", "Notes from the Road"),
     ];
+    // Forms Before Dissolving (London, 2026): the ArtOrb exhibition poster
+    // showing Breakfast Residuals installed at Apsara Studio Gallery, taken
+    // from the artist's own exhibition record. It opens the Residuals plates,
+    // right after the series text (the Artist Weekly excerpt).
+    const fbdItem: CatalogItem = {
+      title: "Breakfast Residuals",
+      metaLine: "2026 · Installation view · 展览现场",
+      year: "2026",
+      medium: "Installation view",
+      dimensions: "",
+      description: "Breakfast Residuals installed at Forms Before Dissolving, Apsara Studio Gallery, London, May 23 – 25, 2026. Exhibition poster by ArtOrb, from the artist's exhibition record.<br />《Breakfast Residuals》在展览 Forms Before Dissolving 的现场，Apsara Studio Gallery，伦敦，2026年5月23 – 25日。展览海报由 ArtOrb 制作，图片来自艺术家本人的展览记录。",
+      category: "Visions in Watercolor",
+      image_url: "/book/residuals/forms-before-dissolving.jpg",
+      fallback_image_url: "/book/residuals/forms-before-dissolving.jpg",
+    };
+    const residualsChapter = splitChapters.find((ch) => ch.key === "residuals");
+    if (residualsChapter) residualsChapter.items = [{ item: fbdItem, plate: 0 }, ...residualsChapter.items];
     const SECTION_ORDER = [
       "spirit", "remains", "residuals", "stillthings", "road", "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography", "series:nostalgia",
       "shop",
