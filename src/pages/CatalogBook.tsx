@@ -521,7 +521,7 @@ const REVERSE_INDEX = {
         { zh: "玻璃柜里的安静", en: "the quiet inside a glass case", to: "前言 Preface" },
         { zh: "白立方里的沉默", en: "the silence of the white cube", to: "Art.empath.io" },
         { zh: "成千上万样东西的尖叫", en: "a thousand things, screaming for attention", to: "信息流扫描仪 Feed Scanner" },
-        { zh: "在巴黎教堂偶然听到的维瓦尔第", en: "Vivaldi, overheard in a Paris church", to: "旅途笔记 Notes from the Road" },
+        { zh: "在巴黎教堂偶然听到的维瓦尔第", en: "Vivaldi, overheard in a Paris church", to: "出发 Notes from the Road" },
       ],
     },
     {
@@ -545,7 +545,7 @@ const REVERSE_INDEX = {
         { zh: "不会再以同样方式回来的光", en: "light that will not come back the same way", to: "前言 Preface" },
         { zh: "一具由光组成的舞者身体", en: "a dancer's body, made of light", to: "窟舞 Cave Dance" },
         { zh: "黎明里成为镜子的盐滩", en: "salt flats, turned mirrors at dawn", to: "死亡谷 Death Valley" },
-        { zh: "冰岛纯净到让人落泪的蓝", en: "a blue so pure it made her cry, in Iceland", to: "旅途笔记 Notes from the Road" },
+        { zh: "冰岛纯净到让人落泪的蓝", en: "a blue so pure it made her cry, in Iceland", to: "出发 Notes from the Road" },
       ],
     },
     {
@@ -585,7 +585,7 @@ const REVERSE_INDEX = {
         { zh: "快要被扔掉、又被戴起来的东西", en: "things nearly thrown away, worn again", to: "Slightly Useful Objects" },
         { zh: "一块陶做的短蛋糕", en: "a shortcake, made of clay", to: "Slightly Useful Objects" },
         { zh: "一台缩成吊坠的烤面包机", en: "a toaster, shrunk to a pendant", to: "Slightly Useful Objects" },
-        { zh: "悬崖上，金刚鹦鹉的早餐", en: "breakfast on a cliff, at four in the morning", to: "旅途笔记 Notes from the Road" },
+        { zh: "悬崖上，金刚鹦鹉的早餐", en: "breakfast on a cliff, at four in the morning", to: "出发 Notes from the Road" },
       ],
     },
   ],
@@ -1551,7 +1551,7 @@ function useBookModel(args: {
     const splitChapters: Chapter[] = [
       wcSplit("residuals", "Residuals", "残留", "Residuals"),
       wcSplit("stillthings", "Still Things", "静物", "Still Things"),
-      wcSplit("road", "Notes from the Road", "旅途笔记", "Notes from the Road"),
+      wcSplit("road", "Notes from the Road", "出发", "Notes from the Road"),
     ];
     // Forms Before Dissolving (London, 2026): the ArtOrb exhibition poster
     // showing Breakfast Residuals installed at Apsara Studio Gallery, taken
