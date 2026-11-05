@@ -669,8 +669,6 @@ const SERIES_PLATE_ANCHORS: Record<string, { image: string; afterPair: number }[
   ],
 };
 
-const TOC_ROWS_PER_PAGE = 8;
-
 /** Which Spirit sub-series have a painting in the book, and where its
  * image lives. Four of the eight background groups have no painting
  * (consumerism, blackmirror, covid, genai — their works are not among
@@ -696,7 +694,9 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
 
   specs.push({ kind: "title" });
   specs.push({ kind: "colophon" });
-  const tocPages = Math.max(1, Math.ceil((chapters.length + 3) / TOC_ROWS_PER_PAGE));
+  // The contents is one designed spread (a map, not a list — see the
+  // contents render in renderPage): always exactly two pages.
+  const tocPages = 2;
   for (let i = 0; i < tocPages; i++) specs.push({ kind: "contents", chunk: i });
   for (let i = 0; i < prefaceChunkCount; i++) specs.push({ kind: "preface", chunk: i });
   // About the Artist stands at the front of the book, right after the preface
@@ -1139,30 +1139,92 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         rows.push({ ...chapterRow(c), inPart: p ? true : undefined });
       }
       rows.push({ num: "", titleEn: "An Index of What Remains", titleZh: "反向索引", sub: "", page: startOf((s) => s.kind === "reverse-index") });
-      const pageRows = rows.slice(spec.chunk * TOC_ROWS_PER_PAGE, spec.chunk * TOC_ROWS_PER_PAGE + TOC_ROWS_PER_PAGE);
+      // The contents as a map, not a list (her direction, 2026-11-05,
+      // from the design mock she approved): one spread, the five parts
+      // as clusters scattered down the two pages, each led by its
+      // arabic numeral in rust, English and Chinese on separate lines
+      // at the same size in the part heads, repeated titles and the
+      // collage unit left out. The layout is a vertical flow with the
+      // clusters spaced apart, so nothing can overlap; the dotted
+      // route segments are flow elements between clusters, never a
+      // background under text. Front matter and the closing rows
+      // (interview, index) sit small at the corners.
+      type TocCluster = { part?: TocRow; rows: TocRow[] };
+      const front: TocRow[] = [];
+      const tail: TocRow[] = [];
+      const clusters: TocCluster[] = [];
+      let cur: TocCluster | null = null;
+      for (const r of rows) {
+        if (r.part) {
+          cur = { part: r, rows: [] };
+          clusters.push(cur);
+        } else if (r.inPart && cur) {
+          cur.rows.push(r);
+        } else if (clusters.length === 0) {
+          front.push(r);
+        } else {
+          tail.push(r);
+        }
+      }
+      const go = (page: number) => document.getElementById(`bk-page-${page}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      const renderSmall = (r: TocRow) => (
+        <div key={r.titleEn} className="bk-tocmap-small" onClick={() => go(r.page)}>
+          {r.num && <span className="bk-tocmap-sec-no">{r.num}</span>}
+          <span className="bk-tocmap-small-en">{r.titleEn}</span>
+          {r.titleZh && <span className="bk-tocmap-small-zh">{r.titleZh}</span>}
+          <span className="bk-tocmap-pg">{pad2(r.page)}</span>
+        </div>
+      );
+      const renderSection = (r: TocRow) => (
+        <div key={r.titleEn} className="bk-tocmap-sec" onClick={() => go(r.page)}>
+          <span className="bk-tocmap-sec-no">{r.num}</span>
+          <span className="bk-tocmap-sec-titles">
+            <span className="bk-tocmap-sec-en">{r.titleEn}<span className="bk-tocmap-pg">{pad2(r.page)}</span></span>
+            {r.titleZh && <span className="bk-tocmap-sec-zh">{r.titleZh}</span>}
+          </span>
+        </div>
+      );
+      const renderCluster = (cl: TocCluster | undefined, cls: string) => {
+        if (!cl?.part) return null;
+        const head = cl.part;
+        return (
+          <div className={`bk-tocmap-cluster ${cls}`}>
+            <div className="bk-tocmap-head" onClick={() => go(head.page)}>
+              <span className="bk-tocmap-num">{head.part}</span>
+              <span className="bk-tocmap-head-titles">
+                <span className="bk-tocmap-pen">{head.titleEn}</span>
+                {head.titleZh && <span className="bk-tocmap-pzh">{head.titleZh}</span>}
+                <span className="bk-tocmap-ppage">P. {head.page}</span>
+              </span>
+            </div>
+            {cl.rows.length > 0 && (
+              <div className={`bk-tocmap-secs${cl.rows.length > 4 ? " bk-tocmap-secs-2col" : ""}`}>{cl.rows.map(renderSection)}</div>
+            )}
+          </div>
+        );
+      };
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
-          {spec.chunk === 0 && (
-            <div className="bk-eyebrow">{translations.en.catalogBook.contents} · {translations.zh.catalogBook.contents}</div>
-          )}
-          <div className="bk-contents">
-            {spec.chunk === 0 && <h2 className="bk-section-title shop-title gloria-title">{stackedPair(translations.en.catalogBook.contents, translations.zh.catalogBook.contents)}</h2>}
-            <ol>
-              {pageRows.map((r, ri) => (
-                <li
-                  key={`${r.titleEn}-${ri}`}
-                  className={`bk-contents-link${r.part ? " bk-contents-part" : ""}${r.inPart ? " bk-contents-inpart" : ""}`}
-                  onClick={() => document.getElementById(`bk-page-${r.page}`)?.scrollIntoView({ behavior: "smooth", block: "start" })}
-                >
-                  <span className="bk-contents-num">{r.part ? <span className="bk-part-num">{r.part}</span> : r.num && <span className="bk-num-box">{r.num}</span>}</span>
-                  <span className="bk-contents-title">
-                    <span className="shop-title">{stackedPair(r.titleEn, r.titleZh)}</span>
-                    {r.sub && <span className="bk-contents-sub">{r.sub}</span>}
-                  </span>
-                  <span className="bk-contents-page">{pad2(r.page)}</span>
-                </li>
-              ))}
-            </ol>
+          <div className={`bk-tocmap bk-tocmap-${spec.chunk === 0 ? "left" : "right"}`}>
+            {spec.chunk === 0 ? (
+              <>
+                <div>
+                  <div className="bk-tocmap-kicker">{translations.en.catalogBook.contents} · {translations.zh.catalogBook.contents}</div>
+                  <div className="bk-tocmap-front">{front.map(renderSmall)}</div>
+                </div>
+                {renderCluster(clusters[0], "bk-tocmap-p1")}
+                <div className="bk-tocmap-route" />
+                {renderCluster(clusters[2], "bk-tocmap-p3")}
+              </>
+            ) : (
+              <>
+                {renderCluster(clusters[1], "bk-tocmap-p2")}
+                <div className="bk-tocmap-route" />
+                {renderCluster(clusters[3], "bk-tocmap-p4")}
+                {renderCluster(clusters[4], "bk-tocmap-p5")}
+                <div className="bk-tocmap-tail">{tail.map(renderSmall)}</div>
+              </>
+            )}
           </div>
         </Page>
       );
