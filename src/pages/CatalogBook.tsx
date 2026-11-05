@@ -521,7 +521,7 @@ const REVERSE_INDEX = {
         { zh: "玻璃柜里的安静", en: "the quiet inside a glass case", to: "前言 Preface" },
         { zh: "白立方里的沉默", en: "the silence of the white cube", to: "Art.empath.io" },
         { zh: "成千上万样东西的尖叫", en: "a thousand things, screaming for attention", to: "信息流扫描仪 Feed Scanner" },
-        { zh: "在巴黎教堂偶然听到的维瓦尔第", en: "Vivaldi, overheard in a Paris church", to: "出发 Notes from the Road" },
+        { zh: "在巴黎教堂偶然听到的维瓦尔第", en: "Vivaldi, overheard in a Paris church", to: "旅途笔记 Notes from the Road" },
       ],
     },
     {
@@ -545,7 +545,7 @@ const REVERSE_INDEX = {
         { zh: "不会再以同样方式回来的光", en: "light that will not come back the same way", to: "前言 Preface" },
         { zh: "一具由光组成的舞者身体", en: "a dancer's body, made of light", to: "窟舞 Cave Dance" },
         { zh: "黎明里成为镜子的盐滩", en: "salt flats, turned mirrors at dawn", to: "死亡谷 Death Valley" },
-        { zh: "冰岛纯净到让人落泪的蓝", en: "a blue so pure it made her cry, in Iceland", to: "出发 Notes from the Road" },
+        { zh: "冰岛纯净到让人落泪的蓝", en: "a blue so pure it made her cry, in Iceland", to: "旅途笔记 Notes from the Road" },
       ],
     },
     {
@@ -585,7 +585,7 @@ const REVERSE_INDEX = {
         { zh: "快要被扔掉、又被戴起来的东西", en: "things nearly thrown away, worn again", to: "Slightly Useful Objects" },
         { zh: "一块陶做的短蛋糕", en: "a shortcake, made of clay", to: "Slightly Useful Objects" },
         { zh: "一台缩成吊坠的烤面包机", en: "a toaster, shrunk to a pendant", to: "Slightly Useful Objects" },
-        { zh: "悬崖上，金刚鹦鹉的早餐", en: "breakfast on a cliff, at four in the morning", to: "出发 Notes from the Road" },
+        { zh: "悬崖上，金刚鹦鹉的早餐", en: "breakfast on a cliff, at four in the morning", to: "旅途笔记 Notes from the Road" },
       ],
     },
   ],
@@ -716,7 +716,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       // the 2018 Untitled (Collage) plate and the method essay together,
       // right after the painting part's introduction. The essay leaves the
       // front matter; the plate leaves the end of the Remains chapter.
-      const collageChapter: Chapter = { key: "collage", number: 0, title: "Collage as Method · 拼贴作为方法", titleEn: "Collage as Method", titleZh: "拼贴作为方法", descriptionHtml: "", items: [], years: "2018" };
+      const collageChapter: Chapter = { key: "collage", number: 0, title: "Collage as Method · 作为方法的拼贴", titleEn: "Collage as Method", titleZh: "作为方法的拼贴", descriptionHtml: "", items: [], years: "2018" };
       specs.push({ kind: "plate", chapter: collageChapter, item: REMAINS_ORIGIN_PLATES[0], plate: 0 });
       specs.push({ kind: "collage", chunk: 0 });
       specs.push({ kind: "collage", chunk: 1 });
@@ -1089,7 +1089,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         { num: "", title: `${translations.en.catalogBook.preface} · ${translations.zh.catalogBook.preface}`, sub: "", page: startOf((s) => s.kind === "preface") },
         { num: "", title: `${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`, sub: "", page: startOf((s) => s.kind === "about") },
         { num: "", title: `${translations.en.catalogBook.paintingIntro} · ${translations.zh.catalogBook.paintingIntro}`, sub: "", page: startOf((s) => s.kind === "painting-intro") },
-        { num: "", title: "Collage as Method · 拼贴作为方法", sub: "", page: startOf((s) => s.kind === "plate" && "chapter" in s && s.chapter.key === "collage") },
+        { num: "", title: "Collage as Method · 作为方法的拼贴", sub: "", page: startOf((s) => s.kind === "plate" && "chapter" in s && s.chapter.key === "collage") },
         ...chapters.map((c) => ({
           num: c.number > 0 ? pad2(c.number) : "",
           title: c.title,
@@ -1307,15 +1307,15 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           <div className="bk-essay">
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
-                <div className="bk-essay-meta sans-label">Collage as Method · 拼贴作为方法</div>
-                <h2 className="bk-section-title shop-title gloria-title">{stackedPair("Collage as Method", "拼贴作为方法")}</h2>
+                <div className="bk-essay-meta sans-label">Collage as Method · 作为方法的拼贴</div>
+                <h2 className="bk-section-title shop-title gloria-title">{stackedPair("Collage as Method", "作为方法的拼贴")}</h2>
               </div>
             )}
             <div className="bk-essay-text description-html">
               <p>{spec.chunk === 0 ? COLLAGE_METHOD.en : COLLAGE_METHOD.zh}</p>
             </div>
           </div>
-          <Folio number={number} tag={`${b.title} | Collage as Method · 拼贴作为方法`} />
+          <Folio number={number} tag={`${b.title} | Collage as Method · 作为方法的拼贴`} />
         </Page>
       );
 
@@ -1551,7 +1551,7 @@ function useBookModel(args: {
     const splitChapters: Chapter[] = [
       wcSplit("residuals", "Residuals", "残留", "Residuals"),
       wcSplit("stillthings", "Still Things", "静物", "Still Things"),
-      wcSplit("road", "Notes from the Road", "出发", "Notes from the Road"),
+      wcSplit("road", "Notes from the Road", "旅途笔记", "Notes from the Road"),
     ];
     // Forms Before Dissolving (London, 2026): the ArtOrb exhibition poster
     // showing Breakfast Residuals installed at Apsara Studio Gallery, taken
