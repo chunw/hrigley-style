@@ -34,6 +34,8 @@ interface Chapter {
   key: string;
   number: number;
   title: string;
+  titleEn?: string;
+  titleZh?: string;
   descriptionHtml: string;
   items: { item: CatalogItem; plate: number }[];
   years: string;
@@ -102,6 +104,24 @@ const displaySize = (text: string, lineInches: number, max: number) =>
   `${Math.min(max, lineInches / (Math.max(text.length, 4) * 0.8)).toFixed(2)}in`;
 
 const pad2 = (n: number) => String(n).padStart(2, "0");
+
+/** Her direction (2026-11-05): a bilingual display title never runs the two
+ * languages together — English on its own line, Chinese on the line below. */
+function stackedPair(en: string, zh?: string): ReactNode {
+  if (zh && zh !== en) {
+    return (
+      <>
+        {en}
+        <span className="bk-title-zh-line">{zh}</span>
+      </>
+    );
+  }
+  return en;
+}
+
+function stackedTitle(chapter: Chapter): ReactNode {
+  return stackedPair(chapter.titleEn ?? chapter.title, chapter.titleZh);
+}
 const plainText = (html: string) => html.replace(/<br\s*\/?>/gi, " ").replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
 const hasCjk = (s: string) => /[\u4e00-\u9fff]/.test(s);
 
@@ -430,7 +450,7 @@ interface Aphorism {
 }
 
 const APHORISMS: Record<string, Aphorism> = {
-  "what-remains": { id: "what-remains", en: "What remains?", zh: "留下了什么？" },
+  "what-remains": { id: "what-remains", en: "What remains?", zh: "什么能留下？" },
   journeys: { id: "journeys", en: "The journeys end. The moments remain.", zh: "旅程一次次散场，这些瞬间留了下来。" },
   keep: { id: "keep", en: "I keep what is about to disappear." },
   "human-touch": { id: "human-touch", en: "The 'human touch' remains a refuge, a place machines cannot tread." },
@@ -858,10 +878,6 @@ function PageBgCtl({ current, onPick }: { current?: PageBgKind; onPick: (kind: P
   );
 }
 
-function RunningHead({ side, left, right }: { side: Side; left: string; right: string }) {
-  return <div className="bk-runhead">{side === "verso" ? left : right}</div>;
-}
-
 function Folio({ number, tag }: { number: number; tag?: string }) {
   return (
     <>
@@ -922,8 +938,10 @@ export interface BookContext {
 export function FrontCoverFace({ ctx }: { ctx: BookContext }) {
   // Final cover (her direction, 2026-10-18): a full rust-brown field, the David
   // still life from the Still Things section whole at the centre, and cream serif lettering walking the four edges, Chun across the
-  // top, Wang down the right side, Remains up the left side. No Chinese on
-  // the front cover (her call, 2026-10-18): English lettering only.
+  // top, Wang down the right side, Remains up the left side. The Chinese title
+  // 遗迹 stands at the lower right (removed 2026-10-18 at her call, restored
+  // 2026-11-05 when she settled 遗迹 as the book's Chinese name and directed
+  // it back onto the cover).
   const still = ctx.chapters.find((c) => c.key === "stillthings");
   // The cover piece is pinned by image, not by title: the plain title
   // "Still Things" is shared by more than one plate in the section. It
@@ -936,6 +954,7 @@ export function FrontCoverFace({ ctx }: { ctx: BookContext }) {
       <span className="bk-cover-word bk-cover-top">Chun</span>
       <span className="bk-cover-word bk-cover-right">Wang</span>
       <span className="bk-cover-word bk-cover-left">Remains</span>
+      <span className="bk-cover-word bk-cover-zh">遗迹</span>
       {art && (
         <div className="bk-cover-art">
           <BookImage src={art.image_url} fallback={art.fallback_image_url} alt="Still Things" />
@@ -996,7 +1015,6 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
   const ctl =
     ctx.editMode && pageKey ? <PageBgCtl current={bg} onPick={(kind) => ctx.setPageBg(pageKey, kind)} /> : null;
   const author = "Chun Wang · 王淳";
-  const bookHead = `${author} - ${b.title}`;
 
   switch (spec.kind) {
     case "title":
@@ -1066,7 +1084,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             <div className="bk-eyebrow">{translations.en.catalogBook.contents} · {translations.zh.catalogBook.contents}</div>
           )}
           <div className="bk-contents">
-            {spec.chunk === 0 && <h2 className="bk-section-title shop-title gloria-title">{translations.en.catalogBook.contents} {translations.zh.catalogBook.contents}</h2>}
+            {spec.chunk === 0 && <h2 className="bk-section-title shop-title gloria-title">{stackedPair(translations.en.catalogBook.contents, translations.zh.catalogBook.contents)}</h2>}
             <ol>
               {pageRows.map((r) => (
                 <li
@@ -1093,11 +1111,10 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const long = paras.map((p) => p.text).join("").length > 1400;
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
-          <RunningHead side={side} left={bookHead} right={`${translations.en.catalogBook.preface} · ${translations.zh.catalogBook.preface}`} />
           <div className="bk-essay">
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
-                <h2 className="bk-section-title shop-title gloria-title">{translations.en.catalogBook.preface} {translations.zh.catalogBook.preface}</h2>
+                <h2 className="bk-section-title shop-title gloria-title">{stackedPair(translations.en.catalogBook.preface, translations.zh.catalogBook.preface)}</h2>
               </div>
             )}
             <div className={`bk-essay-text description-html ${long ? "bk-essay-long" : ""}`}>
@@ -1122,7 +1139,6 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const long = paras.map((p) => p.text).join("").length > 1400;
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
-          <RunningHead side={side} left={bookHead} right={`${translations.en.catalogBook.paintingIntro} · ${translations.zh.catalogBook.paintingIntro}`} />
           <div className="bk-essay">
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
@@ -1164,14 +1180,13 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               </p>
             )}
             <Collage
-              title={chapter.title}
+              title={stackedTitle(chapter)}
               // Two lines across the ~16 in spread at most.
-              titleSize={displaySize(chapter.title, 2 * 15.5, 1.9)}
+              titleSize={displaySize(chapter.titleEn ?? chapter.title, 2 * 15.5, 1.9)}
               above={
                 <div className="bk-collage-row">
                   <span className="bk-opener-label">
                     <span className="bk-num-box">{pad2(chapter.number)}</span>
-                    {translations.en.catalogBook.chapter.replace("{n}", pad2(chapter.number))} · {translations.zh.catalogBook.chapter.replace("{n}", pad2(chapter.number))}
                   </span>
                   <span>{chapter.years}</span>
                 </div>
@@ -1202,12 +1217,11 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const items = chunk?.items ?? [];
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
-          <RunningHead side={side} left={bookHead} right={chapter.title} />
           <div className="bk-essay">
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
                 <span className="bk-num-box">{pad2(chapter.number)}</span>
-                <h2 className="bk-section-title shop-title">{chapter.title}</h2>
+                <h2 className="bk-section-title shop-title">{stackedTitle(chapter)}</h2>
                 <div className="bk-essay-meta sans-label">{chapter.years}</div>
               </div>
             )}
@@ -1235,7 +1249,6 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const { item, chapter } = spec;
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-plate-page">
-          <RunningHead side={side} left={bookHead} right={chapter.title} />
           <div className="bk-plate-frame">
             <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
           </div>
@@ -1256,7 +1269,6 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
     case "about":
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
-          <RunningHead side={side} left={bookHead} right={`${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`} />
           <div className="bk-essay">
             <div className="bk-essay-head">
               <div className="bk-essay-meta sans-label">{translations.en.catalogBook.aboutArtist} · {translations.zh.catalogBook.aboutArtist}</div>
@@ -1271,12 +1283,11 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
     case "collage":
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
-          <RunningHead side={side} left={bookHead} right="Collage as Method · 拼贴作为方法" />
           <div className="bk-essay">
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
                 <div className="bk-essay-meta sans-label">Collage as Method · 拼贴作为方法</div>
-                <h2 className="bk-section-title shop-title gloria-title">Collage as Method 拼贴作为方法</h2>
+                <h2 className="bk-section-title shop-title gloria-title">{stackedPair("Collage as Method", "拼贴作为方法")}</h2>
               </div>
             )}
             <div className="bk-essay-text description-html">
@@ -1293,7 +1304,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
           <div className="bk-eyebrow">相关展览 · Exhibitions</div>
           <div className="bk-exhibitions">
-            <h3 className="bk-exhibitions-head shop-title">{spec.chapter.title}</h3>
+            <h3 className="bk-exhibitions-head shop-title">{stackedTitle(spec.chapter)}</h3>
             <ul>
               {entries.map((e, i) => {
                 const en = exhibitionParts(e.en);
@@ -1336,7 +1347,6 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const chunkGroups = (REVERSE_INDEX_CHUNKS[spec.chunk] ?? []).map((gi) => REVERSE_INDEX.groups[gi]);
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-revindex-page">
-          <RunningHead side={side} left={bookHead} right="An Index of What Remains · 反向索引" />
           <div className="bk-revindex">
             {spec.chunk === 0 && (
               <header className="bk-revindex-head">
@@ -1464,6 +1474,8 @@ function useBookModel(args: {
         key: s.key,
         number: i + 1,
         title: bilingualTitle(CHAPTER_TITLE[s.key](translations.en), CHAPTER_TITLE[s.key](translations.zh)),
+        titleEn: CHAPTER_TITLE[s.key](translations.en),
+        titleZh: CHAPTER_TITLE[s.key](translations.zh),
         // Sections without an essay of their own fall back to the copy the site already uses for them.
         descriptionHtml:
           s.key === "remains"
@@ -1497,6 +1509,8 @@ function useBookModel(args: {
       key: `series:${s.id}`,
       number: 0,
       title: !s.titleZh || s.titleEn === s.titleZh ? s.titleEn : `${s.titleEn} ${s.titleZh}`,
+      titleEn: s.titleEn,
+      titleZh: s.titleZh,
       descriptionHtml: "",
       items: (SERIES_PLATES[s.id] ?? []).map((item) => ({ item, plate: 0 })),
       years: s.years,
@@ -1506,14 +1520,14 @@ function useBookModel(args: {
     // no "Visions in Watercolor" umbrella chapter). Plates split from the
     // watercolor catalog by title; the texts live in BOOK_SERIES.
     const wcChapter = catalogChapters.find((ch) => ch.key === "watercolor");
-    const wcSplit = (id: string, title: string, prefix: string): Chapter => {
+    const wcSplit = (id: string, titleEn: string, titleZh: string, prefix: string): Chapter => {
       const items = (wcChapter?.items ?? []).filter(({ item }) => (item.title ?? "").startsWith(prefix));
-      return { key: id, number: 0, title, descriptionHtml: "", items, years: yearRange(items.map(({ item }) => item.year)), seriesTextId: id };
+      return { key: id, number: 0, title: `${titleEn} ${titleZh}`, titleEn, titleZh, descriptionHtml: "", items, years: yearRange(items.map(({ item }) => item.year)), seriesTextId: id };
     };
     const splitChapters: Chapter[] = [
-      wcSplit("residuals", "Residuals 残留", "Residuals"),
-      wcSplit("stillthings", "Still Things 静物", "Still Things"),
-      wcSplit("road", "Notes from the Road 旅途笔记", "Notes from the Road"),
+      wcSplit("residuals", "Residuals", "残留", "Residuals"),
+      wcSplit("stillthings", "Still Things", "静物", "Still Things"),
+      wcSplit("road", "Notes from the Road", "旅途笔记", "Notes from the Road"),
     ];
     // Forms Before Dissolving (London, 2026): the ArtOrb exhibition poster
     // showing Breakfast Residuals installed at Apsara Studio Gallery, taken

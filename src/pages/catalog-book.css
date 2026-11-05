@@ -325,6 +325,11 @@
   justify-content: center;
 }
 
+/* Bilingual display titles: Chinese on its own line under the English. */
+.bk-title-zh-line {
+  display: block;
+}
+
 /* ── Running heads, folios, small labels ───────────────────────────────────── */
 .bk-runhead,
 .bk-eyebrow {
