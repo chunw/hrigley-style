@@ -305,13 +305,13 @@ interface Aphorism {
 
 const APHORISMS: Record<string, Aphorism> = {
   "what-remains": { id: "what-remains", en: "What remains?", zh: "留下了什么？" },
-  journeys: { id: "journeys", en: "The journeys end. The moments remain.", zh: "旅程会结束，瞬间留下来。" },
-  keep: { id: "keep", en: "I keep what is about to disappear.", zh: "我存留那些即将消失的东西。" },
+  journeys: { id: "journeys", en: "The journeys end. The moments remain.", zh: "旅程一次次散场，这些瞬间留了下来。" },
+  keep: { id: "keep", en: "I keep what is about to disappear." },
   "human-touch": { id: "human-touch", en: "The 'human touch' remains a refuge, a place machines cannot tread." },
   theme: {
     id: "theme",
     en: "The theme of this book is what remains, and its method is the archive.",
-    zh: "主题是存留，方法是档案。",
+    zh: "留下了什么，是这本书的主题；档案，是它的方法。",
   },
   "cover-story": {
     id: "cover-story",
