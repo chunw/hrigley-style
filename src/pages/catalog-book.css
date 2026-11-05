@@ -1292,6 +1292,57 @@
   background: #000;
 }
 
+/* Part (big-chapter) openings: rust ground, cream type, oversized titles —
+   a clear step above the black section openers (her direction, 2026-11-05).
+   The rust and cream are the cover's own colours. */
+.bk-opener-part {
+  background: #8a3c00;
+}
+
+.bk-opener-part .bk-collage-title {
+  color: #fff3c2;
+}
+
+.bk-opener-part .bk-collage-row {
+  color: rgba(255, 243, 194, 0.72);
+}
+
+.bk-opener-part .bk-opener-epigraph {
+  color: #fff3c2;
+}
+
+.bk-opener-part .bk-opener-epigraph-zh {
+  color: rgba(255, 243, 194, 0.78);
+}
+
+.bk-opener-part .bk-num-box {
+  border-color: rgba(255, 243, 194, 0.65);
+  color: #fff3c2;
+}
+
+.bk-part-intro {
+  background: #8a3c00;
+  color: #fff3c2;
+}
+
+.bk-part-intro .bk-section-title {
+  font-size: 0.78in;
+  color: #fff3c2;
+}
+
+.bk-part-intro .bk-essay-text {
+  color: #fff3c2;
+}
+
+.bk-part-intro .bk-folio,
+.bk-part-intro .bk-folio-tag {
+  color: rgba(255, 243, 194, 0.75);
+}
+
+.bk-essay-head .bk-part-title {
+  font-size: 0.78in;
+}
+
 /* ── Aphorism spreads ─────────────────────────────────────────────────────── */
 /* One sentence of hers alone across a spread: warm paper and ink type, a
    light pause against the black chapter openers (her direction, 2026-10-18). */

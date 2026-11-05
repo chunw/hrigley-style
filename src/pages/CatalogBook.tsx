@@ -40,6 +40,14 @@ interface Chapter {
   items: { item: CatalogItem; plate: number }[];
   years: string;
   seriesOnly?: boolean;
+  /** A big-chapter opening (the websites triptych): paginated like a
+   * chapter but stands outside the chapter numbering — number 0, and no
+   * num-box in the contents, on the opener or on its essay pages. */
+  partIntro?: boolean;
+  /** A big chapter's own opening chapter (Inner Wilderness, the objects
+   * chapter): keeps its number and plates, but its opener and essay head
+   * take the part treatment — rust ground, oversized title. */
+  partHead?: boolean;
   seriesTextId?: string;
   /** A chapter may hold back this many trailing essay chunks so paginate()
    * emits them right after the plate whose image_url matches, instead of
@@ -1079,7 +1087,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         { num: "", title: "Collage as Method · 拼贴作为方法", sub: "", page: startOf((s) => s.kind === "collage") },
         { num: "", title: `${translations.en.catalogBook.paintingIntro} · ${translations.zh.catalogBook.paintingIntro}`, sub: "", page: startOf((s) => s.kind === "painting-intro") },
         ...chapters.map((c) => ({
-          num: pad2(c.number),
+          num: c.number > 0 ? pad2(c.number) : "",
           title: c.title,
           sub: c.years,
           page: startOf((s) => "chapter" in s && s.chapter.key === c.key),
@@ -1147,7 +1155,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const paras = ctx.paintingChunks[spec.chunk]?.paras ?? [];
       const long = paras.map((p) => p.text).join("").length > 1400;
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={spec.chunk === 0 ? "bk-part-intro" : undefined}>
           <div className="bk-essay">
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
@@ -1180,7 +1188,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // appears before the section itself.
       const epigraph = CHAPTER_EPIGRAPH[chapter.key];
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-opener bk-opener-${half}`}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-opener bk-opener-${half}${chapter.partIntro || chapter.partHead ? " bk-opener-part" : ""}`}>
           <div className="bk-spread-canvas">
             {epigraph && (
               <p className="bk-opener-epigraph">
@@ -1191,11 +1199,11 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             <Collage
               title={stackedTitle(chapter)}
               // Two lines across the ~16 in spread at most.
-              titleSize={displaySize(chapter.titleEn ?? chapter.title, 2 * 15.5, 1.9)}
+              titleSize={displaySize(chapter.titleEn ?? chapter.title, 2 * 15.5, chapter.partIntro || chapter.partHead ? 2.6 : 1.9)}
               above={
                 <div className="bk-collage-row">
                   <span className="bk-opener-label">
-                    <span className="bk-num-box">{pad2(chapter.number)}</span>
+                    {chapter.number > 0 && <span className="bk-num-box">{pad2(chapter.number)}</span>}
                   </span>
                   <span>{chapter.years}</span>
                 </div>
@@ -1229,8 +1237,8 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           <div className="bk-essay">
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
-                <span className="bk-num-box">{pad2(chapter.number)}</span>
-                <h2 className="bk-section-title shop-title">{stackedTitle(chapter)}</h2>
+                {chapter.number > 0 && <span className="bk-num-box">{pad2(chapter.number)}</span>}
+                <h2 className={`bk-section-title shop-title${chapter.partIntro || chapter.partHead ? " bk-part-title" : ""}`}>{stackedTitle(chapter)}</h2>
                 <div className="bk-essay-meta sans-label">{chapter.years}</div>
               </div>
             )}
@@ -1482,9 +1490,10 @@ function useBookModel(args: {
       .map((s, i) => ({
         key: s.key,
         number: i + 1,
-        title: bilingualTitle(CHAPTER_TITLE[s.key](translations.en), CHAPTER_TITLE[s.key](translations.zh)),
-        titleEn: CHAPTER_TITLE[s.key](translations.en),
-        titleZh: CHAPTER_TITLE[s.key](translations.zh),
+        title: bilingualTitle(s.key === "shop" ? "Slightly Useful Objects" : CHAPTER_TITLE[s.key](translations.en), s.key === "shop" ? "不腐" : CHAPTER_TITLE[s.key](translations.zh)),
+        titleEn: s.key === "shop" ? "Slightly Useful Objects" : CHAPTER_TITLE[s.key](translations.en),
+        titleZh: s.key === "shop" ? "不腐" : CHAPTER_TITLE[s.key](translations.zh),
+        partHead: s.key === "shop",
         // Sections without an essay of their own fall back to the copy the site already uses for them.
         descriptionHtml:
           s.key === "remains"
@@ -1524,6 +1533,8 @@ function useBookModel(args: {
       items: (SERIES_PLATES[s.id] ?? []).map((item) => ({ item, plate: 0 })),
       years: s.years,
       seriesOnly: true,
+      partIntro: !!s.partIntro,
+      partHead: !!s.partIntro,
     }));
     // The watercolor catalog dissolves into its three named series (her call:
     // no "Visions in Watercolor" umbrella chapter). Plates split from the
@@ -1566,13 +1577,18 @@ function useBookModel(args: {
         : residualsChapter.items;
       residualsChapter.items = [{ item: fbdItem, plate: 0 }, ...works];
     }
+    // The three websites stand as one big chapter (her direction,
+    // 2026-11-05): a part opening, "Archive, Body, Negotiation", then the
+    // triptych in the order the IMMEMORY text itself names — first panel
+    // first: IMMEMORY, Cave Dance, Negotiated Intelligence.
     const SECTION_ORDER = [
       "spirit", "remains", "residuals", "stillthings", "road", "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography", "series:nostalgia",
-      "shop",
-      "series:immemory", "series:negotiated", "series:unfinished", "series:google",
-      "series:feedscanner", "series:cavedance", "series:earlyline",
+      "series:triptych", "series:immemory", "series:cavedance", "series:negotiated",
+      "series:unfinishedpart", "series:unfinished", "series:google",
+      "series:feedscanner", "series:earlyline",
       "series:soliloquy", "series:artempath",
       "series:interview",
+      "shop",
     ];
     // Photography, restructured at her direction (2026-10-18): the part is
     // "Inner Wilderness 内在荒原", an opening text chapter carrying the
@@ -1624,7 +1640,7 @@ function useBookModel(args: {
     const elOtroItems = photoItems.filter((p) => !usedPhoto.has(p));
     const photoChapters: Chapter[] = photoParent
       ? [
-          { key: "innerwilderness", number: 0, title: "Inner Wilderness 内在荒原", descriptionHtml: "", years: "2017 – 2025", items: [], seriesTextId: "innerwilderness" },
+          { key: "innerwilderness", number: 0, title: "Inner Wilderness 内在荒原", descriptionHtml: "", years: "2017 – 2025", items: [], seriesTextId: "innerwilderness", partHead: true },
           { key: "deathvalley", number: 0, title: "Death Valley 死亡谷", descriptionHtml: "", years: yrOf(dvItems), items: [...dvItems, ...DEATH_VALLEY_PLATES.map((item) => ({ item, plate: 0 }))], seriesTextId: "deathvalley" },
           { key: "sahara", number: 0, title: "Sahara 撒哈拉", descriptionHtml: "", years: saharaItem?.year ?? "", items: saharaItem ? [{ item: saharaItem, plate: 0 }] : [], seriesTextId: "sahara" },
           { key: "highlands", number: 0, title: "Scottish Highlands 苏格兰高地", descriptionHtml: "", years: yrOf(hgItems), items: hgItems, seriesTextId: "highlands" },
@@ -1633,9 +1649,10 @@ function useBookModel(args: {
         ]
       : [];
     const byChapterKey = new Map([...catalogChapters, ...photoChapters, ...seriesChapters, ...splitChapters].map((ch) => [ch.key, ch]));
+    let chapterNo = 0;
     const chapters = SECTION_ORDER.map((k) => byChapterKey.get(k))
       .filter((ch): ch is Chapter => !!ch)
-      .map((ch, i) => ({ ...ch, number: i + 1 }));
+      .map((ch) => (ch.partIntro ? { ...ch, number: 0 } : { ...ch, number: ++chapterNo }));
     // Slightly Useful Objects opens the shop chapter (Visions in Ceramics is
     // merged into it): the artist's Instagram images go ahead of the shop
     // catalog plates, in the order registered in SERIES_PLATES.shop.
