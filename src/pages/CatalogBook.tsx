@@ -197,32 +197,62 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
   },
 };
 
-/** Exhibition lines are free text carrying their date at the end; pull the year out
- *  to lead the line in bold, leaving the rest of the wording untouched. A range
- *  (2025 – 2026) leads with its first year and drops the range from the rest,
- *  and a 年 right after the year goes with it. */
+/** Exhibition lines are free text carrying their date at the end; pull the
+ *  date's first year out to lead the line in bold, leaving the rest of the
+ *  wording untouched. The trailing date is identified as a whole first:
+ *  every year belonging to it (both ends of a range like "November 1, 2025 –
+ *  March 1, 2026" / "2025年11月1日 – 2026年3月1日") comes out, while years
+ *  that are part of a name ("LIC-A@Atlantic 2020", "The Wrong Biennale
+ *  2025-2026 Edition") stay in place. A 年 right after a removed year goes
+ *  with it, and the ", " an English date puts after its day number goes
+ *  too, so no separator is left dangling. */
 function exhibitionParts(text: string): { year: string; rest: string } {
   const matches = [...text.matchAll(/\d{4}/g)];
   if (matches.length === 0) return { year: "", rest: text.trim() };
-  const last = matches[matches.length - 1];
-  const lastIdx = last.index ?? 0;
-  const before = text.slice(0, lastIdx).replace(/\s+$/, "");
-  let year = last[0];
-  let cutStart = lastIdx;
-  const cutEnd = lastIdx + 4;
-  if ((before.endsWith("–") || before.endsWith("-") || before.endsWith("—")) && matches.length > 1) {
-    year = matches[0][0];
-    cutStart = matches[0].index ?? 0;
+  const MONTHS = "January|February|March|April|May|June|July|August|September|October|November|December";
+  // A gap between two year tokens belongs to one date expression when it
+  // holds only date characters, digits, separators and month names.
+  const isDateGap = (gap: string) =>
+    gap.replace(new RegExp(MONTHS, "g"), "").replace(/[\s,，、·–—\-\d年月日]/g, "") === "";
+  // Walk left from the last year across date-expression gaps to the first
+  // year of the trailing date. A compact "YYYY-YYYY" inside a name (an
+  // edition label) is not a date range: never cross into its tail year over
+  // a bare punctuation gap.
+  let start = matches.length - 1;
+  while (start > 0) {
+    const prev = matches[start - 1];
+    const cur = matches[start];
+    const prevIdx = prev.index ?? 0;
+    const gap = text.slice(prevIdx + 4, cur.index ?? 0);
+    if (!isDateGap(gap)) break;
+    const barePunctuation = gap.replace(/[\s,，、·–—-]/g, "") === "";
+    if (barePunctuation && /\d{4}-$/.test(text.slice(Math.max(0, prevIdx - 5), prevIdx))) break;
+    start--;
   }
-  let tail = text.slice(cutEnd);
-  if (tail.startsWith("年")) tail = tail.slice(1);
-  const rest = (text.slice(0, cutStart) + tail)
+  const dateYears = matches.slice(start);
+  let rest = text;
+  // Remove the date's years from last to first so indices stay valid.
+  for (let i = dateYears.length - 1; i >= 0; i--) {
+    const idx = dateYears[i].index ?? 0;
+    let from = idx;
+    // An English date sets its year off with ", " after the day number
+    // ("November 1, 2025"): that comma goes too. A comma after a word is a
+    // segment separator ("online, 2021 – permanent") and stays.
+    if (rest.slice(Math.max(0, idx - 2), idx) === ", " && /\d/.test(rest[idx - 3] ?? "")) from = idx - 2;
+    let to = idx + 4;
+    if (rest[to] === "年") to++;
+    rest = rest.slice(0, from) + rest.slice(to);
+  }
+  rest = rest
     .replace(/\s+/g, " ")
     .replace(/,\s*,/g, ",")
+    .replace(/，\s*，/g, "，")
+    .replace(/,\s*[–—-]\s*/g, ", ")
+    .replace(/，\s*[–—-]\s*/g, "，")
     .replace(/^[\s,，、·–—-]+/, "")
     .replace(/[\s,，、·–—-]+$/, "")
     .trim();
-  return { year, rest };
+  return { year: dateYears[0][0], rest };
 }
 
 /** Split paragraphs into page-sized chunks of at most ~maxChars each. */
@@ -428,8 +458,9 @@ const APHORISM_BEFORE_CHAPTER: Record<string, string> = {
 
 /** "Collage as Method", a short front-matter essay standing right after
  * About the Artist and before the first chapter (her direction, 2026-10-20).
- * Her own text, verbatim; English page first, Chinese page second, like the
- * preface. */
+ * English page first, Chinese page second, like the preface. Note: the
+ * Chinese text is a drafted translation, not her own wording (item D-1 in
+ * the drafted-text audit) — never describe it as her verbatim text. */
 const COLLAGE_METHOD = {
   en: "Collage is how I think. A pottery figurine made to accompany the dead stands in a museum case; I cut it loose and set it down in a video meeting, next to a toilet, beside a limousine, and the two thousand years between them collapse into one flat, funny surface. A search history, that small pile of electronic waste, is cut out of the browser and pasted next to a stranger's testimony from the other side of a pandemic. Portraits of others and self-portraits take turns on the same page, lending each other a self. Nothing keeps its original context. Everything keeps its edges. I do not blend the fragments into one smooth voice. I let them stand side by side, seam showing, until the spark of continuity jumps across the gap. That is what an archive is, the way I make one: not a box where the past is stored, but a table where what is about to disappear is laid out next to what has already survived, so they can keep each other company.",
   zh: "拼贴是我思考的方式。一个为陪伴逝者而做的陶俑，站在博物馆的玻璃柜里；我把它剪下来，放进一场视频会议，放在一只马桶旁边，一辆豪车旁边，它们之间的两千年，就塌成了一个扁平的、好笑的表面。搜索记录，那一小堆电子垃圾，从浏览器里剪出来，贴在一份来自疫情另一端的陌生人证言旁边。他人的肖像与自画像在同一页上轮流出现，互相借出一个自我。没有什么还留在原来的语境里。每一块都留着自己的边缘。我不把这些碎片融成一个光滑的声音。我让它们并排站着，接缝露在外面，直到连续性的火花从缝隙里跳过去。这就是档案，按我的做法：不是一只收纳过去的箱子，而是一张桌子，即将消失的东西被摆在已经幸存下来的东西旁边，让它们彼此做伴。",
