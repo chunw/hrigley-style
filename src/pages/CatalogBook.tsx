@@ -1626,6 +1626,67 @@ const CatalogBook = () => {
     return m ? `Page ${m[1]} / ${pages.length}` : key;
   };
 
+  // ── Deep links ────────────────────────────────────────────────────────────
+  // A shared link can name the page it opens on: ?page=<folio> jumps to that
+  // printed page, ?section=<key> to a section's first text page. Section
+  // keys: title, contents, preface, about, collage, painting-intro, or any
+  // chapter key (spirit, remains, residuals, shop, series:immemory, ...).
+  // A chapter resolves to its first essay page, or to its opener when the
+  // chapter carries no essay. With neither parameter nothing changes: the
+  // book still opens at the front, and pagination and print are untouched.
+  const deepLinkPage = useMemo(() => {
+    if (typeof window === "undefined") return null;
+    const q = new URLSearchParams(window.location.search);
+    const pageParam = q.get("page");
+    if (pageParam !== null) {
+      const n = Number(pageParam);
+      if (Number.isInteger(n) && n >= 1 && n <= pages.length) return n;
+    }
+    const section = q.get("section");
+    if (!section) return null;
+    if (
+      section === "title" ||
+      section === "contents" ||
+      section === "preface" ||
+      section === "about" ||
+      section === "collage" ||
+      section === "painting-intro"
+    ) {
+      const kind = section as PageSpec["kind"];
+      return pages.find((p) => p.spec.kind === kind)?.number ?? null;
+    }
+    const essay = pages.find((p) => p.spec.kind === "essay" && p.spec.chapter.key === section);
+    if (essay) return essay.number;
+    return pages.find((p) => "chapter" in p.spec && p.spec.chapter.key === section)?.number ?? null;
+  }, [pages]);
+  useEffect(() => {
+    if (deepLinkPage === null) return;
+    let cancelled = false;
+    const stop = () => {
+      cancelled = true;
+    };
+    window.addEventListener("wheel", stop, { passive: true });
+    window.addEventListener("touchstart", stop, { passive: true });
+    window.addEventListener("keydown", stop);
+    const jump = () => {
+      if (cancelled) return;
+      document.getElementById(`bk-page-${deepLinkPage}`)?.scrollIntoView({ behavior: "auto", block: "start" });
+    };
+    // The stage is laid out synchronously, but zoom and fonts settle a beat
+    // later; repeat the jump briefly unless the reader takes over scrolling.
+    jump();
+    const raf = requestAnimationFrame(jump);
+    const timers = [300, 900].map((ms) => window.setTimeout(jump, ms));
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+      timers.forEach((t) => window.clearTimeout(t));
+      window.removeEventListener("wheel", stop);
+      window.removeEventListener("touchstart", stop);
+      window.removeEventListener("keydown", stop);
+    };
+  }, [deepLinkPage]);
+
   const handleSave = async () => {
     if (!stageRef.current) return;
     setPreparing(true);
