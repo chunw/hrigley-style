@@ -1796,6 +1796,14 @@ function useBookModel(args: {
         const ovZh = fieldItems("spirit", "zh");
         ovEn.forEach((it, i) => pushPair(it, ovZh[i]));
         for (let j = ovEn.length; j < ovZh.length; j++) stream.push(ovZh[j]);
+        // Her bridge sentence (chosen by her, 2026-11-05): it ties the
+        // series to the book's theme — reports and data wash away, the
+        // paintings hold them. Book-only: it speaks for this volume, so it
+        // stays out of the shop's shared series description in 21spirit.ts.
+        pushPair(
+          { html: "<p>Reports and data get washed away by newer information. These paintings fix them in place, this era's way of leaving something of itself.</p>", edit: "spiritbridge" },
+          { html: "<p>报道和数据会被新的信息冲走。这些画把它们固定下来，是这个时代留下自己的方式。</p>", edit: "spiritbridge" },
+        );
         // Her own first-person post on the painting Inundated (WeChat
         // Moments, March 28, 2018) stands right after the series overview,
         // ahead of the borrowed background texts: her voice first, then the
