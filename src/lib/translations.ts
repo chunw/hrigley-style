@@ -133,7 +133,7 @@ export const translations = {
       listOfPlates: "List of Plates",
       frontispiece: "Frontispiece",
       preface: "Preface",
-      paintingIntro: "Painting",
+      paintingIntro: "Afterimages",
       prefaceBody: [
         "Some two thousand years ago, a potter shaped a small figure out of clay and sent it underground, to keep company with the dead. The figure was not made to be looked at for long. It was made to stay.",
         "It stayed. It outlived its maker, its language, and the entire world that once knew what it was for. It slept through dynasties. Then one day it was dug up, given a number, and placed behind glass, where it now stands in the quiet of a museum, lit like a jewel, explained by a label.",
@@ -329,7 +329,7 @@ export const translations = {
       listOfPlates: "图版索引",
       frontispiece: "卷首插图",
       preface: "前言",
-      paintingIntro: "绘画",
+      paintingIntro: "余像",
       prefaceBody: [
         "Some two thousand years ago, a potter shaped a small figure out of clay and sent it underground, to keep company with the dead. The figure was not made to be looked at for long. It was made to stay.",
         "It stayed. It outlived its maker, its language, and the entire world that once knew what it was for. It slept through dynasties. Then one day it was dug up, given a number, and placed behind glass, where it now stands in the quiet of a museum, lit like a jewel, explained by a label.",
