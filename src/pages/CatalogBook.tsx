@@ -1592,8 +1592,8 @@ function useBookModel(args: {
       "series:unfinishedpart", "series:unfinished", "series:google",
       "series:feedscanner", "series:earlyline",
       "series:soliloquy", "series:artempath",
-      "series:interview",
       "shop",
+      "series:interview",
     ];
     // Photography, restructured at her direction (2026-10-18): the part is
     // "Inner Wilderness 内在荒原", an opening text chapter carrying the
