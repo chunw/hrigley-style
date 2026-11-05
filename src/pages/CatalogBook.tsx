@@ -1578,12 +1578,13 @@ function useBookModel(args: {
       residualsChapter.items = [{ item: fbdItem, plate: 0 }, ...works];
     }
     // The three websites stand as one big chapter (her direction,
-    // 2026-11-05): a part opening, "Archive, Body, Negotiation", then the
+    // 2026-11-05): a part opening, "Rooms, Scores, Decisions", then the
     // triptych in the order the IMMEMORY text itself names — first panel
     // first: IMMEMORY, Cave Dance, Negotiated Intelligence.
     const SECTION_ORDER = [
-      "spirit", "remains", "residuals", "stillthings", "road", "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography", "series:nostalgia",
+      "spirit", "remains", "residuals", "stillthings", "road",
       "series:triptych", "series:immemory", "series:cavedance", "series:negotiated",
+      "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography", "series:nostalgia",
       "series:unfinishedpart", "series:unfinished", "series:google",
       "series:feedscanner", "series:earlyline",
       "series:soliloquy", "series:artempath",
