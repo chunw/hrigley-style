@@ -12,7 +12,7 @@ export interface BookSeries {
 
 /**
  * Series sections that complete the book's outline but have no catalog plates yet:
- * Nostalgia and Visions in Ceramics, the whole Screen & Archive chapter
+ * Visions in Ceramics, the whole Screen & Archive chapter
  * (IMMEMORY, Negotiated Intelligence, Unfinished Archive, Google Searches,
  * Feed Scanner, Cave Dance) and the whole Live chapter
  * (Soliloquy, Art.empath.io). English texts are the artist's own project overviews;
@@ -21,14 +21,6 @@ export interface BookSeries {
  * the book editor's PR flow (api/book-pr.js) edits textEn/textZh by id.
  */
 export const BOOK_SERIES: BookSeries[] = [
-  {
-    id: "nostalgia",
-    titleEn: "Nostalgia",
-    titleZh: "怀旧",
-    years: "2018",
-    textEn: "An online space for meditation and self-reflection, peppered with nostalgic imagery I created with mixed media, objects and photography.",
-    textZh: "一个用于冥想与自我反思的线上空间，点缀着我用综合材料、物件和摄影创作的怀旧意象。",
-  },
   {
     mergedInto: "shop",
     id: "ceramics",

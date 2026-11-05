@@ -184,10 +184,6 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     en: "We never meet ourselves directly. We arrive by way of other faces.",
     zh: "我们从不直接遇见自己，我们总是绕道他人的面孔抵达。",
   },
-  "series:nostalgia": {
-    en: "An online space for meditation and self-reflection.",
-    zh: "一个用于冥想与自我反思的线上空间。",
-  },
   shop: {
     en: "My ceramics begin as functional forms - a candle holder, a cup, a bowl - then leak into surreal landscapes.",
     zh: "我的陶艺从功能性的形态开始，一只烛台、一只杯子、一只碗，然后渗漏成超现实的风景。",
@@ -478,7 +474,6 @@ const APHORISMS: Record<string, Aphorism> = {
 /** Aphorism spreads placed immediately before these chapters. The first
  * one ("What remains?") goes after the front matter, before chapter one. */
 const APHORISM_BEFORE_CHAPTER: Record<string, string> = {
-  "series:nostalgia": "journeys",
   shop: "keep",
   "series:immemory": "human-touch",
   "series:interview": "theme",
@@ -1525,7 +1520,7 @@ function useBookModel(args: {
         years: yearRange(s.items.map((item) => item.year)),
       }));
     // Series sections that complete the outline but have no catalog plates yet
-    // (Nostalgia, Visions in Ceramics, the Screen & Archive and Live chapters),
+    // (Visions in Ceramics, the Screen & Archive and Live chapters),
     // merged with the catalog chapters in the book outline's order.
     const seriesChapters: Chapter[] = BOOK_SERIES.filter((s) => !s.mergedInto).map((s) => ({
       key: `series:${s.id}`,
@@ -1588,7 +1583,7 @@ function useBookModel(args: {
     const SECTION_ORDER = [
       "spirit", "remains", "residuals", "stillthings", "road",
       "series:triptych", "series:immemory", "series:cavedance", "series:negotiated",
-      "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography", "series:nostalgia",
+      "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography",
       "series:unfinishedpart", "series:unfinished", "series:google",
       "series:feedscanner", "series:earlyline",
       "series:soliloquy", "series:artempath",
