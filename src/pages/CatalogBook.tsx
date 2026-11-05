@@ -69,6 +69,7 @@ type PageSpec =
   | { kind: "aphorism"; half: "left" | "right"; aphorism: Aphorism }
   | { kind: "about"; chunk: number }
   | { kind: "collage"; chunk: number }
+  | { kind: "reverse-index"; chunk: number }
   | { kind: "blank" }
   | { kind: "end" };
 
@@ -466,6 +467,80 @@ const COLLAGE_METHOD = {
   zh: "拼贴是我思考的方式。一个为陪伴逝者而做的陶俑，站在博物馆的玻璃柜里；我把它剪下来，放进一场视频会议，放在一只马桶旁边，一辆豪车旁边，它们之间的两千年，就塌成了一个扁平的、好笑的表面。搜索记录，那一小堆电子垃圾，从浏览器里剪出来，贴在一份来自疫情另一端的陌生人证言旁边。他人的肖像与自画像在同一页上轮流出现，互相借出一个自我。没有什么还留在原来的语境里。每一块都留着自己的边缘。我不把这些碎片融成一个光滑的声音。我让它们并排站着，接缝露在外面，直到连续性的火花从缝隙里跳过去。这就是档案，按我的做法：不是一只收纳过去的箱子，而是一张桌子，即将消失的东西被摆在已经幸存下来的东西旁边，让它们彼此做伴。",
 };
 
+/** The reverse index (her idea; sample page approved 2026-11-05): back
+ * matter that indexes the book not by page but by what remains — a sound,
+ * a temperature, an unfinished sentence. It stands after the last chapter,
+ * before the closing page. Entry wording is exactly as approved on the
+ * sample page; do not edit the phrases here. Pointers name the chapter or
+ * work each remainder lives in, in the book's current names. */
+const REVERSE_INDEX = {
+  titleZh: "反向索引",
+  titleEn: "An Index of What Remains",
+  taglineZh: "这份索引不按页码。按还剩下什么。",
+  taglineEn: "Nothing here is found by page. Everything is found by what remains.",
+  footZh: "从这里，往回翻",
+  footEn: "From here, read backwards.",
+  groups: [
+    {
+      zh: "声音",
+      en: "Sounds",
+      entries: [
+        { zh: "一次冲水的声音", en: "a toilet, flushing once", to: "遗迹 Remains" },
+        { zh: "陶俑对着电话的喊声", en: "a figurine, shouting into a phone", to: "遗迹 Remains" },
+        { zh: "玻璃柜里的安静", en: "the quiet inside a glass case", to: "前言 Preface" },
+        { zh: "白立方里的沉默", en: "the silence of the white cube", to: "Art.empath.io" },
+      ],
+    },
+    {
+      zh: "温度",
+      en: "Temperatures",
+      entries: [
+        { zh: "恶水盆地上热得发亮的盐", en: "salt glittering with heat at Badwater", to: "死亡谷 Death Valley" },
+        { zh: "按钟点存下的沙漠的热", en: "desert heat, kept by the hour", to: "撒哈拉 Sahara" },
+        { zh: "一趟旅程散掉之后，变了的天气", en: "the weather, changed after a journey ends", to: "前言 Preface" },
+      ],
+    },
+    {
+      zh: "光",
+      en: "Light",
+      entries: [
+        { zh: "罗斯科要求的低垂的灯光", en: "the low light Rothko asked for", to: "Art.empath.io" },
+        { zh: "画前八英尺的距离", en: "eight feet from the painting", to: "Art.empath.io" },
+        { zh: "把陶俑照得像珠宝的灯光", en: "light that makes a figurine look like a jewel", to: "前言 Preface" },
+        { zh: "不会再以同样方式回来的光", en: "light that will not come back the same way", to: "前言 Preface" },
+      ],
+    },
+    {
+      zh: "痕迹",
+      en: "Traces",
+      entries: [
+        { zh: "早餐过后，盘子上的污渍", en: "stains on a plate after breakfast", to: "早餐残留 Breakfast Residuals" },
+        { zh: "被清空之前的一小堆搜索记录", en: "a small heap of searches, about to be cleared", to: "谷歌搜索 Google Searches" },
+        { zh: "一万份对疫情的回应", en: "ten thousand answers to a pandemic", to: "IMMEMORY" },
+        { zh: "一张车票，一块石头", en: "a ticket stub, a stone", to: "前言 Preface" },
+      ],
+    },
+    {
+      zh: "没说完的话",
+      en: "Unfinished Words",
+      entries: [
+        { zh: "访谈里一句没说完的话", en: "a sentence in an interview, left unfinished", to: "访谈 The Interview" },
+        { zh: "会议上的一句「无可奉告」", en: "“nothing to contribute,” said at a meeting", to: "遗迹 Remains" },
+        { zh: "先于陶俑消失的语言", en: "the language that vanished before the figurine did", to: "前言 Preface" },
+      ],
+    },
+    {
+      zh: "没吃完的",
+      en: "Left on the Plate",
+      entries: [
+        { zh: "盘子被收走前的一顿早餐", en: "a breakfast, before the plate is taken away", to: "早餐残留 Breakfast Residuals" },
+        { zh: "用陶重做的一顿早餐", en: "a breakfast, remade in clay", to: "Slightly Useful Objects" },
+        { zh: "快要被扔掉、又被戴起来的东西", en: "things nearly thrown away, worn again", to: "Slightly Useful Objects" },
+      ],
+    },
+  ],
+};
+
 /** Print rule (her direction, 2026-10-25): website links are written out in
  * the book so print readers can look works up online. Works with a site of
  * their own carry the URL at the end of their essay (see the essayChunks
@@ -555,7 +630,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
 
   specs.push({ kind: "title" });
   specs.push({ kind: "colophon" });
-  const tocPages = Math.max(1, Math.ceil((chapters.length + 4) / 9));
+  const tocPages = Math.max(1, Math.ceil((chapters.length + 5) / 9));
   for (let i = 0; i < tocPages; i++) specs.push({ kind: "contents", chunk: i });
   for (let i = 0; i < prefaceChunkCount; i++) specs.push({ kind: "preface", chunk: i });
   // About the Artist stands at the front of the book, right after the preface
@@ -637,6 +712,13 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     if (EXHIBITIONS[chapter.key]?.length) specs.push({ kind: "exhibitions", chapter });
   }
 
+  // The reverse index closes the book's text: after the last chapter,
+  // before the closing page (her direction, 2026-11-05). Two pages:
+  // sounds / temperatures / light, then traces / unfinished words /
+  // left on the plate, ending on the line that sends the reader back.
+  specs.push({ kind: "reverse-index", chunk: 0 });
+  specs.push({ kind: "reverse-index", chunk: 1 });
+
   // Closing page sits on the final (verso) page of the last signature.
   while ((specs.length + 1) % SIGNATURE !== 0) specs.push({ kind: "blank" });
   specs.push({ kind: "end" });
@@ -711,6 +793,8 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `about:${spec.chunk}`;
     case "collage":
       return `collage:${spec.chunk}`;
+    case "reverse-index":
+      return `reverse-index:${spec.chunk}`;
     default:
       return spec.kind;
   }
@@ -940,6 +1024,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           sub: c.years,
           page: startOf((s) => "chapter" in s && s.chapter.key === c.key),
         })),
+        { num: "", title: "An Index of What Remains · 反向索引", sub: "", page: startOf((s) => s.kind === "reverse-index") },
       ];
       const pageRows = rows.slice(spec.chunk * 9, spec.chunk * 9 + 9);
       return (
@@ -1197,6 +1282,53 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               })}
             </ul>
           </div>
+        </Page>
+      );
+    }
+
+    case "reverse-index": {
+      // A quiet text page, not a table: each remainder stands as a phrase,
+      // its chapter shrunk to a caption-small line beneath (her direction,
+      // 2026-11-05 — the sample page's index-table look was rejected).
+      const groups = spec.chunk === 0 ? REVERSE_INDEX.groups.slice(0, 3) : REVERSE_INDEX.groups.slice(3);
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-revindex-page">
+          <RunningHead side={side} left={bookHead} right="An Index of What Remains · 反向索引" />
+          <div className="bk-revindex">
+            {spec.chunk === 0 && (
+              <header className="bk-revindex-head">
+                <h2 className="bk-revindex-title">{REVERSE_INDEX.titleZh}</h2>
+                <div className="bk-revindex-title-en">{REVERSE_INDEX.titleEn}</div>
+                <div className="bk-revindex-rule" />
+                <p className="bk-revindex-tagline">{REVERSE_INDEX.taglineZh}</p>
+                <p className="bk-revindex-tagline-en">{REVERSE_INDEX.taglineEn}</p>
+              </header>
+            )}
+            {groups.map((g) => (
+              <section key={g.zh} className="bk-revindex-group">
+                <h3 className="bk-revindex-group-name">
+                  {g.zh}
+                  <span className="bk-revindex-group-en">{g.en}</span>
+                </h3>
+                {g.entries.map((e) => (
+                  <div key={e.zh} className="bk-revindex-entry">
+                    <p className="bk-revindex-phrase">
+                      {e.zh}
+                      <span className="bk-revindex-phrase-en">{e.en}</span>
+                    </p>
+                    <p className="bk-revindex-to">{e.to}</p>
+                  </div>
+                ))}
+              </section>
+            ))}
+            {spec.chunk === 1 && (
+              <footer className="bk-revindex-foot">
+                <p className="bk-revindex-foot-zh">{REVERSE_INDEX.footZh}</p>
+                <p className="bk-revindex-foot-en">{REVERSE_INDEX.footEn}</p>
+              </footer>
+            )}
+          </div>
+          <Folio number={number} tag={`${b.title} | An Index of What Remains · 反向索引`} />
         </Page>
       );
     }
@@ -1942,8 +2074,9 @@ const CatalogBook = () => {
   // ── Deep links ────────────────────────────────────────────────────────────
   // A shared link can name the page it opens on: ?page=<folio> jumps to that
   // printed page, ?section=<key> to a section's first text page. Section
-  // keys: title, contents, preface, about, collage, painting-intro, or any
-  // chapter key (spirit, remains, residuals, shop, series:immemory, ...).
+  // keys: title, contents, preface, about, collage, painting-intro,
+  // reverse-index, or any chapter key (spirit, remains, residuals, shop,
+  // series:immemory, ...).
   // A chapter resolves to its first essay page, or to its opener when the
   // chapter carries no essay. With neither parameter nothing changes: the
   // book still opens at the front, and pagination and print are untouched.
@@ -1963,7 +2096,8 @@ const CatalogBook = () => {
       section === "preface" ||
       section === "about" ||
       section === "collage" ||
-      section === "painting-intro"
+      section === "painting-intro" ||
+      section === "reverse-index"
     ) {
       const kind = section as PageSpec["kind"];
       return pages.find((p) => p.spec.kind === kind)?.number ?? null;
