@@ -969,6 +969,36 @@
   letter-spacing: 0.06em;
 }
 
+/* Contents: part header rows and their nested section rows. The part
+   numeral and title take the part openers' rust brown; section titles
+   indent beneath their part. */
+.bk-contents li.bk-contents-part {
+  padding-top: 0.32in;
+}
+
+.bk-contents li.bk-contents-part .shop-title {
+  font-size: 16pt;
+  color: #8a3c00;
+}
+
+.bk-part-num {
+  font-size: 13pt;
+  font-weight: 700;
+  color: #8a3c00;
+}
+
+.bk-contents li.bk-contents-inpart .bk-contents-title {
+  padding-left: 0.28in;
+}
+
+/* Contents titles print English and Chinese on separate lines. */
+.bk-contents-title .bk-title-zh-line {
+  margin-top: 3px;
+  font-size: 10.5pt;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
 /* ── Essay / about pages ───────────────────────────────────────────────────── */
 .bk-essay {
   display: flex;

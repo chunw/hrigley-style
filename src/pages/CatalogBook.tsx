@@ -669,6 +669,8 @@ const SERIES_PLATE_ANCHORS: Record<string, { image: string; afterPair: number }[
   ],
 };
 
+const TOC_ROWS_PER_PAGE = 8;
+
 /** Which Spirit sub-series have a painting in the book, and where its
  * image lives. Four of the eight background groups have no painting
  * (consumerism, blackmirror, covid, genai — their works are not among
@@ -694,7 +696,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
 
   specs.push({ kind: "title" });
   specs.push({ kind: "colophon" });
-  const tocPages = Math.max(1, Math.ceil((chapters.length + 5) / 9));
+  const tocPages = Math.max(1, Math.ceil((chapters.length + 3) / TOC_ROWS_PER_PAGE));
   for (let i = 0; i < tocPages; i++) specs.push({ kind: "contents", chunk: i });
   for (let i = 0; i < prefaceChunkCount; i++) specs.push({ kind: "preface", chunk: i });
   // About the Artist stands at the front of the book, right after the preface
@@ -1080,20 +1082,63 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
 
     case "contents": {
       const startOf = (pred: (s: PageSpec) => boolean) => pages.find((p) => pred(p.spec))?.number ?? 0;
-      const rows = [
-        { num: "", title: `${translations.en.catalogBook.preface} · ${translations.zh.catalogBook.preface}`, sub: "", page: startOf((s) => s.kind === "preface") },
-        { num: "", title: `${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`, sub: "", page: startOf((s) => s.kind === "about") },
-        { num: "", title: `${translations.en.catalogBook.paintingIntro} · ${translations.zh.catalogBook.paintingIntro}`, sub: "", page: startOf((s) => s.kind === "painting-intro") },
-        { num: "", title: "Collage as Method · 作为方法的拼贴", sub: "", page: startOf((s) => s.kind === "plate" && "chapter" in s && s.chapter.key === "collage") },
-        ...chapters.map((c) => ({
-          num: c.number > 0 ? pad2(c.number) : "",
-          title: c.title,
-          sub: c.years,
-          page: startOf((s) => "chapter" in s && s.chapter.key === c.key),
-        })),
-        { num: "", title: "An Index of What Remains · 反向索引", sub: "", page: startOf((s) => s.kind === "reverse-index") },
+      type TocRow = { num: string; titleEn: string; titleZh?: string; sub: string; page: number; part?: string; inPart?: boolean };
+      const chapterRow = (c: Chapter): TocRow => ({
+        num: c.number > 0 ? pad2(c.number) : "",
+        titleEn: c.titleEn ?? c.title,
+        titleZh: c.titleZh,
+        sub: c.years,
+        page: startOf((s) => "chapter" in s && s.chapter.key === c.key),
+      });
+      // The contents shows the book's five parts as header rows with their
+      // sections nested beneath them (her direction, 2026-11-05: the flat
+      // list did not show how the parts and the sections relate). Part
+      // headers carry an arabic numeral, and every title prints English
+      // and Chinese on separate lines. A section whose Chinese title
+      // repeats its part's title is not listed again (the part header
+      // already names it), and the collage unit is not listed at all:
+      // the contents stays clean, the body text is untouched.
+      const PART_OF: Record<string, number> = {
+        spirit: 1, remains: 1, residuals: 1, stillthings: 1, road: 1,
+        "series:immemory": 2, "series:cavedance": 2, "series:negotiated": 2,
+        innerwilderness: 3, deathvalley: 3, sahara: 3, highlands: 3, theater: 3, photography: 3, "series:nostalgia": 3,
+        "series:unfinished": 4, "series:google": 4, "series:feedscanner": 4, "series:earlyline": 4, "series:soliloquy": 4, "series:artempath": 4,
+        shop: 5,
+      };
+      const PART_NUMERAL = ["1", "2", "3", "4", "5"];
+      const PART_HEAD_KEY: Record<number, string> = { 2: "series:triptych", 3: "innerwilderness", 4: "series:unfinishedpart", 5: "shop" };
+      const partTitlePair = (p: number): { en: string; zh?: string } => {
+        if (p === 1) return { en: translations.en.catalogBook.paintingIntro, zh: translations.zh.catalogBook.paintingIntro };
+        const head = chapters.find((c) => c.key === PART_HEAD_KEY[p]);
+        return { en: head?.titleEn ?? head?.title ?? "", zh: head?.titleZh };
+      };
+      const partPage = (p: number): number => {
+        if (p === 1) return startOf((s) => s.kind === "painting-intro");
+        return startOf((s) => "chapter" in s && s.chapter.key === PART_HEAD_KEY[p]);
+      };
+      const rows: TocRow[] = [
+        { num: "", titleEn: translations.en.catalogBook.preface, titleZh: translations.zh.catalogBook.preface, sub: "", page: startOf((s) => s.kind === "preface") },
+        { num: "", titleEn: translations.en.catalogBook.aboutArtist, titleZh: translations.zh.catalogBook.aboutArtist, sub: "", page: startOf((s) => s.kind === "about") },
       ];
-      const pageRows = rows.slice(spec.chunk * 9, spec.chunk * 9 + 9);
+      const headed = new Set<number>();
+      const pushPart = (p: number) => {
+        if (headed.has(p)) return;
+        headed.add(p);
+        const t = partTitlePair(p);
+        rows.push({ num: "", titleEn: t.en, titleZh: t.zh, sub: "", page: partPage(p), part: PART_NUMERAL[p - 1] });
+      };
+      for (const c of chapters) {
+        if (c.key === "series:triptych") { pushPart(2); continue; }
+        if (c.key === "series:unfinishedpart") { pushPart(4); continue; }
+        const p = PART_OF[c.key];
+        if (p) {
+          pushPart(p);
+          if (c.titleZh && c.titleZh === partTitlePair(p).zh) continue;
+        }
+        rows.push({ ...chapterRow(c), inPart: p ? true : undefined });
+      }
+      rows.push({ num: "", titleEn: "An Index of What Remains", titleZh: "反向索引", sub: "", page: startOf((s) => s.kind === "reverse-index") });
+      const pageRows = rows.slice(spec.chunk * TOC_ROWS_PER_PAGE, spec.chunk * TOC_ROWS_PER_PAGE + TOC_ROWS_PER_PAGE);
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
           {spec.chunk === 0 && (
@@ -1102,15 +1147,15 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           <div className="bk-contents">
             {spec.chunk === 0 && <h2 className="bk-section-title shop-title gloria-title">{stackedPair(translations.en.catalogBook.contents, translations.zh.catalogBook.contents)}</h2>}
             <ol>
-              {pageRows.map((r) => (
+              {pageRows.map((r, ri) => (
                 <li
-                  key={r.title}
-                  className="bk-contents-link"
+                  key={`${r.titleEn}-${ri}`}
+                  className={`bk-contents-link${r.part ? " bk-contents-part" : ""}${r.inPart ? " bk-contents-inpart" : ""}`}
                   onClick={() => document.getElementById(`bk-page-${r.page}`)?.scrollIntoView({ behavior: "smooth", block: "start" })}
                 >
-                  <span className="bk-contents-num">{r.num && <span className="bk-num-box">{r.num}</span>}</span>
+                  <span className="bk-contents-num">{r.part ? <span className="bk-part-num">{r.part}</span> : r.num && <span className="bk-num-box">{r.num}</span>}</span>
                   <span className="bk-contents-title">
-                    <span className="shop-title">{r.title}</span>
+                    <span className="shop-title">{stackedPair(r.titleEn, r.titleZh)}</span>
                     {r.sub && <span className="bk-contents-sub">{r.sub}</span>}
                   </span>
                   <span className="bk-contents-page">{pad2(r.page)}</span>
