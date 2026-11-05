@@ -634,9 +634,18 @@ const SERIES_PLATE_ANCHORS: Record<string, { image: string; afterPair: number }[
   // Negotiated Intelligence handbook: the diary page belongs to its own
   // dated entry, the pavilion photograph to the review passage that
   // describes the entrance, the nominee badge to the closing question.
+  // Seven participating works from the pavilion site are spread through
+  // the flow between them (her direction, 2026-11-05).
   negotiated: [
     { image: "/book/negotiated/diary-page.jpg", afterPair: 6 },
+    { image: "/book/negotiated/work-elsewhere.jpg", afterPair: 12 },
+    { image: "/book/negotiated/work-ave-maria.jpg", afterPair: 19 },
+    { image: "/book/negotiated/work-fractured-star.jpg", afterPair: 26 },
+    { image: "/book/negotiated/work-silence.jpg", afterPair: 33 },
+    { image: "/book/negotiated/work-chimera-haiku.jpg", afterPair: 40 },
+    { image: "/book/negotiated/work-dierenleven.jpg", afterPair: 46 },
     { image: "/book/negotiated/pavilion-entrance.jpg", afterPair: 49 },
+    { image: "/book/negotiated/work-mythology.jpg", afterPair: 51 },
     { image: "/book/negotiated/awwwards-nominee.jpg", afterPair: 52 },
   ],
   // Feed Scanner: interfaces 1–2 show the homepage walkthrough, interface
