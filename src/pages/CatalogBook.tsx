@@ -713,11 +713,11 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
   }
 
   // The reverse index closes the book's text: after the last chapter,
-  // before the closing page (her direction, 2026-11-05). Two pages:
-  // sounds / temperatures / light, then traces / unfinished words /
-  // left on the plate, ending on the line that sends the reader back.
+  // before the closing page (her direction, 2026-11-05). One page, set
+  // exactly as the sample page she sent back that morning and ordered
+  // into the book: all six groups on a single page, ending on the line
+  // that sends the reader back.
   specs.push({ kind: "reverse-index", chunk: 0 });
-  specs.push({ kind: "reverse-index", chunk: 1 });
 
   // Closing page sits on the final (verso) page of the last signature.
   while ((specs.length + 1) % SIGNATURE !== 0) specs.push({ kind: "blank" });
@@ -1287,46 +1287,57 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
     }
 
     case "reverse-index": {
-      // A quiet text page, not a table: each remainder stands as a phrase,
-      // its chapter shrunk to a caption-small line beneath (her direction,
-      // 2026-11-05 — the sample page's index-table look was rejected).
-      const groups = spec.chunk === 0 ? REVERSE_INDEX.groups.slice(0, 3) : REVERSE_INDEX.groups.slice(3);
+      // Set as the sample page she sent back on 2026-11-05 and ordered
+      // into the book as-is: an index page proper — big title, the short
+      // red rule, group heads whose hairline runs out to the right, and
+      // every remainder carried by a dotted leader to the chapter it
+      // lives in, right-aligned. (The "quiet text page" setting tried
+      // first was rejected: too plain, and not this book.) All six
+      // groups stand on this one page; the footer line closes it.
+      const splitPointer = (to: string) => {
+        const m = to.match(/^([一-鿿]+)\s*(.*)$/);
+        return m ? { zh: m[1], en: m[2] } : { zh: "", en: to };
+      };
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-revindex-page">
           <RunningHead side={side} left={bookHead} right="An Index of What Remains · 反向索引" />
           <div className="bk-revindex">
-            {spec.chunk === 0 && (
-              <header className="bk-revindex-head">
-                <h2 className="bk-revindex-title">{REVERSE_INDEX.titleZh}</h2>
-                <div className="bk-revindex-title-en">{REVERSE_INDEX.titleEn}</div>
-                <div className="bk-revindex-rule" />
-                <p className="bk-revindex-tagline">{REVERSE_INDEX.taglineZh}</p>
-                <p className="bk-revindex-tagline-en">{REVERSE_INDEX.taglineEn}</p>
-              </header>
-            )}
-            {groups.map((g) => (
+            <header className="bk-revindex-head">
+              <h2 className="bk-revindex-title">{REVERSE_INDEX.titleZh}</h2>
+              <div className="bk-revindex-title-en">{REVERSE_INDEX.titleEn}</div>
+              <div className="bk-revindex-rule" />
+              <p className="bk-revindex-tagline">{REVERSE_INDEX.taglineZh}</p>
+              <p className="bk-revindex-tagline-en">{REVERSE_INDEX.taglineEn}</p>
+            </header>
+            {REVERSE_INDEX.groups.map((g) => (
               <section key={g.zh} className="bk-revindex-group">
                 <h3 className="bk-revindex-group-name">
-                  {g.zh}
+                  <span className="bk-revindex-group-zh">{g.zh}</span>
                   <span className="bk-revindex-group-en">{g.en}</span>
+                  <span className="bk-revindex-group-line" />
                 </h3>
-                {g.entries.map((e) => (
-                  <div key={e.zh} className="bk-revindex-entry">
-                    <p className="bk-revindex-phrase">
-                      {e.zh}
-                      <span className="bk-revindex-phrase-en">{e.en}</span>
-                    </p>
-                    <p className="bk-revindex-to">{e.to}</p>
-                  </div>
-                ))}
+                {g.entries.map((e) => {
+                  const ptr = splitPointer(e.to);
+                  return (
+                    <div key={e.zh} className="bk-revindex-entry">
+                      <p className="bk-revindex-phrase">
+                        {e.zh}
+                        <span className="bk-revindex-phrase-en">{e.en}</span>
+                      </p>
+                      <span className="bk-revindex-leader" />
+                      <p className="bk-revindex-to">
+                        {ptr.zh}
+                        {ptr.en && <span className="bk-revindex-to-en">{ptr.en}</span>}
+                      </p>
+                    </div>
+                  );
+                })}
               </section>
             ))}
-            {spec.chunk === 1 && (
-              <footer className="bk-revindex-foot">
-                <p className="bk-revindex-foot-zh">{REVERSE_INDEX.footZh}</p>
-                <p className="bk-revindex-foot-en">{REVERSE_INDEX.footEn}</p>
-              </footer>
-            )}
+            <footer className="bk-revindex-foot">
+              <p className="bk-revindex-foot-zh">{REVERSE_INDEX.footZh}</p>
+              <p className="bk-revindex-foot-en">{REVERSE_INDEX.footEn}</p>
+            </footer>
           </div>
           <Folio number={number} tag={`${b.title} | An Index of What Remains · 反向索引`} />
         </Page>
