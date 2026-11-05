@@ -1371,7 +1371,10 @@
    "quiet text page" setting tried first was rejected by her the same
    morning.) All 21 entries stand on one page; the closing line sits at the
    foot of the page. Set in the book's text faces: Cormorant Garamond for
-   the Latin, Zhuque Fangsong for the Chinese. */
+   the Latin, Zhuque Fangsong for the Chinese. Group spacing opened up a
+   touch on her word later the same day (0.11in → 0.15in between groups),
+   taken back inside the groups — entry gaps 0.026in → 0.015in, group-head
+   gap 0.05in → 0.04in — so the page still stands at one. */
 .bk-revindex {
   flex: 1;
   display: flex;
@@ -1420,7 +1423,7 @@
 }
 
 .bk-revindex-group {
-  margin-top: 0.11in;
+  margin-top: 0.15in;
 }
 
 .bk-revindex-head + .bk-revindex-group {
@@ -1428,7 +1431,7 @@
 }
 
 .bk-revindex-group-name {
-  margin: 0 0 0.05in;
+  margin: 0 0 0.04in;
   display: flex;
   align-items: center;
   font-size: 11.5pt;
@@ -1458,7 +1461,7 @@
 .bk-revindex-entry {
   display: flex;
   align-items: flex-end;
-  margin-bottom: 0.026in;
+  margin-bottom: 0.015in;
 }
 
 .bk-revindex-entry:last-child {
