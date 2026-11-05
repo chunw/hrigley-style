@@ -1276,7 +1276,14 @@ function useBookModel(args: {
         const paras = txParas("remainsEssayBody");
         const leadEn: EssayItem = { html: "<p>In the profound atmosphere of the Anahuacalli Museum, I gaze at these ancient handmade works, following Diego Rivera's vision as I look for a spark of continuity between modern art and pre-Columbian aesthetics. The figures in these works of the ancient civilizations of the Americas are strikingly artless and strange. Though carved in a refined, stylized manner, they are simple and powerful.</p>" };
         const leadZh: EssayItem = { html: "<p>在 Anahuacalli 博物馆的深邃氛围中，我凝视这些远古的手作，按照迭戈·里维拉的构想，在现代艺术与前哥伦布时期美学之间寻找延续的火花。这些美洲古文明的作品形象格外憨朴奇崛，尽管是以洗练的风格化手法雕成，却简洁有力。</p>" };
-        essayChunks[chapter.key] = langChunks([leadEn, ...paraItems(paras.filter((p) => !hasCjk(p.text)))], [leadZh, ...paraItems(paras.filter((p) => hasCjk(p.text)))]);
+        // The two paragraphs are her own Facebook post (July 12, 2023); as with
+        // her other diary-like texts in this book, a small source line closes
+        // the text, in the bk-credit style. Place as she identified it:
+        // Cafebrería El Péndulo, Mexico City. No URL is printed, per her rule
+        // for source lines in the book.
+        const noteEn: EssayItem = { html: "<p><span class=\"bk-credit\">July 12, 2023, Cafebrería El Péndulo, Mexico City</span></p>" };
+        const noteZh: EssayItem = { html: "<p><span class=\"bk-credit\">2023 年 7 月 12 日，写于墨西哥城 Cafebrería El Péndulo</span></p>" };
+        essayChunks[chapter.key] = langChunks([leadEn, ...paraItems(paras.filter((p) => !hasCjk(p.text))), noteEn], [leadZh, ...paraItems(paras.filter((p) => hasCjk(p.text))), noteZh]);
       } else if (chapter.key === "photography") {
         const head: EssayItem = { html: "<p>El Otro, El Mismo</p>" };
         const otro = txParas("elOtroEssayBody");
