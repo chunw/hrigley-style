@@ -478,8 +478,6 @@ const REVERSE_INDEX = {
   titleEn: "An Index of What Remains",
   taglineZh: "这份索引不按页码。按还剩下什么。",
   taglineEn: "Nothing here is found by page. Everything is found by what remains.",
-  footZh: "从这里，往回翻",
-  footEn: "From here, read backwards.",
   groups: [
     {
       zh: "声音",
@@ -540,6 +538,16 @@ const REVERSE_INDEX = {
     },
   ],
 };
+
+/** Which groups stand on which page of the reverse index (her direction,
+ * 2026-11-05, refined the same day): the index may run to several pages —
+ * enough air between and inside the groups, even at the cost of another
+ * page — but it must stay an index: dotted leaders, right-aligned
+ * pointers, group heads with their hairlines. Breaks fall between groups. */
+const REVERSE_INDEX_CHUNKS: number[][] = [
+  [0, 1, 2], // 声音 · 温度 · 光
+  [3, 4, 5], // 痕迹 · 没说完的话 · 没吃完的
+];
 
 /** Print rule (her direction, 2026-10-25): website links are written out in
  * the book so print readers can look works up online. Works with a site of
@@ -713,11 +721,12 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
   }
 
   // The reverse index closes the book's text: after the last chapter,
-  // before the closing page (her direction, 2026-11-05). One page, set
-  // exactly as the sample page she sent back that morning and ordered
-  // into the book: all six groups on a single page, ending on the line
-  // that sends the reader back.
-  specs.push({ kind: "reverse-index", chunk: 0 });
+  // before the closing page (her direction, 2026-11-05). It runs to more
+  // than one page — air first, density never (her word the same day) —
+  // with the breaks falling between groups, never inside one.
+  for (let chunk = 0; chunk < REVERSE_INDEX_CHUNKS.length; chunk++) {
+    specs.push({ kind: "reverse-index", chunk });
+  }
 
   // Closing page sits on the final (verso) page of the last signature.
   while ((specs.length + 1) % SIGNATURE !== 0) specs.push({ kind: "blank" });
@@ -1292,24 +1301,29 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // red rule, group heads whose hairline runs out to the right, and
       // every remainder carried by a dotted leader to the chapter it
       // lives in, right-aligned. (The "quiet text page" setting tried
-      // first was rejected: too plain, and not this book.) All six
-      // groups stand on this one page; the footer line closes it.
+      // first was rejected: too plain, and not this book.) The index runs
+      // to several pages (REVERSE_INDEX_CHUNKS), the title head standing
+      // on the first only; the closing footer line the sample carried was
+      // struck at her word the same day.
       const splitPointer = (to: string) => {
         const m = to.match(/^([一-鿿]+)\s*(.*)$/);
         return m ? { zh: m[1], en: m[2] } : { zh: "", en: to };
       };
+      const chunkGroups = (REVERSE_INDEX_CHUNKS[spec.chunk] ?? []).map((gi) => REVERSE_INDEX.groups[gi]);
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-revindex-page">
           <RunningHead side={side} left={bookHead} right="An Index of What Remains · 反向索引" />
           <div className="bk-revindex">
-            <header className="bk-revindex-head">
-              <h2 className="bk-revindex-title">{REVERSE_INDEX.titleZh}</h2>
-              <div className="bk-revindex-title-en">{REVERSE_INDEX.titleEn}</div>
-              <div className="bk-revindex-rule" />
-              <p className="bk-revindex-tagline">{REVERSE_INDEX.taglineZh}</p>
-              <p className="bk-revindex-tagline-en">{REVERSE_INDEX.taglineEn}</p>
-            </header>
-            {REVERSE_INDEX.groups.map((g) => (
+            {spec.chunk === 0 && (
+              <header className="bk-revindex-head">
+                <h2 className="bk-revindex-title">{REVERSE_INDEX.titleZh}</h2>
+                <div className="bk-revindex-title-en">{REVERSE_INDEX.titleEn}</div>
+                <div className="bk-revindex-rule" />
+                <p className="bk-revindex-tagline">{REVERSE_INDEX.taglineZh}</p>
+                <p className="bk-revindex-tagline-en">{REVERSE_INDEX.taglineEn}</p>
+              </header>
+            )}
+            {chunkGroups.map((g) => (
               <section key={g.zh} className="bk-revindex-group">
                 <h3 className="bk-revindex-group-name">
                   <span className="bk-revindex-group-zh">{g.zh}</span>
@@ -1334,10 +1348,6 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 })}
               </section>
             ))}
-            <footer className="bk-revindex-foot">
-              <p className="bk-revindex-foot-zh">{REVERSE_INDEX.footZh}</p>
-              <p className="bk-revindex-foot-en">{REVERSE_INDEX.footEn}</p>
-            </footer>
           </div>
           <Folio number={number} tag={`${b.title} | An Index of What Remains · 反向索引`} />
         </Page>

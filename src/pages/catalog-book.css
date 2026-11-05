@@ -1369,13 +1369,18 @@
    to the right margin, and every remainder carried by a dotted leader to
    the chapter it lives in, right-aligned, no page numbers anywhere. (The
    "quiet text page" setting tried first was rejected by her the same
-   morning.) All 21 entries stand on one page; the closing line sits at the
-   foot of the page. Set in the book's text faces: Cormorant Garamond for
-   the Latin, Zhuque Fangsong for the Chinese. Group spacing opened up on
+   morning.) Set in the book's text faces: Cormorant Garamond for the
+   Latin, Zhuque Fangsong for the Chinese. Group spacing opened up on
    her word the same day, twice: first 0.11in → 0.15in between groups, then
    again — "再留更大" — to 0.25in, each time taken back inside the groups so
    the page still stands at one (entry gaps 0.026in → 0.015in → 0, group-
-   head gap 0.05in → 0.04in → 0.015in, phrase line-height 1.28 → 1.24). */
+   head gap 0.05in → 0.04in → 0.015in, phrase line-height 1.28 → 1.24).
+   Later the same day she lifted the one-page rule — enough air, between
+   groups and between lines, even at the cost of more pages, but still
+   unmistakably an index — and struck the closing footer line. The index
+   now runs to two pages (breaks between groups only), the compression
+   taken back out: group gap 0.36in, entry gap 0.065in, group-head gap
+   0.06in, phrase line-height 1.5. */
 .bk-revindex {
   flex: 1;
   display: flex;
@@ -1424,15 +1429,15 @@
 }
 
 .bk-revindex-group {
-  margin-top: 0.25in;
+  margin-top: 0.36in;
 }
 
-.bk-revindex-head + .bk-revindex-group {
+.bk-revindex-group:first-of-type {
   margin-top: 0;
 }
 
 .bk-revindex-group-name {
-  margin: 0 0 0.015in;
+  margin: 0 0 0.06in;
   display: flex;
   align-items: center;
   font-size: 11.5pt;
@@ -1462,7 +1467,7 @@
 .bk-revindex-entry {
   display: flex;
   align-items: flex-end;
-  margin-bottom: 0;
+  margin-bottom: 0.065in;
 }
 
 .bk-revindex-entry:last-child {
@@ -1473,7 +1478,7 @@
   margin: 0;
   font-size: 12pt;
   font-weight: 500;
-  line-height: 1.24;
+  line-height: 1.5;
   white-space: nowrap;
 }
 
@@ -1506,25 +1511,5 @@
   font-size: 8pt;
   font-weight: 400;
   letter-spacing: 0.05em;
-  color: var(--muted);
-}
-
-.bk-revindex-foot {
-  margin-top: auto;
-  text-align: center;
-}
-
-.bk-revindex-foot-zh {
-  margin: 0;
-  font-size: 10.5pt;
-  letter-spacing: 0.3em;
-  text-indent: 0.3em;
-  color: #35322b;
-}
-
-.bk-revindex-foot-en {
-  margin: 0.05in 0 0;
-  font-style: italic;
-  font-size: 9pt;
   color: var(--muted);
 }
