@@ -1334,18 +1334,26 @@ function useBookModel(args: {
           zhT ? pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s?.id}:zh` })) : [],
         );
       } else if (chapter.key === "spirit") {
-        // The series overview, then the eight sub-series' background texts from her
-        // Portfolio pages: English only, as published there, each group headed by
-        // its bilingual title and closed by its source credit in small type.
-        const bgItems: EssayItem[] = SPIRIT_BACKGROUNDS.flatMap((g) => [
-          { html: `<p><strong>${g.titleEn} ${g.titleZh}</strong></p>`, edit: `spiritbg:${g.id}` },
-          ...(g.workTitle ? [{ html: `<p><strong>${g.workTitle}</strong></p>`, edit: `spiritbg:${g.id}` }] : []),
-          ...g.paras.map((para) => ({
-            html: typeof para === "string" ? `<p>${para}</p>` : `<p><strong>${para.head}</strong></p>`,
-            edit: `spiritbg:${g.id}`,
-          })),
-          ...(g.credit ? [{ html: `<p><span class="bk-credit">${g.credit}</span></p>`, edit: `spiritbg:${g.id}` }] : []),
-        ]);
+        // The series overview, then the sub-series' background texts from her
+        // Portfolio pages, each group headed by its bilingual title and
+        // closed by its source credit in small type. The English pages carry
+        // all eight groups, as published there; the Chinese pages carry the
+        // seven translated groups (parasZh) in the same order and with the
+        // same credit lines. Her GenAI statement stays English only for now.
+        const bgItemsFor = (which: "en" | "zh"): EssayItem[] =>
+          SPIRIT_BACKGROUNDS.flatMap((g) => {
+            const paras = which === "en" ? g.paras : g.parasZh;
+            if (!paras) return [];
+            return [
+              { html: `<p><strong>${g.titleEn} ${g.titleZh}</strong></p>`, edit: `spiritbg:${g.id}` },
+              ...(g.workTitle ? [{ html: `<p><strong>${g.workTitle}</strong></p>`, edit: `spiritbg:${g.id}` }] : []),
+              ...paras.map((para) => ({
+                html: typeof para === "string" ? `<p>${para}</p>` : `<p><strong>${para.head}</strong></p>`,
+                edit: `spiritbg:${g.id}`,
+              })),
+              ...(g.credit ? [{ html: `<p><span class="bk-credit">${g.credit}</span></p>`, edit: `spiritbg:${g.id}` }] : []),
+            ];
+          });
         // Her own first-person post on the painting Inundated (WeChat
         // Moments, March 28, 2018) stands right after the series overview,
         // ahead of the borrowed background texts: her voice first, then the
@@ -1354,7 +1362,7 @@ function useBookModel(args: {
           { html: `<p><span class="bk-credit">${which === "en" ? SPIRIT_MOMENT.labelEn : SPIRIT_MOMENT.labelZh}</span></p>`, edit: "spiritmoment:inundated" },
           { html: `<p>${which === "en" ? SPIRIT_MOMENT.textEn : SPIRIT_MOMENT.textZh}</p>`, edit: "spiritmoment:inundated" },
         ];
-        essayChunks[chapter.key] = langChunks([...fieldItems("spirit", "en"), ...momentItems("en"), ...bgItems], [...fieldItems("spirit", "zh"), ...momentItems("zh")]);
+        essayChunks[chapter.key] = langChunks([...fieldItems("spirit", "en"), ...momentItems("en"), ...bgItemsFor("en")], [...fieldItems("spirit", "zh"), ...momentItems("zh"), ...bgItemsFor("zh")]);
       } else if (fieldText(chapter.key, "en") || fieldText(chapter.key, "zh")) {
         essayChunks[chapter.key] = langChunks(fieldItems(chapter.key, "en"), fieldItems(chapter.key, "zh"));
       } else if (chapter.key === "watercolor") {
