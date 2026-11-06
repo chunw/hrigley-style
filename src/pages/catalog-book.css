@@ -1423,20 +1423,16 @@
 /* ── Aphorism spreads ─────────────────────────────────────────────────────── */
 /* One sentence of hers alone across a spread, redesigned 2026-11-06 (the old
    setting — two small lines centred over the gutter on beige — read as a
-   placeholder). First redesign used a full rust ground with cream type;
-   she retired it the same day — the cover, title page and part pages
-   already use rust-and-cream too much. Now: the book's plain white ground
-   and ink-black type. English stands alone on the left page, set huge and
-   anchored low-left — the protagonist; Chinese stands alone on the right
-   page, kept small like a footnote, vertical when it is a short question
-   and anchored top-right, so the gutter stays clean and the two pages
-   answer each other asymmetrically. The only colour on the spread is the
-   question mark, picked out in rust. Longer sentences step down a tier;
-   the one paragraph-length text keeps a readable size, one language
-   per page. */
+   placeholder). Now: a full rust ground with cream type, the book's own
+   part-intro colours. English stands alone on the left page, set huge and
+   anchored low-left; Chinese stands alone on the right page, vertical when
+   it is a short question and anchored top-right, so the gutter stays clean
+   and the two pages answer each other asymmetrically. Longer sentences
+   step down a tier; the one paragraph-length text keeps a readable size,
+   one language per page. */
 .bk-aphorism {
-  background: #ffffff;
-  color: #111111;
+  background: #8a3c00;
+  color: #fff3c2;
 }
 
 .bk-aphorism-en {
@@ -1449,11 +1445,7 @@
   position: absolute;
   margin: 0;
   font-family: var(--serif);
-}
-
-/* The question mark: the spread's only rust element, sized with its line */
-.bk-aphorism-q {
-  color: #8a3c00;
+  color: #fff3c2;
 }
 
 /* Short questions at poster size (over 3x the old 0.44in setting) */
@@ -1465,14 +1457,13 @@
   line-height: 1.08;
 }
 
-/* Chinese stays small at every tier — a quiet footnote to the English */
 .bk-aphorism-zh-huge-v {
   top: 0.95in;
   right: 0.8in;
   writing-mode: vertical-rl;
-  font-size: 0.42in;
-  line-height: 1.8;
-  letter-spacing: 0.14em;
+  font-size: 1.15in;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
 }
 
 .bk-aphorism-zh-huge {
@@ -1480,8 +1471,8 @@
   right: 0.55in;
   max-width: 6.2in;
   text-align: right;
-  font-size: 0.4in;
-  line-height: 1.65;
+  font-size: 0.95in;
+  line-height: 1.35;
 }
 
 /* Full sentences: still large, sized to hold one page */
@@ -1498,8 +1489,8 @@
   right: 0.55in;
   max-width: 6.4in;
   text-align: right;
-  font-size: 0.36in;
-  line-height: 1.65;
+  font-size: 0.6in;
+  line-height: 1.5;
 }
 
 /* The paragraph-length breathing text: one language per page, readable */

@@ -472,19 +472,6 @@ const APHORISMS: Record<string, Aphorism> = {
   },
 };
 
-/** Aphorism text with the question mark picked out in rust — the only
- * colour on the spread (her direction, 2026-11-06). Applies to both the
- * halfwidth "?" and the fullwidth "？"; the mark inherits the surrounding
- * size, so it stays huge in the English and small in the Chinese. */
-const withRustQ = (text: string) =>
-  text.split(/([?？])/g).map((part, i) =>
-    part === "?" || part === "？" ? (
-      <span key={i} className="bk-aphorism-q">{part}</span>
-    ) : (
-      part
-    ),
-  );
-
 /** Aphorism spreads placed immediately before these chapters. The first
  * one ("What remains?") goes after the front matter, before chapter one. */
 const APHORISM_BEFORE_CHAPTER: Record<string, string> = {
@@ -1342,14 +1329,10 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const a = spec.aphorism;
       // Redesigned spread (her direction, 2026-11-06): the two languages no
       // longer sit together over the gutter. English stands alone on the
-      // left page, huge ink-black serif anchored low-left — the spread's
-      // protagonist; Chinese stands alone on the right page, kept small
-      // like a footnote, vertical when it is a short question, anchored
-      // top-right. Plain white ground (the rust-and-cream full ground was
-      // retired the same day: the cover, title page and part pages already
-      // use it too much) — the only rust on the page is the question mark.
-      // Size tiers keep the longer sentences and the one paragraph-length
-      // text readable on one page.
+      // left page, huge and anchored low-left; Chinese stands alone on the
+      // right page — vertical when it is a short question, anchored
+      // top-right — over a full rust ground. Size tiers keep the longer
+      // sentences and the one paragraph-length text readable on one page.
       const enTier = a.long ? "para" : (a.en ?? "").length <= 24 ? "huge" : "big";
       const zhLen = (a.zh ?? "").length;
       const zhTier = a.long ? "para" : zhLen <= 8 ? "huge-v" : zhLen <= 30 ? "huge" : "big";
@@ -1357,12 +1340,12 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-aphorism bk-aphorism-${spec.half}${a.long ? " bk-aphorism-long" : ""}`}>
           {spec.half === "left" ? (
             a.en ? (
-              <p className={`bk-aphorism-en bk-aphorism-en-${enTier}`}>{withRustQ(a.en)}</p>
+              <p className={`bk-aphorism-en bk-aphorism-en-${enTier}`}>{a.en}</p>
             ) : a.zh ? (
-              <p className={`bk-aphorism-zh bk-aphorism-zh-${zhTier}`}>{withRustQ(a.zh)}</p>
+              <p className={`bk-aphorism-zh bk-aphorism-zh-${zhTier}`}>{a.zh}</p>
             ) : null
           ) : a.en && a.zh ? (
-            <p className={`bk-aphorism-zh bk-aphorism-zh-${zhTier}`}>{withRustQ(a.zh)}</p>
+            <p className={`bk-aphorism-zh bk-aphorism-zh-${zhTier}`}>{a.zh}</p>
           ) : null}
         </Page>
       );
