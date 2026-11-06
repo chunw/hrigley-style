@@ -1142,7 +1142,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         }
         rows.push({ ...chapterRow(c), inPart: p ? true : undefined });
       }
-      rows.push({ num: "", titleEn: "An Index of What Remains", titleZh: "反向索引", sub: "", page: startOf((s) => s.kind === "reverse-index") });
+      rows.push({ num: pad2(Math.max(...chapters.map((c) => c.number)) + 1), titleEn: "An Index of What Remains", titleZh: "反向索引", sub: "", page: startOf((s) => s.kind === "reverse-index") });
       // The contents as a map, not a list (her direction, 2026-11-05,
       // from the design mock she approved): one spread, the five parts
       // as clusters scattered down the two pages, each led by its
@@ -1173,7 +1173,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const go = (page: number) => document.getElementById(`bk-page-${page}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
       const renderSmall = (r: TocRow) => (
         <div key={r.titleEn} className="bk-tocmap-small" onClick={() => go(r.page)}>
-          {r.num && <span className="bk-tocmap-sec-no">{r.num}</span>}
+          <span className="bk-tocmap-sec-no">{r.num}</span>
           <span className="bk-tocmap-small-en">{r.titleEn}</span>
           {r.titleZh && <span className="bk-tocmap-small-zh">{r.titleZh}</span>}
           <span className="bk-tocmap-pg">{pad2(r.page)}</span>
