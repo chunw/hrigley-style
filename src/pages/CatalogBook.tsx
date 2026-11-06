@@ -472,6 +472,19 @@ const APHORISMS: Record<string, Aphorism> = {
   },
 };
 
+/** Aphorism text with the question mark picked out in rust — the only
+ * colour on the spread (her direction, 2026-11-06). Applies to both the
+ * halfwidth "?" and the fullwidth "？"; the mark inherits the surrounding
+ * size, so it stays huge in the English and small in the Chinese. */
+const withRustQ = (text: string) =>
+  text.split(/([?？])/g).map((part, i) =>
+    part === "?" || part === "？" ? (
+      <span key={i} className="bk-aphorism-q">{part}</span>
+    ) : (
+      part
+    ),
+  );
+
 /** Aphorism spreads placed immediately before these chapters. The first
  * one ("What remains?") goes after the front matter, before chapter one. */
 const APHORISM_BEFORE_CHAPTER: Record<string, string> = {
@@ -1044,7 +1057,6 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
   const bg = ctx.pageBgFor(pageKey);
   const ctl =
     ctx.editMode && pageKey ? <PageBgCtl current={bg} onPick={(kind) => ctx.setPageBg(pageKey, kind)} /> : null;
-  const author = "Chun Wang · 王淳";
 
   switch (spec.kind) {
     case "title":
@@ -1225,6 +1237,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 {renderCluster(clusters[2], "bk-tocmap-p3")}
                 <div className="bk-tocmap-route" />
                 {renderCluster(clusters[3], "bk-tocmap-p4")}
+                <div className="bk-tocmap-route" />
                 {renderCluster(clusters[4], "bk-tocmap-p5")}
                 <div className="bk-tocmap-tail">{tail.map(renderSmall)}</div>
               </>
@@ -1327,14 +1340,30 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
 
     case "aphorism": {
       const a = spec.aphorism;
+      // Redesigned spread (her direction, 2026-11-06): the two languages no
+      // longer sit together over the gutter. English stands alone on the
+      // left page, huge ink-black serif anchored low-left — the spread's
+      // protagonist; Chinese stands alone on the right page, kept small
+      // like a footnote, vertical when it is a short question, anchored
+      // top-right. Plain white ground (the rust-and-cream full ground was
+      // retired the same day: the cover, title page and part pages already
+      // use it too much) — the only rust on the page is the question mark.
+      // Size tiers keep the longer sentences and the one paragraph-length
+      // text readable on one page.
+      const enTier = a.long ? "para" : (a.en ?? "").length <= 24 ? "huge" : "big";
+      const zhLen = (a.zh ?? "").length;
+      const zhTier = a.long ? "para" : zhLen <= 8 ? "huge-v" : zhLen <= 30 ? "huge" : "big";
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-aphorism bk-aphorism-${spec.half}${a.long ? " bk-aphorism-long" : ""}`}>
-          <div className="bk-spread-canvas">
-            <div className="bk-aphorism-body">
-              {a.en && <p className="bk-aphorism-en">{a.en}</p>}
-              {a.zh && <p className="bk-aphorism-zh">{a.zh}</p>}
-            </div>
-          </div>
+          {spec.half === "left" ? (
+            a.en ? (
+              <p className={`bk-aphorism-en bk-aphorism-en-${enTier}`}>{withRustQ(a.en)}</p>
+            ) : a.zh ? (
+              <p className={`bk-aphorism-zh bk-aphorism-zh-${zhTier}`}>{withRustQ(a.zh)}</p>
+            ) : null
+          ) : a.en && a.zh ? (
+            <p className={`bk-aphorism-zh bk-aphorism-zh-${zhTier}`}>{withRustQ(a.zh)}</p>
+          ) : null}
         </Page>
       );
     }
@@ -1416,8 +1445,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
           <div className="bk-essay">
             <div className="bk-essay-head">
-              <div className="bk-essay-meta sans-label">{translations.en.catalogBook.aboutArtist} · {translations.zh.catalogBook.aboutArtist}</div>
-              <h2 className="bk-section-title shop-title gloria-title">{author}</h2>
+              <h2 className="bk-section-title shop-title gloria-title">{stackedPair("About the Author", "关于作者")}</h2>
             </div>
             <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: spec.chunk === 0 ? artistBioHTML("en") : artistBioHTML("zh") }} />
           </div>
