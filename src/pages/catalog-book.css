@@ -1421,53 +1421,93 @@
 }
 
 /* ── Aphorism spreads ─────────────────────────────────────────────────────── */
-/* One sentence of hers alone across a spread: warm paper and ink type, a
-   light pause against the black chapter openers (her direction, 2026-10-18). */
+/* One sentence of hers alone across a spread, redesigned 2026-11-06 (the old
+   setting — two small lines centred over the gutter on beige — read as a
+   placeholder). Now: a full rust ground with cream type, the book's own
+   part-intro colours. English stands alone on the left page, set huge and
+   anchored low-left; Chinese stands alone on the right page, vertical when
+   it is a short question and anchored top-right, so the gutter stays clean
+   and the two pages answer each other asymmetrically. Longer sentences
+   step down a tier; the one paragraph-length text keeps a readable size,
+   one language per page. */
 .bk-aphorism {
-  background: #f6efe0;
-  color: #2b2b2b;
-}
-
-.bk-aphorism-left .bk-spread-canvas {
-  left: 0;
-}
-
-.bk-aphorism-right .bk-spread-canvas {
-  left: calc(-1 * var(--trim-w));
-}
-
-.bk-aphorism-body {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: min(9.5in, 72%);
-  text-align: center;
+  background: #8a3c00;
+  color: #fff3c2;
 }
 
 .bk-aphorism-en {
+  position: absolute;
   margin: 0;
   font-family: var(--serif);
-  font-size: 0.44in;
-  line-height: 1.35;
 }
 
 .bk-aphorism-zh {
-  margin: 0.3in 0 0;
+  position: absolute;
+  margin: 0;
   font-family: var(--serif);
-  font-size: 0.3in;
-  line-height: 1.5;
-  color: rgba(43, 43, 43, 0.72);
+  color: #fff3c2;
 }
 
-/* Longer breathing texts set smaller so the whole paragraph fits the spread */
-.bk-aphorism-long .bk-aphorism-en {
-  font-size: 0.32in;
-  line-height: 1.45;
+/* Short questions at poster size (over 3x the old 0.44in setting) */
+.bk-aphorism-en-huge {
+  left: 0.45in;
+  bottom: 1.45in;
+  max-width: 6.3in;
+  font-size: 1.3in;
+  line-height: 1.08;
 }
-.bk-aphorism-long .bk-aphorism-zh {
-  font-size: 0.23in;
-  line-height: 1.6;
+
+.bk-aphorism-zh-huge-v {
+  top: 0.95in;
+  right: 0.8in;
+  writing-mode: vertical-rl;
+  font-size: 1.15in;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+}
+
+.bk-aphorism-zh-huge {
+  top: 1.35in;
+  right: 0.55in;
+  max-width: 6.2in;
+  text-align: right;
+  font-size: 0.95in;
+  line-height: 1.35;
+}
+
+/* Full sentences: still large, sized to hold one page */
+.bk-aphorism-en-big {
+  left: 0.5in;
+  bottom: 1.55in;
+  max-width: 6.6in;
+  font-size: 0.64in;
+  line-height: 1.28;
+}
+
+.bk-aphorism-zh-big {
+  top: 1.4in;
+  right: 0.55in;
+  max-width: 6.4in;
+  text-align: right;
+  font-size: 0.6in;
+  line-height: 1.5;
+}
+
+/* The paragraph-length breathing text: one language per page, readable */
+.bk-aphorism-en-para {
+  left: 0.55in;
+  top: 1.5in;
+  max-width: 6.7in;
+  font-size: 0.3in;
+  line-height: 1.55;
+}
+
+.bk-aphorism-zh-para {
+  left: 0.55in;
+  top: 1.5in;
+  max-width: 6.7in;
+  font-size: 0.27in;
+  line-height: 1.7;
 }
 
 /* Back cover: blank white barcode box (placeholder until the ISBN arrives). */
@@ -1671,7 +1711,8 @@
 .bk-tocmap {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 0.3in;
   height: 100%;
 }
 
@@ -1789,7 +1830,7 @@
 /* The dotted route is a flow element between clusters, never under text. */
 .bk-tocmap-route {
   width: 1px;
-  height: 0.34in;
+  height: 0.3in;
   margin: 0 auto;
   background-image: linear-gradient(#b49b6a 55%, transparent 45%);
   background-size: 1px 7px;
@@ -1804,4 +1845,4 @@
 .bk-tocmap-p2 { margin-left: 0.3in; }
 .bk-tocmap-p4 { margin-left: 0.85in; }
 .bk-tocmap-p5 { margin-left: 1.5in; }
-.bk-tocmap-tail { margin-left: 0.3in; }
+.bk-tocmap-tail { margin-left: 0.3in; margin-top: auto; }
