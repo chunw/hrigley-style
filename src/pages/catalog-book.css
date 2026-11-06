@@ -1684,9 +1684,18 @@
 }
 
 .bk-tocmap-small {
+  display: flex;
+  align-items: baseline;
   font-size: 10.5pt;
   margin-bottom: 6px;
   cursor: pointer;
+}
+
+/* Small rows share the section rows' number column, so titles align
+   down the block, numbered or not. */
+.bk-tocmap-small .bk-tocmap-sec-no {
+  flex: 0 0 0.36in;
+  padding-top: 0;
 }
 
 .bk-tocmap-small-zh {
