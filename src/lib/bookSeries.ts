@@ -192,7 +192,7 @@ export const BOOK_SERIES: BookSeries[] = [
     titleEn: "Theater",
     titleZh: "登场",
     years: "2019 – 2023",
-    textEn: "Travel photography: theatrical moments found on the street (not literal theater stages).",
-    textZh: "旅行摄影：街头抓到的戏剧感瞬间，不是字面意义的剧场。",
+    textEn: "To step into the frame is to take the stage. The street provides the light and the set; strangers cross, pause, turn — performing their own ordinary day, with no script and no second take. I watch from across the way, and keep the scene a moment before it disperses.",
+    textZh: "人一走进画面，就是登场。街道把光和布景都现成摆好，陌生人穿过、停顿、转身，演的是自己的日常——没有剧本，也不重来。我在对面看着，在这一幕散开之前，把它留下来。",
   },
 ];
