@@ -1054,6 +1054,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             <h1 className="bk-title-main shop-title gloria-title" style={{ fontSize: displaySize(translations.en.catalogBook.title, 6.8, 1.35) }}>
               {translations.en.catalogBook.title}
             </h1>
+            <div className="bk-title-zh">遗迹</div>
             <div className="bk-rule" />
             <div className="bk-title-meta">
               <span>{years}</span>
@@ -1077,15 +1078,6 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             </p>
             <p>
               {translations.en.catalogBook.edition}, {year} · {translations.zh.catalogBook.edition}，{year}
-            </p>
-            <p>
-              Online · 在线查阅
-              <br />
-              IMMEMORY: covid-immemory.com · Cave Dance: cavedance.art
-              <br />
-              Art.empath.io: art.empath.io · Remains: chunwangshop.com/remains-catalog
-              <br />
-              Artist Interview · 艺术家访谈: shoutoutatlanta.com/meet-chun-wang-artist
             </p>
           </div>
         </Page>
@@ -1226,11 +1218,11 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 </div>
                 {renderCluster(clusters[0], "bk-tocmap-p1")}
                 <div className="bk-tocmap-route" />
-                {renderCluster(clusters[2], "bk-tocmap-p3")}
+                {renderCluster(clusters[1], "bk-tocmap-p2")}
               </>
             ) : (
               <>
-                {renderCluster(clusters[1], "bk-tocmap-p2")}
+                {renderCluster(clusters[2], "bk-tocmap-p3")}
                 <div className="bk-tocmap-route" />
                 {renderCluster(clusters[3], "bk-tocmap-p4")}
                 {renderCluster(clusters[4], "bk-tocmap-p5")}

@@ -741,6 +741,22 @@
   margin: 0.3in 0 0.16in;
 }
 
+/* Title page takes the part chapters' treatment (her direction,
+   2026-11-05): rust ground, cream type, and the title bilingual —
+   REMAINS with 遗迹 beneath it. */
+.bk-title-page {
+  background: #8a3c00;
+  color: #fff3c2;
+}
+
+.bk-title-page .bk-title-zh {
+  color: #fff3c2;
+}
+
+.bk-title-page .bk-title-meta {
+  color: rgba(255, 243, 194, 0.72);
+}
+
 .bk-title-meta {
   display: flex;
   justify-content: space-between;
