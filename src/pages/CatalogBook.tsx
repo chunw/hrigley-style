@@ -9,6 +9,7 @@ import { getCombinedCatalogSections, type CatalogItem, type CatalogSection, type
 import { translations, type Translations } from "@/lib/translations";
 import { PAGE_BACKGROUNDS, type PageBgKind } from "@/lib/pageBackgrounds";
 import { BOOK_SERIES } from "@/lib/bookSeries";
+import { CV_PAGES, CV_SECTIONS } from "@/lib/cv";
 import { SERIES_PLATES, DEATH_VALLEY_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
@@ -81,6 +82,7 @@ type PageSpec =
   | { kind: "about"; chunk: number }
   | { kind: "collage"; chunk: number }
   | { kind: "reverse-index"; chunk: number }
+  | { kind: "cv"; chunk: number }
   | { kind: "blank" }
   | { kind: "end" };
 
@@ -800,6 +802,12 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     specs.push({ kind: "reverse-index", chunk });
   }
 
+  // The curriculum vitae closes the book, after the reverse index
+  // (her direction, 2026-11-05: a detailed CV at the very end).
+  for (let chunk = 0; chunk < CV_PAGES.length; chunk++) {
+    specs.push({ kind: "cv", chunk });
+  }
+
   // Closing page sits on the final (verso) page of the last signature.
   while ((specs.length + 1) % SIGNATURE !== 0) specs.push({ kind: "blank" });
   specs.push({ kind: "end" });
@@ -878,6 +886,8 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `collage:${spec.chunk}`;
     case "reverse-index":
       return `reverse-index:${spec.chunk}`;
+    case "cv":
+      return `cv:${spec.chunk}`;
     default:
       return spec.kind;
   }
@@ -1143,6 +1153,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         rows.push({ ...chapterRow(c), inPart: p ? true : undefined });
       }
       rows.push({ num: pad2(Math.max(...chapters.map((c) => c.number)) + 1), titleEn: "An Index of What Remains", titleZh: "反向索引", sub: "", page: startOf((s) => s.kind === "reverse-index") });
+      rows.push({ num: pad2(Math.max(...chapters.map((c) => c.number)) + 2), titleEn: "Curriculum Vitae", titleZh: "简历", sub: "", page: startOf((s) => s.kind === "cv") });
       // The contents as a map, not a list (her direction, 2026-11-05,
       // from the design mock she approved): one spread, the five parts
       // as clusters scattered down the two pages, each led by its
@@ -1471,6 +1482,53 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               })}
             </ul>
           </div>
+        </Page>
+      );
+    }
+
+    case "cv": {
+      const blocks = CV_PAGES[spec.chunk] ?? [];
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-cv-page">
+          <div className="bk-cv">
+            {spec.chunk === 0 && (
+              <header className="bk-cv-head">
+                <h2 className="bk-cv-title">简历</h2>
+                <div className="bk-cv-title-en">Curriculum Vitae</div>
+                <div className="bk-cv-rule" />
+                <p className="bk-cv-name">Chun Wang · 王淳</p>
+              </header>
+            )}
+            {blocks.map((block, bi) => {
+              if ("heading" in block) {
+                const s = CV_SECTIONS[block.heading];
+                return (
+                  <h3 key={bi} className="bk-cv-section">
+                    <span className="bk-cv-section-zh">{s.titleZh}</span>
+                    <span className="bk-cv-section-en">{s.titleEn}</span>
+                    <span className="bk-cv-section-line" />
+                  </h3>
+                );
+              }
+              const [si, ei] = block.entry;
+              const e = CV_SECTIONS[si].entries[ei];
+              const lines = e.text.split("\n");
+              return (
+                <div key={bi} className="bk-cv-entry">
+                  {e.years && <span className="bk-cv-years">{e.years}</span>}
+                  <p className="bk-cv-text">
+                    {lines.map((ln, li) => (
+                      <span key={li} className={li > 0 ? "bk-cv-sub" : undefined}>
+                        {ln}
+                        {li < lines.length - 1 && <br />}
+                      </span>
+                    ))}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+          <Folio number={number} tag={`${b.title} | Curriculum Vitae · 简历`} />
         </Page>
       );
     }
@@ -2287,7 +2345,7 @@ const CatalogBook = () => {
   // A shared link can name the page it opens on: ?page=<folio> jumps to that
   // printed page, ?section=<key> to a section's opening page — the same
   // first page the contents page prints for that chapter. Section keys:
-  // title, contents, preface, about, collage, painting-intro, reverse-index,
+  // title, contents, preface, about, collage, painting-intro, reverse-index, cv,
   // or any chapter key (spirit, remains, residuals, shop, ...).
   // Series-driven chapters are keyed "series:<id>" in the book model while
   // shared links name them by the bare series id (?section=negotiated), so
@@ -2312,7 +2370,8 @@ const CatalogBook = () => {
       section === "preface" ||
       section === "about" ||
       section === "painting-intro" ||
-      section === "reverse-index"
+      section === "reverse-index" ||
+      section === "cv"
     ) {
       const kind = section as PageSpec["kind"];
       return pages.find((p) => p.spec.kind === kind)?.number ?? null;
