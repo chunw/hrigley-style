@@ -1675,7 +1675,7 @@ function useBookModel(args: {
     const splitChapters: Chapter[] = [
       wcSplit("residuals", "Residuals", "残留", "Residuals"),
       wcSplit("stillthings", "Still Things", "静物", "Still Things"),
-      wcSplit("road", "Notes from the Road", "旅途笔记", "Notes from the Road"),
+      wcSplit("road", "Notes from the Road", "出发", "Notes from the Road"),
     ];
     // Forms Before Dissolving (London, 2026): the ArtOrb exhibition poster
     // showing Breakfast Residuals installed at Apsara Studio Gallery, taken
