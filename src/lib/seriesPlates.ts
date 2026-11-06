@@ -219,9 +219,9 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
   ],
   negotiated: [
     plate(
-      "The pavilion's 3D archive", "2025 · The Wrong Biennale, 7th Edition", "2025",
-      "The entrance of the Negotiated Intelligence pavilion: a 3D archive of human-AI co-creation.",
-      "《协商智能》展亭的入口：一个人机共创的 3D 档案。",
+      "The pavilion's opening screen", "2025 · The Wrong Biennale, 7th Edition", "2025",
+      "The opening screen of the Negotiated Intelligence website: a robotic arm at work in the 3D archive, beneath the words 'I am human'.",
+      "《协商智能》网站的首屏：3D 档案空间里，机械臂正在工作，上方是「I am human」的字样。",
       "/book/negotiated/pavilion-entrance.jpg",
     ),
     plate(
