@@ -1898,6 +1898,22 @@ function useBookModel(args: {
             zhExtras = new Map([[9, zhBlocks.slice(10, 12)]]);
             zhBlocks = [...zhBlocks.slice(0, 10), ...zhBlocks.slice(12)];
           }
+          if (s.id === "artempath") {
+            // Her diary entry of February 15, 2018 opens the text: a
+            // dated passage, set off by white space alone (her
+            // direction, 2026-11-06) — blank lines before and after it,
+            // up to the "(c. 2018)" block. Her original post kept whole
+            // inside the Chinese flow gets the same air around it.
+            const gapArt = (edit: string): EssayItem => ({ html: "<p><br /><br /><br /></p>", edit });
+            const cut = enBlocks.findIndex((b) => b.html.includes("(c. 2018)"));
+            const diaryEnd = cut === -1 ? enBlocks.length : cut;
+            enBlocks.splice(0, 0, gapArt("series:artempath:en"));
+            zhBlocks.splice(0, 0, gapArt("series:artempath:zh"));
+            enBlocks.splice(diaryEnd + 1, 0, gapArt("series:artempath:en"));
+            zhBlocks.splice(diaryEnd + 1, 0, gapArt("series:artempath:zh"));
+            const extra = zhExtras?.get(9);
+            if (extra) zhExtras?.set(9, [gapArt("series:artempath:zh"), ...extra, gapArt("series:artempath:zh")]);
+          }
           if (zhBlocks.length === enBlocks.length) {
             const { stream, pairEnd } = pairStream(enBlocks, zhBlocks, zhExtras);
             const { chunks, itemChunk } = chunkMixed(stream);
@@ -1962,7 +1978,11 @@ function useBookModel(args: {
         const stmtEn2: EssayItem = { html: "<p>The series borrows its visual grammar from these figurines from different civilizations and historical periods, and drops them into the theater of contemporary daily life.</p>" };
         const stmtZh1: EssayItem = { html: "<p>《遗迹》是一个综合材料系列，起于一种微妙的荒诞感。研究古代陶俑时，我被它们的表情吸引：亲切，笨拙，像是什么都没有做，就停在那一刻。</p>" };
         const stmtZh2: EssayItem = { html: "<p>这个系列的视觉语法就借自这些陶俑。它们来自不同的文明、不同的历史时期，我把它们放进当代日常生活的剧场。</p>" };
-        essayChunks[chapter.key] = langChunks([leadEn, ...paraItems(paras.filter((p) => !hasCjk(p.text))), noteEn, stmtEn1, stmtEn2], [leadZh, ...paraItems(paras.filter((p) => hasCjk(p.text))), noteZh, stmtZh1, stmtZh2]);
+        // A dated passage is set off by white space alone (her
+        // direction, 2026-11-06): blank lines before and after her
+        // Facebook post; the statement after it is not part of the post.
+        const gapPost: EssayItem = { html: "<p><br /><br /><br /></p>" };
+        essayChunks[chapter.key] = langChunks([gapPost, leadEn, ...paraItems(paras.filter((p) => !hasCjk(p.text))), noteEn, gapPost, stmtEn1, stmtEn2], [gapPost, leadZh, ...paraItems(paras.filter((p) => hasCjk(p.text))), noteZh, gapPost, stmtZh1, stmtZh2]);
       } else if (chapter.key === "photography") {
         const head: EssayItem = { html: "<p>El Otro, El Mismo</p>" };
         const otro = txParas("elOtroEssayBody");
@@ -2013,6 +2033,10 @@ function useBookModel(args: {
         // Moments, March 28, 2018) stands right after the series overview,
         // ahead of the borrowed background texts: her voice first, then the
         // texts the paintings answer to.
+        // A dated passage is set off by white space alone (her
+        // direction, 2026-11-06): blank lines before and after the post.
+        const gapMoment: EssayItem = { html: "<p><br /><br /><br /></p>" };
+        pushBoth(gapMoment, gapMoment);
         pushBoth(
           { html: `<p><span class="bk-credit">${SPIRIT_MOMENT.labelEn}</span></p>`, edit: "spiritmoment:inundated" },
           { html: `<p><span class="bk-credit">${SPIRIT_MOMENT.labelZh}</span></p>`, edit: "spiritmoment:inundated" },
@@ -2021,6 +2045,7 @@ function useBookModel(args: {
           { html: `<p>${SPIRIT_MOMENT.textEn}</p>`, edit: "spiritmoment:inundated" },
           { html: `<p>${SPIRIT_MOMENT.textZh}</p>`, edit: "spiritmoment:inundated" },
         );
+        pushBoth(gapMoment, gapMoment);
         for (const g of SPIRIT_BACKGROUNDS) {
           enStream.push({ html: `<p><strong>${g.titleEn}</strong></p>`, edit: `spiritbg:${g.id}` });
           if (g.titleZh) zhStream.push({ html: `<p><strong>${g.titleZh}</strong></p>`, edit: `spiritbg:${g.id}` });
