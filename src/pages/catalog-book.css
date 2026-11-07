@@ -1856,6 +1856,13 @@
 .bk-tocmap-p5 { margin-left: 1.5in; }
 .bk-tocmap-tail { margin-left: 0.3in; margin-top: auto; }
 
+/* ── Dated passages (design E, 2026-11-06) ─────────────────────────
+   Her own writings that carry a date are set in a narrower measure:
+   the paragraph's text is wrapped in a block span padded on both
+   sides, so the passage reads as an indented column, date line
+   included. The text itself is untouched. */
+.bk-indent { display: block; padding: 0 3em; }
+
 /* ── Facsimile pages: the earlier printed painting book (Canva) ───── */
 .bk-canva-frame {
   flex: 1;
