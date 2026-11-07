@@ -27,12 +27,19 @@ export const EXHIBITIONS: Record<string, { en: string; zh: string }[]> = {
     { en: "Personality: Contemporary Portrait (Hours, Minutes), PH21 Photography Gallery, Budapest, Hungary, June 1 – 25, 2024", zh: "《个性：当代肖像》（《时，分》），PH21 Photography Gallery，布达佩斯，匈牙利，2024年6月1 – 25日" },
     { en: "Significant Colour, PH21 Photography Gallery, Budapest, Hungary, May 31 – June 24, 2025", zh: "《重要的色彩》，PH21 Photography Gallery，布达佩斯，匈牙利，2025年5月31日 – 6月24日" },
     { en: "5x7 Photobook Vol. 1 & Vol. 2, Artsin Square, distributed worldwide, 2025 – 2026", zh: "《5x7 摄影书》第 1、2 卷，Artsin Square 出版，全球发行，2025 – 2026" },
+    { en: "International Photography Awards (IPA)", zh: "国际摄影奖（IPA）" },
+    { en: "London International Creative Competition (LICC)", zh: "伦敦国际创意大赛（LICC）" },
+    { en: "Siena International Photo Awards", zh: "锡耶纳国际摄影奖" },
+    { en: "International Color Awards", zh: "国际色彩奖" },
+    { en: "Moscow International Foto Awards", zh: "莫斯科国际摄影奖" },
   ],
   "series:immemory": [
     { en: "IMMEMORY: On COVID-19, online, 2021 – permanent", zh: "《IMMEMORY：新冠记忆》，线上，2021 – 长期" },
   ],
   "series:negotiated": [
+    { en: "Net art died but is doing well Pavilion (We Are Sorry To Inform You That), The Wrong Biennale 2023-2024 Edition, November 1, 2023 – March 1, 2024", zh: "《Net art died but is doing well》展馆（《我们很抱歉地通知您》），The Wrong Biennale 2023-2024，2023年11月1日 – 2024年3月1日" },
     { en: "Negotiated Intelligence Pavilion, The Wrong Biennale 2025-2026 Edition, November 1, 2025 – March 1, 2026", zh: "协商智能馆，The Wrong Biennale 2025-2026，2025年11月1日 – 2026年3月1日" },
+    { en: "Silver Award, Arts and Culture Websites category, 21st w3 Awards", zh: "第 21 届 w3 Awards 艺术与文化类网站银奖" },
   ],
   "series:google": [
     { en: "İz Dünyası: The Waste Land, Istanbul, Turkey, October 2022", zh: "《İz Dünyası：荒原》，伊斯坦布尔，土耳其，2022年10月" },

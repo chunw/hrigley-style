@@ -339,13 +339,13 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
       "/book/google/instructions.jpg",
     ),
     plate(
-      "The Waste Land, Akbank Sanat", "Akbank Sanat, Istanbul", "2019",
+      "The Waste Land, Akbank Sanat", "Akbank Sanat, Istanbul", "2022",
       "Google Searches in The Waste Land exhibition at Akbank Sanat, Istanbul.",
       "《谷歌搜索》在伊斯坦布尔 Akbank Sanat 的《The Waste Land》展览中。",
       "/book/google/exhibition-1.jpg",
     ),
     plate(
-      "Exhibition documentation", "Akbank Sanat, Istanbul", "2019",
+      "Exhibition documentation", "Akbank Sanat, Istanbul", "2022",
       "The work's documentation card at The Waste Land: Google Searches, 2019, in various sizes.",
       "《The Waste Land》展览中的作品信息卡：《谷歌搜索》，2019，尺寸可变。",
       "/book/google/exhibition-2.jpg",
