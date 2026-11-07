@@ -292,27 +292,11 @@ interface ParaItem {
 interface EssayItem {
   html: string;
   edit: string;
-  /** Dated passage (her direction, 2026-11-06): her own dated writings
-   * render as a sticky-note panel, set apart from the body text. */
-  note?: boolean;
 }
 
 interface EssayChunk {
   lang?: "en" | "zh" | "mixed";
   items: EssayItem[];
-}
-
-/** Group a chunk's items into runs of ordinary items and dated passages:
- * a run of note items renders as one sticky-note panel (see .bk-note). */
-function noteRuns(items: EssayItem[]): { note: boolean; items: EssayItem[] }[] {
-  const runs: { note: boolean; items: EssayItem[] }[] = [];
-  for (const it of items) {
-    const n = !!it.note;
-    const last = runs[runs.length - 1];
-    if (last && last.note === n) last.items.push(it);
-    else runs.push({ note: n, items: [it] });
-  }
-  return runs;
 }
 
 /** Chunk paragraphs (carrying their source edit ids) by plain length.
@@ -1402,18 +1386,6 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const { chapter } = spec;
       const chunk = ctx.essayChunks[chapter.key]?.[spec.chunk];
       const items = chunk?.items ?? [];
-      const renderItem = (it: EssayItem, i: number) => (
-        <p
-          key={i}
-          className={ctx.editMode ? "bk-editable" : undefined}
-          onDoubleClick={
-            ctx.editMode
-              ? () => ctx.openEditor(it.edit, `${chapter.title} · ${chunk?.lang === "zh" ? "中文" : "EN"}`, ctx.fieldTexts[it.edit] ?? plainText(it.html))
-              : undefined
-          }
-          dangerouslySetInnerHTML={{ __html: it.html.replace(/^<p[^>]*>/, "").replace(/<\/p>$/, "") }}
-        />
-      );
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
           <div className="bk-essay">
@@ -1425,15 +1397,18 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               </div>
             )}
             <div className="bk-essay-text description-html">
-              {noteRuns(items).map((run, ri) =>
-                run.note ? (
-                  <div key={ri} className="bk-note">
-                    {run.items.map((it, i) => renderItem(it, i))}
-                  </div>
-                ) : (
-                  run.items.map((it, i) => renderItem(it, i))
-                ),
-              )}
+              {items.map((it, i) => (
+                <p
+                  key={i}
+                  className={ctx.editMode ? "bk-editable" : undefined}
+                  onDoubleClick={
+                    ctx.editMode
+                      ? () => ctx.openEditor(it.edit, `${chapter.title} · ${chunk?.lang === "zh" ? "中文" : "EN"}`, ctx.fieldTexts[it.edit] ?? plainText(it.html))
+                      : undefined
+                  }
+                  dangerouslySetInnerHTML={{ __html: it.html.replace(/^<p[^>]*>/, "").replace(/<\/p>$/, "") }}
+                />
+              ))}
             </div>
           </div>
           <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
@@ -1925,15 +1900,8 @@ function useBookModel(args: {
             // her Rothko post, kept whole at her direction, plus its date
             // line. They belong to that paragraph's pair; the rest of the
             // Chinese text realigns by the same offset.
-            zhExtras = new Map([[9, zhBlocks.slice(10, 12).map((b) => ({ ...b, note: true }))]]);
+            zhExtras = new Map([[9, zhBlocks.slice(10, 12)]]);
             zhBlocks = [...zhBlocks.slice(0, 10), ...zhBlocks.slice(12)];
-          }
-          if (s.id === "artempath") {
-            // Dated passages (her direction, 2026-11-06): the February 15,
-            // 2018 diary entry that opens the text, in both languages,
-            // renders as a sticky-note panel (see .bk-note); her original
-            // Rothko post rides as zhExtras on pair 9, flagged above.
-            for (const b of [enBlocks[0], enBlocks[1], zhBlocks[0], zhBlocks[1]]) if (b) b.note = true;
           }
           if (zhBlocks.length === enBlocks.length) {
             const { stream, pairEnd } = pairStream(enBlocks, zhBlocks, zhExtras);
@@ -1980,15 +1948,15 @@ function useBookModel(args: {
         }
       } else if (chapter.key === "remains") {
         const paras = txParas("remainsEssayBody");
-        const leadEn: EssayItem = { note: true, html: "<p>In the profound atmosphere of the Anahuacalli Museum, I gaze at these ancient handmade works, following Diego Rivera's vision as I look for a spark of continuity between modern art and pre-Columbian aesthetics. The figures in these works of the ancient civilizations of the Americas are strikingly artless and strange. Though carved in a refined, stylized manner, they are simple and powerful.</p>" };
-        const leadZh: EssayItem = { note: true, html: "<p>在 Anahuacalli 博物馆的深邃氛围中，我凝视这些远古的手作，按照迭戈·里维拉的构想，在现代艺术与前哥伦布时期美学之间寻找延续的火花。这些美洲古文明的作品形象格外憨朴奇崛，尽管是以洗练的风格化手法雕成，却简洁有力。</p>" };
+        const leadEn: EssayItem = { html: "<p>In the profound atmosphere of the Anahuacalli Museum, I gaze at these ancient handmade works, following Diego Rivera's vision as I look for a spark of continuity between modern art and pre-Columbian aesthetics. The figures in these works of the ancient civilizations of the Americas are strikingly artless and strange. Though carved in a refined, stylized manner, they are simple and powerful.</p>" };
+        const leadZh: EssayItem = { html: "<p>在 Anahuacalli 博物馆的深邃氛围中，我凝视这些远古的手作，按照迭戈·里维拉的构想，在现代艺术与前哥伦布时期美学之间寻找延续的火花。这些美洲古文明的作品形象格外憨朴奇崛，尽管是以洗练的风格化手法雕成，却简洁有力。</p>" };
         // The two paragraphs are her own Facebook post (July 12, 2023); as with
         // her other diary-like texts in this book, a small source line closes
         // the text, in the bk-credit style. Place per the post's own
         // location tag: Mexico · Azcapotzalco. No URL is printed, per her
         // rule for source lines in the book.
-        const noteEn: EssayItem = { note: true, html: "<p><span class=\"bk-credit\">July 12, 2023, Mexico · Azcapotzalco</span></p>" };
-        const noteZh: EssayItem = { note: true, html: "<p><span class=\"bk-credit\">2023 年 7 月 12 日，墨西哥 · Azcapotzalco</span></p>" };
+        const noteEn: EssayItem = { html: "<p><span class=\"bk-credit\">July 12, 2023, Mexico · Azcapotzalco</span></p>" };
+        const noteZh: EssayItem = { html: "<p><span class=\"bk-credit\">2023 年 7 月 12 日，墨西哥 · Azcapotzalco</span></p>" };
         // Her series statement from the Canva painting book follows the
         // Facebook-post text (her order, 2026-11-06: the Rivera text in
         // front, this statement after). The English is her own wording,
@@ -1999,7 +1967,7 @@ function useBookModel(args: {
         const stmtEn2: EssayItem = { html: "<p>The series borrows its visual grammar from these figurines from different civilizations and historical periods, and drops them into the theater of contemporary daily life.</p>" };
         const stmtZh1: EssayItem = { html: "<p>《遗迹》是一个综合材料系列，起于一种微妙的荒诞感。研究古代陶俑时，我被它们的表情吸引：亲切，笨拙，像是什么都没有做，就停在那一刻。</p>" };
         const stmtZh2: EssayItem = { html: "<p>这个系列的视觉语法就借自这些陶俑。它们来自不同的文明、不同的历史时期，我把它们放进当代日常生活的剧场。</p>" };
-        essayChunks[chapter.key] = langChunks([leadEn, ...paraItems(paras.filter((p) => !hasCjk(p.text))).map((it) => ({ ...it, note: true })), noteEn, stmtEn1, stmtEn2], [leadZh, ...paraItems(paras.filter((p) => hasCjk(p.text))).map((it) => ({ ...it, note: true })), noteZh, stmtZh1, stmtZh2]);
+        essayChunks[chapter.key] = langChunks([leadEn, ...paraItems(paras.filter((p) => !hasCjk(p.text))), noteEn, stmtEn1, stmtEn2], [leadZh, ...paraItems(paras.filter((p) => hasCjk(p.text))), noteZh, stmtZh1, stmtZh2]);
       } else if (chapter.key === "photography") {
         const head: EssayItem = { html: "<p>El Otro, El Mismo</p>" };
         const otro = txParas("elOtroEssayBody");
@@ -2026,9 +1994,7 @@ function useBookModel(args: {
         // right after the chunk where its group text ends (see
         // plateBreaks); the Chinese essay then runs clean. Her GenAI
         // statement has no Chinese text (no parasZh) and stays
-        // English-only inside the flow. Her WeChat Moments post on
-        // Inundated is a dated passage: a sticky-note panel in both
-        // languages (item.note, see .bk-note).
+        // English-only inside the flow.
         const enStream: EssayItem[] = [];
         const zhStream: EssayItem[] = [];
         const enGroupEnd = new Map<string, number>();
@@ -2053,12 +2019,12 @@ function useBookModel(args: {
         // ahead of the borrowed background texts: her voice first, then the
         // texts the paintings answer to.
         pushBoth(
-          { html: `<p><span class="bk-credit">${SPIRIT_MOMENT.labelEn}</span></p>`, edit: "spiritmoment:inundated", note: true },
-          { html: `<p><span class="bk-credit">${SPIRIT_MOMENT.labelZh}</span></p>`, edit: "spiritmoment:inundated", note: true },
+          { html: `<p><span class="bk-credit">${SPIRIT_MOMENT.labelEn}</span></p>`, edit: "spiritmoment:inundated" },
+          { html: `<p><span class="bk-credit">${SPIRIT_MOMENT.labelZh}</span></p>`, edit: "spiritmoment:inundated" },
         );
         pushBoth(
-          { html: `<p>${SPIRIT_MOMENT.textEn}</p>`, edit: "spiritmoment:inundated", note: true },
-          { html: `<p>${SPIRIT_MOMENT.textZh}</p>`, edit: "spiritmoment:inundated", note: true },
+          { html: `<p>${SPIRIT_MOMENT.textEn}</p>`, edit: "spiritmoment:inundated" },
+          { html: `<p>${SPIRIT_MOMENT.textZh}</p>`, edit: "spiritmoment:inundated" },
         );
         for (const g of SPIRIT_BACKGROUNDS) {
           enStream.push({ html: `<p><strong>${g.titleEn}</strong></p>`, edit: `spiritbg:${g.id}` });

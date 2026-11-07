@@ -1856,33 +1856,6 @@
 .bk-tocmap-p5 { margin-left: 1.5in; }
 .bk-tocmap-tail { margin-left: 0.3in; margin-top: auto; }
 
-/* ── Dated passages as sticky notes (her direction, 2026-11-06) ────
-   Her own dated writings — posts and diary entries that carry their
-   date with them — are set apart from the body text as sticky notes,
-   after the About note on chunwangshop.com: warm cream paper, a tape
-   strip across the top, a slight tilt. The date line (bk-credit)
-   inside reads as the note's stamp. */
-.bk-note {
-  position: relative;
-  background: #fdf6e0;
-  box-shadow: 0 3px 9px rgba(74, 55, 20, 0.16);
-  transform: rotate(-0.4deg);
-  padding: 30px 30px 20px;
-  margin: 16px 0 30px;
-}
-.bk-note::before {
-  content: "";
-  position: absolute;
-  top: -11px;
-  left: 50%;
-  width: 96px;
-  height: 24px;
-  margin-left: -48px;
-  background: rgba(219, 208, 178, 0.82);
-  box-shadow: 0 1px 3px rgba(74, 55, 20, 0.18);
-  transform: rotate(-1.3deg);
-}
-
 /* ── Facsimile pages: the earlier printed painting book (Canva) ───── */
 .bk-canva-frame {
   flex: 1;
@@ -1896,4 +1869,3 @@
   height: 100%;
   object-fit: contain;
 }
-
