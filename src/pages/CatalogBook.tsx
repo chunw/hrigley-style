@@ -134,6 +134,14 @@ function stackedTitle(chapter: Chapter): ReactNode {
 }
 const plainText = (html: string) => html.replace(/<br\s*\/?>/gi, " ").replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
 const hasCjk = (s: string) => /[\u4e00-\u9fff]/.test(s);
+// Dated passages — her own writings that carry a date — are indented
+// into a narrower column, date line included (design E, her pick,
+// 2026-11-06; it replaces the white-space setting of PR #145). The
+// text itself is untouched, only its measure narrows.
+const indentItem = (item: EssayItem, end = false): EssayItem => ({
+  ...item,
+  html: item.html.replace(/^<p>/, `<p><span class="bk-indent${end ? " bk-indent--end" : ""}">`).replace(/<\/p>$/, "</span></p>"),
+});
 
 /** Chapter opener spreads are uniformly black with white type
  *  (her direction, 2026-10-18); each chapter's epigraph sits in the
@@ -1898,6 +1906,22 @@ function useBookModel(args: {
             zhExtras = new Map([[9, zhBlocks.slice(10, 12)]]);
             zhBlocks = [...zhBlocks.slice(0, 10), ...zhBlocks.slice(12)];
           }
+          if (s.id === "artempath") {
+            // Her diary entry of February 15, 2018 opens the text: a
+            // dated passage, indented into a narrower column (design E,
+            // 2026-11-06) up to the "(c. 2018)" block, where the project
+            // text begins. Her original post kept whole inside the
+            // Chinese flow, and its date line, are indented with it.
+            const cut = enBlocks.findIndex((b) => b.html.includes("(c. 2018)"));
+            const diaryEnd = cut === -1 ? enBlocks.length : cut;
+            for (let i = 0; i < diaryEnd; i++) {
+              const last = i === diaryEnd - 1;
+              enBlocks[i] = indentItem(enBlocks[i], last);
+              if (zhBlocks[i]) zhBlocks[i] = indentItem(zhBlocks[i], last);
+            }
+            const extra = zhExtras?.get(9);
+            if (extra) zhExtras?.set(9, extra.map((it, i) => indentItem(it, i === extra.length - 1)));
+          }
           if (zhBlocks.length === enBlocks.length) {
             const { stream, pairEnd } = pairStream(enBlocks, zhBlocks, zhExtras);
             const { chunks, itemChunk } = chunkMixed(stream);
@@ -1962,7 +1986,7 @@ function useBookModel(args: {
         const stmtEn2: EssayItem = { html: "<p>The series borrows its visual grammar from these figurines from different civilizations and historical periods, and drops them into the theater of contemporary daily life.</p>" };
         const stmtZh1: EssayItem = { html: "<p>《遗迹》是一个综合材料系列，起于一种微妙的荒诞感。研究古代陶俑时，我被它们的表情吸引：亲切，笨拙，像是什么都没有做，就停在那一刻。</p>" };
         const stmtZh2: EssayItem = { html: "<p>这个系列的视觉语法就借自这些陶俑。它们来自不同的文明、不同的历史时期，我把它们放进当代日常生活的剧场。</p>" };
-        essayChunks[chapter.key] = langChunks([leadEn, ...paraItems(paras.filter((p) => !hasCjk(p.text))), noteEn, stmtEn1, stmtEn2], [leadZh, ...paraItems(paras.filter((p) => hasCjk(p.text))), noteZh, stmtZh1, stmtZh2]);
+        essayChunks[chapter.key] = langChunks([indentItem(leadEn), ...paraItems(paras.filter((p) => !hasCjk(p.text))).map(indentItem), indentItem(noteEn, true), stmtEn1, stmtEn2], [indentItem(leadZh), ...paraItems(paras.filter((p) => hasCjk(p.text))).map(indentItem), indentItem(noteZh, true), stmtZh1, stmtZh2]);
       } else if (chapter.key === "photography") {
         const head: EssayItem = { html: "<p>El Otro, El Mismo</p>" };
         const otro = txParas("elOtroEssayBody");
@@ -2014,12 +2038,12 @@ function useBookModel(args: {
         // ahead of the borrowed background texts: her voice first, then the
         // texts the paintings answer to.
         pushBoth(
-          { html: `<p><span class="bk-credit">${SPIRIT_MOMENT.labelEn}</span></p>`, edit: "spiritmoment:inundated" },
-          { html: `<p><span class="bk-credit">${SPIRIT_MOMENT.labelZh}</span></p>`, edit: "spiritmoment:inundated" },
+          indentItem({ html: `<p><span class="bk-credit">${SPIRIT_MOMENT.labelEn}</span></p>`, edit: "spiritmoment:inundated" }),
+          indentItem({ html: `<p><span class="bk-credit">${SPIRIT_MOMENT.labelZh}</span></p>`, edit: "spiritmoment:inundated" }),
         );
         pushBoth(
-          { html: `<p>${SPIRIT_MOMENT.textEn}</p>`, edit: "spiritmoment:inundated" },
-          { html: `<p>${SPIRIT_MOMENT.textZh}</p>`, edit: "spiritmoment:inundated" },
+          indentItem({ html: `<p>${SPIRIT_MOMENT.textEn}</p>`, edit: "spiritmoment:inundated" }, true),
+          indentItem({ html: `<p>${SPIRIT_MOMENT.textZh}</p>`, edit: "spiritmoment:inundated" }, true),
         );
         for (const g of SPIRIT_BACKGROUNDS) {
           enStream.push({ html: `<p><strong>${g.titleEn}</strong></p>`, edit: `spiritbg:${g.id}` });
