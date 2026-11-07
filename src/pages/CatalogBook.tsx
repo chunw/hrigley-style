@@ -76,6 +76,7 @@ type PageSpec =
   | { kind: "essay"; chapter: Chapter; chunk: number }
   | { kind: "exhibitions"; chapter: Chapter }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
+  | { kind: "plateGrid"; chapter: Chapter; entries: { item: CatalogItem; plate: number }[] }
   | { kind: "bleed"; half: "left" | "right"; chapter: Chapter; item: CatalogItem }
   | { kind: "aphorism"; half: "left" | "right"; aphorism: Aphorism }
   | { kind: "about"; chunk: number }
@@ -613,6 +614,22 @@ const SPIRIT_GROUP_PLATES: Record<string, string> = {
 // ── Pagination ────────────────────────────────────────────────────────────────
 // Odd pages are rectos (right-hand), even pages versos. Chapter openers are two-page spreads,
 // so they must start on a verso; a blank is inserted before them whenever needed.
+/** Objects-chapter smalls (her grouping rule, 2026-11-07: only this
+ *  chapter groups; every work still gets its own caption). A work is
+ *  groupable when its largest stated dimension is at most 8 in (or
+ *  200 mm), or when it is one of the Slightly Useful Objects series
+ *  photographs — the plates that carry the series title itself rather
+ *  than a work title: the series' small objects, documented in use.
+ *  No stated size and a title of its own -> keeps its own page. */
+const smallObject = (item: CatalogItem): boolean => {
+  const d = `${item.dimensions ?? ""} ${item.medium ?? ""}`;
+  const inNums = [...d.matchAll(/(\d+(?:\.\d+)?)\s*(?:"|″|inches|in\b)/gi)].map((m) => parseFloat(m[1]));
+  if (inNums.length) return Math.max(...inNums) <= 8;
+  const mmNums = [...d.matchAll(/(\d+(?:\.\d+)?)\s*mm/gi)].map((m) => parseFloat(m[1]));
+  if (mmNums.length) return Math.max(...mmNums) <= 200;
+  return false;
+};
+
 function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkCount: number, essayChunkCounts: Record<string, number>): InteriorPage[] {
   const specs: PageSpec[] = [];
   const nextIsVerso = () => (specs.length + 1) % 2 === 0;
@@ -718,11 +735,41 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         specs.push({ kind: "bleed", half: "right", chapter, item: PRE_IPHONE_ERA_PLATE });
       }
       let heldBackEmitted = false;
-      for (const { item, plate } of chapter.items) {
-        specs.push({ kind: "plate", chapter, item, plate });
-        if (holdBack && !heldBackEmitted && item.image_url === holdBack.imageUrl) {
+      const emitHeldBack = () => {
+        if (holdBack && !heldBackEmitted) {
           for (let i = leadCount; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
           heldBackEmitted = true;
+        }
+      };
+      if (chapter.key === "shop") {
+        // Objects chapter only: small works share a page, up to four to
+        // a grid, each with its own caption (her grouping rule,
+        // 2026-11-07). Everything else keeps a page of its own, and
+        // every other chapter stays one work per page.
+        let group: { item: CatalogItem; plate: number }[] = [];
+        const flushGroup = () => {
+          if (group.length >= 2) specs.push({ kind: "plateGrid", chapter, entries: group });
+          else if (group.length === 1) specs.push({ kind: "plate", chapter, item: group[0].item, plate: group[0].plate });
+          group = [];
+        };
+        for (const { item, plate } of chapter.items) {
+          if (item.title === chapter.titleEn || smallObject(item)) {
+            group.push({ item, plate });
+            if (group.length === 4) flushGroup();
+          } else {
+            flushGroup();
+            specs.push({ kind: "plate", chapter, item, plate });
+          }
+          if (holdBack && item.image_url === holdBack.imageUrl) {
+            flushGroup();
+            emitHeldBack();
+          }
+        }
+        flushGroup();
+      } else {
+        for (const { item, plate } of chapter.items) {
+          specs.push({ kind: "plate", chapter, item, plate });
+          if (holdBack && item.image_url === holdBack.imageUrl) emitHeldBack();
         }
       }
       if (holdBack && !heldBackEmitted) {
@@ -1346,6 +1393,30 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               )}
               {item.description && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: item.description }} />}
             </div>
+          </div>
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+        </Page>
+      );
+    }
+
+    case "plateGrid": {
+      const { chapter, entries } = spec;
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-plate-page">
+          <div className={`bk-plate-grid bk-grid-${entries.length}`}>
+            {entries.map(({ item }) => (
+              <div className="bk-grid-cell" key={item.image_url}>
+                <div className="bk-grid-frame">
+                  <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
+                </div>
+                <div className="bk-grid-caption">
+                  <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
+                  {(item.metaLine || item.dimensions) && (
+                    <div className="bk-caption-meta">{[item.metaLine, item.dimensions].filter(Boolean).join(" · ")}</div>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
           <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
         </Page>

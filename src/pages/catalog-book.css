@@ -1110,6 +1110,57 @@
   margin-top: 0.3in;
 }
 
+/* Objects-chapter grids: small works share a page, each with its own
+   caption under its image (her grouping rule, 2026-11-07). */
+.bk-plate-grid {
+  flex: 1;
+  min-height: 0;
+  margin-top: 0.3in;
+  display: grid;
+  gap: 0.34in 0.3in;
+}
+
+.bk-grid-2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.bk-grid-3 {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.bk-grid-4 {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.bk-grid-cell {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.bk-grid-frame {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.bk-grid-frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.bk-grid-caption {
+  margin-top: 0.12in;
+}
+
+.bk-grid-caption .bk-caption-meta {
+  margin-top: 2px;
+}
+
 .bk-caption {
   display: grid;
   grid-template-columns: 0.75in 1fr;
@@ -1134,9 +1185,15 @@
   text-transform: uppercase;
 }
 
-.bk-caption-title {
-  font-size: 11pt;
-  line-height: 1.25;
+/* Work titles in captions get no special face (her direction,
+   2026-11-07): same font and size as the caption text around them,
+   just a step bolder. This overrides the shop .product-title serif
+   the title elements also carry. */
+.bk-root .bk-caption-title {
+  font-family: inherit;
+  font-size: 8pt;
+  font-weight: 650;
+  line-height: 1.4;
 }
 
 .bk-caption-meta {
