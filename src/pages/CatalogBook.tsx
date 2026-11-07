@@ -365,90 +365,6 @@ function chunkItems(items: EssayItem[], maxChars: number, cost: ChunkCost): Essa
   return out;
 }
 
-/** Build the interleaved item stream for an illustrated long-text chapter
- * (her direction, 2026-11-05): each English paragraph is immediately
- * followed by its Chinese counterpart, instead of the whole English text
- * first and the whole Chinese text after. zhItems must be index-aligned
- * with enItems; zhExtrasAfter maps an English paragraph index to extra
- * Chinese-only items that belong right after that pair (e.g. a diary post
- * kept whole on the Chinese side). Returns the stream plus, for each
- * paragraph pair, the stream index of its last item. */
-function pairStream(
-  enItems: EssayItem[],
-  zhItems: EssayItem[],
-  zhExtrasAfter?: Map<number, EssayItem[]>,
-): { stream: EssayItem[]; pairEnd: number[] } {
-  const stream: EssayItem[] = [];
-  const pairEnd: number[] = [];
-  enItems.forEach((en, i) => {
-    stream.push(en);
-    if (zhItems[i]) stream.push(zhItems[i]);
-    const extras = zhExtrasAfter?.get(i);
-    if (extras) stream.push(...extras);
-    pairEnd.push(stream.length - 1);
-  });
-  for (let j = enItems.length; j < zhItems.length; j++) stream.push(zhItems[j]);
-  return { stream, pairEnd };
-}
-
-/** Chunk a mixed-language item stream into pages. A Chinese character
- * costs ~1.7 English ones (the ratio between the two single-language
- * budgets, 1500 and 880); paragraph breaks and <br />s are charged as in
- * chunkItems, and the first chunk is pre-charged for the chapter head.
- * Pairs normally stay on one page; a pair wider than a whole page splits
- * across the page turn, with the Chinese still immediately after its
- * English paragraph. A subheading is never left as a page's last item.
- * Returns the chunks plus, for each stream item, its chunk index (used to
- * anchor plates inside the flow). */
-function chunkMixed(
-  items: EssayItem[],
-  maxCost = 1500,
-  headSeed = 160,
-): { chunks: EssayChunk[]; itemChunk: number[] } {
-  const cost = (it: EssayItem) => {
-    const text = plainText(it.html);
-    const weighted = hasCjk(text) ? text.length * 1.7 : text.length;
-    return weighted + 21 + (it.html.match(/<br/g) ?? []).length * 64;
-  };
-  const isHead = (it: EssayItem) =>
-    /^<p><strong>[\s\S]*<\/strong><\/p>$/.test(it.html.trim()) && plainText(it.html).length < 120;
-  const chunks: EssayChunk[] = [];
-  const itemChunk: number[] = [];
-  let cur: EssayItem[] = [];
-  let curIdx: number[] = [];
-  let len = headSeed;
-  const flush = () => {
-    if (cur.length === 0) return;
-    const ci = chunks.length;
-    chunks.push({ lang: "mixed", items: cur });
-    for (const ix of curIdx) itemChunk[ix] = ci;
-    cur = [];
-    curIdx = [];
-    len = 0;
-  };
-  items.forEach((it, ix) => {
-    const n = cost(it);
-    if (cur.length > 0 && len + n > maxCost) {
-      const last = cur[cur.length - 1];
-      if (cur.length > 1 && isHead(last)) {
-        const headItem = cur.pop()!;
-        const headIx = curIdx.pop()!;
-        flush();
-        cur = [headItem];
-        curIdx = [headIx];
-        len = cost(headItem);
-      } else {
-        flush();
-      }
-    }
-    cur.push(it);
-    curIdx.push(ix);
-    len += n;
-  });
-  flush();
-  return { chunks: chunks.length > 0 ? chunks : [{ lang: "mixed" as const, items: [] }], itemChunk };
-}
-
 /** Group a chapter essay's <p> blocks into page-sized chunks by plain-text length. */
 
 /** A "remains" aphorism spread: one sentence of hers alone across two
@@ -1395,7 +1311,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 <div className="bk-essay-meta sans-label">{chapter.years}</div>
               </div>
             )}
-            <div className="bk-essay-text description-html">
+            <div className={`bk-essay-text description-html ${items.reduce((n, it) => n + plainText(it.html).length, 0) > 800 ? "bk-essay-cols" : ""}`}>
               {items.map((it, i) => (
                 <p
                   key={i}
@@ -1873,10 +1789,18 @@ function useBookModel(args: {
     const fieldItems = (key: CatalogSectionKey, which: "en" | "zh"): EssayItem[] =>
       pBlocks(asParas(fieldText(key, which))).map((html) => ({ html, edit: `field:${key}:${which}` }));
     const paraItems = (paras: ParaItem[]): EssayItem[] => paras.map((p) => ({ html: `<p>${p.text}</p>`, edit: p.edit }));
+    // Essay page budgets, calibrated to the two-column measure the essay
+    // renderer now uses for long pages (her direction, 2026-11-07, after
+    // Kim Hastreiter's STUFF: dense text pages against the book's quiet
+    // ones). Two ~3.2in columns hold ~1.48x the old single 4.55in column;
+    // per-line costs (overhead, brCost, headSeed) are rescaled to the
+    // narrower line. Short pages still render single-column
+    // and stay well inside these budgets. Preface and painting-intro pages
+    // keep their own smaller chunkParas budgets: they are the quiet pole.
     const langChunks = (en: EssayItem[], zh: EssayItem[]): EssayChunk[] => {
       const all = [
-        ...chunkItems(en, 1500, { overhead: 20, brCost: 68 }).map((items) => ({ lang: "en" as const, items })),
-        ...chunkItems(zh, 880, { overhead: 22, brCost: 34, headSeed: 160 }).map((items) => ({ lang: "zh" as const, items })),
+        ...chunkItems(en, 2200, { overhead: 14, brCost: 48, headSeed: 230 }).map((items) => ({ lang: "en" as const, items })),
+        ...chunkItems(zh, 1300, { overhead: 15, brCost: 24, headSeed: 120 }).map((items) => ({ lang: "zh" as const, items })),
       ];
       return all.length > 0 ? all : [{ lang: "en", items: [] }];
     };
@@ -1892,9 +1816,11 @@ function useBookModel(args: {
         }
         const anchors = s ? SERIES_PLATE_ANCHORS[s.id] : undefined;
         if (s && anchors && enT && zhT) {
-          // Illustrated long-text chapter (her direction, 2026-11-05):
-          // paragraph pairs instead of language blocks, plates anchored
-          // inside the flow (see SERIES_PLATE_ANCHORS / plateBreaks).
+          // Illustrated long-text chapter: plates anchored inside the
+          // text flow (see SERIES_PLATE_ANCHORS / plateBreaks). The text
+          // itself runs as language blocks, English first, then Chinese
+          // (her direction, 2026-11-07, replacing the 2026-11-05
+          // paragraph-pair interleave).
           const enBlocks = pBlocks(asParas(enT)).map((html) => ({ html, edit: `series:${s.id}:en` }));
           let zhBlocks = pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s.id}:zh` }));
           let zhExtras: Map<number, EssayItem[]> | undefined;
@@ -1923,15 +1849,32 @@ function useBookModel(args: {
             if (extra) zhExtras?.set(9, extra.map((it, i) => indentItem(it, i === extra.length - 1)));
           }
           if (zhBlocks.length === enBlocks.length) {
-            const { stream, pairEnd } = pairStream(enBlocks, zhBlocks, zhExtras);
-            const { chunks, itemChunk } = chunkMixed(stream);
-            essayChunks[chapter.key] = chunks;
+            // Dual-stream: chunk each language on its own (same budgets
+            // as langChunks), English chunks first, then Chinese. Plates
+            // anchor inside the English flow, after the chunk holding
+            // their anchor paragraph. Chinese-only extras keep their
+            // aligned place inside the Chinese flow, right after the
+            // block they belong to.
+            const enChunked = chunkItems(enBlocks, 2200, { overhead: 14, brCost: 48, headSeed: 230 });
+            const enItemChunk = new Map<EssayItem, number>();
+            enChunked.forEach((items, ci) => items.forEach((it) => enItemChunk.set(it, ci)));
+            const zhStream: EssayItem[] = [];
+            zhBlocks.forEach((it, i) => {
+              zhStream.push(it);
+              const extras = zhExtras?.get(i);
+              if (extras) zhStream.push(...extras);
+            });
+            essayChunks[chapter.key] = [
+              ...enChunked.map((items) => ({ lang: "en" as const, items })),
+              ...chunkItems(zhStream, 1300, { overhead: 15, brCost: 24, headSeed: 120 }).map((items) => ({ lang: "zh" as const, items })),
+            ];
             chapter.plateBreaks = {};
             chapter.plateAnchorOrder = anchors.map((a) => a.image);
             for (const a of anchors) {
-              const endIx = pairEnd[a.afterPair];
-              if (endIx !== undefined && itemChunk[endIx] !== undefined) {
-                chapter.plateBreaks[a.image] = itemChunk[endIx] + 1;
+              const anchorItem = enBlocks[a.afterPair];
+              const ci = anchorItem ? enItemChunk.get(anchorItem) : undefined;
+              if (ci !== undefined) {
+                chapter.plateBreaks[a.image] = ci + 1;
               }
             }
           } else {
@@ -2064,8 +2007,8 @@ function useBookModel(args: {
           }
           enGroupEnd.set(g.id, enStream.length - 1);
         }
-        const enChunked = chunkItems(enStream, 1500, { overhead: 20, brCost: 68 });
-        const zhChunked = chunkItems(zhStream, 880, { overhead: 22, brCost: 34, headSeed: 160 });
+        const enChunked = chunkItems(enStream, 2200, { overhead: 14, brCost: 48, headSeed: 230 });
+        const zhChunked = chunkItems(zhStream, 1300, { overhead: 15, brCost: 24, headSeed: 120 });
         essayChunks[chapter.key] = [
           ...enChunked.map((items) => ({ lang: "en" as const, items })),
           ...zhChunked.map((items) => ({ lang: "zh" as const, items })),

@@ -1084,6 +1084,19 @@
   margin-bottom: 0;
 }
 
+/* Two-column measure for long essay pages (her direction, 2026-11-07,
+   after Kim Hastreiter's STUFF: dense text pages set against the book's
+   quiet ones). The essay renderer adds this class per page, only when the
+   page's text is long enough to fill two columns; short pages keep the
+   single measure above. The chunk budgets in CatalogBook.tsx are
+   calibrated to this column width and line height. */
+.bk-essay-text.bk-essay-cols {
+  max-width: none;
+  column-count: 2;
+  column-gap: 0.34in;
+  line-height: 1.85;
+}
+
 .bk-essay-long {
   font-size: 9.5pt;
   line-height: 1.95;
