@@ -1856,6 +1856,24 @@
 .bk-tocmap-p5 { margin-left: 1.5in; }
 .bk-tocmap-tail { margin-left: 0.3in; margin-top: auto; }
 
+/* ── Dated passages: bilingual archive stamp (design D, 2026-11-06) ──
+   Her own dated writings are headed by a small red archive stamp with
+   the date (and place, where the source carries one) in English and
+   Chinese, on both language pages. The stamp replaces the small
+   trailing date line these passages used to close with. */
+.bk-stamp {
+  display: inline-block;
+  border: 1.5px solid #C8402A;
+  border-radius: 4px;
+  color: #C8402A;
+  padding: 6px 14px 7px;
+  font-size: 9.5pt;
+  letter-spacing: 0.1em;
+  line-height: 1.55;
+  transform: rotate(-1.6deg);
+  opacity: 0.88;
+}
+
 /* ── Facsimile pages: the earlier printed painting book (Canva) ───── */
 .bk-canva-frame {
   flex: 1;
