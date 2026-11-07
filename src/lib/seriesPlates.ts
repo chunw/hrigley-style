@@ -30,8 +30,8 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
   artempath: [
     plate(
       "Art.empath.io at SFMOMA", "2018 · SFMOMA, San Francisco", "2018",
-      "A visitor types her response at the Art.empath.io station on the bench in front of Rothko's No.14, May 6, 2018.",
-      "2018 年 5 月 6 日，一位观众在罗斯科《No.14》前的长椅上，通过 Art.empath.io 输入她的回应。",
+      "Installation view, in front of Rothko's No.14, May 6, 2018.",
+      "展览现场，罗斯科《No.14》前，2018 年 5 月 6 日。",
       "/book/artempath/sfmoma-bench.jpg",
     ),
     plate(
@@ -42,14 +42,14 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
     ),
     plate(
       "Interacting at SFMOMA", "2018 · SFMOMA, San Francisco", "2018",
-      "Typing a response at the station in front of No.14.",
-      "在《No.14》前的工作站输入回应。",
+      "Installation view, in front of Rothko's No.14.",
+      "展览现场，罗斯科《No.14》前。",
       "/book/artempath/interface-sf.jpg",
     ),
     plate(
       "Field documentation, SFMOMA", "2018 · SFMOMA, San Francisco", "2018",
-      "Visitors discovering the system on the bench, May 6, 2018.",
-      "2018 年 5 月 6 日，观众在长椅上发现并使用系统的现场记录。",
+      "Installation view, May 6, 2018.",
+      "展览现场，2018 年 5 月 6 日。",
       "/book/artempath/sfmoma-grid.jpg",
     ),
     plate(
@@ -60,14 +60,14 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
     ),
     plate(
       "Art.empath.io at the Anderson Collection", "2018 · Anderson Collection, Stanford University", "2018",
-      "The system installed in front of Joan Mitchell's Begin, Again IV (1985), May 11, 2018.",
-      "2018 年 5 月 11 日，系统安装在琼·米切尔《Begin, Again IV》（1985）之前。",
+      "Installation view, in front of Joan Mitchell's Begin, Again IV (1985), May 11, 2018.",
+      "展览现场，琼·米切尔《Begin, Again IV》（1985）前，2018 年 5 月 11 日。",
       "/book/artempath/anderson-wide.jpg",
     ),
     plate(
       "Interacting at the Anderson Collection", "2018 · Anderson Collection, Stanford University", "2018",
-      "A visitor types her response in front of Mitchell's painting.",
-      "一位观众在米切尔的画前输入她的回应。",
+      "Installation view, in front of Mitchell's painting.",
+      "展览现场，米切尔的画前。",
       "/book/artempath/interface-and.jpg",
     ),
     plate(
@@ -78,14 +78,14 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
     ),
     plate(
       "Taking the printout away", "2018 · Anderson Collection, Stanford University", "2018",
-      "A visitor takes the printed response from the thermal printer.",
-      "一位观众从热敏打印机取走打印出的回应。",
+      "Installation view; a visitor collects the printed response.",
+      "展览现场，一位观众取走打印出的回应。",
       "/book/artempath/visualization.jpg",
     ),
     plate(
       "Field documentation, Anderson Collection", "2018 · Anderson Collection, Stanford University", "2018",
-      "Visitors engaging with the system at the Anderson Collection, May 11, 2018.",
-      "2018 年 5 月 11 日，观众在安德森收藏馆与系统互动的现场记录。",
+      "Installation view, May 11, 2018.",
+      "展览现场，2018 年 5 月 11 日。",
       "/book/artempath/anderson-grid.jpg",
     ),
   ],
@@ -307,8 +307,8 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
     ),
     plate(
       "Feed Scanner installed", "2018 · Stanford", "2018",
-      "The work installed: the live feed on one screen, the reading interface on the other.",
-      "作品的布展现场：一个屏幕是实时信息流，另一个是阅读界面。",
+      "Installation view: the live feed on one screen, the reading interface on the other.",
+      "展览现场：一个屏幕是实时信息流，另一个是阅读界面。",
       "/book/feedscanner/installation.jpg",
     ),
   ],

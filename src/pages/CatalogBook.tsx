@@ -76,6 +76,7 @@ type PageSpec =
   | { kind: "essay"; chapter: Chapter; chunk: number }
   | { kind: "exhibitions"; chapter: Chapter }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
+  | { kind: "plateGrid"; chapter: Chapter; entries: { item: CatalogItem; plate: number }[] }
   | { kind: "bleed"; half: "left" | "right"; chapter: Chapter; item: CatalogItem }
   | { kind: "aphorism"; half: "left" | "right"; aphorism: Aphorism }
   | { kind: "about"; chunk: number }
@@ -365,90 +366,6 @@ function chunkItems(items: EssayItem[], maxChars: number, cost: ChunkCost): Essa
   return out;
 }
 
-/** Build the interleaved item stream for an illustrated long-text chapter
- * (her direction, 2026-11-05): each English paragraph is immediately
- * followed by its Chinese counterpart, instead of the whole English text
- * first and the whole Chinese text after. zhItems must be index-aligned
- * with enItems; zhExtrasAfter maps an English paragraph index to extra
- * Chinese-only items that belong right after that pair (e.g. a diary post
- * kept whole on the Chinese side). Returns the stream plus, for each
- * paragraph pair, the stream index of its last item. */
-function pairStream(
-  enItems: EssayItem[],
-  zhItems: EssayItem[],
-  zhExtrasAfter?: Map<number, EssayItem[]>,
-): { stream: EssayItem[]; pairEnd: number[] } {
-  const stream: EssayItem[] = [];
-  const pairEnd: number[] = [];
-  enItems.forEach((en, i) => {
-    stream.push(en);
-    if (zhItems[i]) stream.push(zhItems[i]);
-    const extras = zhExtrasAfter?.get(i);
-    if (extras) stream.push(...extras);
-    pairEnd.push(stream.length - 1);
-  });
-  for (let j = enItems.length; j < zhItems.length; j++) stream.push(zhItems[j]);
-  return { stream, pairEnd };
-}
-
-/** Chunk a mixed-language item stream into pages. A Chinese character
- * costs ~1.7 English ones (the ratio between the two single-language
- * budgets, 1500 and 880); paragraph breaks and <br />s are charged as in
- * chunkItems, and the first chunk is pre-charged for the chapter head.
- * Pairs normally stay on one page; a pair wider than a whole page splits
- * across the page turn, with the Chinese still immediately after its
- * English paragraph. A subheading is never left as a page's last item.
- * Returns the chunks plus, for each stream item, its chunk index (used to
- * anchor plates inside the flow). */
-function chunkMixed(
-  items: EssayItem[],
-  maxCost = 1500,
-  headSeed = 160,
-): { chunks: EssayChunk[]; itemChunk: number[] } {
-  const cost = (it: EssayItem) => {
-    const text = plainText(it.html);
-    const weighted = hasCjk(text) ? text.length * 1.7 : text.length;
-    return weighted + 21 + (it.html.match(/<br/g) ?? []).length * 64;
-  };
-  const isHead = (it: EssayItem) =>
-    /^<p><strong>[\s\S]*<\/strong><\/p>$/.test(it.html.trim()) && plainText(it.html).length < 120;
-  const chunks: EssayChunk[] = [];
-  const itemChunk: number[] = [];
-  let cur: EssayItem[] = [];
-  let curIdx: number[] = [];
-  let len = headSeed;
-  const flush = () => {
-    if (cur.length === 0) return;
-    const ci = chunks.length;
-    chunks.push({ lang: "mixed", items: cur });
-    for (const ix of curIdx) itemChunk[ix] = ci;
-    cur = [];
-    curIdx = [];
-    len = 0;
-  };
-  items.forEach((it, ix) => {
-    const n = cost(it);
-    if (cur.length > 0 && len + n > maxCost) {
-      const last = cur[cur.length - 1];
-      if (cur.length > 1 && isHead(last)) {
-        const headItem = cur.pop()!;
-        const headIx = curIdx.pop()!;
-        flush();
-        cur = [headItem];
-        curIdx = [headIx];
-        len = cost(headItem);
-      } else {
-        flush();
-      }
-    }
-    cur.push(it);
-    curIdx.push(ix);
-    len += n;
-  });
-  flush();
-  return { chunks: chunks.length > 0 ? chunks : [{ lang: "mixed" as const, items: [] }], itemChunk };
-}
-
 /** Group a chapter essay's <p> blocks into page-sized chunks by plain-text length. */
 
 /** A "remains" aphorism spread: one sentence of hers alone across two
@@ -697,6 +614,22 @@ const SPIRIT_GROUP_PLATES: Record<string, string> = {
 // ── Pagination ────────────────────────────────────────────────────────────────
 // Odd pages are rectos (right-hand), even pages versos. Chapter openers are two-page spreads,
 // so they must start on a verso; a blank is inserted before them whenever needed.
+/** Objects-chapter smalls (her grouping rule, 2026-11-07: only this
+ *  chapter groups; every work still gets its own caption). A work is
+ *  groupable when its largest stated dimension is at most 8 in (or
+ *  200 mm), or when it is one of the Slightly Useful Objects series
+ *  photographs — the plates that carry the series title itself rather
+ *  than a work title: the series' small objects, documented in use.
+ *  No stated size and a title of its own -> keeps its own page. */
+const smallObject = (item: CatalogItem): boolean => {
+  const d = `${item.dimensions ?? ""} ${item.medium ?? ""}`;
+  const inNums = [...d.matchAll(/(\d+(?:\.\d+)?)\s*(?:"|″|inches|in\b)/gi)].map((m) => parseFloat(m[1]));
+  if (inNums.length) return Math.max(...inNums) <= 8;
+  const mmNums = [...d.matchAll(/(\d+(?:\.\d+)?)\s*mm/gi)].map((m) => parseFloat(m[1]));
+  if (mmNums.length) return Math.max(...mmNums) <= 200;
+  return false;
+};
+
 function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkCount: number, essayChunkCounts: Record<string, number>): InteriorPage[] {
   const specs: PageSpec[] = [];
   const nextIsVerso = () => (specs.length + 1) % 2 === 0;
@@ -802,11 +735,41 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         specs.push({ kind: "bleed", half: "right", chapter, item: PRE_IPHONE_ERA_PLATE });
       }
       let heldBackEmitted = false;
-      for (const { item, plate } of chapter.items) {
-        specs.push({ kind: "plate", chapter, item, plate });
-        if (holdBack && !heldBackEmitted && item.image_url === holdBack.imageUrl) {
+      const emitHeldBack = () => {
+        if (holdBack && !heldBackEmitted) {
           for (let i = leadCount; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
           heldBackEmitted = true;
+        }
+      };
+      if (chapter.key === "shop") {
+        // Objects chapter only: small works share a page, up to four to
+        // a grid, each with its own caption (her grouping rule,
+        // 2026-11-07). Everything else keeps a page of its own, and
+        // every other chapter stays one work per page.
+        let group: { item: CatalogItem; plate: number }[] = [];
+        const flushGroup = () => {
+          if (group.length >= 2) specs.push({ kind: "plateGrid", chapter, entries: group });
+          else if (group.length === 1) specs.push({ kind: "plate", chapter, item: group[0].item, plate: group[0].plate });
+          group = [];
+        };
+        for (const { item, plate } of chapter.items) {
+          if (item.title === chapter.titleEn || smallObject(item)) {
+            group.push({ item, plate });
+            if (group.length === 4) flushGroup();
+          } else {
+            flushGroup();
+            specs.push({ kind: "plate", chapter, item, plate });
+          }
+          if (holdBack && item.image_url === holdBack.imageUrl) {
+            flushGroup();
+            emitHeldBack();
+          }
+        }
+        flushGroup();
+      } else {
+        for (const { item, plate } of chapter.items) {
+          specs.push({ kind: "plate", chapter, item, plate });
+          if (holdBack && item.image_url === holdBack.imageUrl) emitHeldBack();
         }
       }
       if (holdBack && !heldBackEmitted) {
@@ -1395,7 +1358,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 <div className="bk-essay-meta sans-label">{chapter.years}</div>
               </div>
             )}
-            <div className="bk-essay-text description-html">
+            <div className={`bk-essay-text description-html ${items.reduce((n, it) => n + plainText(it.html).length, 0) > 450 ? "bk-essay-cols" : ""}`}>
               {items.map((it, i) => (
                 <p
                   key={i}
@@ -1430,6 +1393,30 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               )}
               {item.description && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: item.description }} />}
             </div>
+          </div>
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+        </Page>
+      );
+    }
+
+    case "plateGrid": {
+      const { chapter, entries } = spec;
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-plate-page">
+          <div className={`bk-plate-grid bk-grid-${entries.length}`}>
+            {entries.map(({ item }) => (
+              <div className="bk-grid-cell" key={item.image_url}>
+                <div className="bk-grid-frame">
+                  <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
+                </div>
+                <div className="bk-grid-caption">
+                  <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
+                  {(item.metaLine || item.dimensions) && (
+                    <div className="bk-caption-meta">{[item.metaLine, item.dimensions].filter(Boolean).join(" · ")}</div>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
           <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
         </Page>
@@ -1873,10 +1860,22 @@ function useBookModel(args: {
     const fieldItems = (key: CatalogSectionKey, which: "en" | "zh"): EssayItem[] =>
       pBlocks(asParas(fieldText(key, which))).map((html) => ({ html, edit: `field:${key}:${which}` }));
     const paraItems = (paras: ParaItem[]): EssayItem[] => paras.map((p) => ({ html: `<p>${p.text}</p>`, edit: p.edit }));
+    // Essay page budgets, calibrated to the two-column measure the essay
+    // renderer now uses for long pages (her direction, 2026-11-07, after
+    // Kim Hastreiter's STUFF: dense text pages against the book's quiet
+    // ones). First pass (budgets 2200/1300) still left the lower half of
+    // text pages empty, so the budgets were re-measured in a faithful
+    // render harness (real CSS, real texts, checked against her preview
+    // screenshots): EN 2800, CN 1400, with thicker headSeed so first
+    // pages keep clear of the foot, and the two-column switch lowered
+    // to pages over 450 chars — a many-short-paragraphs page overflows
+    // the narrow single column long before it fills a two-column page.
+    // Preface and painting-intro pages keep their own smaller
+    // chunkParas budgets: they are the quiet pole.
     const langChunks = (en: EssayItem[], zh: EssayItem[]): EssayChunk[] => {
       const all = [
-        ...chunkItems(en, 1500, { overhead: 20, brCost: 68 }).map((items) => ({ lang: "en" as const, items })),
-        ...chunkItems(zh, 880, { overhead: 22, brCost: 34, headSeed: 160 }).map((items) => ({ lang: "zh" as const, items })),
+        ...chunkItems(en, 2800, { overhead: 14, brCost: 48, headSeed: 330 }).map((items) => ({ lang: "en" as const, items })),
+        ...chunkItems(zh, 1400, { overhead: 15, brCost: 24, headSeed: 230 }).map((items) => ({ lang: "zh" as const, items })),
       ];
       return all.length > 0 ? all : [{ lang: "en", items: [] }];
     };
@@ -1892,9 +1891,11 @@ function useBookModel(args: {
         }
         const anchors = s ? SERIES_PLATE_ANCHORS[s.id] : undefined;
         if (s && anchors && enT && zhT) {
-          // Illustrated long-text chapter (her direction, 2026-11-05):
-          // paragraph pairs instead of language blocks, plates anchored
-          // inside the flow (see SERIES_PLATE_ANCHORS / plateBreaks).
+          // Illustrated long-text chapter: plates anchored inside the
+          // text flow (see SERIES_PLATE_ANCHORS / plateBreaks). The text
+          // itself runs as language blocks, English first, then Chinese
+          // (her direction, 2026-11-07, replacing the 2026-11-05
+          // paragraph-pair interleave).
           const enBlocks = pBlocks(asParas(enT)).map((html) => ({ html, edit: `series:${s.id}:en` }));
           let zhBlocks = pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s.id}:zh` }));
           let zhExtras: Map<number, EssayItem[]> | undefined;
@@ -1923,15 +1924,32 @@ function useBookModel(args: {
             if (extra) zhExtras?.set(9, extra.map((it, i) => indentItem(it, i === extra.length - 1)));
           }
           if (zhBlocks.length === enBlocks.length) {
-            const { stream, pairEnd } = pairStream(enBlocks, zhBlocks, zhExtras);
-            const { chunks, itemChunk } = chunkMixed(stream);
-            essayChunks[chapter.key] = chunks;
+            // Dual-stream: chunk each language on its own (same budgets
+            // as langChunks), English chunks first, then Chinese. Plates
+            // anchor inside the English flow, after the chunk holding
+            // their anchor paragraph. Chinese-only extras keep their
+            // aligned place inside the Chinese flow, right after the
+            // block they belong to.
+            const enChunked = chunkItems(enBlocks, 2800, { overhead: 14, brCost: 48, headSeed: 330 });
+            const enItemChunk = new Map<EssayItem, number>();
+            enChunked.forEach((items, ci) => items.forEach((it) => enItemChunk.set(it, ci)));
+            const zhStream: EssayItem[] = [];
+            zhBlocks.forEach((it, i) => {
+              zhStream.push(it);
+              const extras = zhExtras?.get(i);
+              if (extras) zhStream.push(...extras);
+            });
+            essayChunks[chapter.key] = [
+              ...enChunked.map((items) => ({ lang: "en" as const, items })),
+              ...chunkItems(zhStream, 1400, { overhead: 15, brCost: 24, headSeed: 230 }).map((items) => ({ lang: "zh" as const, items })),
+            ];
             chapter.plateBreaks = {};
             chapter.plateAnchorOrder = anchors.map((a) => a.image);
             for (const a of anchors) {
-              const endIx = pairEnd[a.afterPair];
-              if (endIx !== undefined && itemChunk[endIx] !== undefined) {
-                chapter.plateBreaks[a.image] = itemChunk[endIx] + 1;
+              const anchorItem = enBlocks[a.afterPair];
+              const ci = anchorItem ? enItemChunk.get(anchorItem) : undefined;
+              if (ci !== undefined) {
+                chapter.plateBreaks[a.image] = ci + 1;
               }
             }
           } else {
@@ -2064,8 +2082,8 @@ function useBookModel(args: {
           }
           enGroupEnd.set(g.id, enStream.length - 1);
         }
-        const enChunked = chunkItems(enStream, 1500, { overhead: 20, brCost: 68 });
-        const zhChunked = chunkItems(zhStream, 880, { overhead: 22, brCost: 34, headSeed: 160 });
+        const enChunked = chunkItems(enStream, 2800, { overhead: 14, brCost: 48, headSeed: 330 });
+        const zhChunked = chunkItems(zhStream, 1400, { overhead: 15, brCost: 24, headSeed: 230 });
         essayChunks[chapter.key] = [
           ...enChunked.map((items) => ({ lang: "en" as const, items })),
           ...zhChunked.map((items) => ({ lang: "zh" as const, items })),
