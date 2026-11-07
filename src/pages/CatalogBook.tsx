@@ -1957,7 +1957,17 @@ function useBookModel(args: {
         // rule for source lines in the book.
         const noteEn: EssayItem = { html: "<p><span class=\"bk-credit\">July 12, 2023, Mexico · Azcapotzalco</span></p>" };
         const noteZh: EssayItem = { html: "<p><span class=\"bk-credit\">2023 年 7 月 12 日，墨西哥 · Azcapotzalco</span></p>" };
-        essayChunks[chapter.key] = langChunks([leadEn, ...paraItems(paras.filter((p) => !hasCjk(p.text))), noteEn], [leadZh, ...paraItems(paras.filter((p) => hasCjk(p.text))), noteZh]);
+        // Her series statement from the Canva painting book follows the
+        // Facebook-post text (her order, 2026-11-06: the Rivera text in
+        // front, this statement after). The English is her own wording,
+        // verbatim; the Chinese is Beignet's translation, pending her
+        // review. It stands after the source line, which belongs to the
+        // Facebook post alone.
+        const stmtEn1: EssayItem = { html: "<p>Remains was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions.</p>" };
+        const stmtEn2: EssayItem = { html: "<p>The series borrows its visual grammar from these figurines from different civilizations and historical periods, and drops them into the theater of contemporary daily life.</p>" };
+        const stmtZh1: EssayItem = { html: "<p>《遗迹》是一个综合材料系列，起于一种微妙的荒诞感。研究古代陶俑时，我被它们的表情吸引：亲切，笨拙，像是什么都没有做，就停在那一刻。</p>" };
+        const stmtZh2: EssayItem = { html: "<p>这个系列的视觉语法就借自这些陶俑。它们来自不同的文明、不同的历史时期，我把它们放进当代日常生活的剧场。</p>" };
+        essayChunks[chapter.key] = langChunks([leadEn, ...paraItems(paras.filter((p) => !hasCjk(p.text))), noteEn, stmtEn1, stmtEn2], [leadZh, ...paraItems(paras.filter((p) => hasCjk(p.text))), noteZh, stmtZh1, stmtZh2]);
       } else if (chapter.key === "photography") {
         const head: EssayItem = { html: "<p>El Otro, El Mismo</p>" };
         const otro = txParas("elOtroEssayBody");
