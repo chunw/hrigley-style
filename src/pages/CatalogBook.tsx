@@ -725,7 +725,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       pushAphorism(APHORISMS["what-remains"]);
       for (let i = 0; i < paintingChunkCount; i++) specs.push({ kind: "painting-intro", chunk: i });
       // Collage as Method stands with its work (her direction, 2026-11-05):
-      // the 2018 Untitled (Collage) plate and the method essay together,
+      // the 2018 collage plate (MURDER VALENTINE) and the method essay together,
       // right after the painting part's introduction. The essay leaves the
       // front matter; the plate leaves the end of the Remains chapter.
       const collageChapter: Chapter = { key: "collage", number: 0, title: "Collage as Method · 作为方法的拼贴", titleEn: "Collage as Method", titleZh: "作为方法的拼贴", descriptionHtml: "", items: [], years: "2018" };
@@ -1702,6 +1702,10 @@ function useBookModel(args: {
         }),
         years: yearRange(s.items.map((item) => item.year)),
       }));
+    // Her direction (2026-11-06): no year on the Spirit chapter — its
+    // opener and essay head print number and title only.
+    const spiritChapter = catalogChapters.find((ch) => ch.key === "spirit");
+    if (spiritChapter) spiritChapter.years = "";
     // Series sections that complete the outline but have no catalog plates yet
     // (Visions in Ceramics, the Screen & Archive and Live chapters),
     // merged with the catalog chapters in the book outline's order.
