@@ -668,13 +668,17 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     }
     // The earlier printed painting book (Canva, "Chun Wang: Paintings
     // 2019–2026") is bound into the painting part as a facsimile block at
-    // the end of the part, right before Part 2 opens (her direction,
-    // 2026-11-06: add it in as it stands, duplicates kept). Her review
+    // the end of the part, right before the following part opens (her
+    // direction, 2026-11-06: add it in as it stands, duplicates kept).
+    // The block belongs to the painting part, so when the parts were
+    // reordered (her direction, 2026-11-07) it stayed at the end of
+    // Part 1: it keys on Inner Wilderness, the part that now follows
+    // painting, not on the triptych. Her review
     // cuts the same day: the Canva cover (p.1), the egg page (p.5) and
     // the whole tail from the Remains divider to the back cover
     // (pp. 23–44) are removed; pp. 2–4 and 6–22 stand.
     const CANVA_KEPT_PAGES = [2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
-    if (chapter.key === "series:triptych") {
+    if (chapter.key === "innerwilderness") {
       for (const p of CANVA_KEPT_PAGES) specs.push({ kind: "canva", page: p });
     }
     const aphorismId = APHORISM_BEFORE_CHAPTER[chapter.key];
@@ -1092,13 +1096,13 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // the contents stays clean, the body text is untouched.
       const PART_OF: Record<string, number> = {
         spirit: 1, remains: 1, residuals: 1, stillthings: 1, road: 1,
-        "series:immemory": 2, "series:cavedance": 2, "series:negotiated": 2,
-        innerwilderness: 3, deathvalley: 3, sahara: 3, highlands: 3, theater: 3, photography: 3, "series:nostalgia": 3,
-        "series:unfinished": 4, "series:google": 4, "series:feedscanner": 4, "series:earlyline": 4, "series:soliloquy": 4, "series:artempath": 4,
+        innerwilderness: 2, deathvalley: 2, sahara: 2, highlands: 2, theater: 2, photography: 2, "series:nostalgia": 2,
+        "series:unfinished": 3, "series:google": 3, "series:feedscanner": 3, "series:earlyline": 3, "series:soliloquy": 3, "series:artempath": 3,
+        "series:immemory": 4, "series:cavedance": 4, "series:negotiated": 4,
         shop: 5,
       };
       const PART_NUMERAL = ["1", "2", "3", "4", "5"];
-      const PART_HEAD_KEY: Record<number, string> = { 2: "series:triptych", 3: "innerwilderness", 4: "series:unfinishedpart", 5: "shop" };
+      const PART_HEAD_KEY: Record<number, string> = { 2: "innerwilderness", 3: "series:unfinishedpart", 4: "series:triptych", 5: "shop" };
       const partTitlePair = (p: number): { en: string; zh?: string } => {
         if (p === 1) return { en: translations.en.catalogBook.paintingIntro, zh: translations.zh.catalogBook.paintingIntro };
         const head = chapters.find((c) => c.key === PART_HEAD_KEY[p]);
@@ -1120,8 +1124,8 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         rows.push({ num: "", titleEn: t.en, titleZh: t.zh, sub: "", page: partPage(p), part: PART_NUMERAL[p - 1] });
       };
       for (const c of chapters) {
-        if (c.key === "series:triptych") { pushPart(2); continue; }
-        if (c.key === "series:unfinishedpart") { pushPart(4); continue; }
+        if (c.key === "series:triptych") { pushPart(4); continue; }
+        if (c.key === "series:unfinishedpart") { pushPart(3); continue; }
         const p = PART_OF[c.key];
         if (p) {
           pushPart(p);
@@ -1749,13 +1753,16 @@ function useBookModel(args: {
     // 2026-11-05): a part opening, "Rooms, Scores, Decisions", then the
     // triptych in the order the IMMEMORY text itself names — first panel
     // first: IMMEMORY, Cave Dance, Negotiated Intelligence.
+    // Part order (her direction, 2026-11-07): the website works move to
+    // the back — Painting, Inner Wilderness, The Unfinished Archive,
+    // Rooms/Scores/Decisions, Slightly Useful Objects.
     const SECTION_ORDER = [
       "spirit", "remains", "residuals", "stillthings", "road",
-      "series:triptych", "series:immemory", "series:cavedance", "series:negotiated",
       "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography",
       "series:unfinishedpart", "series:unfinished", "series:google",
       "series:feedscanner", "series:earlyline",
       "series:soliloquy", "series:artempath",
+      "series:triptych", "series:immemory", "series:cavedance", "series:negotiated",
       "shop",
       "series:interview",
     ];
