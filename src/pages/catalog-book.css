@@ -1856,6 +1856,12 @@
 .bk-tocmap-p5 { margin-left: 1.5in; }
 .bk-tocmap-tail { margin-left: 0.3in; margin-top: auto; }
 
+/* ── Dated passages ──────────────────────────────────────────────────
+   Her own writings that carry a date are set in the book's rust-brown
+   ink, so the date is felt in the text itself; no other device marks
+   them (her direction, 2026-11-06). */
+.bk-dated { color: #8A3C00; }
+
 /* ── Facsimile pages: the earlier printed painting book (Canva) ───── */
 .bk-canva-frame {
   flex: 1;
