@@ -611,18 +611,9 @@ const REVERSE_INDEX_CHUNKS: number[][] = [
   [3, 4, 5], // 痕迹 · 没说完的话 · 没吃完的
 ];
 
-/** Print rule (her direction, 2026-10-25): website links are written out in
- * the book so print readers can look works up online. Works with a site of
- * their own carry the URL at the end of their essay (see the essayChunks
- * assembly below), and the colophon lists them all. Only verified URLs are
- * printed; the rest wait for her confirmation (book board note, 2026-10-25). */
-const ONLINE_URLS: Record<string, string> = {
-  remains: "chunwangshop.com/remains-catalog",
-  immemory: "covid-immemory.com",
-  cavedance: "cavedance.art",
-  artempath: "art.empath.io",
-  interview: "shoutoutatlanta.com/meet-chun-wang-artist",
-};
+/** Print rule (her direction, 2026-11-06): no online-lookup lines and no
+ * bare URLs are printed anywhere in the book. (The 2026-10-25 apparatus
+ * that wrote each web work's URL out at the end of its essay is removed.) */
 
 /** In-text plate anchors for the illustrated long-text chapters (her
  * direction, 2026-11-05): each listed plate is emitted right after the
@@ -1702,6 +1693,10 @@ function useBookModel(args: {
         }),
         years: yearRange(s.items.map((item) => item.year)),
       }));
+    // Her direction (2026-11-06): no year on the Spirit chapter — its
+    // opener and essay head print number and title only.
+    const spiritChapter = catalogChapters.find((ch) => ch.key === "spirit");
+    if (spiritChapter) spiritChapter.years = "";
     // Series sections that complete the outline but have no catalog plates yet
     // (Visions in Ceramics, the Screen & Archive and Live chapters),
     // merged with the catalog chapters in the book outline's order.
@@ -2111,27 +2106,7 @@ function useBookModel(args: {
         essayChunks[chapter.key] = [{ lang: "en", items: [] }];
       }
     }
-    // Written-out website links (print rule above): the URL goes on the last
-    // essay page of each language, in the small credit style.
-    for (const chapter of chapters) {
-      const oid = chapter.key.startsWith("series:") ? chapter.key.slice("series:".length) : chapter.key;
-      const url = ONLINE_URLS[oid];
-      const chunks = essayChunks[chapter.key];
-      if (!url || !chunks) continue;
-      // Interleaved chapters (paragraph pairs) carry both lines on their
-      // last mixed chunk.
-      const mixedC = chunks.filter((c) => c.lang === "mixed").pop();
-      if (mixedC && mixedC.items.length > 0) {
-        mixedC.items.push({ html: `<p><span class="bk-credit">Online · ${url}</span></p>` });
-        mixedC.items.push({ html: `<p><span class="bk-credit">在线查阅 · ${url}</span></p>` });
-        continue;
-      }
-      const lastOf = (lang: "en" | "zh") => chunks.filter((c) => c.lang === lang).pop();
-      const enC = lastOf("en");
-      const zhC = lastOf("zh");
-      if (enC && enC.items.length > 0) enC.items.push({ html: `<p><span class="bk-credit">Online · ${url}</span></p>` });
-      if (zhC && zhC.items.length > 0) zhC.items.push({ html: `<p><span class="bk-credit">在线查阅 · ${url}</span></p>` });
-    }
+    // (No online-lookup lines are appended: print rule, 2026-11-06.)
     const byKey = (key: CatalogSectionKey) => chapters.find((c) => c.key === key)?.items.map((i) => i.item) ?? [];
     const prefaceParas = txParas("prefaceBody");
     const paintingParas = txParas("paintingIntroBody");
