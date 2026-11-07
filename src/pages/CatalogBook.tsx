@@ -948,37 +948,51 @@ function PlateCtl({ ctx, slot }: { ctx: BookContext; slot: number }) {
     [order[i], order[j]] = [order[j], order[i]];
     set({ order });
   };
-  const cycleSize = () => {
-    const next = size === "full" ? "large" : size === "large" ? "medium" : "full";
-    set({ size: { ...(edits.size ?? {}), [slot]: next } });
-  };
+  const setSize = (next: "full" | "large" | "medium") => set({ size: { ...(edits.size ?? {}), [slot]: next } });
   const swapTo = (url: string | null) => {
     const swap = { ...(edits.swap ?? {}) };
     if (url) swap[slot] = url;
     else delete swap[slot];
     set({ swap });
-    setOpen(false);
   };
   const dirty = !!(edits.order || edits.swap || edits.size || edits.hidden?.length);
   return (
     <div className="bk-plate-ctl" data-noprint>
-      <div className="bk-plate-ctl-row">
-        <button type="button" className="bk-pagebg-btn" onClick={() => setOpen((v) => !v)}>换图</button>
-        <button type="button" className="bk-pagebg-btn" onClick={cycleSize}>尺寸 · {size === "full" ? "整版" : size === "large" ? "大" : "中"}</button>
-        <button type="button" className="bk-pagebg-btn" onClick={() => move(-1)}>↑ 前移</button>
-        <button type="button" className="bk-pagebg-btn" onClick={() => move(1)}>↓ 后移</button>
-        <button type="button" className="bk-pagebg-btn" onClick={() => set({ hidden: [...(edits.hidden ?? []), slot] })}>隐藏</button>
-        {edits.hidden?.length ? <button type="button" className="bk-pagebg-btn" onClick={() => set({ hidden: [] })}>显示全部</button> : null}
-        {dirty ? <button type="button" className="bk-pagebg-btn" onClick={() => ctx.setPlateEdits({})}>重置</button> : null}
-      </div>
+      <button type="button" className="bk-pagebg-btn bk-plate-entry" onClick={() => setOpen((v) => !v)}>
+        图版调整{dirty ? " ·" : ""}
+      </button>
       {open && (
-        <div className="bk-plate-strip">
-          {ctx.remainsPool.map((item) => (
-            <button key={item.image_url} type="button" className="bk-plate-thumb" onClick={() => swapTo(item.image_url)} title={item.title}>
-              <img src={item.image_url} alt={item.title} />
-            </button>
-          ))}
-          <button type="button" className="bk-pagebg-btn" onClick={() => swapTo(null)}>原图</button>
+        <div className="bk-plate-panel">
+          <div className="bk-plate-sec">
+            <div className="bk-plate-sec-label">换图</div>
+            <div className="bk-plate-strip">
+              {ctx.remainsPool.map((item) => (
+                <button key={item.image_url} type="button" className="bk-plate-thumb" onClick={() => swapTo(item.image_url)} title={item.title}>
+                  <img src={item.image_url} alt={item.title} />
+                </button>
+              ))}
+              <button type="button" className="bk-pagebg-btn" onClick={() => swapTo(null)}>原图</button>
+            </div>
+          </div>
+          <div className="bk-plate-sec">
+            <div className="bk-plate-sec-label">尺寸</div>
+            <div className="bk-plate-ctl-row">
+              <button type="button" className={`bk-pagebg-btn ${size === "full" ? "bk-pagebg-on" : ""}`} onClick={() => setSize("full")}>整版</button>
+              <button type="button" className={`bk-pagebg-btn ${size === "large" ? "bk-pagebg-on" : ""}`} onClick={() => setSize("large")}>大</button>
+              <button type="button" className={`bk-pagebg-btn ${size === "medium" ? "bk-pagebg-on" : ""}`} onClick={() => setSize("medium")}>中</button>
+            </div>
+          </div>
+          <div className="bk-plate-sec">
+            <div className="bk-plate-sec-label">位置与显隐</div>
+            <div className="bk-plate-ctl-row">
+              <button type="button" className="bk-pagebg-btn" onClick={() => move(-1)}>↑ 前移</button>
+              <button type="button" className="bk-pagebg-btn" onClick={() => move(1)}>↓ 后移</button>
+              <button type="button" className="bk-pagebg-btn" onClick={() => set({ hidden: [...(edits.hidden ?? []), slot] })}>隐藏本张</button>
+              {edits.hidden?.length ? <button type="button" className="bk-pagebg-btn" onClick={() => set({ hidden: [] })}>显示全部</button> : null}
+              {dirty ? <button type="button" className="bk-pagebg-btn" onClick={() => ctx.setPlateEdits({})}>重置本章</button> : null}
+            </div>
+          </div>
+          <button type="button" className="bk-pagebg-btn bk-plate-done" onClick={() => setOpen(false)}>完成</button>
         </div>
       )}
     </div>
