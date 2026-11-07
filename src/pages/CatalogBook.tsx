@@ -716,7 +716,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       pushAphorism(APHORISMS["what-remains"]);
       for (let i = 0; i < paintingChunkCount; i++) specs.push({ kind: "painting-intro", chunk: i });
       // Collage as Method stands with its work (her direction, 2026-11-05):
-      // the 2018 collage plate (MURDER VALENTINE) and the method essay together,
+      // the 2018 Untitled (Collage) plate and the method essay together,
       // right after the painting part's introduction. The essay leaves the
       // front matter; the plate leaves the end of the Remains chapter.
       const collageChapter: Chapter = { key: "collage", number: 0, title: "Collage as Method · 作为方法的拼贴", titleEn: "Collage as Method", titleZh: "作为方法的拼贴", descriptionHtml: "", items: [], years: "2018" };
@@ -1693,10 +1693,6 @@ function useBookModel(args: {
         }),
         years: yearRange(s.items.map((item) => item.year)),
       }));
-    // Her direction (2026-11-06): no year on the Spirit chapter — its
-    // opener and essay head print number and title only.
-    const spiritChapter = catalogChapters.find((ch) => ch.key === "spirit");
-    if (spiritChapter) spiritChapter.years = "";
     // Series sections that complete the outline but have no catalog plates yet
     // (Visions in Ceramics, the Screen & Archive and Live chapters),
     // merged with the catalog chapters in the book outline's order.
@@ -1986,64 +1982,80 @@ function useBookModel(args: {
           zhT ? pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s?.id}:zh` })) : [],
         );
       } else if (chapter.key === "spirit") {
-        // Illustrated-chapter layout (her direction, 2026-11-05): the
-        // series overview, her own Inundated post and the eight sub-series'
-        // background texts run as English/Chinese paragraph pairs — group
-        // headings and source credits print once, bilingually, as part of
-        // the pair flow — and each sub-series' painting stands right after
-        // its own text group instead of in a block after the chapter (see
-        // SPIRIT_GROUP_PLATES / plateBreaks). Her GenAI statement has no
-        // Chinese text (no parasZh) and runs English-only inside the flow.
-        const stream: EssayItem[] = [];
-        const groupEnd = new Map<string, number>();
-        const pushPair = (en: EssayItem, zh?: EssayItem) => {
-          stream.push(en);
-          if (zh) stream.push(zh);
+        // Essay layout (her direction, 2026-11-06, replacing the
+        // 2026-11-05 paragraph-pair interleave): the whole English essay
+        // runs first, then the whole Chinese essay, no interleaving. Each
+        // background group's painting anchors inside the English essay,
+        // right after the chunk where its group text ends (see
+        // plateBreaks); the Chinese essay then runs clean. Her GenAI
+        // statement has no Chinese text (no parasZh) and stays
+        // English-only inside the flow.
+        const enStream: EssayItem[] = [];
+        const zhStream: EssayItem[] = [];
+        const enGroupEnd = new Map<string, number>();
+        const pushBoth = (en: EssayItem, zh?: EssayItem) => {
+          enStream.push(en);
+          if (zh) zhStream.push(zh);
         };
         const ovEn = fieldItems("spirit", "en");
         const ovZh = fieldItems("spirit", "zh");
-        ovEn.forEach((it, i) => pushPair(it, ovZh[i]));
-        for (let j = ovEn.length; j < ovZh.length; j++) stream.push(ovZh[j]);
+        ovEn.forEach((it, i) => pushBoth(it, ovZh[i]));
+        for (let j = ovEn.length; j < ovZh.length; j++) zhStream.push(ovZh[j]);
         // Her bridge sentence (chosen by her, 2026-11-05): it ties the
         // series to the book's theme — reports and data wash away, the
         // paintings hold them. Book-only: it speaks for this volume, so it
         // stays out of the shop's shared series description in 21spirit.ts.
-        pushPair(
+        pushBoth(
           { html: "<p>Reports and data get washed away by newer information. These paintings fix them in place, this era's way of leaving something of itself.</p>", edit: "spiritbridge" },
           { html: "<p>报道和数据会被新的信息冲走。这些画把它们固定下来，是这个时代留下自己的方式。</p>", edit: "spiritbridge" },
         );
         // Her own first-person post on the painting Inundated (WeChat
         // Moments, March 28, 2018) stands right after the series overview,
         // ahead of the borrowed background texts: her voice first, then the
-        // texts the paintings answer to. Bilingual, like her other texts.
-        pushPair(
+        // texts the paintings answer to.
+        pushBoth(
           { html: `<p><span class="bk-credit">${SPIRIT_MOMENT.labelEn}</span></p>`, edit: "spiritmoment:inundated" },
           { html: `<p><span class="bk-credit">${SPIRIT_MOMENT.labelZh}</span></p>`, edit: "spiritmoment:inundated" },
         );
-        pushPair(
+        pushBoth(
           { html: `<p>${SPIRIT_MOMENT.textEn}</p>`, edit: "spiritmoment:inundated" },
           { html: `<p>${SPIRIT_MOMENT.textZh}</p>`, edit: "spiritmoment:inundated" },
         );
         for (const g of SPIRIT_BACKGROUNDS) {
-          stream.push({ html: `<p><strong>${g.titleEn} ${g.titleZh}</strong></p>`, edit: `spiritbg:${g.id}` });
-          if (g.workTitle) stream.push({ html: `<p><strong>${g.workTitle}</strong></p>`, edit: `spiritbg:${g.id}` });
-          const toItem = (p: string | { head: string }): EssayItem => ({
-            html: typeof p === "string" ? `<p>${p}</p>` : `<p><strong>${p.head}</strong></p>`,
+          enStream.push({ html: `<p><strong>${g.titleEn}</strong></p>`, edit: `spiritbg:${g.id}` });
+          if (g.titleZh) zhStream.push({ html: `<p><strong>${g.titleZh}</strong></p>`, edit: `spiritbg:${g.id}` });
+          if (g.workTitle) enStream.push({ html: `<p><strong>${g.workTitle}</strong></p>`, edit: `spiritbg:${g.id}` });
+          const toBg = (para: string | { head: string }): EssayItem => ({
+            html: typeof para === "string" ? `<p>${para}</p>` : `<p><strong>${para.head}</strong></p>`,
             edit: `spiritbg:${g.id}`,
           });
-          g.paras.forEach((para, i) => pushPair(toItem(para), g.parasZh?.[i] ? toItem(g.parasZh[i]) : undefined));
-          if (g.credit) stream.push({ html: `<p><span class="bk-credit">${g.credit}</span></p>`, edit: `spiritbg:${g.id}` });
-          groupEnd.set(g.id, stream.length - 1);
+          g.paras.forEach((para, i) => {
+            enStream.push(toBg(para));
+            if (g.parasZh?.[i]) zhStream.push(toBg(g.parasZh[i]));
+          });
+          if (g.credit) {
+            // The group's source line closes the group in both essays.
+            enStream.push({ html: `<p><span class="bk-credit">${g.credit}</span></p>`, edit: `spiritbg:${g.id}` });
+            zhStream.push({ html: `<p><span class="bk-credit">${g.credit}</span></p>`, edit: `spiritbg:${g.id}` });
+          }
+          enGroupEnd.set(g.id, enStream.length - 1);
         }
-        const { chunks, itemChunk } = chunkMixed(stream);
-        essayChunks[chapter.key] = chunks;
+        const enChunked = chunkItems(enStream, 1500, { overhead: 20, brCost: 68 });
+        const zhChunked = chunkItems(zhStream, 880, { overhead: 22, brCost: 34, headSeed: 160 });
+        essayChunks[chapter.key] = [
+          ...enChunked.map((items) => ({ lang: "en" as const, items })),
+          ...zhChunked.map((items) => ({ lang: "zh" as const, items })),
+        ];
+        const enItemChunk = new Map<EssayItem, number>();
+        enChunked.forEach((items, ci) => items.forEach((it) => enItemChunk.set(it, ci)));
         chapter.plateBreaks = {};
         chapter.plateAnchorOrder = SPIRIT_BACKGROUNDS.map((g) => SPIRIT_GROUP_PLATES[g.id]).filter(Boolean);
         for (const [groupId, suffix] of Object.entries(SPIRIT_GROUP_PLATES)) {
-          const endIx = groupEnd.get(groupId);
+          const endIx = enGroupEnd.get(groupId);
           const found = chapter.items.find(({ item }) => item.image_url.endsWith(suffix));
-          if (endIx !== undefined && itemChunk[endIx] !== undefined && found) {
-            chapter.plateBreaks[found.item.image_url] = itemChunk[endIx] + 1;
+          if (endIx !== undefined && found) {
+            const ci = enItemChunk.get(enStream[endIx]);
+            if (ci !== undefined) chapter.plateBreaks[found.item.image_url] = ci + 1;
           }
         }
       } else if (fieldText(chapter.key, "en") || fieldText(chapter.key, "zh")) {
