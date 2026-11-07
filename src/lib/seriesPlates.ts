@@ -91,7 +91,7 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
   ],
   immemory: [
     plate(
-      "IMMEMORY open call", "2020 · covid-immemory.com", "2020",
+      "IMMEMORY open call", "2020", "2020",
       "The open call poster of IMMEMORY: On COVID-19, published on the project's website.",
       "《IMMEMORY：新冠记忆》发布在项目网站上的公开征集海报。",
       "/book/immemory/open-call.jpg",
@@ -358,9 +358,9 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
   // right after this plate (see Chapter.essayAfterPlate).
   earlyline: [
     plate(
-      "The Loss of Childhood", "2017 – 2018 · chunw.github.io/lost", "2018",
-      "The Loss of Childhood, series website (chunw.github.io/lost), full-page screenshot, captured 2026. Nine works, 2017–2018.",
-      "《消失的童年》系列网站（chunw.github.io/lost）全页截图，2026 年截取。系列共九件，2017–2018。",
+      "The Loss of Childhood", "2017 – 2018", "2018",
+      "The Loss of Childhood, series website, full-page screenshot, captured 2026. Nine works, 2017–2018.",
+      "《消失的童年》系列网站全页截图，2026 年截取。系列共九件，2017–2018。",
       "/book/earlyline/lost-series-page.png",
       "消失的童年",
     ),
@@ -435,7 +435,7 @@ export const DEATH_VALLEY_PLATES: CatalogItem[] = [1, 2, 3].map((n) => ({
  */
 export const REMAINS_ORIGIN_PLATES: CatalogItem[] = [
   plate(
-    "Untitled (Collage)", "2018 · Ink and watercolor on paper", "2018",
+    "谋杀情人节", "2018 · Ink and watercolor on paper", "2018",
     "Cut fragments, faces, a slumped figure, a hand, a knife, reassembled on a single sheet. Five years before the Remains figurines, the archive method of this book was already at work.",
     "剪下的碎片，面孔、瘫倒的人、一只手、一把刀，重新拼在一张纸上。比《遗迹》的陶俑早五年，本书的档案方法已经在这里了。",
     "/book/remains/collage-2018.jpg",
