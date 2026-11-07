@@ -1702,10 +1702,6 @@ function useBookModel(args: {
         }),
         years: yearRange(s.items.map((item) => item.year)),
       }));
-    // Her direction (2026-11-06): no year on the Spirit chapter — its
-    // opener and essay head print number and title only.
-    const spiritChapter = catalogChapters.find((ch) => ch.key === "spirit");
-    if (spiritChapter) spiritChapter.years = "";
     // Series sections that complete the outline but have no catalog plates yet
     // (Visions in Ceramics, the Screen & Archive and Live chapters),
     // merged with the catalog chapters in the book outline's order.
@@ -1840,6 +1836,10 @@ function useBookModel(args: {
     const chapters = SECTION_ORDER.map((k) => byChapterKey.get(k))
       .filter((ch): ch is Chapter => !!ch)
       .map((ch) => (ch.partIntro ? { ...ch, number: 0 } : { ...ch, number: ++chapterNo }));
+    // Her direction (2026-11-06): no chapter carries a year — openers and
+    // essay heads print number and title only. (Asked first for the
+    // Spirit chapter, then extended to all chapters the same evening.)
+    for (const ch of chapters) ch.years = "";
     // Slightly Useful Objects opens the shop chapter (Visions in Ceramics is
     // merged into it): the artist's Instagram images go ahead of the shop
     // catalog plates, in the order registered in SERIES_PLATES.shop.
