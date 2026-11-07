@@ -735,12 +735,15 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       firstChapter = false;
     }
     // The earlier printed painting book (Canva, "Chun Wang: Paintings
-    // 2019–2026", 44 square pages) is bound into the painting part as a
-    // facsimile block, as-is with its duplicates kept, at the end of the
-    // part — right before Part 2 opens (her direction, 2026-11-06: add
-    // it in as it stands; she reviews and cuts later).
+    // 2019–2026") is bound into the painting part as a facsimile block at
+    // the end of the part, right before Part 2 opens (her direction,
+    // 2026-11-06: add it in as it stands, duplicates kept). Her review
+    // cuts the same day: the Canva cover (p.1), the egg page (p.5) and
+    // the whole tail from the Remains divider to the back cover
+    // (pp. 23–44) are removed; pp. 2–4 and 6–22 stand.
+    const CANVA_KEPT_PAGES = [2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
     if (chapter.key === "series:triptych") {
-      for (let p = 1; p <= 44; p++) specs.push({ kind: "canva", page: p });
+      for (const p of CANVA_KEPT_PAGES) specs.push({ kind: "canva", page: p });
     }
     const aphorismId = APHORISM_BEFORE_CHAPTER[chapter.key];
     if (aphorismId) pushAphorism(APHORISMS[aphorismId]);
