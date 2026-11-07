@@ -1862,6 +1862,9 @@
    sides, so the passage reads as an indented column, date line
    included. The text itself is untouched. */
 .bk-indent { display: block; padding: 0 3em; }
+/* The passage's last block carries extra room below it, so the
+   indented column closes with a longer pause (her call, 2026-11-06). */
+.bk-indent--end { padding-bottom: 2.4em; }
 
 /* ── Facsimile pages: the earlier printed painting book (Canva) ───── */
 .bk-canva-frame {
