@@ -292,11 +292,27 @@ interface ParaItem {
 interface EssayItem {
   html: string;
   edit: string;
+  /** Dated passage (her direction, 2026-11-06): her own dated writings
+   * render as a sticky-note panel, set apart from the body text. */
+  note?: boolean;
 }
 
 interface EssayChunk {
   lang?: "en" | "zh" | "mixed";
   items: EssayItem[];
+}
+
+/** Group a chunk's items into runs of ordinary items and dated passages:
+ * a run of note items renders as one sticky-note panel (see .bk-note). */
+function noteRuns(items: EssayItem[]): { note: boolean; items: EssayItem[] }[] {
+  const runs: { note: boolean; items: EssayItem[] }[] = [];
+  for (const it of items) {
+    const n = !!it.note;
+    const last = runs[runs.length - 1];
+    if (last && last.note === n) last.items.push(it);
+    else runs.push({ note: n, items: [it] });
+  }
+  return runs;
 }
 
 /** Chunk paragraphs (carrying their source edit ids) by plain length.
@@ -1386,6 +1402,18 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const { chapter } = spec;
       const chunk = ctx.essayChunks[chapter.key]?.[spec.chunk];
       const items = chunk?.items ?? [];
+      const renderItem = (it: EssayItem, i: number) => (
+        <p
+          key={i}
+          className={ctx.editMode ? "bk-editable" : undefined}
+          onDoubleClick={
+            ctx.editMode
+              ? () => ctx.openEditor(it.edit, `${chapter.title} · ${chunk?.lang === "zh" ? "中文" : "EN"}`, ctx.fieldTexts[it.edit] ?? plainText(it.html))
+              : undefined
+          }
+          dangerouslySetInnerHTML={{ __html: it.html.replace(/^<p[^>]*>/, "").replace(/<\/p>$/, "") }}
+        />
+      );
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
           <div className="bk-essay">
@@ -1397,18 +1425,15 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               </div>
             )}
             <div className="bk-essay-text description-html">
-              {items.map((it, i) => (
-                <p
-                  key={i}
-                  className={ctx.editMode ? "bk-editable" : undefined}
-                  onDoubleClick={
-                    ctx.editMode
-                      ? () => ctx.openEditor(it.edit, `${chapter.title} · ${chunk?.lang === "zh" ? "中文" : "EN"}`, ctx.fieldTexts[it.edit] ?? plainText(it.html))
-                      : undefined
-                  }
-                  dangerouslySetInnerHTML={{ __html: it.html.replace(/^<p[^>]*>/, "").replace(/<\/p>$/, "") }}
-                />
-              ))}
+              {noteRuns(items).map((run, ri) =>
+                run.note ? (
+                  <div key={ri} className="bk-note">
+                    {run.items.map((it, i) => renderItem(it, i))}
+                  </div>
+                ) : (
+                  run.items.map((it, i) => renderItem(it, i))
+                ),
+              )}
             </div>
           </div>
           <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
@@ -1900,8 +1925,15 @@ function useBookModel(args: {
             // her Rothko post, kept whole at her direction, plus its date
             // line. They belong to that paragraph's pair; the rest of the
             // Chinese text realigns by the same offset.
-            zhExtras = new Map([[9, zhBlocks.slice(10, 12)]]);
+            zhExtras = new Map([[9, zhBlocks.slice(10, 12).map((b) => ({ ...b, note: true }))]]);
             zhBlocks = [...zhBlocks.slice(0, 10), ...zhBlocks.slice(12)];
+          }
+          if (s.id === "artempath") {
+            // Dated passages (her direction, 2026-11-06): the February 15,
+            // 2018 diary entry that opens the text, in both languages,
+            // renders as a sticky-note panel (see .bk-note); her original
+            // Rothko post rides as zhExtras on pair 9, flagged above.
+            for (const b of [enBlocks[0], enBlocks[1], zhBlocks[0], zhBlocks[1]]) if (b) b.note = true;
           }
           if (zhBlocks.length === enBlocks.length) {
             const { stream, pairEnd } = pairStream(enBlocks, zhBlocks, zhExtras);
@@ -1948,15 +1980,15 @@ function useBookModel(args: {
         }
       } else if (chapter.key === "remains") {
         const paras = txParas("remainsEssayBody");
-        const leadEn: EssayItem = { html: "<p>In the profound atmosphere of the Anahuacalli Museum, I gaze at these ancient handmade works, following Diego Rivera's vision as I look for a spark of continuity between modern art and pre-Columbian aesthetics. The figures in these works of the ancient civilizations of the Americas are strikingly artless and strange. Though carved in a refined, stylized manner, they are simple and powerful.</p>" };
-        const leadZh: EssayItem = { html: "<p>在 Anahuacalli 博物馆的深邃氛围中，我凝视这些远古的手作，按照迭戈·里维拉的构想，在现代艺术与前哥伦布时期美学之间寻找延续的火花。这些美洲古文明的作品形象格外憨朴奇崛，尽管是以洗练的风格化手法雕成，却简洁有力。</p>" };
+        const leadEn: EssayItem = { note: true, html: "<p>In the profound atmosphere of the Anahuacalli Museum, I gaze at these ancient handmade works, following Diego Rivera's vision as I look for a spark of continuity between modern art and pre-Columbian aesthetics. The figures in these works of the ancient civilizations of the Americas are strikingly artless and strange. Though carved in a refined, stylized manner, they are simple and powerful.</p>" };
+        const leadZh: EssayItem = { note: true, html: "<p>在 Anahuacalli 博物馆的深邃氛围中，我凝视这些远古的手作，按照迭戈·里维拉的构想，在现代艺术与前哥伦布时期美学之间寻找延续的火花。这些美洲古文明的作品形象格外憨朴奇崛，尽管是以洗练的风格化手法雕成，却简洁有力。</p>" };
         // The two paragraphs are her own Facebook post (July 12, 2023); as with
         // her other diary-like texts in this book, a small source line closes
         // the text, in the bk-credit style. Place per the post's own
         // location tag: Mexico · Azcapotzalco. No URL is printed, per her
         // rule for source lines in the book.
-        const noteEn: EssayItem = { html: "<p><span class=\"bk-credit\">July 12, 2023, Mexico · Azcapotzalco</span></p>" };
-        const noteZh: EssayItem = { html: "<p><span class=\"bk-credit\">2023 年 7 月 12 日，墨西哥 · Azcapotzalco</span></p>" };
+        const noteEn: EssayItem = { note: true, html: "<p><span class=\"bk-credit\">July 12, 2023, Mexico · Azcapotzalco</span></p>" };
+        const noteZh: EssayItem = { note: true, html: "<p><span class=\"bk-credit\">2023 年 7 月 12 日，墨西哥 · Azcapotzalco</span></p>" };
         // Her series statement from the Canva painting book follows the
         // Facebook-post text (her order, 2026-11-06: the Rivera text in
         // front, this statement after). The English is her own wording,
@@ -1967,7 +1999,7 @@ function useBookModel(args: {
         const stmtEn2: EssayItem = { html: "<p>The series borrows its visual grammar from these figurines from different civilizations and historical periods, and drops them into the theater of contemporary daily life.</p>" };
         const stmtZh1: EssayItem = { html: "<p>《遗迹》是一个综合材料系列，起于一种微妙的荒诞感。研究古代陶俑时，我被它们的表情吸引：亲切，笨拙，像是什么都没有做，就停在那一刻。</p>" };
         const stmtZh2: EssayItem = { html: "<p>这个系列的视觉语法就借自这些陶俑。它们来自不同的文明、不同的历史时期，我把它们放进当代日常生活的剧场。</p>" };
-        essayChunks[chapter.key] = langChunks([leadEn, ...paraItems(paras.filter((p) => !hasCjk(p.text))), noteEn, stmtEn1, stmtEn2], [leadZh, ...paraItems(paras.filter((p) => hasCjk(p.text))), noteZh, stmtZh1, stmtZh2]);
+        essayChunks[chapter.key] = langChunks([leadEn, ...paraItems(paras.filter((p) => !hasCjk(p.text))).map((it) => ({ ...it, note: true })), noteEn, stmtEn1, stmtEn2], [leadZh, ...paraItems(paras.filter((p) => hasCjk(p.text))).map((it) => ({ ...it, note: true })), noteZh, stmtZh1, stmtZh2]);
       } else if (chapter.key === "photography") {
         const head: EssayItem = { html: "<p>El Otro, El Mismo</p>" };
         const otro = txParas("elOtroEssayBody");
@@ -1987,64 +2019,82 @@ function useBookModel(args: {
           zhT ? pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s?.id}:zh` })) : [],
         );
       } else if (chapter.key === "spirit") {
-        // Illustrated-chapter layout (her direction, 2026-11-05): the
-        // series overview, her own Inundated post and the eight sub-series'
-        // background texts run as English/Chinese paragraph pairs — group
-        // headings and source credits print once, bilingually, as part of
-        // the pair flow — and each sub-series' painting stands right after
-        // its own text group instead of in a block after the chapter (see
-        // SPIRIT_GROUP_PLATES / plateBreaks). Her GenAI statement has no
-        // Chinese text (no parasZh) and runs English-only inside the flow.
-        const stream: EssayItem[] = [];
-        const groupEnd = new Map<string, number>();
-        const pushPair = (en: EssayItem, zh?: EssayItem) => {
-          stream.push(en);
-          if (zh) stream.push(zh);
+        // Essay layout (her direction, 2026-11-06, replacing the
+        // 2026-11-05 paragraph-pair interleave): the whole English essay
+        // runs first, then the whole Chinese essay, no interleaving. Each
+        // background group's painting anchors inside the English essay,
+        // right after the chunk where its group text ends (see
+        // plateBreaks); the Chinese essay then runs clean. Her GenAI
+        // statement has no Chinese text (no parasZh) and stays
+        // English-only inside the flow. Her WeChat Moments post on
+        // Inundated is a dated passage: a sticky-note panel in both
+        // languages (item.note, see .bk-note).
+        const enStream: EssayItem[] = [];
+        const zhStream: EssayItem[] = [];
+        const enGroupEnd = new Map<string, number>();
+        const pushBoth = (en: EssayItem, zh?: EssayItem) => {
+          enStream.push(en);
+          if (zh) zhStream.push(zh);
         };
         const ovEn = fieldItems("spirit", "en");
         const ovZh = fieldItems("spirit", "zh");
-        ovEn.forEach((it, i) => pushPair(it, ovZh[i]));
-        for (let j = ovEn.length; j < ovZh.length; j++) stream.push(ovZh[j]);
+        ovEn.forEach((it, i) => pushBoth(it, ovZh[i]));
+        for (let j = ovEn.length; j < ovZh.length; j++) zhStream.push(ovZh[j]);
         // Her bridge sentence (chosen by her, 2026-11-05): it ties the
         // series to the book's theme — reports and data wash away, the
         // paintings hold them. Book-only: it speaks for this volume, so it
         // stays out of the shop's shared series description in 21spirit.ts.
-        pushPair(
+        pushBoth(
           { html: "<p>Reports and data get washed away by newer information. These paintings fix them in place, this era's way of leaving something of itself.</p>", edit: "spiritbridge" },
           { html: "<p>报道和数据会被新的信息冲走。这些画把它们固定下来，是这个时代留下自己的方式。</p>", edit: "spiritbridge" },
         );
         // Her own first-person post on the painting Inundated (WeChat
         // Moments, March 28, 2018) stands right after the series overview,
         // ahead of the borrowed background texts: her voice first, then the
-        // texts the paintings answer to. Bilingual, like her other texts.
-        pushPair(
-          { html: `<p><span class="bk-credit">${SPIRIT_MOMENT.labelEn}</span></p>`, edit: "spiritmoment:inundated" },
-          { html: `<p><span class="bk-credit">${SPIRIT_MOMENT.labelZh}</span></p>`, edit: "spiritmoment:inundated" },
+        // texts the paintings answer to.
+        pushBoth(
+          { html: `<p><span class="bk-credit">${SPIRIT_MOMENT.labelEn}</span></p>`, edit: "spiritmoment:inundated", note: true },
+          { html: `<p><span class="bk-credit">${SPIRIT_MOMENT.labelZh}</span></p>`, edit: "spiritmoment:inundated", note: true },
         );
-        pushPair(
-          { html: `<p>${SPIRIT_MOMENT.textEn}</p>`, edit: "spiritmoment:inundated" },
-          { html: `<p>${SPIRIT_MOMENT.textZh}</p>`, edit: "spiritmoment:inundated" },
+        pushBoth(
+          { html: `<p>${SPIRIT_MOMENT.textEn}</p>`, edit: "spiritmoment:inundated", note: true },
+          { html: `<p>${SPIRIT_MOMENT.textZh}</p>`, edit: "spiritmoment:inundated", note: true },
         );
         for (const g of SPIRIT_BACKGROUNDS) {
-          stream.push({ html: `<p><strong>${g.titleEn} ${g.titleZh}</strong></p>`, edit: `spiritbg:${g.id}` });
-          if (g.workTitle) stream.push({ html: `<p><strong>${g.workTitle}</strong></p>`, edit: `spiritbg:${g.id}` });
-          const toItem = (p: string | { head: string }): EssayItem => ({
-            html: typeof p === "string" ? `<p>${p}</p>` : `<p><strong>${p.head}</strong></p>`,
+          enStream.push({ html: `<p><strong>${g.titleEn}</strong></p>`, edit: `spiritbg:${g.id}` });
+          if (g.titleZh) zhStream.push({ html: `<p><strong>${g.titleZh}</strong></p>`, edit: `spiritbg:${g.id}` });
+          if (g.workTitle) enStream.push({ html: `<p><strong>${g.workTitle}</strong></p>`, edit: `spiritbg:${g.id}` });
+          const toBg = (para: string | { head: string }): EssayItem => ({
+            html: typeof para === "string" ? `<p>${para}</p>` : `<p><strong>${para.head}</strong></p>`,
             edit: `spiritbg:${g.id}`,
           });
-          g.paras.forEach((para, i) => pushPair(toItem(para), g.parasZh?.[i] ? toItem(g.parasZh[i]) : undefined));
-          if (g.credit) stream.push({ html: `<p><span class="bk-credit">${g.credit}</span></p>`, edit: `spiritbg:${g.id}` });
-          groupEnd.set(g.id, stream.length - 1);
+          g.paras.forEach((para, i) => {
+            enStream.push(toBg(para));
+            if (g.parasZh?.[i]) zhStream.push(toBg(g.parasZh[i]));
+          });
+          if (g.credit) {
+            // The group's source line closes the group in both essays.
+            enStream.push({ html: `<p><span class="bk-credit">${g.credit}</span></p>`, edit: `spiritbg:${g.id}` });
+            zhStream.push({ html: `<p><span class="bk-credit">${g.credit}</span></p>`, edit: `spiritbg:${g.id}` });
+          }
+          enGroupEnd.set(g.id, enStream.length - 1);
         }
-        const { chunks, itemChunk } = chunkMixed(stream);
-        essayChunks[chapter.key] = chunks;
+        const enChunked = chunkItems(enStream, 1500, { overhead: 20, brCost: 68 });
+        const zhChunked = chunkItems(zhStream, 880, { overhead: 22, brCost: 34, headSeed: 160 });
+        essayChunks[chapter.key] = [
+          ...enChunked.map((items) => ({ lang: "en" as const, items })),
+          ...zhChunked.map((items) => ({ lang: "zh" as const, items })),
+        ];
+        const enItemChunk = new Map<EssayItem, number>();
+        enChunked.forEach((items, ci) => items.forEach((it) => enItemChunk.set(it, ci)));
         chapter.plateBreaks = {};
         chapter.plateAnchorOrder = SPIRIT_BACKGROUNDS.map((g) => SPIRIT_GROUP_PLATES[g.id]).filter(Boolean);
         for (const [groupId, suffix] of Object.entries(SPIRIT_GROUP_PLATES)) {
-          const endIx = groupEnd.get(groupId);
+          const endIx = enGroupEnd.get(groupId);
           const found = chapter.items.find(({ item }) => item.image_url.endsWith(suffix));
-          if (endIx !== undefined && itemChunk[endIx] !== undefined && found) {
-            chapter.plateBreaks[found.item.image_url] = itemChunk[endIx] + 1;
+          if (endIx !== undefined && found) {
+            const ci = enItemChunk.get(enStream[endIx]);
+            if (ci !== undefined) chapter.plateBreaks[found.item.image_url] = ci + 1;
           }
         }
       } else if (fieldText(chapter.key, "en") || fieldText(chapter.key, "zh")) {
