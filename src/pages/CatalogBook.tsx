@@ -81,6 +81,7 @@ type PageSpec =
   | { kind: "about"; chunk: number }
   | { kind: "collage"; chunk: number }
   | { kind: "reverse-index"; chunk: number }
+  | { kind: "canva"; page: number }
   | { kind: "blank" }
   | { kind: "end" };
 
@@ -733,6 +734,17 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       specs.push({ kind: "collage", chunk: 1 });
       firstChapter = false;
     }
+    // The earlier printed painting book (Canva, "Chun Wang: Paintings
+    // 2019–2026") is bound into the painting part as a facsimile block at
+    // the end of the part, right before Part 2 opens (her direction,
+    // 2026-11-06: add it in as it stands, duplicates kept). Her review
+    // cuts the same day: the Canva cover (p.1), the egg page (p.5) and
+    // the whole tail from the Remains divider to the back cover
+    // (pp. 23–44) are removed; pp. 2–4 and 6–22 stand.
+    const CANVA_KEPT_PAGES = [2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
+    if (chapter.key === "series:triptych") {
+      for (const p of CANVA_KEPT_PAGES) specs.push({ kind: "canva", page: p });
+    }
     const aphorismId = APHORISM_BEFORE_CHAPTER[chapter.key];
     if (aphorismId) pushAphorism(APHORISMS[aphorismId]);
     // One opening per chapter (her direction, 2026-10-18): the big-type
@@ -891,6 +903,8 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `collage:${spec.chunk}`;
     case "reverse-index":
       return `reverse-index:${spec.chunk}`;
+    case "canva":
+      return `canva:${spec.page}`;
     default:
       return spec.kind;
   }
@@ -1499,6 +1513,18 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               })}
             </ul>
           </div>
+        </Page>
+      );
+    }
+
+    case "canva": {
+      const src = `/book/canva-paintings/p${String(spec.page).padStart(2, "0")}.jpg`;
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-canva-page">
+          <div className="bk-canva-frame">
+            <BookImage src={src} alt={`Paintings 2019–2026 — earlier printed edition, page ${spec.page}`} />
+          </div>
+          <Folio number={number} tag={`${b.title} | Paintings 2019–2026`} />
         </Page>
       );
     }
@@ -2316,6 +2342,7 @@ const CatalogBook = () => {
   // printed page, ?section=<key> to a section's opening page — the same
   // first page the contents page prints for that chapter. Section keys:
   // title, contents, preface, about, collage, painting-intro, reverse-index,
+  // canva (the facsimile painting book bound into Part 1),
   // or any chapter key (spirit, remains, residuals, shop, ...).
   // Series-driven chapters are keyed "series:<id>" in the book model while
   // shared links name them by the bare series id (?section=negotiated), so
@@ -2340,7 +2367,8 @@ const CatalogBook = () => {
       section === "preface" ||
       section === "about" ||
       section === "painting-intro" ||
-      section === "reverse-index"
+      section === "reverse-index" ||
+      section === "canva"
     ) {
       const kind = section as PageSpec["kind"];
       return pages.find((p) => p.spec.kind === kind)?.number ?? null;
