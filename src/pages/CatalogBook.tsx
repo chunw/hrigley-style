@@ -935,7 +935,7 @@ function PageBgCtl({ current, onPick }: { current?: PageBgKind; onPick: (kind: P
   );
 }
 
-function PlateCtl({ ctx, slot }: { ctx: BookContext; slot: number }) {
+function PlateCtl({ ctx, slot, title }: { ctx: BookContext; slot: number; title?: string }) {
   const [open, setOpen] = useState(false);
   const edits = ctx.plateEdits;
   const size = edits.size?.[slot] ?? "full";
@@ -958,11 +958,12 @@ function PlateCtl({ ctx, slot }: { ctx: BookContext; slot: number }) {
   const dirty = !!(edits.order || edits.swap || edits.size || edits.hidden?.length);
   return (
     <div className="bk-plate-ctl" data-noprint>
-      <button type="button" className="bk-pagebg-btn bk-plate-entry" onClick={() => setOpen((v) => !v)}>
-        图版调整{dirty ? " ·" : ""}
+      <button type="button" className="bk-plate-entry" onClick={() => setOpen((v) => !v)}>
+        调整这张图{dirty ? " ·" : ""}
       </button>
       {open && (
         <div className="bk-plate-panel">
+          <div className="bk-plate-panel-title">Remains 图版{title ? ` · ${title}` : ""}</div>
           <div className="bk-plate-sec">
             <div className="bk-plate-sec-label">换图</div>
             <div className="bk-plate-strip">
@@ -1138,7 +1139,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
   const pageKey = pageKeyOf(spec);
   const bg = ctx.pageBgFor(pageKey);
   const plateCtl =
-    ctx.editMode && spec.kind === "plate" && spec.chapter.key === "remains" ? <PlateCtl ctx={ctx} slot={spec.plate} /> : null;
+    spec.kind === "plate" && spec.chapter.key === "remains" ? <PlateCtl ctx={ctx} slot={spec.plate} title={spec.item.title} /> : null;
   const ctl =
     (ctx.editMode && pageKey) || plateCtl ? (
       <>
