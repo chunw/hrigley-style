@@ -8,5 +8,7 @@ export type PageBgKind = "white" | "cream" | "black" | "pink";
  * Written by the book editor's 生成PR flow (api/book-pr.js); edit by hand if needed.
  */
 export const PAGE_BACKGROUNDS: Record<string, PageBgKind> = {
-  contents: "white",
+  "contents": "white",
+  "plate:107": "black",
+  "plateGrid": "black",
 };
