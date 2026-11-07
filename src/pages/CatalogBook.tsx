@@ -8,6 +8,15 @@ import { SHOP_URL, SITE_URL } from "@/lib/constants";
 import { getCombinedCatalogSections, type CatalogItem, type CatalogSection, type CatalogSectionKey } from "@/lib/printCatalog";
 import { translations, type Translations } from "@/lib/translations";
 import { PAGE_BACKGROUNDS, type PageBgKind } from "@/lib/pageBackgrounds";
+
+/** Plate layout edits from the book's editor (sample scope: the Remains
+ *  chapter's plates), keyed by plate number. Stored in the browser. */
+export interface PlateEdits {
+  order?: number[];
+  swap?: Record<number, string>;
+  size?: Record<number, "full" | "large" | "medium">;
+  hidden?: number[];
+}
 import { BOOK_SERIES } from "@/lib/bookSeries";
 import { SERIES_PLATES, DEATH_VALLEY_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
@@ -926,6 +935,56 @@ function PageBgCtl({ current, onPick }: { current?: PageBgKind; onPick: (kind: P
   );
 }
 
+function PlateCtl({ ctx, slot }: { ctx: BookContext; slot: number }) {
+  const [open, setOpen] = useState(false);
+  const edits = ctx.plateEdits;
+  const size = edits.size?.[slot] ?? "full";
+  const set = (patch: Partial<PlateEdits>) => ctx.setPlateEdits((prev) => ({ ...prev, ...patch }));
+  const move = (dir: -1 | 1) => {
+    const order = ctx.remainsOrder.slice();
+    const i = order.indexOf(slot);
+    const j = i + dir;
+    if (i < 0 || j < 0 || j >= order.length) return;
+    [order[i], order[j]] = [order[j], order[i]];
+    set({ order });
+  };
+  const cycleSize = () => {
+    const next = size === "full" ? "large" : size === "large" ? "medium" : "full";
+    set({ size: { ...(edits.size ?? {}), [slot]: next } });
+  };
+  const swapTo = (url: string | null) => {
+    const swap = { ...(edits.swap ?? {}) };
+    if (url) swap[slot] = url;
+    else delete swap[slot];
+    set({ swap });
+    setOpen(false);
+  };
+  const dirty = !!(edits.order || edits.swap || edits.size || edits.hidden?.length);
+  return (
+    <div className="bk-plate-ctl" data-noprint>
+      <div className="bk-plate-ctl-row">
+        <button type="button" className="bk-pagebg-btn" onClick={() => setOpen((v) => !v)}>换图</button>
+        <button type="button" className="bk-pagebg-btn" onClick={cycleSize}>尺寸 · {size === "full" ? "整版" : size === "large" ? "大" : "中"}</button>
+        <button type="button" className="bk-pagebg-btn" onClick={() => move(-1)}>↑ 前移</button>
+        <button type="button" className="bk-pagebg-btn" onClick={() => move(1)}>↓ 后移</button>
+        <button type="button" className="bk-pagebg-btn" onClick={() => set({ hidden: [...(edits.hidden ?? []), slot] })}>隐藏</button>
+        {edits.hidden?.length ? <button type="button" className="bk-pagebg-btn" onClick={() => set({ hidden: [] })}>显示全部</button> : null}
+        {dirty ? <button type="button" className="bk-pagebg-btn" onClick={() => ctx.setPlateEdits({})}>重置</button> : null}
+      </div>
+      {open && (
+        <div className="bk-plate-strip">
+          {ctx.remainsPool.map((item) => (
+            <button key={item.image_url} type="button" className="bk-plate-thumb" onClick={() => swapTo(item.image_url)} title={item.title}>
+              <img src={item.image_url} alt={item.title} />
+            </button>
+          ))}
+          <button type="button" className="bk-pagebg-btn" onClick={() => swapTo(null)}>原图</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function Folio({ number, tag }: { number: number; tag?: string }) {
   return (
     <>
@@ -980,6 +1039,10 @@ export interface BookContext {
   openEditor: (edit: string, label: string, current: string) => void;
   pageBgFor: (key: string | null) => PageBgKind | undefined;
   setPageBg: (key: string, kind: PageBgKind | "global") => void;
+  plateEdits: PlateEdits;
+  setPlateEdits: (next: PlateEdits | ((prev: PlateEdits) => PlateEdits)) => void;
+  remainsPool: CatalogItem[];
+  remainsOrder: number[];
   paintingChunks: { paras: ParaItem[] }[];
 }
 
@@ -1060,8 +1123,15 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
   const pageId = `bk-page-${number}`;
   const pageKey = pageKeyOf(spec);
   const bg = ctx.pageBgFor(pageKey);
+  const plateCtl =
+    ctx.editMode && spec.kind === "plate" && spec.chapter.key === "remains" ? <PlateCtl ctx={ctx} slot={spec.plate} /> : null;
   const ctl =
-    ctx.editMode && pageKey ? <PageBgCtl current={bg} onPick={(kind) => ctx.setPageBg(pageKey, kind)} /> : null;
+    (ctx.editMode && pageKey) || plateCtl ? (
+      <>
+        {ctx.editMode && pageKey ? <PageBgCtl current={bg} onPick={(kind) => ctx.setPageBg(pageKey, kind)} /> : null}
+        {plateCtl}
+      </>
+    ) : null;
 
   switch (spec.kind) {
     case "title":
@@ -1409,9 +1479,10 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
 
     case "plate": {
       const { item, chapter } = spec;
+      const psize = ctx.plateEdits.size?.[spec.plate];
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-plate-page">
-          <div className="bk-plate-frame">
+          <div className={`bk-plate-frame${psize === "large" ? " bk-plate-frame--large" : psize === "medium" ? " bk-plate-frame--medium" : ""}`}>
             <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
           </div>
           <div className="bk-caption">
@@ -1640,8 +1711,10 @@ function useBookModel(args: {
   pageBgFor: BookContext["pageBgFor"];
   setPageBg: BookContext["setPageBg"];
   openEditor: BookContext["openEditor"];
+  plateEdits: PlateEdits;
+  setPlateEdits: BookContext["setPlateEdits"];
 }): { ctx: BookContext; pages: InteriorPage[] } {
-  const { editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, openEditor } = args;
+  const { editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, openEditor, plateEdits, setPlateEdits } = args;
   const t = translations.en;
   const ctx = useMemo<BookContext>(() => {
     let plate = 0;
@@ -1852,6 +1925,31 @@ function useBookModel(args: {
       translations.en.catalogBook[field].map((p, i) => ({ text: textEdits[`tx:${field}:${i}`] ?? p, edit: `tx:${field}:${i}` }));
     const fieldText = (key: CatalogSectionKey, which: "en" | "zh") =>
       textEdits[`field:${key}:${which}`] ?? descOf(which === "en" ? sectionsEn : sectionsZh, key);
+    // ── Plate editor sample (option A, her trial, 2026-11-06) ────────
+    // The Remains chapter's plates answer to her layout edits: reorder,
+    // swap and hide, keyed by plate number and stored in the browser.
+    // The chapter's unedited plates form the swap pool.
+    const remainsCh = chapters.find((c) => c.key === "remains");
+    const remainsPool: CatalogItem[] = remainsCh ? remainsCh.items.map(({ item }) => item) : [];
+    let remainsOrder: number[] = remainsCh ? remainsCh.items.map(({ plate }) => plate) : [];
+    if (remainsCh && (plateEdits.order || plateEdits.swap || plateEdits.hidden)) {
+      let items = remainsCh.items.slice();
+      if (plateEdits.hidden?.length) items = items.filter(({ plate }) => !plateEdits.hidden!.includes(plate));
+      if (plateEdits.order?.length) {
+        const rank = new Map(plateEdits.order.map((n, i) => [n, i] as const));
+        items.sort((a, b) => (rank.get(a.plate) ?? Number.MAX_SAFE_INTEGER) - (rank.get(b.plate) ?? Number.MAX_SAFE_INTEGER));
+      }
+      if (plateEdits.swap) {
+        items = items.map(({ item, plate }) => {
+          const url = plateEdits.swap![plate];
+          const found = url ? remainsPool.find((poolItem) => poolItem.image_url === url) : undefined;
+          return found ? { item: found, plate } : { item, plate };
+        });
+      }
+      remainsCh.items = items;
+      remainsOrder = items.map(({ plate }) => plate);
+    }
+
     const fieldTexts: Record<string, string> = {};
     for (const key of ["spirit", "watercolor"] as const) {
       fieldTexts[`field:${key}:en`] = fieldText(key, "en");
@@ -2139,11 +2237,15 @@ function useBookModel(args: {
       openEditor,
       pageBgFor,
       setPageBg,
+      plateEdits,
+      setPlateEdits,
+      remainsPool,
+      remainsOrder,
       years: yearRange(chapters.flatMap((c) => c.items.map((i) => i.item.year))),
       coverFront: byKey("residuals")[0] ?? chapters[0]?.items[0]?.item,
       coverBack: byKey("photography")[0] ?? chapters[0]?.items[1]?.item,
     };
-  }, [textEdits, editMode, pageBgEdits]);
+  }, [textEdits, editMode, pageBgEdits, plateEdits]);
   const pages = useMemo(() => paginate(ctx.chapters, ctx.prefaceChunks.length, ctx.paintingChunks.length, Object.fromEntries(Object.entries(ctx.essayChunks).map(([k, v]) => [k, v.length]))), [ctx]);
   return { ctx, pages };
 }
@@ -2192,12 +2294,15 @@ const CatalogBook = () => {
   const [editMode, setEditMode] = useState(false);
   const [textEdits, setTextEdits] = useState<Record<string, string>>(() => loadJSON("remains-book-text-edits", {}));
   const [pageBgEdits, setPageBgEdits] = useState<Record<string, PageBgKind | "global">>(() => loadJSON("remains-book-page-bg", {}));
+  const [plateEdits, setPlateEditsState] = useState<PlateEdits>(() => loadJSON("remains-book-plate-edits", {}));
+  const setPlateEdits: BookContext["setPlateEdits"] = (next) =>
+    setPlateEditsState((prev) => (typeof next === "function" ? (next as (p: PlateEdits) => PlateEdits)(prev) : next));
   const [savedSnapshot, setSavedSnapshot] = useState(() =>
-    JSON.stringify({ t: loadJSON("remains-book-text-edits", {}), b: loadJSON("remains-book-page-bg", {}) }),
+    JSON.stringify({ t: loadJSON("remains-book-text-edits", {}), b: loadJSON("remains-book-page-bg", {}), p: loadJSON("remains-book-plate-edits", {}) }),
   );
   const [panel, setPanel] = useState<{ edit: string; label: string; value: string } | null>(null);
   const [prMsg, setPrMsg] = useState("");
-  const editorDirty = JSON.stringify({ t: textEdits, b: pageBgEdits }) !== savedSnapshot;
+  const editorDirty = JSON.stringify({ t: textEdits, b: pageBgEdits, p: plateEdits }) !== savedSnapshot;
   const openEditor = (edit: string, label: string, current: string) => setPanel({ edit, label, value: current });
   const pageBgFor = (key: string | null): PageBgKind | undefined => {
     if (!key) return undefined;
@@ -2209,7 +2314,8 @@ const CatalogBook = () => {
   const saveAllEdits = () => {
     localStorage.setItem("remains-book-text-edits", JSON.stringify(textEdits));
     localStorage.setItem("remains-book-page-bg", JSON.stringify(pageBgEdits));
-    setSavedSnapshot(JSON.stringify({ t: textEdits, b: pageBgEdits }));
+    localStorage.setItem("remains-book-plate-edits", JSON.stringify(plateEdits));
+    setSavedSnapshot(JSON.stringify({ t: textEdits, b: pageBgEdits, p: plateEdits }));
     setPrMsg(lang === "zh" ? "已保存到本机浏览器。" : "Saved in this browser.");
   };
   const generatePR = async () => {
@@ -2219,7 +2325,7 @@ const CatalogBook = () => {
       if (v === "global") delete pageBg[k];
       else pageBg[k] = v;
     }
-    const payload = { textEdits, pageBg };
+    const payload = { textEdits, pageBg, plateEdits };
     try {
       const res = await fetch("/api/book-pr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
@@ -2251,7 +2357,7 @@ const CatalogBook = () => {
     noindex: true,
   });
 
-  const { ctx, pages } = useBookModel({ editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, openEditor });
+  const { ctx, pages } = useBookModel({ editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, openEditor, plateEdits, setPlateEdits });
   const spine = spineWidth(pages.length);
 
   const bleedIn = bleed ? BLEED : 0;
