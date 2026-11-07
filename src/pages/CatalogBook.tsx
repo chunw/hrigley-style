@@ -1311,7 +1311,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 <div className="bk-essay-meta sans-label">{chapter.years}</div>
               </div>
             )}
-            <div className={`bk-essay-text description-html ${items.reduce((n, it) => n + plainText(it.html).length, 0) > 800 ? "bk-essay-cols" : ""}`}>
+            <div className={`bk-essay-text description-html ${items.reduce((n, it) => n + plainText(it.html).length, 0) > 450 ? "bk-essay-cols" : ""}`}>
               {items.map((it, i) => (
                 <p
                   key={i}
@@ -1792,15 +1792,19 @@ function useBookModel(args: {
     // Essay page budgets, calibrated to the two-column measure the essay
     // renderer now uses for long pages (her direction, 2026-11-07, after
     // Kim Hastreiter's STUFF: dense text pages against the book's quiet
-    // ones). Two ~3.2in columns hold ~1.48x the old single 4.55in column;
-    // per-line costs (overhead, brCost, headSeed) are rescaled to the
-    // narrower line. Short pages still render single-column
-    // and stay well inside these budgets. Preface and painting-intro pages
-    // keep their own smaller chunkParas budgets: they are the quiet pole.
+    // ones). First pass (budgets 2200/1300) still left the lower half of
+    // text pages empty, so the budgets were re-measured in a faithful
+    // render harness (real CSS, real texts, checked against her preview
+    // screenshots): EN 2800, CN 1400, with thicker headSeed so first
+    // pages keep clear of the foot, and the two-column switch lowered
+    // to pages over 450 chars — a many-short-paragraphs page overflows
+    // the narrow single column long before it fills a two-column page.
+    // Preface and painting-intro pages keep their own smaller
+    // chunkParas budgets: they are the quiet pole.
     const langChunks = (en: EssayItem[], zh: EssayItem[]): EssayChunk[] => {
       const all = [
-        ...chunkItems(en, 2200, { overhead: 14, brCost: 48, headSeed: 230 }).map((items) => ({ lang: "en" as const, items })),
-        ...chunkItems(zh, 1300, { overhead: 15, brCost: 24, headSeed: 120 }).map((items) => ({ lang: "zh" as const, items })),
+        ...chunkItems(en, 2800, { overhead: 14, brCost: 48, headSeed: 330 }).map((items) => ({ lang: "en" as const, items })),
+        ...chunkItems(zh, 1400, { overhead: 15, brCost: 24, headSeed: 230 }).map((items) => ({ lang: "zh" as const, items })),
       ];
       return all.length > 0 ? all : [{ lang: "en", items: [] }];
     };
@@ -1855,7 +1859,7 @@ function useBookModel(args: {
             // their anchor paragraph. Chinese-only extras keep their
             // aligned place inside the Chinese flow, right after the
             // block they belong to.
-            const enChunked = chunkItems(enBlocks, 2200, { overhead: 14, brCost: 48, headSeed: 230 });
+            const enChunked = chunkItems(enBlocks, 2800, { overhead: 14, brCost: 48, headSeed: 330 });
             const enItemChunk = new Map<EssayItem, number>();
             enChunked.forEach((items, ci) => items.forEach((it) => enItemChunk.set(it, ci)));
             const zhStream: EssayItem[] = [];
@@ -1866,7 +1870,7 @@ function useBookModel(args: {
             });
             essayChunks[chapter.key] = [
               ...enChunked.map((items) => ({ lang: "en" as const, items })),
-              ...chunkItems(zhStream, 1300, { overhead: 15, brCost: 24, headSeed: 120 }).map((items) => ({ lang: "zh" as const, items })),
+              ...chunkItems(zhStream, 1400, { overhead: 15, brCost: 24, headSeed: 230 }).map((items) => ({ lang: "zh" as const, items })),
             ];
             chapter.plateBreaks = {};
             chapter.plateAnchorOrder = anchors.map((a) => a.image);
@@ -2007,8 +2011,8 @@ function useBookModel(args: {
           }
           enGroupEnd.set(g.id, enStream.length - 1);
         }
-        const enChunked = chunkItems(enStream, 2200, { overhead: 14, brCost: 48, headSeed: 230 });
-        const zhChunked = chunkItems(zhStream, 1300, { overhead: 15, brCost: 24, headSeed: 120 });
+        const enChunked = chunkItems(enStream, 2800, { overhead: 14, brCost: 48, headSeed: 330 });
+        const zhChunked = chunkItems(zhStream, 1400, { overhead: 15, brCost: 24, headSeed: 230 });
         essayChunks[chapter.key] = [
           ...enChunked.map((items) => ({ lang: "en" as const, items })),
           ...zhChunked.map((items) => ({ lang: "zh" as const, items })),
