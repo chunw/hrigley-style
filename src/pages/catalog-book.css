@@ -1869,3 +1869,13 @@
   height: 100%;
   object-fit: contain;
 }
+
+/* ── Essay section heads: the book's serif ─────────────────────────── */
+/* Her direction (2026-11-06): the handwritten face on the English
+   essay-head titles reads strangely — unify them in the book's text
+   serif. Chapter opener titles keep the handwritten face for now, also
+   at her word; this reaches only .bk-section-title (Preface, Painting
+   introduction, About the Author, Collage as Method). */
+.bk-section-title.gloria-title {
+  font-family: "Cormorant Garamond", "Zhuque Fangsong (technical preview)", "Zhuque Fangsong", Georgia, serif;
+}
