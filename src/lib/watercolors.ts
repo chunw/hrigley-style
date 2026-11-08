@@ -235,6 +235,24 @@ export const watercolors: Watercolor[] = [
     printInfoZh: "4×6英寸哑光艺术微喷",
     price: 4,
   },
+  {
+    id: "55",
+    title: "Notes from the Road #10",
+    titleZh: "行旅拾记 其十",
+    series: "IV",
+    printInCatalog: true,
+    showInStorefront: false,
+    year: "2026",
+    medium: "Watercolor on paper",
+    mediumZh: "纸本水彩",
+    dimensions: "",
+    dimensionsZh: "",
+    description: "New York City.<br />纽约市。",
+    descriptionZh: "纽约市。",
+    printInfo: `4×6" print on matte fine art paper`,
+    printInfoZh: "4×6英寸哑光艺术微喷",
+    price: 4,
+  },
 
   // 残留
 
