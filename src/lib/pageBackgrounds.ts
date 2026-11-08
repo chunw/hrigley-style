@@ -12,4 +12,9 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgKind> = {
   "plate:107": "black",
   "plate:35": "black",
   "plateGrid": "black",
+  "canva:11": "black",
+  "canva:15": "black",
+  "canva:16": "black",
+  "canva:3": "black",
+  "canva:4": "black",
 };

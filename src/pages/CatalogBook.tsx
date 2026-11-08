@@ -765,18 +765,27 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       firstChapter = false;
     }
     // The earlier printed painting book (Canva, "Chun Wang: Paintings
-    // 2019–2026") is bound into the painting part as a facsimile block
-    // (her direction, 2026-11-06: add it in as it stands, duplicates
-    // kept). Her review cuts the same day: the Canva cover (p.1), the
-    // egg page (p.5) and the whole tail from the Remains divider to the
-    // back cover (pp. 23–44) are removed; pp. 2–4 and 6–22 stand.
-    // Placement (her direction, 2026-11-08, replacing the 2026-11-06 /
-    // 2026-11-07 end-of-part placement): the block stands inside the
-    // painting part right before Notes from the Road — after Still
-    // Things, ahead of the Road opener — so it keys on the road chapter.
+    // 2019–2026") is bound into the painting part as a facsimile (her
+    // direction, 2026-11-06: add it in as it stands, duplicates kept).
+    // Her review cuts the same day: the Canva cover (p.1), the egg page
+    // (p.5) and the whole tail from the Remains divider to the back
+    // cover (pp. 23–44) are removed; pp. 2–4 and 6–22 stand.
+    // Placement (her direction, 2026-11-08, replacing the same day's
+    // earlier single-block placement after Still Things): the
+    // facsimile no longer stands as its own block — its pages merge
+    // into the two sections they belong to, so Residuals and Still
+    // Things each read as one continuous run. The facsimile front
+    // matter (pp. 2–4 and 6–10) opens the pair, ahead of the Residuals
+    // opener; the facsimile Residuals chapter (pp. 11–16) closes the
+    // Residuals section and the facsimile Still Things chapter
+    // (pp. 17–22) closes Still Things — those two groups are emitted
+    // at the end of each chapter's run, below.
     const CANVA_KEPT_PAGES = [2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
-    if (chapter.key === "road") {
-      for (const p of CANVA_KEPT_PAGES) specs.push({ kind: "canva", page: p });
+    const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
+    const CANVA_RESIDUALS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 11 && p < 17);
+    const CANVA_STILLTHINGS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 17);
+    if (chapter.key === "residuals") {
+      for (const p of CANVA_FRONT_PAGES) specs.push({ kind: "canva", page: p });
     }
     const aphorismId = APHORISM_BEFORE_CHAPTER[chapter.key];
     if (aphorismId) pushAphorism(APHORISMS[aphorismId]);
@@ -887,6 +896,16 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       if (holdBack && !heldBackEmitted) {
         for (let i = leadCount; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
       }
+    }
+    // Facsimile chapters close their own sections (see the placement
+    // note at the facsimile block above): the printed book's Residuals
+    // chapter ends the Residuals run and its Still Things chapter ends
+    // the Still Things run, so no page of either section stands apart.
+    if (chapter.key === "residuals") {
+      for (const p of CANVA_RESIDUALS_PAGES) specs.push({ kind: "canva", page: p });
+    }
+    if (chapter.key === "stillthings") {
+      for (const p of CANVA_STILLTHINGS_PAGES) specs.push({ kind: "canva", page: p });
     }
     // Exhibition & award credits close the part, not the section (her
     // direction, 2026-11-08): when the next chapter belongs to another
