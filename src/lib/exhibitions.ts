@@ -65,10 +65,6 @@ export const EXHIBITIONS: Record<string, { en: string; zh: string }[]> = {
     { en: "Kaimu Theater: Form, Shadow, Mind, Cheng's Ancestral Hall, Panlong Tiandi, Shanghai, October 27, 2023 – March 31, 2024", zh: "《开目剧场：形·影·神》，程祠故里，蟠龙天地，上海，2023年10月27日 – 2024年3月31日" },
     { en: "Civilizations in Fusion: The Sound of Camel Bells, Silk Road Art Exhibition, Beijing Minsheng Art Museum, Beijing, January 13 – July 13, 2024", zh: "《文明的融合：驼铃声响——丝绸之路艺术大展》，北京民生现代美术馆，北京，2024年1月13日 – 7月13日" },
   ],
-  "series:soliloquy": [
-    { en: "World of Co Artist Residency Virtual Exhibition, Sofia, Bulgaria and online, February 28 – April 20, 2021", zh: "World of Co 驻地虚拟展，索非亚，保加利亚，及线上，2021年2月28日 – 4月20日" },
-    { en: "LIC-A@Atlantic Spring 2021, Atlantic Gallery, New York, April – May 2021", zh: "LIC-A@Atlantic 2021 春季展，Atlantic Gallery，纽约，2021年4 – 5月" },
-  ],
   "series:artempath": [
     { en: "Art.empath.io, San Francisco Museum of Modern Art, San Francisco, and Anderson Collection at Stanford University, May 2018", zh: "Art.empath.io，旧金山现代艺术博物馆，旧金山，及斯坦福大学 Anderson Collection，2018年5月" },
   ],
