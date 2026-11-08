@@ -2001,7 +2001,7 @@ function useBookModel(args: {
   openBgImagePanel: BookContext["openBgImagePanel"];
   openEditor: BookContext["openEditor"];
 }): { ctx: BookContext; pages: InteriorPage[] } {
-  const { editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgFor, setBgImg, openBgImagePanel, openEditor } = args;
+  const { editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, openEditor } = args;
   const t = translations.en;
   const ctx = useMemo<BookContext>(() => {
     let plate = 0;
@@ -2635,6 +2635,44 @@ const CatalogBook = () => {
     return PAGE_BACKGROUNDS[key];
   };
   const setPageBg = (key: string, kind: PageBgKind | "global") => setPageBgEdits((prev) => ({ ...prev, [key]: kind }));
+  // Background-image editor state (PR #159): these five helpers were used
+  // by useBookModel / InteriorPageView / BgImagePanel but never defined, so
+  // evaluating the useBookModel argument object threw a ReferenceError on
+  // mount and the book viewer never rendered. Definitions mirror pageBgFor /
+  // setPageBg above: local edits win, a null edit clears the committed entry.
+  const bgImgFor = (key: string | null): PageBgImage | undefined => {
+    if (!key) return undefined;
+    if (key in bgImgEdits) return bgImgEdits[key] ?? undefined;
+    return PAGE_BACKGROUND_IMAGES[key];
+  };
+  const setBgImg = (key: string, value: PageBgImage | null) => setBgImgEdits((prev) => ({ ...prev, [key]: value }));
+  const openBgImagePanel = (info: BgImagePanelInfo) => setBgPanel(info);
+  const applyBgImg = (scope: BgImgScope, src: string) => {
+    if (!bgPanel) return;
+    if (scope === "spread") {
+      const key = bgPanel.leftKey ?? bgPanel.rightKey;
+      if (!key) return;
+      // A spread entry may live on either page key; drop a stale one on the
+      // other side so exactly one spread entry remains.
+      const other = key === bgPanel.leftKey ? bgPanel.rightKey : bgPanel.leftKey;
+      if (other && bgImgFor(other)?.scope === "spread") setBgImg(other, null);
+      setBgImg(key, { src, scope: "spread" });
+      return;
+    }
+    const key = scope === "left" ? bgPanel.leftKey : bgPanel.rightKey;
+    if (key) setBgImg(key, { src, scope: "page" });
+  };
+  const clearBgImg = (scope: BgImgScope) => {
+    if (!bgPanel) return;
+    if (scope === "spread") {
+      for (const key of [bgPanel.leftKey, bgPanel.rightKey]) {
+        if (key && bgImgFor(key)?.scope === "spread") setBgImg(key, null);
+      }
+      return;
+    }
+    const key = scope === "left" ? bgPanel.leftKey : bgPanel.rightKey;
+    if (key) setBgImg(key, null);
+  };
   const saveAllEdits = () => {
     localStorage.setItem("remains-book-text-edits", JSON.stringify(textEdits));
     localStorage.setItem("remains-book-page-bg", JSON.stringify(pageBgEdits));
