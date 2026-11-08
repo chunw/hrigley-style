@@ -1331,6 +1331,18 @@
   line-height: 1.95;
 }
 
+/* About pages only (her note, 2026-11-08: the English page's bottom
+   whitespace was wrong): with the life paragraph added, the English bio
+   outgrew one page at the essay setting and its last paragraph slipped
+   below the folio. The About text therefore runs a touch smaller and
+   tighter — same face, same measure — so both language pages end above
+   their folios. Section essays keep the setting above. */
+.bk-essay-text.bk-about-text {
+  margin-top: 0.45in;
+  font-size: 9.25pt;
+  line-height: 1.7;
+}
+
 .bk-essay-text p {
   margin: 0 0 1.1em;
 }
