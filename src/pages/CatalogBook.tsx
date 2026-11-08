@@ -3654,8 +3654,7 @@ const CatalogBook = () => {
     setSavedSnapshot(JSON.stringify({ t: textEdits, b: pageBgEdits, i: bgImgEdits, n: pageNotes, g: imgEdits }));
     setPrMsg(lang === "zh" ? "已保存到本机浏览器。" : "Saved in this browser.");
   };
-  const generatePR = async () => {
-    setPrMsg(lang === "zh" ? "正在生成 PR…" : "Creating PR…");
+  const buildEditsPayload = () => {
     const pageBg: Record<string, PageBgValue> = { ...PAGE_BACKGROUNDS };
     for (const [k, v] of Object.entries(pageBgEdits)) {
       if (v === "global") delete pageBg[k];
@@ -3674,7 +3673,49 @@ const CatalogBook = () => {
       .sort((x, y) => x.folio - y.folio);
     // Picture edits ride along keyed by picture src: { scale?, src? } —
     // src is a replacement image's data URL when the picture was swapped.
-    const payload = { textEdits, pageBg, pageBgImages, pageNotes: pageNotesList, imageEdits: imgEdits };
+    return { textEdits, pageBg, pageBgImages, pageNotes: pageNotesList, imageEdits: imgEdits };
+  };
+  // "Send to Muse" (her request, 2026-11-08): on a phone the download
+  // fallback means hunting for the file afterwards, so this hands the
+  // exact same book-edits.json to the system share sheet instead — she
+  // picks the Muse app and the file lands in chat with Beignet, who
+  // turns it into a PR as usual. Browsers without file sharing fall
+  // back to the plain download.
+  const shareToMuse = async () => {
+    const payload = buildEditsPayload();
+    const text = JSON.stringify(payload, null, 2);
+    const file = new File([text], "book-edits.json", { type: "application/json" });
+    const nav = navigator as Navigator & {
+      canShare?: (data: { files: File[] }) => boolean;
+      share?: (data: { files: File[]; title: string }) => Promise<void>;
+    };
+    if (nav.canShare && nav.share && nav.canShare({ files: [file] })) {
+      try {
+        await nav.share({ files: [file], title: "book-edits.json" });
+        setPrMsg(lang === "zh" ? "已通过分享发送。" : "Shared.");
+        return;
+      } catch (err) {
+        if (err instanceof Error && err.name === "AbortError") {
+          setPrMsg(lang === "zh" ? "已取消发送。" : "Share cancelled.");
+          return;
+        }
+      }
+    }
+    const blob = new Blob([text], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "book-edits.json";
+    a.click();
+    URL.revokeObjectURL(a.href);
+    setPrMsg(
+      lang === "zh"
+        ? "这个浏览器不支持直接分享，已下载 book-edits.json，把它发给 Beignet 即可。"
+        : "This browser cannot share files directly; book-edits.json downloaded instead, send it to Beignet.",
+    );
+  };
+  const generatePR = async () => {
+    setPrMsg(lang === "zh" ? "正在生成 PR…" : "Creating PR…");
+    const payload = buildEditsPayload();
     try {
       const res = await fetch("/api/book-pr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
@@ -3987,6 +4028,9 @@ const CatalogBook = () => {
                 </button>
                 <button type="button" onClick={generatePR} className={toggleClass(false)}>
                   {lang === "zh" ? "生成PR" : "Make PR"}
+                </button>
+                <button type="button" onClick={shareToMuse} className={toggleClass(false)}>
+                  {lang === "zh" ? "发送给 Muse" : "Send to Muse"}
                 </button>
               </>
             )}
