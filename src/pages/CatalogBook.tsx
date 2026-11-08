@@ -75,6 +75,7 @@ type PageSpec =
   | { kind: "opener"; half: "left" | "right"; chapter: Chapter }
   | { kind: "essay"; chapter: Chapter; chunk: number }
   | { kind: "exhibitions"; chapter: Chapter }
+  | { kind: "part-exhibitions"; part: number; chunk: number }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
   | { kind: "plateGrid"; chapter: Chapter; entries: { item: CatalogItem; plate: number }[] }
   | { kind: "bleed"; half: "left" | "right"; chapter: Chapter; item: CatalogItem }
@@ -289,6 +290,95 @@ function exhibitionParts(text: string): { year: string; rest: string } {
     .replace(/[\s,，、·–—-]+$/, "")
     .trim();
   return { year: dateYears[0][0], rest };
+}
+
+/** ── Exhibition & award credits, consolidated at each part's end ──────────
+ * Her direction, 2026-11-08: every work's exhibition and award information
+ * is listed once, at the end of the part the work belongs to, grouped by
+ * section — no longer as a separate closing page per section. The single
+ * data source stays EXHIBITIONS (src/lib/exhibitions.ts), keyed by section;
+ * this block only regroups it under the book's five parts (the same
+ * membership the contents page uses) and splits each part's list across as
+ * many pages as it needs, breaks falling between groups where possible.
+ * Sections that stand outside the five parts (the closing interview) keep
+ * their own per-section exhibitions page. */
+const PART_SECTIONS: Record<number, string[]> = {
+  1: ["spirit", "remains", "residuals", "stillthings", "road"],
+  2: ["innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography"],
+  3: ["series:unfinished", "series:google", "series:feedscanner", "series:earlyline", "series:soliloquy", "series:artempath"],
+  4: ["series:immemory", "series:cavedance", "series:negotiated"],
+  5: ["shop"],
+};
+const SECTION_PART: Record<string, number> = Object.fromEntries(
+  Object.entries(PART_SECTIONS).flatMap(([part, keys]) => keys.map((k) => [k, Number(part)] as [string, number])),
+);
+
+/** Canonical section titles for the credits lists (her rule, 2026-11-08:
+ * chapter and series names print in one canonical form everywhere). The
+ * three photography sections were renamed the same day — Reflections in
+ * the Death Valley; Sahara from 6 to 10: An Archive (撒哈拉晚六时至早十时,
+ * the full titleZh in her photography data); Scottish Highlands -
+ * Heroism of the Vista — and the lists use the new names even while a
+ * rename is still landing in the chapter data itself; once it lands,
+ * this table and the chapter titles agree. */
+const CANONICAL_SECTION_TITLE: Record<string, { en: string; zh?: string }> = {
+  deathvalley: { en: "Reflections in the Death Valley", zh: "死亡谷" },
+  sahara: { en: "Sahara from 6 to 10: An Archive", zh: "撒哈拉晚六时至早十时" },
+  highlands: { en: "Scottish Highlands - Heroism of the Vista", zh: "苏格兰高地 - 视域的英雄主义" },
+};
+
+type ExhibitionGroupChunk = { key: string; entries: { en: string; zh: string }[]; continued: boolean };
+/** Page budgets in inches for the credits lists, from the .bk-exhibitions
+ * metrics (page content height 9.15in; first page also pays the list's top
+ * margin and the part head, continuation pages only the top margin). Entry
+ * heights are estimated from text length at the set line metrics, kept
+ * conservative so a list page never clips. */
+const EXHIBITIONS_FIRST_PAGE_IN = 7.55;
+const EXHIBITIONS_CONT_PAGE_IN = 8.55;
+const EXHIBITIONS_GROUP_HEAD_IN = 0.92;
+const exhibitionEntryIn = (e: { en: string; zh: string }): number =>
+  Math.ceil(e.en.length / 82) * 0.219 + Math.ceil(e.zh.length / 50) * 0.201 + 0.26;
+
+function partExhibitionChunks(part: number): ExhibitionGroupChunk[][] {
+  const groups = (PART_SECTIONS[part] ?? [])
+    .filter((k) => EXHIBITIONS[k]?.length)
+    .map((k) => ({ key: k, entries: EXHIBITIONS[k] }));
+  const pages: ExhibitionGroupChunk[][] = [];
+  let cur: ExhibitionGroupChunk[] = [];
+  let budget = EXHIBITIONS_FIRST_PAGE_IN;
+  const flush = () => {
+    if (cur.length) pages.push(cur);
+    cur = [];
+    budget = EXHIBITIONS_CONT_PAGE_IN;
+  };
+  for (const g of groups) {
+    let rest = [...g.entries];
+    let headPending = true;
+    while (rest.length) {
+      const headCost = headPending ? EXHIBITIONS_GROUP_HEAD_IN : 0;
+      let take = 0;
+      let used = headCost;
+      while (take < rest.length && used + exhibitionEntryIn(rest[take]) <= budget) {
+        used += exhibitionEntryIn(rest[take]);
+        take++;
+      }
+      if (take === 0) {
+        if (cur.length) {
+          flush();
+          continue;
+        }
+        take = 1;
+        used = headCost + exhibitionEntryIn(rest[0]);
+      }
+      cur.push({ key: g.key, entries: rest.slice(0, take), continued: !headPending });
+      budget -= used;
+      rest = rest.slice(take);
+      headPending = false;
+      if (rest.length) flush();
+    }
+  }
+  flush();
+  return pages;
 }
 
 /** Split paragraphs into page-sized chunks of at most ~maxChars each. */
@@ -652,7 +742,8 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
   specs.push({ kind: "about", chunk: 1 });
 
   let firstChapter = true;
-  for (const chapter of chapters) {
+  for (let chapterIdx = 0; chapterIdx < chapters.length; chapterIdx++) {
+    const chapter = chapters[chapterIdx];
     if (firstChapter) {
       pushAphorism(APHORISMS["what-remains"]);
       for (let i = 0; i < paintingChunkCount; i++) specs.push({ kind: "painting-intro", chunk: i });
@@ -779,7 +870,22 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         for (let i = leadCount; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
       }
     }
-    if (EXHIBITIONS[chapter.key]?.length) specs.push({ kind: "exhibitions", chapter });
+    // Exhibition & award credits close the part, not the section (her
+    // direction, 2026-11-08): when the next chapter belongs to another
+    // part — or the book's chapters run out — the part's consolidated
+    // list is emitted here, grouped by section. Chapters outside the
+    // five parts (the closing interview) keep their own closing page.
+    const sectionPart = SECTION_PART[chapter.key];
+    if (sectionPart) {
+      const nextChapter = chapters[chapterIdx + 1];
+      const nextPart = nextChapter ? SECTION_PART[nextChapter.key] : undefined;
+      if (nextPart !== sectionPart) {
+        const chunks = partExhibitionChunks(sectionPart);
+        for (let i = 0; i < chunks.length; i++) specs.push({ kind: "part-exhibitions", part: sectionPart, chunk: i });
+      }
+    } else if (EXHIBITIONS[chapter.key]?.length) {
+      specs.push({ kind: "exhibitions", chapter });
+    }
   }
 
   // The reverse index closes the book's text: after the last chapter,
@@ -854,6 +960,8 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `essay:${spec.chapter.key}:${spec.chunk}`;
     case "exhibitions":
       return `exhibitions:${spec.chapter.key}`;
+    case "part-exhibitions":
+      return `part-exhibitions:${spec.part}:${spec.chunk}`;
     case "opener":
       return `opener:${spec.chapter.key}:${spec.half}`;
     case "aphorism":
@@ -1507,6 +1615,63 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 );
               })}
             </ul>
+          </div>
+        </Page>
+      );
+    }
+
+    case "part-exhibitions": {
+      // The part's consolidated exhibition & award credits (her direction,
+      // 2026-11-08): the part title heads the first page; under it the
+      // part's sections stand as group heads in book order, each with its
+      // entries from EXHIBITIONS, English first and Chinese following,
+      // years leading each line — the same setting as the per-section
+      // exhibitions pages this replaces.
+      const chunks = partExhibitionChunks(spec.part);
+      const groups = chunks[spec.chunk] ?? [];
+      const PART_HEAD_KEY: Record<number, string> = { 2: "innerwilderness", 3: "series:unfinishedpart", 4: "series:triptych", 5: "shop" };
+      const headChapter = spec.part === 1 ? undefined : chapters.find((c) => c.key === PART_HEAD_KEY[spec.part]);
+      const partTitle =
+        spec.part === 1
+          ? { en: translations.en.catalogBook.paintingIntro, zh: translations.zh.catalogBook.paintingIntro }
+          : { en: headChapter?.titleEn ?? headChapter?.title ?? "", zh: headChapter?.titleZh };
+      const groupTitle = (key: string) => {
+        const canon = CANONICAL_SECTION_TITLE[key];
+        const ch = chapters.find((c) => c.key === key);
+        return stackedPair(canon?.en ?? ch?.titleEn ?? ch?.title ?? key, canon?.zh ?? ch?.titleZh);
+      };
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
+          <div className="bk-eyebrow">相关展览 · Exhibitions</div>
+          <div className="bk-exhibitions">
+            {spec.chunk === 0 && (
+              <h3 className="bk-exhibitions-head shop-title">{stackedPair(partTitle.en, partTitle.zh)}</h3>
+            )}
+            {groups.map((g) => (
+              <div className="bk-exhibitions-group" key={`${g.key}${g.continued ? "-cont" : ""}`}>
+                <h4 className="bk-exhibitions-subhead shop-title">{groupTitle(g.key)}</h4>
+                <ul>
+                  {g.entries.map((e, i) => {
+                    const en = exhibitionParts(e.en);
+                    const zh = exhibitionParts(e.zh);
+                    return (
+                      <li key={i}>
+                        <span className="bk-exhibitions-en">
+                          {en.year && <strong>{en.year}</strong>}
+                          {en.year ? " " : ""}
+                          {en.rest}
+                        </span>
+                        <span className="bk-exhibitions-zh">
+                          {zh.year && <strong>{zh.year}</strong>}
+                          {zh.year ? " " : ""}
+                          {zh.rest}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
           </div>
         </Page>
       );

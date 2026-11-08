@@ -837,6 +837,17 @@
   margin-bottom: 0.4in;
 }
 
+/* Part-end consolidated credits: section group heads inside the list. */
+.bk-exhibitions-subhead {
+  font-size: 0.165in;
+  line-height: 1.35;
+  margin: 0.34in 0 0.18in;
+}
+
+.bk-exhibitions-group:first-of-type .bk-exhibitions-subhead {
+  margin-top: 0.02in;
+}
+
 .bk-exhibitions ul {
   list-style: none;
   margin: 0;
