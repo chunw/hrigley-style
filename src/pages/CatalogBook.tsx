@@ -1706,7 +1706,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // the contents stays clean, the body text is untouched.
       const PART_OF: Record<string, number> = {
         spirit: 1, remains: 1, residuals: 1, stillthings: 1, road: 1,
-        innerwilderness: 2, deathvalley: 2, sahara: 2, highlands: 2, theater: 2, photography: 2, "series:nostalgia": 2,
+        innerwilderness: 2, deathvalley: 2, sahara: 2, highlands: 2, theater: 2, photography: 2,
         "series:unfinished": 3, "series:google": 3, "series:feedscanner": 3, "series:earlyline": 3, "series:soliloquy": 3, "series:artempath": 3,
         "series:immemory": 4, "series:cavedance": 4, "series:negotiated": 4,
         shop: 5,
