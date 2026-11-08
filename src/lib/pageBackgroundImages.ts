@@ -13,4 +13,6 @@ export interface PageBgImage {
  * (see pageBackgrounds.ts for the colour overrides underneath).
  * Written by the book editor's 生成PR flow (api/book-pr.js); edit by hand if needed.
  */
-export const PAGE_BACKGROUND_IMAGES: Record<string, PageBgImage> = {};
+export const PAGE_BACKGROUND_IMAGES: Record<string, PageBgImage> = {
+  "aphorism:what-remains:left": { src: "/watercolors/45/main.jpg", scope: "spread" },
+};

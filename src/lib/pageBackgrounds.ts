@@ -9,8 +9,9 @@ export type PageBgKind = "white" | "cream" | "black" | "pink";
  */
 export const PAGE_BACKGROUNDS: Record<string, PageBgKind> = {
   "contents": "white",
-  "plate:107": "black",
-  "plate:35": "black",
+  "plate:31": "black",
+  "plate:32": "black",
+  "plate:103": "black",
   "plateGrid": "black",
   "canva:11": "black",
   "canva:15": "black",
