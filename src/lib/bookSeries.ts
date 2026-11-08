@@ -160,8 +160,8 @@ export const BOOK_SERIES: BookSeries[] = [
     titleEn: "Inner Wilderness",
     titleZh: "内在荒原",
     years: "2017 – 2025",
-    textEn: "I think of my landscape works as a kind of departure. The land comes first, before language, before the self, and what I bring back from it is not a view but a state: distances that reorganize the person looking. Death Valley, the Sahara, the Scottish Highlands: places where the horizon does the thinking.\n\nThis line of work is ongoing. Alongside the landscapes, the portraits and street scenes gathered here, El Otro, El Mismo and Theater, keep the same question at human scale: what does a place, or a face, leave in the one who passes through it?",
-    textZh: "我把自己的风景作品看作一种出发。土地在先，在语言之前，在自我之前，我从那里带回的不是一个景象，而是一种状态：让观看者重新排列自身的距离。死亡谷、撒哈拉、苏格兰高地：这些地方，地平线替人思考。\n\n这条线索仍在继续。与风景并置的，是这里收录的人像与街头场景，《另一个，同一个》和《登场》，在人的尺度上追问同一个问题：一个地方，或一张脸，会在经过它的人身上留下什么？",
+    textEn: "The land comes first, before language, before the self, and what I bring back from it is not a view but a state: distances that reorganize the person looking.\nThis line of work is ongoing. Alongside the landscapes, the portraits and street scenes gathered here, El Otro, El Mismo and Theater, keep the same question at human scale: what does a place, or a face, leave in the one who passes through it?",
+    textZh: "土地在先，在语言之前，在自我之前，我从那里带回的不是一个景象，而是一种状态：让观看者重新排列自身的距离\n\n这条线索仍在继续。与风景并置的，是这里收录的人像与街头场景，《另一个，同一个》和《登场》，在人的尺度上追问同一个问题：一个地方，或一张脸，会在经过它的人身上留下什么？",
   },
   {
     id: "deathvalley",
