@@ -227,10 +227,6 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     en: "To revive the music and dance depicted in the Dunhuang cave paintings.",
     zh: "让敦煌壁画中的音乐与舞蹈重现。",
   },
-  "series:soliloquy": {
-    en: "A temple for meditation and reflection.",
-    zh: "一座冥想与自我反思的庙宇。",
-  },
   "series:artempath": {
     en: "Opening dialogues between the artist and the viewer as well as among viewers themselves.",
     zh: "在艺术家与观众之间、观众与观众之间开启对话。",
@@ -312,7 +308,7 @@ function exhibitionParts(text: string): { year: string; rest: string } {
 const PART_SECTIONS: Record<number, string[]> = {
   1: ["spirit", "remains", "residuals", "stillthings", "road"],
   2: ["innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography"],
-  3: ["series:unfinished", "series:google", "series:feedscanner", "series:earlyline", "series:soliloquy", "series:artempath"],
+  3: ["series:unfinished", "series:google", "series:feedscanner", "series:earlyline", "series:artempath"],
   4: ["series:immemory", "series:cavedance", "series:negotiated"],
   5: ["shop"],
 };
@@ -1707,7 +1703,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const PART_OF: Record<string, number> = {
         spirit: 1, remains: 1, residuals: 1, stillthings: 1, road: 1,
         innerwilderness: 2, deathvalley: 2, sahara: 2, highlands: 2, theater: 2, photography: 2, "series:nostalgia": 2,
-        "series:unfinished": 3, "series:google": 3, "series:feedscanner": 3, "series:earlyline": 3, "series:soliloquy": 3, "series:artempath": 3,
+        "series:unfinished": 3, "series:google": 3, "series:feedscanner": 3, "series:earlyline": 3, "series:artempath": 3,
         "series:immemory": 4, "series:cavedance": 4, "series:negotiated": 4,
         shop: 5,
       };
@@ -2463,8 +2459,7 @@ function useBookModel(args: {
       "spirit", "remains", "residuals", "stillthings", "road",
       "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography",
       "series:unfinishedpart", "series:unfinished", "series:google",
-      "series:feedscanner", "series:earlyline",
-      "series:soliloquy", "series:artempath",
+      "series:feedscanner", "series:earlyline", "series:artempath",
       "series:triptych", "series:immemory", "series:cavedance", "series:negotiated",
       "shop",
       "series:interview",
