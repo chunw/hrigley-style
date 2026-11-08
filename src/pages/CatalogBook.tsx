@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { createPortal } from "react-dom";
 import { ArrowLeft, ChevronLeft, ChevronRight, Printer } from "lucide-react";
 import "./catalog-book.css";
 import { usePageMeta } from "@/hooks/usePageMeta";
@@ -1054,6 +1055,7 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
   const [aspect, setAspect] = useState(0);
   const [frameAspect, setFrameAspect] = useState(0);
   const [pageRel, setPageRel] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
+  const [pageEl, setPageEl] = useState<Element | null>(null);
 
   // The picture's natural aspect, via a probe on the same URL.
   useEffect(() => {
@@ -1085,6 +1087,7 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
         setFrameAspect(fr.width / fr.height);
         const page = frame.closest('[id^="bk-page-"]');
         if (page) {
+          setPageEl(page);
           const pr = page.getBoundingClientRect();
           setPageRel({ x: ((pr.left - fr.left) / fr.width) * 100, y: ((pr.top - fr.top) / fr.height) * 100, w: (pr.width / fr.width) * 100, h: (pr.height / fr.height) * 100 });
         }
@@ -1213,31 +1216,54 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
     <>
       <span ref={anchorRef} className="bk-imgedit-anchor" aria-hidden="true" />
       <BookImage src={displaySrc} fallback={edit?.src ? undefined : fallback} alt={alt} className={className} style={merged} />
-      {ctx.editMode && (
-        <div
-          ref={wrapRef}
-          className={`bk-imgedit-overlay ${selected ? "bk-imgedit-on" : ""}`}
-          style={ready ? { left: `${rect.x}%`, top: `${rect.y}%`, width: `${rect.w}%`, height: `${rect.h}%`, right: "auto", bottom: "auto" } : undefined}
-          onClick={(e) => {
-            e.stopPropagation();
-            ctx.selectImg(src);
-          }}
-          onPointerDown={(e) => onDragStart(e, "move")}
-          {...dragHandlers}
-        >
-          {selected &&
-            corners.map((cn) => (
-              <div
-                key={cn.k}
-                className={`bk-imgedit-handle ${cn.cls}`}
-                style={{ cursor: cn.cursor }}
-                onPointerDown={(e) => onDragStart(e, cn.k)}
-                {...dragHandlers}
-                title="拖动改大小 · Drag to resize"
-              />
-            ))}
-        </div>
-      )}
+      {ctx.editMode &&
+        (() => {
+          // The selection layer renders into the PAGE, not the frame:
+          // pages clip at their edges (overflow hidden), and a frame-
+          // level layer lost its corner handles whenever the picture
+          // was dragged partly past the frame (her Canva-standard
+          // retest, 2026-11-08). Page-relative geometry keeps every
+          // handle on the page and grabbable.
+          const inPage = !!(pageEl && pageRel && ready);
+          const oStyle: CSSProperties | undefined = !ready
+            ? undefined
+            : inPage && pageRel
+              ? {
+                  left: `${((rect.x - pageRel.x) / pageRel.w) * 100}%`,
+                  top: `${((rect.y - pageRel.y) / pageRel.h) * 100}%`,
+                  width: `${(rect.w / pageRel.w) * 100}%`,
+                  height: `${(rect.h / pageRel.h) * 100}%`,
+                  right: "auto",
+                  bottom: "auto",
+                }
+              : { left: `${rect.x}%`, top: `${rect.y}%`, width: `${rect.w}%`, height: `${rect.h}%`, right: "auto", bottom: "auto" };
+          const node = (
+            <div
+              ref={wrapRef}
+              className={`bk-imgedit-overlay ${selected ? "bk-imgedit-on" : ""}`}
+              style={oStyle}
+              onClick={(e) => {
+                e.stopPropagation();
+                ctx.selectImg(src);
+              }}
+              onPointerDown={(e) => onDragStart(e, "move")}
+              {...dragHandlers}
+            >
+              {selected &&
+                corners.map((cn) => (
+                  <div
+                    key={cn.k}
+                    className={`bk-imgedit-handle ${cn.cls}`}
+                    style={{ cursor: cn.cursor }}
+                    onPointerDown={(e) => onDragStart(e, cn.k)}
+                    {...dragHandlers}
+                    title="拖动改大小 · Drag to resize"
+                  />
+                ))}
+            </div>
+          );
+          return inPage && pageEl ? createPortal(node, pageEl) : node;
+        })()}
     </>
   );
 }
