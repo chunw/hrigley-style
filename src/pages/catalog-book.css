@@ -1919,7 +1919,10 @@
 
 /* Each cluster keeps its own indent, so the two pages read as a field
    of places rather than a table. */
-.bk-tocmap-p1 { margin-left: 0; }
+/* Extra air above the first part (her direction, 2026-11-08: the gap
+   between the front matter and part 1 was too tight). The margin stacks
+   on the flow gap, so part 1 starts well clear of Preface / About. */
+.bk-tocmap-p1 { margin-left: 0; margin-top: 0.5in; }
 .bk-tocmap-p3 { margin-left: 0.55in; }
 .bk-tocmap-p2 { margin-left: 0.3in; }
 .bk-tocmap-p4 { margin-left: 0.85in; }
