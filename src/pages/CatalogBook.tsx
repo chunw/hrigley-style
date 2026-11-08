@@ -956,33 +956,6 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     specs.push({ kind: "reverse-index", chunk });
   }
 
-  // Her direction (2026-11-08): in the road chapter, every landscape
-  // work that can carry it prints as a full-bleed spread — "whatever
-  // can be full bleed, is full bleed". The portrait works keep their
-  // plate pages: spread across two pages they would lose most of the
-  // picture to the crop. Spreads start on a verso, like the openers.
-  const ROAD_SPREAD_TITLES = new Set([
-    "Notes from the Road #2", "Notes from the Road #3", "Notes from the Road #4",
-    "Notes from the Road #5", "Notes from the Road #6", "Notes from the Road #9",
-    "Notes from the Road #12", "Notes from the Road #13", "Notes from the Road #14",
-  ]);
-  for (let i = 0; i < specs.length; i++) {
-    const spec = specs[i];
-    if (spec.kind === "plate" && spec.chapter.key === "road" && ROAD_SPREAD_TITLES.has(spec.item.title)) {
-      const pair: PageSpec[] = [
-        { kind: "bleed", half: "left", chapter: spec.chapter, item: spec.item },
-        { kind: "bleed", half: "right", chapter: spec.chapter, item: spec.item },
-      ];
-      if ((i + 1) % 2 !== 0) {
-        specs.splice(i, 1, { kind: "blank" }, ...pair);
-        i += 2;
-      } else {
-        specs.splice(i, 1, ...pair);
-        i += 1;
-      }
-    }
-  }
-
   // Closing page sits on the final (verso) page of the last signature.
   while ((specs.length + 1) % SIGNATURE !== 0) specs.push({ kind: "blank" });
   specs.push({ kind: "end" });
@@ -1074,9 +1047,7 @@ function pageKeyOf(spec: PageSpec): string | null {
     case "plate":
       return `plate:${spec.plate}`;
     case "bleed":
-      return spec.chapter.key === "road"
-        ? `bleed:road:${spec.item.image_url}:${spec.half}`
-        : `bleed:${spec.chapter.key}:${spec.half}`;
+      return `bleed:${spec.chapter.key}:${spec.half}`;
     case "about":
       return `about:${spec.chunk}`;
     case "collage":
@@ -2081,18 +2052,12 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-bleed bk-bleed-${spec.half}${bgImgCls}`}>{bgImgLayer}
           <div className="bk-spread-canvas">
             <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} className="bk-bleed-img" />
-            {spec.half === "right" && spec.chapter.key === "road" ? (
-              <div className="bk-bleed-caption bk-bleed-caption-road">
-                <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
-                <div className="bk-caption-meta">{[item.metaLine, item.mediumZh && item.mediumZh !== item.medium && !(item.metaLine ?? "").includes(item.mediumZh) ? item.mediumZh : ""].filter(Boolean).join(" · ")}</div>
-                {item.description && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: item.description }} />}
-              </div>
-            ) : spec.half === "right" ? (
+            {spec.half === "right" && (
               <div className="bk-bleed-caption">
                 <div className="bk-caption-title product-title">{item.title}</div>
                 <div className="bk-caption-meta">{item.metaLine}</div>
               </div>
-            ) : null}
+            )}
           </div>
         </Page>
       );
