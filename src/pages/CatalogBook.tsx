@@ -1014,6 +1014,10 @@ export interface ImgEdit {
   dy?: number;
   /** The picture fills its whole page edge to edge (object-fit cover). */
   full?: boolean;
+  /** Full-bleed crop position (object-position, percent 0–100): which
+   * part of the picture shows inside the page when it is cropped.
+   * Adjusted by dragging the picture while it is full bleed. */
+  pos?: { x: number; y: number };
   src?: string;
 }
 
@@ -1051,6 +1055,8 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
     fr: { width: number; height: number };
     base: { scale: number; dx: number; dy: number };
     baseRect: { x: number; y: number; w: number; h: number };
+    fullAtStart: boolean;
+    startPos: { x: number; y: number };
   } | null>(null);
   const [aspect, setAspect] = useState(0);
   const [frameAspect, setFrameAspect] = useState(0);
@@ -1127,7 +1133,14 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
         h: fy * scale * 100,
       };
   const imgStyle: CSSProperties = ready
-    ? { left: `${rect.x}%`, top: `${rect.y}%`, width: `${rect.w}%`, height: `${rect.h}%`, objectFit: full ? "cover" : "contain" }
+    ? {
+        left: `${rect.x}%`,
+        top: `${rect.y}%`,
+        width: `${rect.w}%`,
+        height: `${rect.h}%`,
+        objectFit: full ? "cover" : "contain",
+        ...(full ? { objectPosition: `${edit?.pos?.x ?? 50}% ${edit?.pos?.y ?? 50}%` } : {}),
+      }
     : {};
   const merged: CSSProperties = { ...style, ...imgStyle };
 
@@ -1166,7 +1179,7 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
     const baseRect = exitFull
       ? { x: startRect.x, y: startRect.y, w: fx * base.scale * 100, h: fy * base.scale * 100 }
       : startRect;
-    dragRef.current = { pointerId: e.pointerId, mode, start: { x: e.clientX, y: e.clientY }, fr: { width: fr.width, height: fr.height }, base, baseRect };
+    dragRef.current = { pointerId: e.pointerId, mode, start: { x: e.clientX, y: e.clientY }, fr: { width: fr.width, height: fr.height }, base, baseRect, fullAtStart: full, startPos: { x: edit?.pos?.x ?? 50, y: edit?.pos?.y ?? 50 } };
   };
   const onDragMove = (e: React.PointerEvent) => {
     const d = dragRef.current;
@@ -1175,6 +1188,23 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
     let ddx = ((e.clientX - d.start.x) / d.fr.width) * 100;
     let ddy = ((e.clientY - d.start.y) / d.fr.height) * 100;
     const cur = ctx.imgEditFor(src) ?? {};
+    if (d.mode === "move" && d.fullAtStart && pageRel) {
+      // Full bleed: dragging slides the crop window over the picture
+      // (Canva's fill-position drag) instead of moving the frame.
+      const pageWpx = (pageRel.w / 100) * d.fr.width;
+      const pageHpx = (pageRel.h / 100) * d.fr.height;
+      if (pageWpx > 0 && pageHpx > 0 && aspect > 0) {
+        const pageAspect = pageWpx / pageHpx;
+        const overX = aspect > pageAspect ? pageHpx * aspect - pageWpx : 0;
+        const overY = aspect < pageAspect ? pageWpx / aspect - pageHpx : 0;
+        const px = e.clientX - d.start.x;
+        const py = e.clientY - d.start.y;
+        const nx = overX > 0 ? Math.min(100, Math.max(0, d.startPos.x - (px / overX) * 100)) : d.startPos.x;
+        const ny = overY > 0 ? Math.min(100, Math.max(0, d.startPos.y - (py / overY) * 100)) : d.startPos.y;
+        ctx.setImgEdit(src, { ...cur, full: true, pos: { x: Math.round(nx * 10) / 10, y: Math.round(ny * 10) / 10 } });
+      }
+      return;
+    }
     // The picture lives on ONE page of a spread: it may bleed to its
     // page's edges but never onto the neighbouring page — past the
     // page edge its handles physically cannot exist (the neighbour
@@ -1504,7 +1534,7 @@ function ImgEditPanel({
     <div data-noprint className="bk-editor-panel bk-imgedit-panel">
       <div className="bk-editor-head">
         <span className="sans-label">{zh ? "图片" : "Picture"} · {title || src}</span>
-        <span className="bk-editor-hint">{zh ? "拖图片四个角改大小（对角不动）、拖图片本身移动；改动自动存到本机草稿" : "Drag a corner to resize (opposite corner stays), drag the picture to move — changes save to this browser automatically"}</span>
+        <span className="bk-editor-hint">{edit?.full ? (zh ? "满版中：拖动图片调整取景位置；拖角退出满版改大小" : "Full bleed: drag the picture to reposition the crop; drag a corner to leave full bleed and resize") : zh ? "拖图片四个角改大小（对角不动）、拖图片本身移动；改动自动存到本机草稿" : "Drag a corner to resize (opposite corner stays), drag the picture to move — changes save to this browser automatically"}</span>
       </div>
       <div className="bk-imgedit-row">
         <span>{zh ? "大小" : "Size"}</span>
@@ -3431,7 +3461,7 @@ const CatalogBook = () => {
   const setImgEdit = (src: string, edit: ImgEdit | null) =>
     setImgEdits((prev) => {
       const next = { ...prev };
-      if (!edit || (edit.scale === undefined && !edit.src && !edit.full && !edit.dx && !edit.dy)) delete next[src];
+      if (!edit || (edit.scale === undefined && !edit.src && !edit.full && !edit.dx && !edit.dy && !edit.pos)) delete next[src];
       else next[src] = edit;
       return next;
     });
