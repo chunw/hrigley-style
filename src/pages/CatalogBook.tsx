@@ -927,7 +927,7 @@ type BgImgScope = "spread" | "left" | "right";
  * then choose where it goes — the whole spread, the left page or the right
  * page — and Apply. Clear removes the chosen scope's image again, back to
  * the page's paper ground. Staged like every other editor change: it only
- * persists via Save edits / Make PR in the toolbar. */
+ * persists via Save edits / Export in the toolbar. */
 function BgImagePanel({
   info,
   images,
@@ -2038,7 +2038,7 @@ function useBookModel(args: {
 
     // Essay layout rule: English gets its own pages, Chinese gets its own pages.
     // The two languages never share an essay page, so the book does not read like a translation.
-    // Editor: every paragraph carries the id of the source text it came from (see api/book-pr.js).
+    // Editor: every paragraph carries the id of the source text it came from (the edit ids exported in book-edits.json).
     const txParas = (field: "prefaceBody" | "paintingIntroBody" | "remainsEssayBody" | "elOtroEssayBody"): ParaItem[] =>
       translations.en.catalogBook[field].map((p, i) => ({ text: textEdits[`tx:${field}:${i}`] ?? p, edit: `tx:${field}:${i}` }));
     const fieldText = (key: CatalogSectionKey, which: "en" | "zh") =>
@@ -2456,8 +2456,10 @@ const CatalogBook = () => {
     setSavedSnapshot(JSON.stringify({ t: textEdits, b: pageBgEdits, i: bgImgEdits }));
     setPrMsg(lang === "zh" ? "已保存到本机浏览器。" : "Saved in this browser.");
   };
-  const generatePR = async () => {
-    setPrMsg(lang === "zh" ? "正在生成 PR…" : "Creating PR…");
+  // Export downloads book-edits.json only (no automatic PR); Chun sends the
+  // file to Beignet, who opens the PR from it. The payload is self-contained:
+  // textEdits plus the full merged pageBg and pageBgImages maps.
+  const exportEdits = () => {
     const pageBg: Record<string, PageBgKind> = { ...PAGE_BACKGROUNDS };
     for (const [k, v] of Object.entries(pageBgEdits)) {
       if (v === "global") delete pageBg[k];
@@ -2469,27 +2471,13 @@ const CatalogBook = () => {
       else pageBgImages[k] = v;
     }
     const payload = { textEdits, pageBg, pageBgImages };
-    try {
-      const res = await fetch("/api/book-pr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-      const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
-      if (res.ok && data.url) {
-        setPrMsg(`PR: ${data.url}`);
-        return;
-      }
-      throw new Error(data.error || `HTTP ${res.status}`);
-    } catch (err) {
-      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "book-edits.json";
-      a.click();
-      URL.revokeObjectURL(a.href);
-      setPrMsg(
-        lang === "zh"
-          ? `自动生成失败（${err instanceof Error ? err.message : "网络问题"}），已下载 book-edits.json，把它发给 Beignet 即可生成同样的 PR。`
-          : "Automatic PR failed; book-edits.json downloaded instead, send it to Beignet.",
-      );
-    }
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "book-edits.json";
+    a.click();
+    URL.revokeObjectURL(a.href);
+    setPrMsg(lang === "zh" ? "book-edits.json 已下载" : "book-edits.json downloaded.");
   };
   const stageRef = useRef<HTMLDivElement>(null);
 
@@ -2764,8 +2752,8 @@ const CatalogBook = () => {
                   {lang === "zh" ? "保存内容修改" : "Save edits"}
                   {editorDirty ? " *" : ""}
                 </button>
-                <button type="button" onClick={generatePR} className={toggleClass(false)}>
-                  {lang === "zh" ? "生成PR" : "Make PR"}
+                <button type="button" onClick={exportEdits} className={toggleClass(false)}>
+                  {lang === "zh" ? "导出" : "Export"}
                 </button>
               </>
             )}
