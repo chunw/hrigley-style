@@ -2281,3 +2281,23 @@
   color: #8a3c00;
   font-weight: 600;
 }
+
+/* The picture panel inherits near-white text from the toolbar theme;
+   pin its own colours so the title and size stay legible. */
+.bk-imgedit-panel {
+  color: #20211d;
+}
+
+.bk-imgedit-panel .bk-editor-hint {
+  color: #767066;
+}
+
+.bk-imgedit-pct input[type="number"] {
+  width: 3.4em;
+  color: #20211d;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #c9c2b2;
+  text-align: right;
+  font: inherit;
+}

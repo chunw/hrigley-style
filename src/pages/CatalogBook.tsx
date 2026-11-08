@@ -1275,7 +1275,9 @@ function ImgEditPanel({
       <div className="bk-imgedit-row">
         <span>{zh ? "大小" : "Size"}</span>
         <input type="range" min={20} max={300} step={1} value={Math.round(scale * 100)} onChange={(e) => onScale(Number(e.target.value) / 100)} />
-        <span className="bk-imgedit-pct">{Math.round(scale * 100)}%</span>
+        <span className="bk-imgedit-pct">
+          <input type="number" min={20} max={300} step={1} value={Math.round(scale * 100)} onChange={(e) => { const v = Number(e.target.value); if (Number.isFinite(v) && v >= 20 && v <= 300) onScale(v / 100); }} />%
+        </span>
         {edit?.src && <span className="bk-imgedit-swapped">{zh ? "已换成本地图片" : "Swapped image"}</span>}
       </div>
       <div className="bk-editor-actions">
