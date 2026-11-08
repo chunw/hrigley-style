@@ -1,5 +1,5 @@
 // Book editor → PR bridge.
-// POST { textEdits: { [editId]: newText }, pageBg: { [pageKey]: kind } }
+// POST { textEdits: { [editId]: newText }, pageBg: { [pageKey]: kind }, pageBgImages: { [pageKey]: { src, scope } } }
 // Applies the edits to the source files on a fresh branch and opens a PR.
 // Requires env GITHUB_TOKEN (fine-grained, this repo: Contents + Pull requests RW).
 // Edit ids (see CatalogBook.tsx): tx:<arrayField>:<index> | tx:watercolorNote:<lang> |
@@ -139,14 +139,40 @@ ${lines}
 
 // ── Handler ─────────────────────────────────────────────────────────────────
 
+function renderPageBackgroundImages(pageBgImages) {
+  const keys = Object.keys(pageBgImages).sort();
+  const lines = keys
+    .map((k) => `  ${JSON.stringify(k)}: { src: ${JSON.stringify(pageBgImages[k].src)}, scope: ${JSON.stringify(pageBgImages[k].scope)} },`)
+    .join("\n");
+  return `export interface PageBgImage {
+  src: string;
+  scope: "spread" | "page";
+}
+
+/**
+ * Per-spread / per-page background images for the book, keyed by stable page
+ * key (see pageKeyOf in CatalogBook.tsx: "preface:0", "aphorism:remains:left",
+ * "plate:41", ...). An entry with scope "page" covers that one page full
+ * bleed; an entry with scope "spread" is stored on either page of the
+ * spread and one image runs across both pages, continuous over the gutter.
+ * Pages not listed have no background image and keep their paper ground
+ * (see pageBackgrounds.ts for the colour overrides underneath).
+ * Written by the book editor's \u751f\u6210PR flow (api/book-pr.js); edit by hand if needed.
+ */
+export const PAGE_BACKGROUND_IMAGES: Record<string, PageBgImage> = {
+${lines}
+};
+`;
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "method-not-allowed" });
   const token = process.env.GITHUB_TOKEN;
   if (!token) return res.status(501).json({ error: "not-configured: GITHUB_TOKEN is not set in Vercel" });
 
-  const { textEdits = {}, pageBg = null } = req.body || {};
+  const { textEdits = {}, pageBg = null, pageBgImages = null } = req.body || {};
   const editIds = Object.keys(textEdits);
-  if (editIds.length === 0 && !pageBg) return res.status(400).json({ error: "nothing-to-do" });
+  if (editIds.length === 0 && !pageBg && !pageBgImages) return res.status(400).json({ error: "nothing-to-do" });
 
   try {
     // Route edits to files.
@@ -202,6 +228,7 @@ export default async function handler(req, res) {
     }
     if (failures.length > 0) return res.status(422).json({ error: "apply-failed", failures });
     if (pageBg) changed.set("src/lib/pageBackgrounds.ts", renderPageBackgrounds(pageBg));
+    if (pageBgImages) changed.set("src/lib/pageBackgroundImages.ts", renderPageBackgroundImages(pageBgImages));
 
     // Branch, commit, PR.
     const stamp = new Date().toISOString().replace(/[:.]/g, "-").replace("T", "-").slice(0, 19);
@@ -222,7 +249,7 @@ export default async function handler(req, res) {
       title: "Book edits from the web editor",
       head: branch,
       base: "main",
-      body: `Text edits: ${editIds.length} (${editIds.slice(0, 12).join(", ")}${editIds.length > 12 ? ", …" : ""}).\nPage backgrounds: ${pageBg ? Object.keys(pageBg).length : 0} page(s) set.\n\nPreview: ${preview}\n\nMade from the book page's edit mode (double-click text, per-page background swatches).`,
+      body: `Text edits: ${editIds.length} (${editIds.slice(0, 12).join(", ")}${editIds.length > 12 ? ", …" : ""}).\nPage backgrounds: ${pageBg ? Object.keys(pageBg).length : 0} page(s) set.\nBackground images: ${pageBgImages ? Object.keys(pageBgImages).length : 0} page(s) set.\n\nPreview: ${preview}\n\nMade from the book page's edit mode (double-click text, per-page background swatches).`,
     });
     return res.status(200).json({ url: pr.html_url, branch });
   } catch (err) {
