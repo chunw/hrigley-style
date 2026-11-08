@@ -306,7 +306,7 @@ function exhibitionParts(text: string): { year: string; rest: string } {
  * Sections that stand outside the five parts (the closing interview) keep
  * their own per-section exhibitions page. */
 const PART_SECTIONS: Record<number, string[]> = {
-  1: ["spirit", "remains", "residuals", "stillthings", "road"],
+  1: ["remains", "residuals", "stillthings", "road", "spirit"],
   2: ["innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography"],
   3: ["series:unfinished", "series:google", "series:feedscanner", "series:earlyline", "series:artempath"],
   4: ["series:immemory", "series:cavedance", "series:negotiated"],
@@ -2480,8 +2480,11 @@ function useBookModel(args: {
     // Part order (her direction, 2026-11-07): the website works move to
     // the back — Painting, Inner Wilderness, The Unfinished Archive,
     // Rooms/Scores/Decisions, Slightly Useful Objects.
+    // Her direction (2026-11-08): In the Spirit of the 21st Century
+    // closes Part 1 instead of opening it — the part now runs Remains,
+    // Residuals, Still Things, Notes from the Road, and Spirit last.
     const SECTION_ORDER = [
-      "spirit", "remains", "residuals", "stillthings", "road",
+      "remains", "residuals", "stillthings", "road", "spirit",
       "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography",
       "series:unfinishedpart", "series:unfinished", "series:google",
       "series:feedscanner", "series:earlyline", "series:artempath",
