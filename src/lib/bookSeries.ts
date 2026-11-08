@@ -165,7 +165,7 @@ export const BOOK_SERIES: BookSeries[] = [
   },
   {
     id: "deathvalley",
-    titleEn: "Death Valley",
+    titleEn: "Reflections in the Death Valley",
     titleZh: "死亡谷",
     years: "2017",
     textEn: "Reflections in the Death Valley. At Badwater Basin, the lowest point in North America, the salt flats become mirrors at dawn, doubling the sky and dissolving the boundary between earth and atmosphere.\n\nFeatured on SFMOMA · LensCulture",

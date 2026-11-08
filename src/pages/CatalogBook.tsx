@@ -463,7 +463,7 @@ const REVERSE_INDEX = {
       zh: "温度",
       en: "Temperatures",
       entries: [
-        { zh: "恶水盆地上热得发亮的盐", en: "salt glittering with heat at Badwater", to: "死亡谷 Death Valley" },
+        { zh: "恶水盆地上热得发亮的盐", en: "salt glittering with heat at Badwater", to: "死亡谷 Reflections in the Death Valley" },
         { zh: "按钟点存下的沙漠的热", en: "desert heat, kept by the hour", to: "撒哈拉 Sahara from 6 to 10: An Archive" },
         { zh: "一趟旅程散掉之后，变了的天气", en: "the weather, changed after a journey ends", to: "前言 Preface" },
         { zh: "一个没被自动化的决定的温度", en: "the warmth of a decision not automated", to: "协商智能 Negotiated Intelligence" },
@@ -479,7 +479,7 @@ const REVERSE_INDEX = {
         { zh: "把陶俑照得像珠宝的灯光", en: "light that makes a figurine look like a jewel", to: "前言 Preface" },
         { zh: "不会再以同样方式回来的光", en: "light that will not come back the same way", to: "前言 Preface" },
         { zh: "一具由光组成的舞者身体", en: "a dancer's body, made of light", to: "窟舞 Cave Dance" },
-        { zh: "黎明里成为镜子的盐滩", en: "salt flats, turned mirrors at dawn", to: "死亡谷 Death Valley" },
+        { zh: "黎明里成为镜子的盐滩", en: "salt flats, turned mirrors at dawn", to: "死亡谷 Reflections in the Death Valley" },
         { zh: "冰岛纯净到让人落泪的蓝", en: "a blue so pure it made her cry, in Iceland", to: "旅途笔记 Notes from the Road" },
       ],
     },
@@ -1832,7 +1832,7 @@ function useBookModel(args: {
     const photoChapters: Chapter[] = photoParent
       ? [
           { key: "innerwilderness", number: 0, title: "Inner Wilderness 内在荒原", titleEn: "Inner Wilderness", titleZh: "内在荒原", descriptionHtml: "", years: "2017 – 2025", items: [], seriesTextId: "innerwilderness", partHead: true },
-          { key: "deathvalley", number: 0, title: "Death Valley 死亡谷", titleEn: "Death Valley", titleZh: "死亡谷", descriptionHtml: "", years: yrOf(dvItems), items: [...dvItems, ...DEATH_VALLEY_PLATES.map((item) => ({ item, plate: 0 }))], seriesTextId: "deathvalley" },
+          { key: "deathvalley", number: 0, title: "Reflections in the Death Valley 死亡谷", titleEn: "Reflections in the Death Valley", titleZh: "死亡谷", descriptionHtml: "", years: yrOf(dvItems), items: [...dvItems, ...DEATH_VALLEY_PLATES.map((item) => ({ item, plate: 0 }))], seriesTextId: "deathvalley" },
           { key: "sahara", number: 0, title: "Sahara from 6 to 10: An Archive 撒哈拉", titleEn: "Sahara from 6 to 10: An Archive", titleZh: "撒哈拉", descriptionHtml: "", years: saharaItem?.year ?? "", items: saharaItem ? [{ item: saharaItem, plate: 0 }] : [], seriesTextId: "sahara" },
           { key: "highlands", number: 0, title: "Scottish Highlands 苏格兰高地", titleEn: "Scottish Highlands", titleZh: "苏格兰高地", descriptionHtml: "", years: yrOf(hgItems), items: hgItems, seriesTextId: "highlands" },
           { key: "theater", number: 0, title: "Theater 登场", titleEn: "Theater", titleZh: "登场", descriptionHtml: "", years: yrOf(thItems), items: thItems, seriesTextId: "theater" },
