@@ -777,9 +777,20 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // One opening per chapter (her direction, 2026-10-18): the big-type
     // opener spread alone, no separate title page before it. Series-only
     // chapters open with the same spread; their essay count can be 0.
-    if (!nextIsVerso()) specs.push({ kind: "blank" });
-    specs.push({ kind: "opener", half: "left", chapter });
-    specs.push({ kind: "opener", half: "right", chapter });
+    // Her direction (2026-11-08): a spread that carries nothing but the
+    // chapter's name duplicates the contents and the head of the
+    // chapter's own text, so openers print only where the chapter's
+    // epigraph gives the spread content of its own. Chapters without an
+    // epigraph (Still Things, the Unfinished Archive part head and its
+    // Life section, The Loss of Childhood, the Rooms/Scores/Decisions
+    // part head) open directly with their first text or plate page; the
+    // Unfinished Archive part head, which has no text or plates at all,
+    // prints no page and stands in the contents alone.
+    if (CHAPTER_EPIGRAPH[chapter.key]) {
+      if (!nextIsVerso()) specs.push({ kind: "blank" });
+      specs.push({ kind: "opener", half: "left", chapter });
+      specs.push({ kind: "opener", half: "right", chapter });
+    }
     const essayCount = essayChunkCounts[chapter.key] ?? (chapter.seriesOnly ? 0 : 1);
     // Illustrated chapters with plates anchored inside the essay flow (see
     // Chapter.plateBreaks): essay chunks and anchored plates are emitted in
@@ -1393,7 +1404,13 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       };
       const partPage = (p: number): number => {
         if (p === 1) return startOf((s) => s.kind === "painting-intro");
-        return startOf((s) => "chapter" in s && s.chapter.key === PART_HEAD_KEY[p]);
+        const headPage = startOf((s) => "chapter" in s && s.chapter.key === PART_HEAD_KEY[p]);
+        if (headPage > 0) return headPage;
+        // A part head that prints no page of its own (the Unfinished
+        // Archive divider chapter, retired 2026-11-08) opens at its
+        // first section's first page instead of printing folio 0.
+        const first = chapters.find((c) => PART_OF[c.key] === p);
+        return first ? startOf((s) => "chapter" in s && s.chapter.key === first.key) : 0;
       };
       const rows: TocRow[] = [
         { num: "", titleEn: translations.en.catalogBook.preface, titleZh: translations.zh.catalogBook.preface, sub: "", page: startOf((s) => s.kind === "preface") },
