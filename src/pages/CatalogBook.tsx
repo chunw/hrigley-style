@@ -1664,6 +1664,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             <div className="bk-title-meta">
               <span>{years}</span>
             </div>
+            <div className="bk-title-decade">十年选集 · A Ten-Year Selection</div>
           </div>
         </Page>
       );

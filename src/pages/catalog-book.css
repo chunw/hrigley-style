@@ -991,6 +991,16 @@
   color: rgba(255, 243, 194, 0.72);
 }
 
+/* The decade line under the title-page years (her direction, 2026-11-08):
+   the meta line's cream and letterspacing, one step smaller, so the title
+   block keeps its existing shape. */
+.bk-title-page .bk-title-decade {
+  margin-top: 0.09in;
+  font-size: 6.5pt;
+  letter-spacing: 0.22em;
+  color: rgba(255, 243, 194, 0.72);
+}
+
 .bk-title-meta {
   display: flex;
   justify-content: space-between;
