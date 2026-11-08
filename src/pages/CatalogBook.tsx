@@ -328,6 +328,12 @@ const CANONICAL_SECTION_TITLE: Record<string, { en: string; zh?: string }> = {
   highlands: { en: "Scottish Highlands - Heroism of the Vista", zh: "苏格兰高地 - 视域的英雄主义" },
 };
 
+/** Fixed title of every credits page (her direction, 2026-11-08: a part's
+ * closing list must say plainly that it is the exhibition & award list).
+ * The fixed bilingual title heads the page; the part or chapter name
+ * moves up into the eyebrow as the attribution. */
+const CREDITS_TITLE = { en: "Exhibitions and Awards", zh: "展览与奖项" };
+
 type ExhibitionGroupChunk = { key: string; entries: { en: string; zh: string }[]; continued: boolean };
 /** Page budgets in inches for the credits lists, from the .bk-exhibitions
  * metrics (page content height 9.15in; first page also pays the list's top
@@ -1779,9 +1785,9 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const entries = EXHIBITIONS[spec.chapter.key] ?? [];
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
-          <div className="bk-eyebrow">相关展览 · Exhibitions</div>
+          <div className="bk-eyebrow">{[spec.chapter.titleZh, spec.chapter.titleEn ?? spec.chapter.title].filter(Boolean).join(" · ")}</div>
           <div className="bk-exhibitions">
-            <h3 className="bk-exhibitions-head shop-title">{stackedTitle(spec.chapter)}</h3>
+            <h3 className="bk-exhibitions-head shop-title">{stackedPair(CREDITS_TITLE.en, CREDITS_TITLE.zh)}</h3>
             <ul>
               {entries.map((e, i) => {
                 const en = exhibitionParts(e.en);
@@ -1809,11 +1815,12 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
 
     case "part-exhibitions": {
       // The part's consolidated exhibition & award credits (her direction,
-      // 2026-11-08): the part title heads the first page; under it the
-      // part's sections stand as group heads in book order, each with its
-      // entries from EXHIBITIONS, English first and Chinese following,
-      // years leading each line — the same setting as the per-section
-      // exhibitions pages this replaces.
+      // 2026-11-08): the fixed list title heads the first page and the
+      // part name rides in the eyebrow as the attribution; under the
+      // title the part's sections stand as group heads in book order,
+      // each with its entries from EXHIBITIONS, English first and
+      // Chinese following, years leading each line — the same setting
+      // as the per-section exhibitions pages this replaces.
       const chunks = partExhibitionChunks(spec.part);
       const groups = chunks[spec.chunk] ?? [];
       const PART_HEAD_KEY: Record<number, string> = { 2: "innerwilderness", 3: "series:unfinishedpart", 4: "series:triptych", 5: "shop" };
@@ -1829,10 +1836,10 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       };
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
-          <div className="bk-eyebrow">相关展览 · Exhibitions</div>
+          <div className="bk-eyebrow">{[partTitle.zh, partTitle.en].filter(Boolean).join(" · ")}</div>
           <div className="bk-exhibitions">
             {spec.chunk === 0 && (
-              <h3 className="bk-exhibitions-head shop-title">{stackedPair(partTitle.en, partTitle.zh)}</h3>
+              <h3 className="bk-exhibitions-head shop-title">{stackedPair(CREDITS_TITLE.en, CREDITS_TITLE.zh)}</h3>
             )}
             {groups.map((g) => (
               <div className="bk-exhibitions-group" key={`${g.key}${g.continued ? "-cont" : ""}`}>
