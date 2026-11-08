@@ -253,6 +253,24 @@ export const watercolors: Watercolor[] = [
     printInfoZh: "4×6英寸哑光艺术微喷",
     price: 4,
   },
+  {
+    id: "56",
+    title: "Notes from the Road #11",
+    titleZh: "行旅拾记 其十一",
+    series: "IV",
+    printInCatalog: true,
+    showInStorefront: false,
+    year: "2026",
+    medium: "Watercolor on paper",
+    mediumZh: "纸本水彩",
+    dimensions: "",
+    dimensionsZh: "",
+    description: "Lofoten Islands, Norway.<br />挪威，罗弗敦群岛。",
+    descriptionZh: "挪威，罗弗敦群岛。",
+    printInfo: `4×6" print on matte fine art paper`,
+    printInfoZh: "4×6英寸哑光艺术微喷",
+    price: 4,
+  },
 
   // 残留
 
