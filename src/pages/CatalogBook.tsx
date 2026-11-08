@@ -1081,15 +1081,28 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
   useEffect(() => {
     const frame = anchorRef.current?.parentElement;
     if (!frame) return;
+    const measured = { fa: 0, rel: null as null | { x: number; y: number; w: number; h: number }, el: null as Element | null };
     const measure = () => {
       const fr = frame.getBoundingClientRect();
       if (fr.width > 0 && fr.height > 0) {
-        setFrameAspect(fr.width / fr.height);
+        const fa = fr.width / fr.height;
+        if (Math.abs(fa - measured.fa) > 0.0005) {
+          measured.fa = fa;
+          setFrameAspect(fa);
+        }
         const page = frame.closest('[id^="bk-page-"]');
         if (page) {
-          setPageEl(page);
+          if (measured.el !== page) {
+            measured.el = page;
+            setPageEl(page);
+          }
           const pr = page.getBoundingClientRect();
-          setPageRel({ x: ((pr.left - fr.left) / fr.width) * 100, y: ((pr.top - fr.top) / fr.height) * 100, w: (pr.width / fr.width) * 100, h: (pr.height / fr.height) * 100 });
+          const rel = { x: ((pr.left - fr.left) / fr.width) * 100, y: ((pr.top - fr.top) / fr.height) * 100, w: (pr.width / fr.width) * 100, h: (pr.height / fr.height) * 100 };
+          const prev = measured.rel;
+          if (!prev || Math.abs(prev.x - rel.x) > 0.01 || Math.abs(prev.y - rel.y) > 0.01 || Math.abs(prev.w - rel.w) > 0.01 || Math.abs(prev.h - rel.h) > 0.01) {
+            measured.rel = rel;
+            setPageRel(rel);
+          }
         }
       }
     };
@@ -1193,16 +1206,18 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
           : mode === "ne"
             ? { x: d.baseRect.x + d.baseRect.w, y: d.baseRect.y }
             : { x: d.baseRect.x, y: d.baseRect.y + d.baseRect.h };
-    let now: Pt = { x: corner0.x + ddx, y: corner0.y + ddy };
-    if (pageRel) {
-      now = {
-        x: Math.min(Math.max(now.x, pageRel.x), pageRel.x + pageRel.w),
-        y: Math.min(Math.max(now.y, pageRel.y), pageRel.y + pageRel.h),
-      };
-    }
+    const now: Pt = { x: corner0.x + ddx, y: corner0.y + ddy };
     const d0 = Math.hypot(corner0.x - anchor.x, corner0.y - anchor.y) || 1;
     const d1 = Math.hypot(now.x - anchor.x, now.y - anchor.y);
-    const s = Math.min(4, Math.max(0.1, d.base.scale * (d1 / d0)));
+    let s = Math.min(4, Math.max(0.1, d.base.scale * (d1 / d0)));
+    if (pageRel) {
+      // Growth stops when the dragged corner reaches the page edge:
+      // cap the scale by the room left from the pinned corner to the
+      // page bounds, on whichever axis runs out first.
+      const availW = mode === "se" || mode === "ne" ? pageRel.x + pageRel.w - anchor.x : anchor.x - pageRel.x;
+      const availH = mode === "se" || mode === "sw" ? pageRel.y + pageRel.h - anchor.y : anchor.y - pageRel.y;
+      s = Math.min(s, availW / (fx * 100), availH / (fy * 100));
+    }
     const w = fx * s * 100;
     const h = fy * s * 100;
     const nx = mode === "se" || mode === "ne" ? anchor.x : anchor.x - w;
@@ -3416,7 +3431,7 @@ const CatalogBook = () => {
   const setImgEdit = (src: string, edit: ImgEdit | null) =>
     setImgEdits((prev) => {
       const next = { ...prev };
-      if (!edit || (edit.scale === undefined && !edit.src)) delete next[src];
+      if (!edit || (edit.scale === undefined && !edit.src && !edit.full && !edit.dx && !edit.dy)) delete next[src];
       else next[src] = edit;
       return next;
     });
