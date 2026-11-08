@@ -226,6 +226,118 @@
   color: #fffdf8;
 }
 
+/* Editor-set background images (edit mode, 2026-11-08): a layer inside the
+   page, behind the content. The page isolates its stacking context so the
+   negative-z layer stays above the paper ground but below every word; the
+   printed ground returns untouched when the image is cleared. The "spread"
+   scope reuses the full-spread canvas geometry: the left page shows the
+   left half of one picture, the right page is shifted by one trim width,
+   so the image runs continuous over the gutter, in print as on screen. */
+.bk-page.bk-has-bgimg {
+  isolation: isolate;
+}
+
+.bk-bgimg-layer {
+  position: absolute;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.bk-bgimg-layer:not(.bk-spread-canvas) {
+  inset: 0;
+}
+
+.bk-bgimg-layer img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bk-bgimg-anchor-left .bk-spread-canvas {
+  left: 0;
+}
+
+.bk-bgimg-anchor-right .bk-spread-canvas {
+  left: calc(-1 * var(--trim-w));
+}
+
+.bk-pagebgimg-ctl {
+  position: absolute;
+  top: calc(var(--bleed) + 0.52in);
+  right: 0.16in;
+  z-index: 30;
+}
+
+/* Background-image picker panel (edit mode, screen only) */
+.bk-bgimg-scopes {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 10px 0 2px;
+}
+
+.bk-bgimg-current {
+  font-size: 11px;
+  opacity: 0.65;
+}
+
+.bk-bgimg-grid {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 6px 0 8px;
+}
+
+.bk-bgimg-thumb {
+  flex: none;
+  width: 64px;
+  height: 48px;
+  padding: 0;
+  border: 2px solid transparent;
+  background: #e9e5dc;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.bk-bgimg-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bk-bgimg-thumb-on {
+  border-color: #C8402A;
+}
+
+.bk-bgimg-custom {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.bk-bgimg-custom input[type="text"] {
+  flex: 1 1 220px;
+  padding: 6px 8px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  font-size: 12px;
+}
+
+.bk-bgimg-upload {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.bk-bgimg-preview {
+  height: 40px;
+  width: auto;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
+
 .bk-editor-panel {
   position: fixed;
   left: 0;

@@ -8,6 +8,7 @@ import { SHOP_URL, SITE_URL } from "@/lib/constants";
 import { getCombinedCatalogSections, type CatalogItem, type CatalogSection, type CatalogSectionKey } from "@/lib/printCatalog";
 import { translations, type Translations } from "@/lib/translations";
 import { PAGE_BACKGROUNDS, type PageBgKind } from "@/lib/pageBackgrounds";
+import { PAGE_BACKGROUND_IMAGES, type PageBgImage } from "@/lib/pageBackgroundImages";
 import { BOOK_SERIES } from "@/lib/bookSeries";
 import { SERIES_PLATES, DEATH_VALLEY_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
@@ -900,6 +901,132 @@ function PageBgCtl({ current, onPick }: { current?: PageBgKind; onPick: (kind: P
   );
 }
 
+/** Which spread the background-image panel edits: the two page keys of the
+ * open spread (either may be null — blank pages carry no key of their own). */
+export interface BgImagePanelInfo {
+  leftKey: string | null;
+  rightKey: string | null;
+  leftNumber: number;
+  rightNumber: number | null;
+}
+
+function PageBgImgCtl({ marked, onOpen }: { marked: boolean; onOpen: () => void }) {
+  return (
+    <div className="bk-pagebgimg-ctl" data-noprint>
+      <button type="button" className={`bk-pagebg-btn ${marked ? "bk-pagebg-on" : ""}`} onClick={onOpen}>
+        背景图 Bg img
+      </button>
+    </div>
+  );
+}
+
+type BgImgScope = "spread" | "left" | "right";
+
+/** Background-image picker (edit mode): pick a picture from the book itself,
+ * paste a URL, or upload a local file (downscaled, stored as a data URL),
+ * then choose where it goes — the whole spread, the left page or the right
+ * page — and Apply. Clear removes the chosen scope's image again, back to
+ * the page's paper ground. Staged like every other editor change: it only
+ * persists via Save edits / Make PR in the toolbar. */
+function BgImagePanel({
+  info,
+  images,
+  current,
+  onApply,
+  onClear,
+  onClose,
+  lang,
+}: {
+  info: BgImagePanelInfo;
+  images: { src: string; title: string }[];
+  current: { spread?: PageBgImage; left?: PageBgImage; right?: PageBgImage };
+  onApply: (scope: BgImgScope, src: string) => void;
+  onClear: (scope: BgImgScope) => void;
+  onClose: () => void;
+  lang: "en" | "zh";
+}) {
+  const zh = lang === "zh";
+  const [scope, setScope] = useState<BgImgScope>("spread");
+  const [src, setSrc] = useState(current.spread?.src ?? current.left?.src ?? current.right?.src ?? "");
+  const [url, setUrl] = useState("");
+  const currentForScope = scope === "spread" ? current.spread : scope === "left" ? current.left : current.right;
+  const onFile = (f: File | undefined) => {
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = String(reader.result);
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, 1600 / Math.max(img.width, img.height));
+        if (scale >= 1) {
+          setSrc(dataUrl);
+          return;
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext("2d")?.drawImage(img, 0, 0, canvas.width, canvas.height);
+        setSrc(canvas.toDataURL("image/jpeg", 0.85));
+      };
+      img.src = dataUrl;
+    };
+    reader.readAsDataURL(f);
+  };
+  const scopeBtn = (k: BgImgScope, label: string, disabled: boolean) => (
+    <button key={k} type="button" disabled={disabled} className={`bk-pagebg-btn ${scope === k ? "bk-pagebg-on" : ""}`} onClick={() => setScope(k)}>
+      {label}
+    </button>
+  );
+  return (
+    <div data-noprint className="bk-editor-panel bk-bgimg-panel">
+      <div className="bk-editor-head">
+        <span className="sans-label">
+          {zh ? "背景图" : "Background image"} · p.{info.leftNumber}
+          {info.rightNumber ? `–${info.rightNumber}` : ""}
+        </span>
+        <span className="bk-editor-hint">
+          {zh ? "选图、选范围、点「应用」，再点工具栏「保存内容修改」存好" : "Pick an image, choose a scope, Apply — then Save edits in the toolbar"}
+        </span>
+      </div>
+      <div className="bk-bgimg-scopes">
+        {scopeBtn("spread", zh ? "整个跨页" : "Whole spread", false)}
+        {scopeBtn("left", zh ? `左半页 p.${info.leftNumber}` : `Left page p.${info.leftNumber}`, !info.leftKey)}
+        {scopeBtn("right", info.rightNumber ? (zh ? `右半页 p.${info.rightNumber}` : `Right page p.${info.rightNumber}`) : zh ? "右半页" : "Right page", !info.rightKey)}
+        <span className="bk-bgimg-current">{currentForScope ? (zh ? "这个范围已设背景图" : "This scope has a background") : zh ? "这个范围暂无背景图" : "No background on this scope"}</span>
+      </div>
+      <div className="bk-bgimg-grid">
+        {images.map((im) => (
+          <button key={im.src} type="button" title={im.title} className={`bk-bgimg-thumb ${src === im.src ? "bk-bgimg-thumb-on" : ""}`} onClick={() => setSrc(im.src)}>
+            <img src={im.src} alt={im.title} loading="lazy" />
+          </button>
+        ))}
+      </div>
+      <div className="bk-bgimg-custom">
+        <input type="text" placeholder={zh ? "或粘贴图片链接…" : "Or paste an image URL…"} value={url} onChange={(e) => setUrl(e.target.value)} />
+        <button type="button" className="bk-pagebg-btn" onClick={() => url.trim() && setSrc(url.trim())}>
+          {zh ? "用这个链接" : "Use URL"}
+        </button>
+        <label className="bk-pagebg-btn bk-bgimg-upload">
+          {zh ? "上传本地图片" : "Upload image"}
+          <input type="file" accept="image/*" hidden onChange={(e) => onFile(e.target.files?.[0])} />
+        </label>
+        {src && <img className="bk-bgimg-preview" src={src} alt="" />}
+      </div>
+      <div className="bk-editor-actions">
+        <button type="button" disabled={!src} onClick={() => onApply(scope, src)}>
+          {zh ? "应用" : "Apply"}
+        </button>
+        <button type="button" disabled={!currentForScope} onClick={() => onClear(scope)}>
+          {zh ? "清除这个范围的背景" : "Clear this scope"}
+        </button>
+        <button type="button" onClick={onClose}>
+          {zh ? "关闭" : "Close"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function Folio({ number, tag }: { number: number; tag?: string }) {
   return (
     <>
@@ -954,6 +1081,9 @@ export interface BookContext {
   openEditor: (edit: string, label: string, current: string) => void;
   pageBgFor: (key: string | null) => PageBgKind | undefined;
   setPageBg: (key: string, kind: PageBgKind | "global") => void;
+  bgImgFor: (key: string | null) => PageBgImage | undefined;
+  setBgImg: (key: string, value: PageBgImage | null) => void;
+  openBgImagePanel: (info: BgImagePanelInfo) => void;
   paintingChunks: { paras: ParaItem[] }[];
 }
 
@@ -1040,13 +1170,53 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
   const pageId = `bk-page-${number}`;
   const pageKey = pageKeyOf(spec);
   const bg = ctx.pageBgFor(pageKey);
+  // Background image (editor, 2026-11-08): a "page"-scope entry covers this
+  // page alone; a "spread"-scope entry stored on either page of the spread
+  // runs one image across both pages — rendered as the same shifted
+  // full-spread canvas the bleed spreads use, so the picture stays
+  // continuous over the gutter. The layer sits behind the page content and
+  // the printed ground returns when the entry is cleared.
+  const partnerPage = pages.find((p) => p.number === (side === "verso" ? number + 1 : number - 1));
+  const partnerKey = partnerPage ? pageKeyOf(partnerPage.spec) : null;
+  const ownBgImg = ctx.bgImgFor(pageKey);
+  const partnerBgImg = ctx.bgImgFor(partnerKey);
+  const spreadBgImg = ownBgImg?.scope === "spread" ? ownBgImg : partnerBgImg?.scope === "spread" ? partnerBgImg : undefined;
+  const bgImg = ownBgImg?.scope === "page" ? ownBgImg : spreadBgImg;
+  const bgImgLayer = bgImg ? (
+    <div className={bgImg.scope === "spread" ? "bk-spread-canvas bk-bgimg-layer" : "bk-bgimg-layer"} aria-hidden="true">
+      <img src={bgImg.src} alt="" />
+    </div>
+  ) : null;
+  const bgImgCls = bgImg
+    ? ` bk-has-bgimg${bgImg.scope === "spread" ? (side === "verso" ? " bk-bgimg-anchor-left" : " bk-bgimg-anchor-right") : ""}`
+    : "";
   const ctl =
     ctx.editMode && pageKey ? <PageBgCtl current={bg} onPick={(kind) => ctx.setPageBg(pageKey, kind)} /> : null;
+  const bgImgCtl =
+    ctx.editMode && (pageKey || partnerKey) ? (
+      <PageBgImgCtl
+        marked={!!bgImg}
+        onOpen={() =>
+          ctx.openBgImagePanel({
+            leftKey: side === "verso" ? pageKey : partnerKey,
+            rightKey: side === "verso" ? partnerKey : pageKey,
+            leftNumber: side === "verso" ? number : number - 1,
+            rightNumber: partnerPage ? partnerPage.number : null,
+          })
+        }
+      />
+    ) : null;
+  const ctlAll = (
+    <>
+      {ctl}
+      {bgImgCtl}
+    </>
+  );
 
   switch (spec.kind) {
     case "title":
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-title-page">
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-title-page${bgImgCls}`}>{bgImgLayer}
           <div className="bk-title-body">
             <h1 className="bk-title-main shop-title gloria-title" style={{ fontSize: displaySize(translations.en.catalogBook.title, 6.8, 1.35) }}>
               {translations.en.catalogBook.title}
@@ -1063,7 +1233,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
     case "colophon": {
       const year = new Date().getFullYear();
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-colophon">
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-colophon${bgImgCls}`}>{bgImgLayer}
           <div className="bk-colophon-body">
             <p className="bk-colophon-title shop-title">{translations.en.catalogBook.title} · {"遗迹"}</p>
             <p>© {year} Chun Wang. {translations.en.catalogBook.rights}</p>
@@ -1205,7 +1375,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         );
       };
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
           <div className={`bk-tocmap bk-tocmap-${spec.chunk === 0 ? "left" : "right"}`}>
             {spec.chunk === 0 ? (
               <>
@@ -1236,7 +1406,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const paras = ctx.prefaceChunks[spec.chunk]?.paras ?? [];
       const long = paras.map((p) => p.text).join("").length > 1400;
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
           <div className="bk-essay">
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
@@ -1264,7 +1434,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const paras = ctx.paintingChunks[spec.chunk]?.paras ?? [];
       const long = paras.map((p) => p.text).join("").length > 1400;
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={spec.chunk === 0 ? "bk-part-intro" : undefined}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={(spec.chunk === 0 ? "bk-part-intro" : "") + bgImgCls}>{bgImgLayer}
           <div className="bk-essay">
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
@@ -1297,7 +1467,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // appears before the section itself.
       const epigraph = CHAPTER_EPIGRAPH[chapter.key];
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-opener bk-opener-${half}${chapter.partIntro || chapter.partHead ? " bk-opener-part" : ""}`}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-opener bk-opener-${half}${chapter.partIntro || chapter.partHead ? " bk-opener-part" : ""}${bgImgCls}`}>{bgImgLayer}
           <div className="bk-spread-canvas">
             {epigraph && (
               <p className="bk-opener-epigraph">
@@ -1339,7 +1509,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const zhLen = (a.zh ?? "").length;
       const zhTier = a.long ? "para" : zhLen <= 8 ? "huge-v" : zhLen <= 30 ? "huge" : "big";
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-aphorism bk-aphorism-${spec.half}${a.long ? " bk-aphorism-long" : ""}`}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-aphorism bk-aphorism-${spec.half}${a.long ? " bk-aphorism-long" : ""}${bgImgCls}`}>{bgImgLayer}
           {spec.half === "left" ? (
             a.en ? (
               <p className={`bk-aphorism-en bk-aphorism-en-${enTier}`}>{withRustQ(a.en)}</p>
@@ -1358,7 +1528,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const chunk = ctx.essayChunks[chapter.key]?.[spec.chunk];
       const items = chunk?.items ?? [];
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
           <div className="bk-essay">
             {spec.chunk === 0 && !chapter.partIntro && !chapter.partHead && (
               <div className="bk-essay-head">
@@ -1390,7 +1560,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
     case "plate": {
       const { item, chapter } = spec;
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-plate-page">
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-plate-page${bgImgCls}`}>{bgImgLayer}
           <div className="bk-plate-frame">
             <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
           </div>
@@ -1411,7 +1581,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
     case "plateGrid": {
       const { chapter, entries } = spec;
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-plate-page">
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-plate-page${bgImgCls}`}>{bgImgLayer}
           <div className={`bk-plate-grid bk-grid-${entries.length}`}>
             {entries.map(({ item }) => (
               <div className="bk-grid-cell" key={item.image_url}>
@@ -1435,7 +1605,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
     case "bleed": {
       const { item } = spec;
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className={`bk-bleed bk-bleed-${spec.half}`}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-bleed bk-bleed-${spec.half}${bgImgCls}`}>{bgImgLayer}
           <div className="bk-spread-canvas">
             <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} className="bk-bleed-img" />
             {spec.half === "right" && (
@@ -1451,7 +1621,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
 
     case "about":
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
           <div className="bk-essay">
             <div className="bk-essay-head">
               <h2 className="bk-section-title shop-title gloria-title">{stackedPair("About the Author", "关于作者")}</h2>
@@ -1464,7 +1634,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
 
     case "collage":
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
           <div className="bk-essay">
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
@@ -1483,7 +1653,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
     case "exhibitions": {
       const entries = EXHIBITIONS[spec.chapter.key] ?? [];
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl}>
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
           <div className="bk-eyebrow">相关展览 · Exhibitions</div>
           <div className="bk-exhibitions">
             <h3 className="bk-exhibitions-head shop-title">{stackedTitle(spec.chapter)}</h3>
@@ -1515,7 +1685,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
     case "canva": {
       const src = `/book/canva-paintings/p${String(spec.page).padStart(2, "0")}.jpg`;
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-canva-page">
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-canva-page${bgImgCls}`}>{bgImgLayer}
           <div className="bk-canva-frame">
             <BookImage src={src} alt={`Paintings 2019–2026 — earlier printed edition, page ${spec.page}`} />
           </div>
@@ -1540,7 +1710,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       };
       const chunkGroups = (REVERSE_INDEX_CHUNKS[spec.chunk] ?? []).map((gi) => REVERSE_INDEX.groups[gi]);
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-revindex-page">
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-revindex-page${bgImgCls}`}>{bgImgLayer}
           <div className="bk-revindex">
             {spec.chunk === 0 && (
               <header className="bk-revindex-head">
@@ -1584,7 +1754,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
 
     case "end":
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctl} className="bk-center">
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-center${bgImgCls}`}>{bgImgLayer}
           <div className="bk-end">
             <div className="shop-title gloria-title">{translations.en.catalogBook.publisher} · {translations.zh.catalogBook.publisher}</div>
             <div className="bk-end-sub">{years}</div>
@@ -1593,7 +1763,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       );
 
     case "blank":
-      return <Page id={pageId} side={side} bg={bg} ctl={ctl} />;
+      return <Page id={pageId} side={side} bg={bg} ctl={ctlAll} />;
   }
 }
 
@@ -1643,9 +1813,13 @@ function useBookModel(args: {
   pageBgEdits: Record<string, PageBgKind | "global">;
   pageBgFor: BookContext["pageBgFor"];
   setPageBg: BookContext["setPageBg"];
+  bgImgEdits: Record<string, PageBgImage | null>;
+  bgImgFor: BookContext["bgImgFor"];
+  setBgImg: BookContext["setBgImg"];
+  openBgImagePanel: BookContext["openBgImagePanel"];
   openEditor: BookContext["openEditor"];
 }): { ctx: BookContext; pages: InteriorPage[] } {
-  const { editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, openEditor } = args;
+  const { editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgFor, setBgImg, openBgImagePanel, openEditor } = args;
   const t = translations.en;
   const ctx = useMemo<BookContext>(() => {
     let plate = 0;
@@ -2203,11 +2377,14 @@ function useBookModel(args: {
       openEditor,
       pageBgFor,
       setPageBg,
+      bgImgFor,
+      setBgImg,
+      openBgImagePanel,
       years: yearRange(chapters.flatMap((c) => c.items.map((i) => i.item.year))),
       coverFront: byKey("residuals")[0] ?? chapters[0]?.items[0]?.item,
       coverBack: byKey("photography")[0] ?? chapters[0]?.items[1]?.item,
     };
-  }, [textEdits, editMode, pageBgEdits]);
+  }, [textEdits, editMode, pageBgEdits, bgImgEdits]);
   const pages = useMemo(() => paginate(ctx.chapters, ctx.prefaceChunks.length, ctx.paintingChunks.length, Object.fromEntries(Object.entries(ctx.essayChunks).map(([k, v]) => [k, v.length]))), [ctx]);
   return { ctx, pages };
 }
@@ -2256,12 +2433,14 @@ const CatalogBook = () => {
   const [editMode, setEditMode] = useState(false);
   const [textEdits, setTextEdits] = useState<Record<string, string>>(() => loadJSON("remains-book-text-edits", {}));
   const [pageBgEdits, setPageBgEdits] = useState<Record<string, PageBgKind | "global">>(() => loadJSON("remains-book-page-bg", {}));
+  const [bgImgEdits, setBgImgEdits] = useState<Record<string, PageBgImage | null>>(() => loadJSON("remains-book-bgimg", {}));
   const [savedSnapshot, setSavedSnapshot] = useState(() =>
-    JSON.stringify({ t: loadJSON("remains-book-text-edits", {}), b: loadJSON("remains-book-page-bg", {}) }),
+    JSON.stringify({ t: loadJSON("remains-book-text-edits", {}), b: loadJSON("remains-book-page-bg", {}), i: loadJSON("remains-book-bgimg", {}) }),
   );
   const [panel, setPanel] = useState<{ edit: string; label: string; value: string } | null>(null);
+  const [bgPanel, setBgPanel] = useState<BgImagePanelInfo | null>(null);
   const [prMsg, setPrMsg] = useState("");
-  const editorDirty = JSON.stringify({ t: textEdits, b: pageBgEdits }) !== savedSnapshot;
+  const editorDirty = JSON.stringify({ t: textEdits, b: pageBgEdits, i: bgImgEdits }) !== savedSnapshot;
   const openEditor = (edit: string, label: string, current: string) => setPanel({ edit, label, value: current });
   const pageBgFor = (key: string | null): PageBgKind | undefined => {
     if (!key) return undefined;
@@ -2273,7 +2452,8 @@ const CatalogBook = () => {
   const saveAllEdits = () => {
     localStorage.setItem("remains-book-text-edits", JSON.stringify(textEdits));
     localStorage.setItem("remains-book-page-bg", JSON.stringify(pageBgEdits));
-    setSavedSnapshot(JSON.stringify({ t: textEdits, b: pageBgEdits }));
+    localStorage.setItem("remains-book-bgimg", JSON.stringify(bgImgEdits));
+    setSavedSnapshot(JSON.stringify({ t: textEdits, b: pageBgEdits, i: bgImgEdits }));
     setPrMsg(lang === "zh" ? "已保存到本机浏览器。" : "Saved in this browser.");
   };
   const generatePR = async () => {
@@ -2283,7 +2463,12 @@ const CatalogBook = () => {
       if (v === "global") delete pageBg[k];
       else pageBg[k] = v;
     }
-    const payload = { textEdits, pageBg };
+    const pageBgImages: Record<string, PageBgImage> = { ...PAGE_BACKGROUND_IMAGES };
+    for (const [k, v] of Object.entries(bgImgEdits)) {
+      if (v === null) delete pageBgImages[k];
+      else pageBgImages[k] = v;
+    }
+    const payload = { textEdits, pageBg, pageBgImages };
     try {
       const res = await fetch("/api/book-pr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
@@ -2315,7 +2500,20 @@ const CatalogBook = () => {
     noindex: true,
   });
 
-  const { ctx, pages } = useBookModel({ editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, openEditor });
+  const { ctx, pages } = useBookModel({ editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, openEditor });
+  // Every picture already in the book, for the background-image picker.
+  const bookImages = useMemo(() => {
+    const seen = new Map<string, string>();
+    for (const c of ctx.chapters) for (const { item } of c.items) if (!seen.has(item.image_url)) seen.set(item.image_url, item.title);
+    return [...seen.entries()].map(([src, title]) => ({ src, title }));
+  }, [ctx]);
+  const bgPanelCurrent = bgPanel
+    ? {
+        spread: [bgImgFor(bgPanel.leftKey), bgImgFor(bgPanel.rightKey)].find((e) => e?.scope === "spread"),
+        left: bgImgFor(bgPanel.leftKey)?.scope === "page" ? bgImgFor(bgPanel.leftKey) : undefined,
+        right: bgImgFor(bgPanel.rightKey)?.scope === "page" ? bgImgFor(bgPanel.rightKey) : undefined,
+      }
+    : null;
   const spine = spineWidth(pages.length);
 
   const bleedIn = bleed ? BLEED : 0;
@@ -2618,6 +2816,19 @@ const CatalogBook = () => {
         <div data-noprint className="bk-editor-msg sans-label">
           {prMsg}
         </div>
+      )}
+
+      {bgPanel && bgPanelCurrent && (
+        <BgImagePanel
+          key={`${bgPanel.leftKey}|${bgPanel.rightKey}`}
+          info={bgPanel}
+          images={bookImages}
+          current={bgPanelCurrent}
+          onApply={applyBgImg}
+          onClear={clearBgImg}
+          onClose={() => setBgPanel(null)}
+          lang={lang}
+        />
       )}
 
       <div ref={stageRef} className="bk-stage" style={{ zoom }}>
