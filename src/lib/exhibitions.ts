@@ -1,6 +1,8 @@
 /** Exhibition credits per book chapter, from her Notion exhibitions database
  *  (shared 2026-10-18). Keys are chapter keys as built in CatalogBook.
- *  Each entry renders bilingually on the chapter's closing Exhibitions page. */
+ *  Entries render bilingually on the consolidated credits pages at the
+ *  end of the part each section belongs to (her direction, 2026-11-08:
+ *  grouped by section under the part's closing Exhibitions list). */
 export const EXHIBITIONS: Record<string, { en: string; zh: string }[]> = {
   "spirit": [
     { en: "Drawings In A Time Of Social Distancing, LiC-A at the Plaxall Gallery, Long Island City, NY, June 12 – August 12, 2020", zh: "《社交距离时代的绘画》，LiC-A（Plaxall Gallery），长岛市，纽约，2020年6月12日 – 8月12日" },
