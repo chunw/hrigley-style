@@ -667,18 +667,17 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       firstChapter = false;
     }
     // The earlier printed painting book (Canva, "Chun Wang: Paintings
-    // 2019–2026") is bound into the painting part as a facsimile block at
-    // the end of the part, right before the following part opens (her
-    // direction, 2026-11-06: add it in as it stands, duplicates kept).
-    // The block belongs to the painting part, so when the parts were
-    // reordered (her direction, 2026-11-07) it stayed at the end of
-    // Part 1: it keys on Inner Wilderness, the part that now follows
-    // painting, not on the triptych. Her review
-    // cuts the same day: the Canva cover (p.1), the egg page (p.5) and
-    // the whole tail from the Remains divider to the back cover
-    // (pp. 23–44) are removed; pp. 2–4 and 6–22 stand.
+    // 2019–2026") is bound into the painting part as a facsimile block
+    // (her direction, 2026-11-06: add it in as it stands, duplicates
+    // kept). Her review cuts the same day: the Canva cover (p.1), the
+    // egg page (p.5) and the whole tail from the Remains divider to the
+    // back cover (pp. 23–44) are removed; pp. 2–4 and 6–22 stand.
+    // Placement (her direction, 2026-11-08, replacing the 2026-11-06 /
+    // 2026-11-07 end-of-part placement): the block stands inside the
+    // painting part right before Notes from the Road — after Still
+    // Things, ahead of the Road opener — so it keys on the road chapter.
     const CANVA_KEPT_PAGES = [2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
-    if (chapter.key === "innerwilderness") {
+    if (chapter.key === "road") {
       for (const p of CANVA_KEPT_PAGES) specs.push({ kind: "canva", page: p });
     }
     const aphorismId = APHORISM_BEFORE_CHAPTER[chapter.key];
@@ -970,8 +969,14 @@ export function FrontCoverFace({ ctx }: { ctx: BookContext }) {
   // "Still Things" is shared by more than one plate in the section. It
   // was originally settled with the landscape plate (watercolors/43);
   // on 2026-10-24 she asked to try the portrait plate that joined the
-  // section in 2026 (watercolors/48) as the cover centre instead.
-  const art = still?.items.find(({ item }) => item.image_url.includes("/watercolors/48/"))?.item ?? still?.items[0]?.item ?? ctx.coverFront;
+  // section in 2026 (watercolors/48) as the cover centre instead. The
+  // plate page left the Still Things section on 2026-11-08 (her
+  // direction), but the piece stays the cover centre, so it is found
+  // in the watercolor catalog rather than in the chapter.
+  const catalogArt = getCombinedCatalogSections("", "en")
+    .find((s) => s.key === "watercolor")
+    ?.items.find((item) => item.image_url.includes("/watercolors/48/"));
+  const art = catalogArt ?? still?.items[0]?.item ?? ctx.coverFront;
   return (
     <div className="bk-face bk-face-front bk-face-rust">
       <span className="bk-cover-word bk-cover-top">Chun</span>
@@ -1748,6 +1753,16 @@ function useBookModel(args: {
         ? [residualsChapter.items[firstIdx], ...residualsChapter.items.filter((_, i) => i !== firstIdx)]
         : residualsChapter.items;
       residualsChapter.items = [{ item: fbdItem, plate: 0 }, ...works];
+    }
+    // Her direction (2026-11-08): the Still Things plate on
+    // /watercolors/48/ — the section's last plate page — is deleted
+    // from the book. The piece itself stays in the watercolor catalog
+    // and keeps its place as the front cover's centre image (chosen
+    // 2026-10-24); FrontCoverFace now finds it in the catalog, not in
+    // this chapter.
+    const stillThingsChapter = splitChapters.find((ch) => ch.key === "stillthings");
+    if (stillThingsChapter) {
+      stillThingsChapter.items = stillThingsChapter.items.filter(({ item }) => !item.image_url.includes("/watercolors/48/"));
     }
     // The three websites stand as one big chapter (her direction,
     // 2026-11-05): a part opening, "Rooms, Scores, Decisions", then the
