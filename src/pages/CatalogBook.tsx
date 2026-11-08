@@ -93,6 +93,12 @@ export interface InteriorPage {
   number: number;
 }
 
+/** Facsimile pages printed full bleed, edge to edge, instead of framed
+ * inside the page (her direction, 2026-11-08: the light-blue cloth page,
+ * p. 18, fills the sheet; aligned right when cover-fit so the crop eats
+ * the scan's blank margin, not the painting). */
+const CANVA_FULL_BLEED_PAGES = new Set([18]);
+
 const CHAPTER_TITLE: Record<CatalogSectionKey, (t: Translations) => string> = {
   spirit: (t) => t.spirit21Catalog.subtitle,
   remains: (t) => t.remainsCatalog.subtitle,
@@ -782,10 +788,21 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // at the end of each chapter's run, below.
     const CANVA_KEPT_PAGES = [2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
     const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
-    const CANVA_RESIDUALS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 11 && p < 17);
-    const CANVA_STILLTHINGS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 17);
+    const CANVA_RESIDUALS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 12 && p < 17);
+    const CANVA_STILLTHINGS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 17 && p <= 20);
+    // Facsimile placement updates (her direction, 2026-11-08, later the
+    // same day): p. 11 — the printed book's "II. Still Things" chapter
+    // page — opens the Still Things section as its only chapter page
+    // (the section's own text page no longer prints a title head), and
+    // pp. 21–22 (the three small still lifes and the brown box) close
+    // Notes from the Road instead of Still Things, the section she
+    // assigns them to.
+    const CANVA_ROAD_PAGES = [21, 22];
     if (chapter.key === "residuals") {
       for (const p of CANVA_FRONT_PAGES) specs.push({ kind: "canva", page: p });
+    }
+    if (chapter.key === "stillthings") {
+      specs.push({ kind: "canva", page: 11 });
     }
     const aphorismId = APHORISM_BEFORE_CHAPTER[chapter.key];
     if (aphorismId) pushAphorism(APHORISMS[aphorismId]);
@@ -906,6 +923,9 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     }
     if (chapter.key === "stillthings") {
       for (const p of CANVA_STILLTHINGS_PAGES) specs.push({ kind: "canva", page: p });
+    }
+    if (chapter.key === "road") {
+      for (const p of CANVA_ROAD_PAGES) specs.push({ kind: "canva", page: p });
     }
     // Exhibition & award credits close the part, not the section (her
     // direction, 2026-11-08): when the next chapter belongs to another
@@ -1680,7 +1700,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
           <div className="bk-essay">
-            {spec.chunk === 0 && !chapter.partIntro && !chapter.partHead && (
+            {spec.chunk === 0 && !chapter.partIntro && !chapter.partHead && chapter.key !== "stillthings" && (
               <div className="bk-essay-head">
                 {chapter.number > 0 && <span className="bk-num-box">{pad2(chapter.number)}</span>}
                 <h2 className="bk-section-title shop-title">{stackedTitle(chapter)}</h2>
@@ -1892,6 +1912,17 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
 
     case "canva": {
       const src = `/book/canva-paintings/p${String(spec.page).padStart(2, "0")}.jpg`;
+      if (CANVA_FULL_BLEED_PAGES.has(spec.page)) {
+        // Full bleed like the bleed spreads: the image covers the whole
+        // sheet and, as there, no folio is printed over it.
+        return (
+          <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-canva-page bk-canva-bleed-page${bgImgCls}`}>{bgImgLayer}
+            <div className="bk-canva-bleed">
+              <BookImage src={src} alt={`Paintings 2019–2026 — earlier printed edition, page ${spec.page}`} />
+            </div>
+          </Page>
+        );
+      }
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-canva-page${bgImgCls}`}>{bgImgLayer}
           <div className="bk-canva-frame">
@@ -3122,3 +3153,4 @@ const CatalogBook = () => {
 };
 
 export default CatalogBook;
+

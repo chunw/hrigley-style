@@ -15,4 +15,6 @@ export interface PageBgImage {
  */
 export const PAGE_BACKGROUND_IMAGES: Record<string, PageBgImage> = {
   "aphorism:what-remains:left": { src: "/watercolors/45/main.jpg", scope: "spread" },
+  "opener:road:left": { src: "/watercolors/19/main.jpg", scope: "page" },
+  "opener:road:right": { src: "/watercolors/18/main.jpg", scope: "page" },
 };
