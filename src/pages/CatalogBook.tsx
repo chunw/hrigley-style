@@ -782,9 +782,9 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // Residuals section and the facsimile Still Things chapter
     // (pp. 17–22) closes Still Things — those two groups are emitted
     // at the end of each chapter's run, below.
-    const CANVA_KEPT_PAGES = [2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
+    const CANVA_KEPT_PAGES = [2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22];
     const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
-    const CANVA_RESIDUALS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 12 && p < 17);
+    const CANVA_RESIDUALS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 13 && p < 17);
     const CANVA_STILLTHINGS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 17 && p <= 20);
     // Facsimile placement updates (her direction, 2026-11-08, later the
     // same day): p. 11 — the printed book's "II. Still Things" chapter
@@ -799,6 +799,13 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     }
     if (chapter.key === "stillthings") {
       specs.push({ kind: "canva", page: 11 });
+      // Her review (2026-11-08): facsimile p. 12 — the red-dog still
+      // life — moves out of the Residuals run and opens the Still
+      // Things section as its first page, right after the section's
+      // own chapter page above; facsimile pp. 19–20 (the green chair
+      // and the blue bag) are deleted from the book (removed from
+      // CANVA_KEPT_PAGES above).
+      specs.push({ kind: "canva", page: 12 });
     }
     const aphorismId = APHORISM_BEFORE_CHAPTER[chapter.key];
     if (aphorismId) pushAphorism(APHORISMS[aphorismId]);
@@ -2195,6 +2202,15 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           <div className="bk-canva-frame">
             <BookImage src={src} alt={`Paintings 2019–2026 — earlier printed edition, page ${spec.page}`} />
           </div>
+          {spec.page === 21 && (
+            <div className="bk-caption">
+              <div className="bk-caption-body">
+                <div className="bk-caption-title product-title">Japanese Pottery 日本陶器</div>
+                <div className="bk-caption-meta">2025 · Watercolor on paper · 纸本水彩</div>
+                <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: "Japan.<br />日本。" }} />
+              </div>
+            </div>
+          )}
           <Folio number={number} tag={`${b.title} | Paintings 2019–2026`} />
         </Page>
       );
@@ -2410,40 +2426,42 @@ function useBookModel(args: {
       wcSplit("stillthings", "Still Things", "静物", "Still Things"),
       wcSplit("road", "Notes from the Road", "出发", "Notes from the Road"),
     ];
-    // Forms Before Dissolving (London, 2026): the ArtOrb exhibition poster
-    // showing Breakfast Residuals installed at Apsara Studio Gallery, taken
-    // from the artist's own exhibition record. It opens the Residuals plates,
-    // right after the series text (the Artist Weekly excerpt).
-    const fbdItem: CatalogItem = {
-      title: "Breakfast Residuals",
-      titleZh: "早餐残留",
-      metaLine: "2026 · Installation view · 展览现场",
-      year: "2026",
-      medium: "Installation view",
-      dimensions: "",
-      description: "Breakfast Residuals installed at Forms Before Dissolving, Apsara Studio Gallery, London, May 23 – 25, 2026. Exhibition poster by ArtOrb, from the artist's exhibition record.<br />《Breakfast Residuals》在展览 Forms Before Dissolving 的现场，Apsara Studio Gallery，伦敦，2026年5月23 – 25日。展览海报由 ArtOrb 制作，图片来自艺术家本人的展览记录。",
-      category: "Visions in Watercolor",
-      image_url: "/book/residuals/forms-before-dissolving.jpg",
-      fallback_image_url: "/book/residuals/forms-before-dissolving.jpg",
-    };
+    // Her review (2026-11-08): the Forms Before Dissolving exhibition
+    // poster plate and the Residuals #2 and #3 plates are deleted from
+    // the book (the works stay in the watercolor catalog). The works
+    // open with the newly added Residuals #26, then Residuals #1 (her
+    // direction, 2026-11-04); the rest keep their catalog order.
     const residualsChapter = splitChapters.find((ch) => ch.key === "residuals");
     if (residualsChapter) {
-      // Her direction (2026-11-04): the works open with Residuals #1, right
-      // after the exhibition poster plate above; the poster is front matter
-      // for the section, not a numbered work. The remaining works keep
-      // their catalog order.
-      const firstIdx = residualsChapter.items.findIndex(({ item }) => item.title === "Residuals #1");
-      const works = firstIdx > 0
-        ? [residualsChapter.items[firstIdx], ...residualsChapter.items.filter((_, i) => i !== firstIdx)]
-        : residualsChapter.items;
-      // Her direction (2026-11-08): the newly added Residuals #26 opens
-      // the works as the chapter's first plate, ahead of Residuals #1;
-      // the exhibition poster stays in front of it as front matter.
-      const openerIdx = works.findIndex(({ item }) => item.title === "Residuals #26");
-      const orderedWorks = openerIdx > 0
-        ? [works[openerIdx], ...works.filter((_, i) => i !== openerIdx)]
-        : works;
-      residualsChapter.items = [{ item: fbdItem, plate: 0 }, ...orderedWorks];
+      const kept = residualsChapter.items.filter(({ item }) => item.title !== "Residuals #2" && item.title !== "Residuals #3");
+      const byTitle = (t: string) => kept.findIndex(({ item }) => item.title === t);
+      const lead: typeof kept = [];
+      for (const t of ["Residuals #26", "Residuals #1"]) {
+        const i = byTitle(t);
+        if (i >= 0) lead.push(kept[i]);
+      }
+      residualsChapter.items = [...lead, ...kept.filter(({ item }) => item.title !== "Residuals #26" && item.title !== "Residuals #1")];
+    }
+    // Her direction (2026-11-08): the road chapter's plates are grouped
+    // by country — Mexico first (the chapter's original run), then
+    // Colombia, Thailand, Costa Rica, the United States and Norway;
+    // within a country the plates keep their numeric order.
+    const roadChapter = splitChapters.find((ch) => ch.key === "road");
+    if (roadChapter) {
+      const ROAD_COUNTRY_ORDER = [
+        "Notes from the Road #2", "Notes from the Road #3", "Notes from the Road #4", "Notes from the Road #9", "Notes from the Road #14",
+        "Notes from the Road #5", "Notes from the Road #8",
+        "Notes from the Road #6", "Notes from the Road #7", "Notes from the Road #12",
+        "Notes from the Road #13",
+        "Notes from the Road #10",
+        "Notes from the Road #11",
+        "Notes from the Road #15",
+      ];
+      const rank = (t: string) => {
+        const i = ROAD_COUNTRY_ORDER.indexOf(t);
+        return i === -1 ? ROAD_COUNTRY_ORDER.length : i;
+      };
+      roadChapter.items = [...roadChapter.items].sort((a, b) => rank(a.item.title ?? "") - rank(b.item.title ?? ""));
     }
     // Her direction (2026-11-08): the Still Things plate on
     // /watercolors/48/ — the section's last plate page — is deleted
