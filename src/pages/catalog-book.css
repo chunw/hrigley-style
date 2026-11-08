@@ -905,6 +905,16 @@
   color: #20211d;
 }
 
+/* Road-chapter spreads carry a full caption (her rule, 2026-11-08:
+   every road work shows its location); the works run dark — churros
+   on black, jungle greens — so the caption sits on a pale chip to
+   stay legible on any picture. */
+.bk-bleed-caption-road {
+  background: rgba(255, 255, 255, 0.86);
+  padding: 0.14in 0.18in;
+  max-width: 3.8in;
+}
+
 .bk-opener-label {
   display: inline-flex;
   align-items: center;
