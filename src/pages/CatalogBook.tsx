@@ -1134,9 +1134,15 @@ function BgImagePanel({
 }) {
   const zh = lang === "zh";
   const [scope, setScope] = useState<BgImgScope>("spread");
-  const [src, setSrc] = useState(current.spread?.src ?? current.left?.src ?? current.right?.src ?? "");
+  // The preselected image is DERIVED from the live `current` of the chosen
+  // scope until the editor explicitly picks another one. (A useState copy
+  // of `current` went stale: after Clear it still highlighted — and would
+  // re-Apply — the image that had just been removed, so the panel and the
+  // page disagreed about whether a background existed.)
+  const [picked, setPicked] = useState<string | null>(null);
   const [url, setUrl] = useState("");
   const currentForScope = scope === "spread" ? current.spread : scope === "left" ? current.left : current.right;
+  const src = picked ?? currentForScope?.src ?? "";
   const onFile = (f: File | undefined) => {
     if (!f) return;
     const reader = new FileReader();
@@ -1146,14 +1152,14 @@ function BgImagePanel({
       img.onload = () => {
         const scale = Math.min(1, 1600 / Math.max(img.width, img.height));
         if (scale >= 1) {
-          setSrc(dataUrl);
+          setPicked(dataUrl);
           return;
         }
         const canvas = document.createElement("canvas");
         canvas.width = Math.round(img.width * scale);
         canvas.height = Math.round(img.height * scale);
         canvas.getContext("2d")?.drawImage(img, 0, 0, canvas.width, canvas.height);
-        setSrc(canvas.toDataURL("image/jpeg", 0.85));
+        setPicked(canvas.toDataURL("image/jpeg", 0.85));
       };
       img.src = dataUrl;
     };
@@ -1172,7 +1178,7 @@ function BgImagePanel({
           {info.rightNumber ? `–${info.rightNumber}` : ""}
         </span>
         <span className="bk-editor-hint">
-          {zh ? "选图、选范围、点「应用」，再点工具栏「保存内容修改」存好" : "Pick an image, choose a scope, Apply — then Save edits in the toolbar"}
+          {zh ? "选图、选范围、点「应用」；背景图改动会自动存到本机草稿" : "Pick an image, choose a scope, Apply — background changes save to this browser automatically"}
         </span>
       </div>
       <div className="bk-bgimg-scopes">
@@ -1183,14 +1189,14 @@ function BgImagePanel({
       </div>
       <div className="bk-bgimg-grid">
         {images.map((im) => (
-          <button key={im.src} type="button" title={im.title} className={`bk-bgimg-thumb ${src === im.src ? "bk-bgimg-thumb-on" : ""}`} onClick={() => setSrc(im.src)}>
+          <button key={im.src} type="button" title={im.title} className={`bk-bgimg-thumb ${src === im.src ? "bk-bgimg-thumb-on" : ""}`} onClick={() => setPicked(im.src)}>
             <img src={im.src} alt={im.title} loading="lazy" />
           </button>
         ))}
       </div>
       <div className="bk-bgimg-custom">
         <input type="text" placeholder={zh ? "或粘贴图片链接…" : "Or paste an image URL…"} value={url} onChange={(e) => setUrl(e.target.value)} />
-        <button type="button" className="bk-pagebg-btn" onClick={() => url.trim() && setSrc(url.trim())}>
+        <button type="button" className="bk-pagebg-btn" onClick={() => url.trim() && setPicked(url.trim())}>
           {zh ? "用这个链接" : "Use URL"}
         </button>
         <label className="bk-pagebg-btn bk-bgimg-upload">
@@ -1203,7 +1209,14 @@ function BgImagePanel({
         <button type="button" disabled={!src} onClick={() => onApply(scope, src)}>
           {zh ? "应用" : "Apply"}
         </button>
-        <button type="button" disabled={!currentForScope} onClick={() => onClear(scope)}>
+        <button
+          type="button"
+          disabled={!currentForScope}
+          onClick={() => {
+            setPicked(null);
+            onClear(scope);
+          }}
+        >
           {zh ? "清除这个范围的背景" : "Clear this scope"}
         </button>
         <button type="button" onClick={onClose}>
@@ -2916,6 +2929,31 @@ const CatalogBook = () => {
     const key = scope === "left" ? bgPanel.leftKey : bgPanel.rightKey;
     if (key) setBgImg(key, null);
   };
+  // Background-image drafts persist on EVERY change, unlike the staged
+  // text / paper edits, which wait for the toolbar's Save. A clear that
+  // lived only in component state was lost on refresh: bgImgFor then fell
+  // back to the committed PAGE_BACKGROUND_IMAGES entry and the panel
+  // "revived" that image — preselected — although it had just been
+  // cleared. Writing the draft through (nulls included, so a cleared key
+  // keeps shadowing the committed entry) makes a clear stick. The saved
+  // snapshot moves with the write, so the toolbar's unsaved-changes
+  // marker treats the auto-save as saved.
+  useEffect(() => {
+    try {
+      localStorage.setItem("remains-book-bgimg", JSON.stringify(bgImgEdits));
+      setSavedSnapshot((prev) => {
+        try {
+          const snap = JSON.parse(prev) as { t: unknown; b: unknown; i: unknown };
+          return JSON.stringify({ ...snap, i: bgImgEdits });
+        } catch {
+          return prev;
+        }
+      });
+    } catch {
+      // Storage full (uploaded data URLs are large): the in-memory draft
+      // still applies for this session, and Save / Make PR work as before.
+    }
+  }, [bgImgEdits]);
   // Eyedropper (edit mode): the native EyeDropper where the browser has
   // one; otherwise an in-page picking state — the stage's capture-phase
   // click samples instead of acting (see onStagePickClick), and Esc or the

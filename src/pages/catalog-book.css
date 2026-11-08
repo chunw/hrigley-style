@@ -273,6 +273,18 @@
   left: calc(-1 * var(--trim-w));
 }
 
+/* The background layer must stay under ALL page content, on every page
+   type and on both sides of a spread: the layer itself sits at z-index -1
+   inside the page's isolated stacking context (above), and every other
+   direct child of a backgrounded page is lifted to z-index 1. The page is
+   a flex column, so every direct child is a flex item or absolutely
+   positioned and z-index applies without touching position or layout —
+   text, captions, folios and plates all clear the image. The two editor
+   control clusters keep their own z-index 30 and are excluded. */
+.bk-page.bk-has-bgimg > :not(.bk-bgimg-layer):not(.bk-pagebg-ctl):not(.bk-pagebgimg-ctl) {
+  z-index: 1;
+}
+
 .bk-pagebgimg-ctl {
   position: absolute;
   top: calc(var(--bleed) + 0.52in);
