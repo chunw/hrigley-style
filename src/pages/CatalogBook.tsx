@@ -2028,10 +2028,14 @@ function useBookModel(args: {
         const stmtZh2: EssayItem = { html: "<p>这个系列的视觉语法就借自这些陶俑。它们来自不同的文明、不同的历史时期，我把它们放进当代日常生活的剧场。</p>" };
         essayChunks[chapter.key] = langChunks([indentItem(leadEn), ...paraItems(paras.filter((p) => !hasCjk(p.text))).map(indentItem), indentItem(noteEn, true), stmtEn1, stmtEn2], [indentItem(leadZh), ...paraItems(paras.filter((p) => hasCjk(p.text))).map(indentItem), indentItem(noteZh, true), stmtZh1, stmtZh2]);
       } else if (chapter.key === "photography") {
-        const head: EssayItem = { html: "<p>El Otro, El Mismo</p>" };
+        // No title line inside the text (her direction, 2026-11-08): a
+        // hardcoded "El Otro, El Mismo" head item used to be prepended to
+        // both language streams, so the section title printed three times
+        // on the opening spread — the essay head on the first page already
+        // carries it. The body text stands on its own now.
         const otro = txParas("elOtroEssayBody");
-        const en = [head, ...paraItems(otro.filter((p) => !hasCjk(p.text)))];
-        const zh = [head, ...paraItems(otro.filter((p) => hasCjk(p.text)))];
+        const en = paraItems(otro.filter((p) => !hasCjk(p.text)));
+        const zh = paraItems(otro.filter((p) => hasCjk(p.text)));
         essayChunks[chapter.key] = langChunks(en, zh);
       } else if (chapter.seriesTextId) {
         const s = BOOK_SERIES.find((x) => x.id === chapter.seriesTextId);
