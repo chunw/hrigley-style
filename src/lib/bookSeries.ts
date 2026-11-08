@@ -173,7 +173,7 @@ export const BOOK_SERIES: BookSeries[] = [
   },
   {
     id: "sahara",
-    titleEn: "Sahara",
+    titleEn: "Sahara from 6 to 10: An Archive",
     titleZh: "撒哈拉",
     years: "2021",
     textEn: "Sahara from 6 to 10: An Archive. An archive of the desert kept by the clock, hour by hour, from 6 to 10.",
