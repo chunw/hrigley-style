@@ -2284,6 +2284,8 @@
 
 .bk-imgedit-overlay {
   touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .bk-imgedit-anchor {

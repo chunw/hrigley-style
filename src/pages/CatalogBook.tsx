@@ -1159,10 +1159,19 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
     const d = dragRef.current;
     if (!d || e.pointerId !== d.pointerId) return;
     e.preventDefault();
-    const ddx = ((e.clientX - d.start.x) / d.fr.width) * 100;
-    const ddy = ((e.clientY - d.start.y) / d.fr.height) * 100;
+    let ddx = ((e.clientX - d.start.x) / d.fr.width) * 100;
+    let ddy = ((e.clientY - d.start.y) / d.fr.height) * 100;
     const cur = ctx.imgEditFor(src) ?? {};
+    // The picture lives on ONE page of a spread: it may bleed to its
+    // page's edges but never onto the neighbouring page — past the
+    // page edge its handles physically cannot exist (the neighbour
+    // page owns those pixels), so movement and growth stop at the
+    // page bounds, exactly like a print trim (v5, 2026-11-08).
     if (d.mode === "move") {
+      if (pageRel) {
+        ddx = Math.min(Math.max(ddx, pageRel.x - d.baseRect.x), pageRel.x + pageRel.w - (d.baseRect.x + d.baseRect.w));
+        ddy = Math.min(Math.max(ddy, pageRel.y - d.baseRect.y), pageRel.y + pageRel.h - (d.baseRect.y + d.baseRect.h));
+      }
       ctx.setImgEdit(src, { ...cur, full: false, scale: d.base.scale, dx: d.base.dx + ddx, dy: d.base.dy + ddy });
       return;
     }
@@ -1184,7 +1193,13 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
           : mode === "ne"
             ? { x: d.baseRect.x + d.baseRect.w, y: d.baseRect.y }
             : { x: d.baseRect.x, y: d.baseRect.y + d.baseRect.h };
-    const now: Pt = { x: corner0.x + ddx, y: corner0.y + ddy };
+    let now: Pt = { x: corner0.x + ddx, y: corner0.y + ddy };
+    if (pageRel) {
+      now = {
+        x: Math.min(Math.max(now.x, pageRel.x), pageRel.x + pageRel.w),
+        y: Math.min(Math.max(now.y, pageRel.y), pageRel.y + pageRel.h),
+      };
+    }
     const d0 = Math.hypot(corner0.x - anchor.x, corner0.y - anchor.y) || 1;
     const d1 = Math.hypot(now.x - anchor.x, now.y - anchor.y);
     const s = Math.min(4, Math.max(0.1, d.base.scale * (d1 / d0)));
