@@ -998,6 +998,74 @@ function BookImage({ src, fallback, alt = "", className, style }: { src: string;
   );
 }
 
+/** One staged picture edit (edit mode): a size change and/or a swapped-in
+ * replacement for a picture already in the book, keyed by the picture's
+ * own src — stable across pagination shifts, unlike page numbers. It
+ * applies everywhere that src is rendered as a framed picture (plates,
+ * object grids, facsimile pages), travels in the exported book-edits.json
+ * as imageEdits, and persists in this browser like the background-image
+ * drafts. */
+export interface ImgEdit {
+  scale?: number;
+  src?: string;
+}
+
+/** A framed book picture with the picture-edit tool applied (her
+ * direction, 2026-11-08): in edit mode the picture can be clicked to
+ * select it, dragged by its corner handle to resize, and swapped for a
+ * file from the computer via the panel that selection opens. Outside
+ * edit mode it simply renders the staged edit, so toggling edit mode
+ * off previews the result. The scale resizes the picture's box inside
+ * its frame, centred — the same percentages the print CSS will see. */
+function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: BookContext; src: string; fallback?: string; alt?: string; className?: string; style?: CSSProperties }) {
+  const edit = ctx.imgEditFor(src);
+  const scale = edit?.scale && edit.scale > 0 ? edit.scale : 1;
+  const sized: CSSProperties =
+    scale !== 1
+      ? { width: `${scale * 100}%`, height: `${scale * 100}%`, left: `${((1 - scale) / 2) * 100}%`, top: `${((1 - scale) / 2) * 100}%` }
+      : {};
+  const selected = ctx.editMode && ctx.imgSel === src;
+  const dragRef = useRef<{ x: number; y: number; scale: number } | null>(null);
+  const onHandleDown = (e: { preventDefault: () => void; stopPropagation: () => void; clientX: number; clientY: number }) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragRef.current = { x: e.clientX, y: e.clientY, scale };
+    const move = (ev: PointerEvent) => {
+      const d = dragRef.current;
+      if (!d) return;
+      const next = Math.min(3, Math.max(0.2, d.scale + (ev.clientX - d.x + (ev.clientY - d.y)) / 320));
+      ctx.setImgEdit(src, { ...(ctx.imgEditFor(src) ?? {}), scale: Math.round(next * 100) / 100 });
+    };
+    const up = () => {
+      dragRef.current = null;
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+  };
+  return (
+    <>
+      <BookImage src={edit?.src ?? src} fallback={edit?.src ? undefined : fallback} alt={alt} className={className} style={{ ...style, ...sized }} />
+      {ctx.editMode && (
+        <div
+          className={`bk-imgedit-overlay ${selected ? "bk-imgedit-on" : ""}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            ctx.selectImg(src);
+          }}
+        >
+          {selected && (
+            <div className="bk-imgedit-handle" onPointerDown={onHandleDown} title="拖动改大小 · Drag to resize">
+              ⤡
+            </div>
+          )}
+        </div>
+      )}
+    </>
+  );
+}
+
 /** Inline ground for an eyedropper-picked hex background (see PageBgValue):
  * the colour itself as the paper, plus the text variables of whichever
  * preset (white / black) its luminance sits closer to, so type stays
@@ -1148,6 +1216,84 @@ type BgImgScope = "spread" | "left" | "right";
  * page — and Apply. Clear removes the chosen scope's image again, back to
  * the page's paper ground. Staged like every other editor change: it only
  * persists via Save edits / Make PR in the toolbar. */
+/** Picture-edit panel (edit mode): opens when a framed picture is
+ * clicked. The size can also be set by dragging the picture's corner
+ * handle directly; this panel mirrors it with a slider, swaps the
+ * picture for a file from the computer, and resets both. Changes apply
+ * immediately and auto-save to this browser's draft. */
+function ImgEditPanel({
+  src,
+  title,
+  edit,
+  onScale,
+  onReplace,
+  onReset,
+  onClose,
+  lang,
+}: {
+  src: string;
+  title: string;
+  edit: ImgEdit | undefined;
+  onScale: (scale: number) => void;
+  onReplace: (dataUrl: string) => void;
+  onReset: () => void;
+  onClose: () => void;
+  lang: "en" | "zh";
+}) {
+  const zh = lang === "zh";
+  const scale = edit?.scale && edit.scale > 0 ? edit.scale : 1;
+  const onFile = (f: File | undefined) => {
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = String(reader.result);
+      // Keep the original unless it is very large; past ~2400px a
+      // downscale keeps the export file manageable at print size.
+      const img = new Image();
+      img.onload = () => {
+        if (Math.max(img.width, img.height) <= 2400 && f.size <= 10 * 1024 * 1024) {
+          onReplace(dataUrl);
+          return;
+        }
+        const k = 2400 / Math.max(img.width, img.height);
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(img.width * k);
+        canvas.height = Math.round(img.height * k);
+        canvas.getContext("2d")?.drawImage(img, 0, 0, canvas.width, canvas.height);
+        onReplace(canvas.toDataURL("image/jpeg", 0.9));
+      };
+      img.src = dataUrl;
+    };
+    reader.readAsDataURL(f);
+  };
+  return (
+    <div data-noprint className="bk-editor-panel bk-imgedit-panel">
+      <div className="bk-editor-head">
+        <span className="sans-label">{zh ? "图片" : "Picture"} · {title || src}</span>
+        <span className="bk-editor-hint">{zh ? "拖图片右下角的把手也能改大小；改动自动存到本机草稿" : "Drag the picture's corner handle to resize — changes save to this browser automatically"}</span>
+      </div>
+      <div className="bk-imgedit-row">
+        <span>{zh ? "大小" : "Size"}</span>
+        <input type="range" min={20} max={300} step={1} value={Math.round(scale * 100)} onChange={(e) => onScale(Number(e.target.value) / 100)} />
+        <span className="bk-imgedit-pct">{Math.round(scale * 100)}%</span>
+        {edit?.src && <span className="bk-imgedit-swapped">{zh ? "已换成本地图片" : "Swapped image"}</span>}
+      </div>
+      <div className="bk-editor-actions">
+        <label className="bk-pagebg-btn bk-bgimg-upload">
+          {zh ? "从电脑换一张图片" : "Replace from computer"}
+          <input type="file" accept="image/*" hidden onChange={(e) => onFile(e.target.files?.[0])} />
+        </label>
+        <button type="button" disabled={!edit} onClick={onReset}>
+          {zh ? "恢复原图和大小" : "Reset picture"}
+        </button>
+        <button type="button" onClick={onClose}>
+          {zh ? "完成" : "Done"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function BgImagePanel({
   info,
   images,
@@ -1516,6 +1662,10 @@ export interface BookContext {
   openBgImagePanel: (info: BgImagePanelInfo) => void;
   pageNoteFor: (key: string | null) => PageNote | undefined;
   openPageNotePanel: (info: PageNotePanelInfo) => void;
+  imgEditFor: (src: string) => ImgEdit | undefined;
+  setImgEdit: (src: string, edit: ImgEdit | null) => void;
+  imgSel: string | null;
+  selectImg: (src: string | null) => void;
   startEyedrop: (info: EyedropInfo) => void;
   paintingChunks: { paras: ParaItem[] }[];
 }
@@ -2006,7 +2156,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-plate-page${bgImgCls}`}>{bgImgLayer}
           <div className="bk-plate-frame">
-            <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
+            <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
           </div>
           <div className="bk-caption">
             <div className="bk-caption-body">
@@ -2030,7 +2180,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             {entries.map(({ item }) => (
               <div className="bk-grid-cell" key={item.image_url}>
                 <div className="bk-grid-frame">
-                  <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
+                  <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
                 </div>
                 <div className="bk-grid-caption">
                   <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
@@ -2200,7 +2350,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-canva-page${bgImgCls}`}>{bgImgLayer}
           <div className="bk-canva-frame">
-            <BookImage src={src} alt={`Paintings 2019–2026 — earlier printed edition, page ${spec.page}`} />
+            <EdBookImage ctx={ctx} src={src} alt={`Paintings 2019–2026 — earlier printed edition, page ${spec.page}`} />
           </div>
           {spec.page === 21 && (
             <div className="bk-caption">
@@ -2344,8 +2494,13 @@ function useBookModel(args: {
   pageNoteFor: BookContext["pageNoteFor"];
   openPageNotePanel: BookContext["openPageNotePanel"];
   openEditor: BookContext["openEditor"];
+  imgEdits: Record<string, ImgEdit>;
+  imgEditFor: BookContext["imgEditFor"];
+  setImgEdit: BookContext["setImgEdit"];
+  imgSel: string | null;
+  selectImg: BookContext["selectImg"];
 }): { ctx: BookContext; pages: InteriorPage[] } {
-  const { editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, startEyedrop, pageNotes, pageNoteFor, openPageNotePanel, openEditor } = args;
+  const { editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, startEyedrop, pageNotes, pageNoteFor, openPageNotePanel, openEditor, imgEdits, imgEditFor, setImgEdit, imgSel, selectImg } = args;
   const t = translations.en;
   const ctx = useMemo<BookContext>(() => {
     let plate = 0;
@@ -2920,12 +3075,16 @@ function useBookModel(args: {
       openBgImagePanel,
       pageNoteFor,
       openPageNotePanel,
+      imgEditFor,
+      setImgEdit,
+      imgSel,
+      selectImg,
       startEyedrop,
       years: yearRange(chapters.flatMap((c) => c.items.map((i) => i.item.year))),
       coverFront: byKey("residuals")[0] ?? chapters[0]?.items[0]?.item,
       coverBack: byKey("photography")[0] ?? chapters[0]?.items[1]?.item,
     };
-  }, [textEdits, editMode, pageBgEdits, bgImgEdits, pageNotes]);
+  }, [textEdits, editMode, pageBgEdits, bgImgEdits, pageNotes, imgEdits, imgSel]);
   const pages = useMemo(() => paginate(ctx.chapters, ctx.prefaceChunks.length, ctx.paintingChunks.length, Object.fromEntries(Object.entries(ctx.essayChunks).map(([k, v]) => [k, v.length]))), [ctx]);
   return { ctx, pages };
 }
@@ -2976,8 +3135,15 @@ const CatalogBook = () => {
   const [pageBgEdits, setPageBgEdits] = useState<Record<string, PageBgValue | "global">>(() => loadJSON("remains-book-page-bg", {}));
   const [bgImgEdits, setBgImgEdits] = useState<Record<string, PageBgImage | null>>(() => loadJSON("remains-book-bgimg", {}));
   const [pageNotes, setPageNotes] = useState<Record<string, PageNote>>(() => loadJSON("remains-book-page-notes", {}));
+  // Picture edits (size / replacement), keyed by picture src.
+  const [imgEdits, setImgEdits] = useState<Record<string, ImgEdit>>(() => loadJSON("remains-book-img-edits", {}));
+  const [imgSel, setImgSel] = useState<string | null>(null);
+  // Leaving edit mode drops the picture selection with it.
+  useEffect(() => {
+    if (!editMode) setImgSel(null);
+  }, [editMode]);
   const [savedSnapshot, setSavedSnapshot] = useState(() =>
-    JSON.stringify({ t: loadJSON("remains-book-text-edits", {}), b: loadJSON("remains-book-page-bg", {}), i: loadJSON("remains-book-bgimg", {}), n: loadJSON("remains-book-page-notes", {}) }),
+    JSON.stringify({ t: loadJSON("remains-book-text-edits", {}), b: loadJSON("remains-book-page-bg", {}), i: loadJSON("remains-book-bgimg", {}), n: loadJSON("remains-book-page-notes", {}), g: loadJSON("remains-book-img-edits", {}) }),
   );
   const [panel, setPanel] = useState<{ edit: string; label: string; value: string } | null>(null);
   const [bgPanel, setBgPanel] = useState<BgImagePanelInfo | null>(null);
@@ -2987,7 +3153,7 @@ const CatalogBook = () => {
   const [eyedropHover, setEyedropHover] = useState<{ hex: string; x: number; y: number } | null>(null);
   const pickHoverRaf = useRef(0);
   const [prMsg, setPrMsg] = useState("");
-  const editorDirty = JSON.stringify({ t: textEdits, b: pageBgEdits, i: bgImgEdits, n: pageNotes }) !== savedSnapshot;
+  const editorDirty = JSON.stringify({ t: textEdits, b: pageBgEdits, i: bgImgEdits, n: pageNotes, g: imgEdits }) !== savedSnapshot;
   const openEditor = (edit: string, label: string, current: string) => setPanel({ edit, label, value: current });
   const pageBgFor = (key: string | null): PageBgValue | undefined => {
     if (!key) return undefined;
@@ -3020,6 +3186,17 @@ const CatalogBook = () => {
       else delete next[key];
       return next;
     });
+  // Picture edits: read / write the staged edit for one picture src; a
+  // null edit (or one with neither field) clears the entry.
+  const imgEditFor = (src: string): ImgEdit | undefined => imgEdits[src];
+  const setImgEdit = (src: string, edit: ImgEdit | null) =>
+    setImgEdits((prev) => {
+      const next = { ...prev };
+      if (!edit || (edit.scale === undefined && !edit.src)) delete next[src];
+      else next[src] = edit;
+      return next;
+    });
+  const selectImg = (src: string | null) => setImgSel(src);
   const applyBgImg = (scope: BgImgScope, src: string) => {
     if (!bgPanel) return;
     if (scope === "spread") {
@@ -3071,6 +3248,25 @@ const CatalogBook = () => {
       // still applies for this session, and Save / Make PR work as before.
     }
   }, [bgImgEdits]);
+  // Picture drafts persist on EVERY change too, same reasoning as the
+  // background-image drafts above: a resize or a swap that survived only
+  // in component state would vanish on refresh.
+  useEffect(() => {
+    try {
+      localStorage.setItem("remains-book-img-edits", JSON.stringify(imgEdits));
+      setSavedSnapshot((prev) => {
+        try {
+          const snap = JSON.parse(prev) as Record<string, unknown>;
+          return JSON.stringify({ ...snap, g: imgEdits });
+        } catch {
+          return prev;
+        }
+      });
+    } catch {
+      // Storage full (a swapped-in original is large): the in-memory
+      // draft still applies for this session and the export carries it.
+    }
+  }, [imgEdits]);
   // Eyedropper (edit mode): the native EyeDropper where the browser has
   // one; otherwise an in-page picking state — the stage's capture-phase
   // click samples instead of acting (see onStagePickClick), and Esc or the
@@ -3155,7 +3351,8 @@ const CatalogBook = () => {
     localStorage.setItem("remains-book-page-bg", JSON.stringify(pageBgEdits));
     localStorage.setItem("remains-book-bgimg", JSON.stringify(bgImgEdits));
     localStorage.setItem("remains-book-page-notes", JSON.stringify(pageNotes));
-    setSavedSnapshot(JSON.stringify({ t: textEdits, b: pageBgEdits, i: bgImgEdits, n: pageNotes }));
+    localStorage.setItem("remains-book-img-edits", JSON.stringify(imgEdits));
+    setSavedSnapshot(JSON.stringify({ t: textEdits, b: pageBgEdits, i: bgImgEdits, n: pageNotes, g: imgEdits }));
     setPrMsg(lang === "zh" ? "已保存到本机浏览器。" : "Saved in this browser.");
   };
   const generatePR = async () => {
@@ -3176,7 +3373,9 @@ const CatalogBook = () => {
       .filter(([, n]) => n.text.trim())
       .map(([anchor, n]) => ({ anchor, folio: n.folio, text: n.text }))
       .sort((x, y) => x.folio - y.folio);
-    const payload = { textEdits, pageBg, pageBgImages, pageNotes: pageNotesList };
+    // Picture edits ride along keyed by picture src: { scale?, src? } —
+    // src is a replacement image's data URL when the picture was swapped.
+    const payload = { textEdits, pageBg, pageBgImages, pageNotes: pageNotesList, imageEdits: imgEdits };
     try {
       const res = await fetch("/api/book-pr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
@@ -3208,7 +3407,7 @@ const CatalogBook = () => {
     noindex: true,
   });
 
-  const { ctx, pages } = useBookModel({ editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, startEyedrop, pageNotes, pageNoteFor, openPageNotePanel, openEditor });
+  const { ctx, pages } = useBookModel({ editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, startEyedrop, pageNotes, pageNoteFor, openPageNotePanel, openEditor, imgEdits, imgEditFor, setImgEdit, imgSel, selectImg });
   // Every picture already in the book, for the background-image picker.
   const bookImages = useMemo(() => {
     const seen = new Map<string, string>();
@@ -3578,6 +3777,18 @@ const CatalogBook = () => {
         </div>
       )}
 
+      {imgSel && editMode && (
+        <ImgEditPanel
+          src={imgSel}
+          title={bookImages.find((im) => im.src === imgSel)?.title ?? ""}
+          edit={imgEdits[imgSel]}
+          onScale={(s) => setImgEdit(imgSel, { ...(imgEdits[imgSel] ?? {}), scale: s })}
+          onReplace={(dataUrl) => setImgEdit(imgSel, { ...(imgEdits[imgSel] ?? {}), src: dataUrl })}
+          onReset={() => setImgEdit(imgSel, null)}
+          onClose={() => setImgSel(null)}
+          lang={lang}
+        />
+      )}
       {bgPanel && bgPanelCurrent && (
         <BgImagePanel
           key={`${bgPanel.leftKey}|${bgPanel.rightKey}`}
