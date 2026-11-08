@@ -43,7 +43,9 @@
 }
 
 .bk-paper-black {
-  --paper: #17140f;
+  /* True black (her direction, 2026-11-08): was a warm near-black, which
+     showed as a seam against pure-black images laid over the page. */
+  --paper: #000000;
 }
 
 .bk-paper-black .bk-page.bk-tone-paper {
@@ -177,11 +179,11 @@
 }
 
 .bk-page.bk-bg-black {
-  --paper: #17140f;
+  --paper: #000000;
   --text: #f0e9da;
   --muted: #a79c86;
   --rule: #3a352a;
-  background: #17140f;
+  background: #000000;
 }
 
 .bk-page.bk-bg-pink {
