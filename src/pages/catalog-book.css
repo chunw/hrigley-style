@@ -2280,7 +2280,26 @@
 
 .bk-imgedit-on {
   cursor: move;
+}
+
+.bk-imgedit-overlay {
   touch-action: none;
+}
+
+.bk-imgedit-anchor {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Canva-sized touch target: the visible dot is 20px, the grabbable
+   area is 44px. */
+.bk-imgedit-handle::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
 }
 
 .bk-imgedit-row {

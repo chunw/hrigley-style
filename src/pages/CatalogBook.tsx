@@ -1042,6 +1042,15 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
   const full = !!edit?.full;
   const selected = ctx.editMode && ctx.imgSel === src;
   const wrapRef = useRef<HTMLDivElement>(null);
+  const anchorRef = useRef<HTMLSpanElement>(null);
+  const dragRef = useRef<{
+    pointerId: number;
+    mode: "move" | "nw" | "ne" | "sw" | "se";
+    start: { x: number; y: number };
+    fr: { width: number; height: number };
+    base: { scale: number; dx: number; dy: number };
+    baseRect: { x: number; y: number; w: number; h: number };
+  } | null>(null);
   const [aspect, setAspect] = useState(0);
   const [frameAspect, setFrameAspect] = useState(0);
   const [pageRel, setPageRel] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
@@ -1060,9 +1069,15 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
   }, [displaySrc]);
 
   // Frame aspect + the page's rect relative to the frame (for full
-  // bleed), refreshed whenever the frame's box changes (zoom, resize).
+  // bleed). Measured through the always-mounted anchor span after
+  // every render: the overlay itself only exists in edit mode, and a
+  // mount-only measurement through it left the geometry dead when edit
+  // mode was switched on after the page had mounted — the picture
+  // looked selected but never responded to drags (her report,
+  // 2026-11-08). A ResizeObserver on the frame covers zoom/resize
+  // changes that do not re-render.
   useEffect(() => {
-    const frame = wrapRef.current?.parentElement;
+    const frame = anchorRef.current?.parentElement;
     if (!frame) return;
     const measure = () => {
       const fr = frame.getBoundingClientRect();
@@ -1079,7 +1094,7 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
     const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(measure) : null;
     ro?.observe(frame);
     return () => ro?.disconnect();
-  }, []);
+  });
 
   // Default contain-fitted rect as fractions of the frame.
   const ready = aspect > 0 && frameAspect > 0;
@@ -1100,17 +1115,25 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
     : {};
   const merged: CSSProperties = { ...style, ...imgStyle };
 
-  const frameOf = () => wrapRef.current?.parentElement?.getBoundingClientRect();
   type Pt = { x: number; y: number };
-  const beginDrag = (e: { preventDefault: () => void; stopPropagation: () => void; clientX: number; clientY: number }, mode: "move" | "nw" | "ne" | "sw" | "se") => {
+  /** Canva-standard direct manipulation (v3, 2026-11-08): one press
+   * both selects and starts the drag, the pressed element captures
+   * the pointer so mouse, touch and pen all track the same way, and
+   * touch scrolling is disabled on the tool so a phone drag moves the
+   * picture instead of the page. */
+  const onDragStart = (e: React.PointerEvent, mode: "move" | "nw" | "ne" | "sw" | "se") => {
     e.preventDefault();
     e.stopPropagation();
     ctx.selectImg(src);
-    const fr = frameOf();
+    const frame = anchorRef.current?.parentElement;
+    const fr = frame?.getBoundingClientRect();
     if (!fr || fr.width === 0) return;
-    const start: Pt = { x: e.clientX, y: e.clientY };
+    try {
+      (e.currentTarget as Element).setPointerCapture(e.pointerId);
+    } catch {
+      /* capture is a progressive enhancement; window tracking below still applies */
+    }
     const startRect = { ...rect };
-    const startEdit = { scale, dx, dy };
     // Leaving full bleed by dragging: continue from the page rect as
     // plain geometry (its size becomes the new scale baseline).
     const exitFull = full
@@ -1123,58 +1146,61 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
           };
         })()
       : null;
-    const base = exitFull ?? startEdit;
+    const base = exitFull ?? { scale, dx, dy };
     const baseRect = exitFull
       ? { x: startRect.x, y: startRect.y, w: fx * base.scale * 100, h: fy * base.scale * 100 }
       : startRect;
-    const move = (ev: PointerEvent) => {
-      const ddx = ((ev.clientX - start.x) / fr.width) * 100;
-      const ddy = ((ev.clientY - start.y) / fr.height) * 100;
-      const cur = ctx.imgEditFor(src) ?? {};
-      if (mode === "move") {
-        ctx.setImgEdit(src, { ...cur, full: false, scale: base.scale, dx: base.dx + ddx, dy: base.dy + ddy });
-        return;
-      }
-      // Corner drag: the opposite corner of the rect stays pinned.
-      const anchor: Pt =
-        mode === "se"
-          ? { x: baseRect.x, y: baseRect.y }
-          : mode === "nw"
-            ? { x: baseRect.x + baseRect.w, y: baseRect.y + baseRect.h }
-            : mode === "ne"
-              ? { x: baseRect.x, y: baseRect.y + baseRect.h }
-              : { x: baseRect.x + baseRect.w, y: baseRect.y };
-      const corner0: Pt =
-        mode === "se"
-          ? { x: baseRect.x + baseRect.w, y: baseRect.y + baseRect.h }
-          : mode === "nw"
-            ? { x: baseRect.x, y: baseRect.y }
-            : mode === "ne"
-              ? { x: baseRect.x + baseRect.w, y: baseRect.y }
-              : { x: baseRect.x, y: baseRect.y + baseRect.h };
-      const now: Pt = { x: corner0.x + ddx, y: corner0.y + ddy };
-      const d0 = Math.hypot(corner0.x - anchor.x, corner0.y - anchor.y) || 1;
-      const d1 = Math.hypot(now.x - anchor.x, now.y - anchor.y);
-      const s = Math.min(4, Math.max(0.1, base.scale * (d1 / d0)));
-      const w = fx * s * 100;
-      const h = fy * s * 100;
-      const nx = mode === "se" || mode === "ne" ? anchor.x : anchor.x - w;
-      const ny = mode === "se" || mode === "sw" ? anchor.y : anchor.y - h;
-      ctx.setImgEdit(src, {
-        ...cur,
-        full: false,
-        scale: Math.round(s * 1000) / 1000,
-        dx: nx - (1 - fx) * 50 - ((fx * (1 - s)) / 2) * 100,
-        dy: ny - (1 - fy) * 50 - ((fy * (1 - s)) / 2) * 100,
-      });
-    };
-    const up = () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
-    };
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
+    dragRef.current = { pointerId: e.pointerId, mode, start: { x: e.clientX, y: e.clientY }, fr: { width: fr.width, height: fr.height }, base, baseRect };
   };
+  const onDragMove = (e: React.PointerEvent) => {
+    const d = dragRef.current;
+    if (!d || e.pointerId !== d.pointerId) return;
+    e.preventDefault();
+    const ddx = ((e.clientX - d.start.x) / d.fr.width) * 100;
+    const ddy = ((e.clientY - d.start.y) / d.fr.height) * 100;
+    const cur = ctx.imgEditFor(src) ?? {};
+    if (d.mode === "move") {
+      ctx.setImgEdit(src, { ...cur, full: false, scale: d.base.scale, dx: d.base.dx + ddx, dy: d.base.dy + ddy });
+      return;
+    }
+    // Corner drag: the opposite corner of the rect stays pinned.
+    const mode = d.mode;
+    const anchor: Pt =
+      mode === "se"
+        ? { x: d.baseRect.x, y: d.baseRect.y }
+        : mode === "nw"
+          ? { x: d.baseRect.x + d.baseRect.w, y: d.baseRect.y + d.baseRect.h }
+          : mode === "ne"
+            ? { x: d.baseRect.x, y: d.baseRect.y + d.baseRect.h }
+            : { x: d.baseRect.x + d.baseRect.w, y: d.baseRect.y };
+    const corner0: Pt =
+      mode === "se"
+        ? { x: d.baseRect.x + d.baseRect.w, y: d.baseRect.y + d.baseRect.h }
+        : mode === "nw"
+          ? { x: d.baseRect.x, y: d.baseRect.y }
+          : mode === "ne"
+            ? { x: d.baseRect.x + d.baseRect.w, y: d.baseRect.y }
+            : { x: d.baseRect.x, y: d.baseRect.y + d.baseRect.h };
+    const now: Pt = { x: corner0.x + ddx, y: corner0.y + ddy };
+    const d0 = Math.hypot(corner0.x - anchor.x, corner0.y - anchor.y) || 1;
+    const d1 = Math.hypot(now.x - anchor.x, now.y - anchor.y);
+    const s = Math.min(4, Math.max(0.1, d.base.scale * (d1 / d0)));
+    const w = fx * s * 100;
+    const h = fy * s * 100;
+    const nx = mode === "se" || mode === "ne" ? anchor.x : anchor.x - w;
+    const ny = mode === "se" || mode === "sw" ? anchor.y : anchor.y - h;
+    ctx.setImgEdit(src, {
+      ...cur,
+      full: false,
+      scale: Math.round(s * 1000) / 1000,
+      dx: nx - (1 - fx) * 50 - ((fx * (1 - s)) / 2) * 100,
+      dy: ny - (1 - fy) * 50 - ((fy * (1 - s)) / 2) * 100,
+    });
+  };
+  const onDragEnd = (e: React.PointerEvent) => {
+    if (dragRef.current && e.pointerId === dragRef.current.pointerId) dragRef.current = null;
+  };
+  const dragHandlers = { onPointerMove: onDragMove, onPointerUp: onDragEnd, onPointerCancel: onDragEnd };
 
   const corners = [
     { k: "nw", cls: "bk-imgedit-h-nw", cursor: "nwse-resize" },
@@ -1185,6 +1211,7 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
 
   return (
     <>
+      <span ref={anchorRef} className="bk-imgedit-anchor" aria-hidden="true" />
       <BookImage src={displaySrc} fallback={edit?.src ? undefined : fallback} alt={alt} className={className} style={merged} />
       {ctx.editMode && (
         <div
@@ -1195,9 +1222,8 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
             e.stopPropagation();
             ctx.selectImg(src);
           }}
-          onPointerDown={(e) => {
-            if (selected) beginDrag(e, "move");
-          }}
+          onPointerDown={(e) => onDragStart(e, "move")}
+          {...dragHandlers}
         >
           {selected &&
             corners.map((cn) => (
@@ -1205,7 +1231,8 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
                 key={cn.k}
                 className={`bk-imgedit-handle ${cn.cls}`}
                 style={{ cursor: cn.cursor }}
-                onPointerDown={(e) => beginDrag(e, cn.k)}
+                onPointerDown={(e) => onDragStart(e, cn.k)}
+                {...dragHandlers}
                 title="拖动改大小 · Drag to resize"
               />
             ))}
