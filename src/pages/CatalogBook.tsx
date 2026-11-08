@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ChevronLeft, ChevronRight, Printer } from "lucide-react";
 import "./catalog-book.css";
@@ -7,7 +7,7 @@ import { artistBioHTML } from "@/lib/artistBio";
 import { SHOP_URL, SITE_URL } from "@/lib/constants";
 import { getCombinedCatalogSections, type CatalogItem, type CatalogSection, type CatalogSectionKey } from "@/lib/printCatalog";
 import { translations, type Translations } from "@/lib/translations";
-import { PAGE_BACKGROUNDS, type PageBgKind } from "@/lib/pageBackgrounds";
+import { PAGE_BACKGROUNDS, hexToRgb, isHexPageBg, rgbToHex, type PageBgKind, type PageBgValue } from "@/lib/pageBackgrounds";
 import { PAGE_BACKGROUND_IMAGES, type PageBgImage } from "@/lib/pageBackgroundImages";
 import { BOOK_SERIES } from "@/lib/bookSeries";
 import { SERIES_PLATES, DEATH_VALLEY_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
@@ -995,9 +995,27 @@ function BookImage({ src, fallback, alt = "", className, style }: { src: string;
   );
 }
 
-function Page({ side, tone = "paper", className = "", id, bg, ctl, style, children }: { side: Side; tone?: "paper" | "ink" | "accent"; className?: string; id?: string; bg?: PageBgKind; ctl?: ReactNode; style?: CSSProperties; children?: ReactNode }) {
+/** Inline ground for an eyedropper-picked hex background (see PageBgValue):
+ * the colour itself as the paper, plus the text variables of whichever
+ * preset (white / black) its luminance sits closer to, so type stays
+ * legible on any picked colour. Named kinds keep the .bk-bg-* classes. */
+function hexBgStyle(hex: string): CSSProperties {
+  const rgb = hexToRgb(hex);
+  const lum = rgb ? (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b) / 255 : 1;
+  const dark = lum < 0.5;
+  return {
+    background: hex,
+    "--paper": hex,
+    "--text": dark ? "#f0e9da" : "#111111",
+    "--muted": dark ? "#a79c86" : "#767066",
+    "--rule": dark ? "#3a352a" : "#ddd8ce",
+  } as CSSProperties;
+}
+
+function Page({ side, tone = "paper", className = "", id, bg, ctl, style, children }: { side: Side; tone?: "paper" | "ink" | "accent"; className?: string; id?: string; bg?: PageBgValue; ctl?: ReactNode; style?: CSSProperties; children?: ReactNode }) {
+  const hex = isHexPageBg(bg) ? bg : undefined;
   return (
-    <section id={id} style={style} className={`bk-page bk-${side} bk-tone-${tone} ${bg ? `bk-bg-${bg}` : ""} ${className}`}>
+    <section id={id} style={hex ? { ...hexBgStyle(hex), ...style } : style} className={`bk-page bk-${side} bk-tone-${tone} ${bg && !hex ? `bk-bg-${bg}` : ""} ${className}`}>
       {ctl}
       {children}
     </section>
@@ -1048,7 +1066,8 @@ const BG_OPTIONS: [PageBgKind | "global", string][] = [
   ["pink", "粉"],
 ];
 
-function PageBgCtl({ current, onPick }: { current?: PageBgKind; onPick: (kind: PageBgKind | "global") => void }) {
+function PageBgCtl({ current, onPick, onEyedrop }: { current?: PageBgValue; onPick: (kind: PageBgValue | "global") => void; onEyedrop: () => void }) {
+  const hex = isHexPageBg(current) ? current : undefined;
   return (
     <div className="bk-pagebg-ctl" data-noprint>
       {BG_OPTIONS.map(([kind, label]) => (
@@ -1061,6 +1080,10 @@ function PageBgCtl({ current, onPick }: { current?: PageBgKind; onPick: (kind: P
           {label}
         </button>
       ))}
+      {hex && <span className="bk-pagebg-swatch" style={{ background: hex }} title={hex} />}
+      <button type="button" className="bk-pagebg-btn" onClick={onEyedrop}>
+        取色
+      </button>
     </div>
   );
 }
@@ -1191,6 +1214,162 @@ function BgImagePanel({
   );
 }
 
+/** Which spread the eyedropper acts on, and which side's 取色 button opened
+ * it — that side is the panel's preselected apply scope. */
+export interface EyedropInfo extends BgImagePanelInfo {
+  fromSide: "left" | "right";
+}
+
+interface EyeDropperResult {
+  sRGBHex: string;
+}
+interface EyeDropperInstance {
+  open: () => Promise<EyeDropperResult>;
+}
+type EyeDropperCtor = new () => EyeDropperInstance;
+
+/** The native EyeDropper (Chrome / Edge): a magnifier that picks any pixel
+ * in the window. Undefined in other browsers — the page component's
+ * startEyedrop falls back to in-page canvas sampling there. */
+function nativeEyeDropper(): EyeDropperCtor | undefined {
+  return (window as unknown as { EyeDropper?: EyeDropperCtor }).EyeDropper;
+}
+
+type SampleResult = { hex: string } | { blocked: true } | null;
+
+/** One offscreen canvas per <img>, drawn once at natural size and reused
+ * across hover moves, so fallback sampling stays cheap. A cross-origin
+ * image taints its canvas: the draw succeeds but the pixel read throws,
+ * and sampleImagePixel reports that as "blocked" instead of guessing. */
+const sampleCanvasCache = new WeakMap<HTMLImageElement, HTMLCanvasElement | null>();
+
+function sampleImagePixel(img: HTMLImageElement, clientX: number, clientY: number): string | "blocked" | null {
+  let canvas = sampleCanvasCache.get(img);
+  if (canvas === undefined) {
+    canvas = null;
+    try {
+      const c = document.createElement("canvas");
+      c.width = img.naturalWidth;
+      c.height = img.naturalHeight;
+      const g = c.getContext("2d", { willReadFrequently: true });
+      if (g) {
+        g.drawImage(img, 0, 0);
+        canvas = c;
+      }
+    } catch {
+      canvas = null;
+    }
+    sampleCanvasCache.set(img, canvas);
+  }
+  if (!canvas) return null;
+  const rect = img.getBoundingClientRect();
+  if (rect.width <= 0 || rect.height <= 0) return null;
+  // The viewer scales pages with CSS zoom; the rendered rect already
+  // carries that scale, so the rect → natural-size ratio cancels it out.
+  const px = Math.floor(((clientX - rect.left) / rect.width) * img.naturalWidth);
+  const py = Math.floor(((clientY - rect.top) / rect.height) * img.naturalHeight);
+  if (px < 0 || py < 0 || px >= img.naturalWidth || py >= img.naturalHeight) return null;
+  try {
+    const g = canvas.getContext("2d", { willReadFrequently: true });
+    if (!g) return null;
+    const d = g.getImageData(px, py, 1, 1).data;
+    return d[3] === 0 ? null : rgbToHex(d[0], d[1], d[2]);
+  } catch {
+    return "blocked";
+  }
+}
+
+/** A computed "rgb(a)" background → hex, or null when fully transparent. */
+function cssColorToHex(css: string): string | null {
+  const m = /rgba?\(([^)]+)\)/.exec(css);
+  if (!m) return null;
+  const parts = m[1].split(",").map((s) => parseFloat(s));
+  if (parts.length < 3) return null;
+  const alpha = parts.length > 3 ? parts[3] : 1;
+  if (!alpha) return null;
+  return rgbToHex(parts[0], parts[1], parts[2]);
+}
+
+/** The colour under a viewport point, for the fallback eyedropper: walk the
+ * paint stack top-down — an image pixel where the point is over a picture
+ * (canvas sampling), otherwise the first non-transparent computed
+ * background, which on bare paper is the page's ground colour. */
+function sampleColorAtPoint(clientX: number, clientY: number): SampleResult {
+  for (const el of document.elementsFromPoint(clientX, clientY)) {
+    if (el instanceof HTMLImageElement && el.naturalWidth > 0) {
+      const r = sampleImagePixel(el, clientX, clientY);
+      if (r === "blocked") return { blocked: true };
+      if (r) return { hex: r };
+      continue;
+    }
+    const hex = cssColorToHex(window.getComputedStyle(el).backgroundColor);
+    if (hex) return { hex };
+  }
+  return null;
+}
+
+/** Eyedropper result (edit mode): the sampled colour as a swatch + hex, and
+ * where it goes — the page whose 取色 button was pressed (preselected), the
+ * other page, or the whole spread (both page keys written together). Apply
+ * goes through setPageBg exactly like a preset pick, so the export carries
+ * the hex in pageBg; like every editor change it only persists via Save
+ * edits / Make PR in the toolbar. */
+function EyedropPanel({
+  info,
+  color,
+  onApply,
+  onPickAgain,
+  onClose,
+  lang,
+}: {
+  info: EyedropInfo;
+  color: string;
+  onApply: (scope: BgImgScope, hex: string) => void;
+  onPickAgain: () => void;
+  onClose: () => void;
+  lang: "en" | "zh";
+}) {
+  const zh = lang === "zh";
+  const [scope, setScope] = useState<BgImgScope>(info.fromSide);
+  const scopeBtn = (k: BgImgScope, label: string, disabled: boolean) => (
+    <button key={k} type="button" disabled={disabled} className={`bk-pagebg-btn ${scope === k ? "bk-pagebg-on" : ""}`} onClick={() => setScope(k)}>
+      {label}
+    </button>
+  );
+  return (
+    <div data-noprint className="bk-editor-panel bk-eyedrop-panel">
+      <div className="bk-editor-head">
+        <span className="sans-label">
+          {zh ? "取色" : "Eyedropper"} · p.{info.leftNumber}
+          {info.rightNumber ? `–${info.rightNumber}` : ""}
+        </span>
+        <span className="bk-editor-hint">{zh ? "选范围、点「应用」设为背景色，再点工具栏「保存内容修改」存好" : "Choose a scope, Apply as the background — then Save edits in the toolbar"}</span>
+      </div>
+      <div className="bk-eyedrop-row">
+        <span className="bk-eyedrop-swatch" style={{ background: color }} />
+        <input className="bk-eyedrop-hex" readOnly value={color} aria-label="hex" onFocus={(e) => e.target.select()} />
+      </div>
+      <div className="bk-bgimg-scopes">
+        {scopeBtn("spread", zh ? "整个跨页" : "Whole spread", false)}
+        {scopeBtn("left", zh ? `左半页 p.${info.leftNumber}` : `Left page p.${info.leftNumber}`, !info.leftKey)}
+        {scopeBtn("right", info.rightNumber ? (zh ? `右半页 p.${info.rightNumber}` : `Right page p.${info.rightNumber}`) : zh ? "右半页" : "Right page", !info.rightKey)}
+      </div>
+      <div className="bk-editor-actions">
+        <button type="button" onClick={() => onApply(scope, color)}>
+          {zh ? "应用" : "Apply"}
+        </button>
+        <button type="button" onClick={onPickAgain}>
+          {zh ? "重新取色" : "Pick again"}
+        </button>
+        <button type="button" onClick={onClose}>
+          {zh ? "关闭" : "Close"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+
 function Folio({ number, tag }: { number: number; tag?: string }) {
   return (
     <>
@@ -1243,11 +1422,12 @@ export interface BookContext {
   editMode: boolean;
   fieldTexts: Record<string, string>;
   openEditor: (edit: string, label: string, current: string) => void;
-  pageBgFor: (key: string | null) => PageBgKind | undefined;
-  setPageBg: (key: string, kind: PageBgKind | "global") => void;
+  pageBgFor: (key: string | null) => PageBgValue | undefined;
+  setPageBg: (key: string, kind: PageBgValue | "global") => void;
   bgImgFor: (key: string | null) => PageBgImage | undefined;
   setBgImg: (key: string, value: PageBgImage | null) => void;
   openBgImagePanel: (info: BgImagePanelInfo) => void;
+  startEyedrop: (info: EyedropInfo) => void;
   paintingChunks: { paras: ParaItem[] }[];
 }
 
@@ -1354,22 +1534,22 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
   const bgImgCls = bgImg
     ? ` bk-has-bgimg${bgImg.scope === "spread" ? (side === "verso" ? " bk-bgimg-anchor-left" : " bk-bgimg-anchor-right") : ""}`
     : "";
+  const spreadInfo: BgImagePanelInfo = {
+    leftKey: side === "verso" ? pageKey : partnerKey,
+    rightKey: side === "verso" ? partnerKey : pageKey,
+    leftNumber: side === "verso" ? number : number - 1,
+    rightNumber: partnerPage ? partnerPage.number : null,
+  };
   const ctl =
-    ctx.editMode && pageKey ? <PageBgCtl current={bg} onPick={(kind) => ctx.setPageBg(pageKey, kind)} /> : null;
-  const bgImgCtl =
-    ctx.editMode && (pageKey || partnerKey) ? (
-      <PageBgImgCtl
-        marked={!!bgImg}
-        onOpen={() =>
-          ctx.openBgImagePanel({
-            leftKey: side === "verso" ? pageKey : partnerKey,
-            rightKey: side === "verso" ? partnerKey : pageKey,
-            leftNumber: side === "verso" ? number : number - 1,
-            rightNumber: partnerPage ? partnerPage.number : null,
-          })
-        }
+    ctx.editMode && pageKey ? (
+      <PageBgCtl
+        current={bg}
+        onPick={(kind) => ctx.setPageBg(pageKey, kind)}
+        onEyedrop={() => ctx.startEyedrop({ ...spreadInfo, fromSide: side === "verso" ? "left" : "right" })}
       />
     ) : null;
+  const bgImgCtl =
+    ctx.editMode && (pageKey || partnerKey) ? <PageBgImgCtl marked={!!bgImg} onOpen={() => ctx.openBgImagePanel(spreadInfo)} /> : null;
   const ctlAll = (
     <>
       {ctl}
@@ -2049,16 +2229,17 @@ async function waitForAssets(root: HTMLElement) {
 function useBookModel(args: {
   editMode: boolean;
   textEdits: Record<string, string>;
-  pageBgEdits: Record<string, PageBgKind | "global">;
+  pageBgEdits: Record<string, PageBgValue | "global">;
   pageBgFor: BookContext["pageBgFor"];
   setPageBg: BookContext["setPageBg"];
   bgImgEdits: Record<string, PageBgImage | null>;
   bgImgFor: BookContext["bgImgFor"];
   setBgImg: BookContext["setBgImg"];
   openBgImagePanel: BookContext["openBgImagePanel"];
+  startEyedrop: BookContext["startEyedrop"];
   openEditor: BookContext["openEditor"];
 }): { ctx: BookContext; pages: InteriorPage[] } {
-  const { editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, openEditor } = args;
+  const { editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, startEyedrop, openEditor } = args;
   const t = translations.en;
   const ctx = useMemo<BookContext>(() => {
     let plate = 0;
@@ -2623,6 +2804,7 @@ function useBookModel(args: {
       bgImgFor,
       setBgImg,
       openBgImagePanel,
+      startEyedrop,
       years: yearRange(chapters.flatMap((c) => c.items.map((i) => i.item.year))),
       coverFront: byKey("residuals")[0] ?? chapters[0]?.items[0]?.item,
       coverBack: byKey("photography")[0] ?? chapters[0]?.items[1]?.item,
@@ -2675,23 +2857,27 @@ const CatalogBook = () => {
   };
   const [editMode, setEditMode] = useState(false);
   const [textEdits, setTextEdits] = useState<Record<string, string>>(() => loadJSON("remains-book-text-edits", {}));
-  const [pageBgEdits, setPageBgEdits] = useState<Record<string, PageBgKind | "global">>(() => loadJSON("remains-book-page-bg", {}));
+  const [pageBgEdits, setPageBgEdits] = useState<Record<string, PageBgValue | "global">>(() => loadJSON("remains-book-page-bg", {}));
   const [bgImgEdits, setBgImgEdits] = useState<Record<string, PageBgImage | null>>(() => loadJSON("remains-book-bgimg", {}));
   const [savedSnapshot, setSavedSnapshot] = useState(() =>
     JSON.stringify({ t: loadJSON("remains-book-text-edits", {}), b: loadJSON("remains-book-page-bg", {}), i: loadJSON("remains-book-bgimg", {}) }),
   );
   const [panel, setPanel] = useState<{ edit: string; label: string; value: string } | null>(null);
   const [bgPanel, setBgPanel] = useState<BgImagePanelInfo | null>(null);
+  const [eyedrop, setEyedrop] = useState<{ info: EyedropInfo; color: string } | null>(null);
+  const [eyedropPick, setEyedropPick] = useState<EyedropInfo | null>(null);
+  const [eyedropHover, setEyedropHover] = useState<{ hex: string; x: number; y: number } | null>(null);
+  const pickHoverRaf = useRef(0);
   const [prMsg, setPrMsg] = useState("");
   const editorDirty = JSON.stringify({ t: textEdits, b: pageBgEdits, i: bgImgEdits }) !== savedSnapshot;
   const openEditor = (edit: string, label: string, current: string) => setPanel({ edit, label, value: current });
-  const pageBgFor = (key: string | null): PageBgKind | undefined => {
+  const pageBgFor = (key: string | null): PageBgValue | undefined => {
     if (!key) return undefined;
     const e = pageBgEdits[key];
     if (e && e !== "global") return e;
     return PAGE_BACKGROUNDS[key];
   };
-  const setPageBg = (key: string, kind: PageBgKind | "global") => setPageBgEdits((prev) => ({ ...prev, [key]: kind }));
+  const setPageBg = (key: string, kind: PageBgValue | "global") => setPageBgEdits((prev) => ({ ...prev, [key]: kind }));
   // Background-image editor state (PR #159): these five helpers were used
   // by useBookModel / InteriorPageView / BgImagePanel but never defined, so
   // evaluating the useBookModel argument object threw a ReferenceError on
@@ -2730,6 +2916,85 @@ const CatalogBook = () => {
     const key = scope === "left" ? bgPanel.leftKey : bgPanel.rightKey;
     if (key) setBgImg(key, null);
   };
+  // Eyedropper (edit mode): the native EyeDropper where the browser has
+  // one; otherwise an in-page picking state — the stage's capture-phase
+  // click samples instead of acting (see onStagePickClick), and Esc or the
+  // hint bar's Cancel leaves it. Either way the sampled hex lands in
+  // eyedrop state and EyedropPanel offers the apply scopes. All five
+  // helpers are defined here next to their pageBg / bgImg counterparts.
+  const startEyedrop = (info: EyedropInfo) => {
+    const ED = nativeEyeDropper();
+    if (ED) {
+      new ED().open().then(
+        ({ sRGBHex }) => setEyedrop({ info, color: sRGBHex.toLowerCase() }),
+        () => {
+          /* aborted in the native UI — nothing to apply */
+        },
+      );
+      return;
+    }
+    setEyedropHover(null);
+    setEyedropPick(info);
+  };
+  const applyEyedrop = (scope: BgImgScope, hex: string) => {
+    if (!eyedrop) return;
+    if (scope === "spread") {
+      if (eyedrop.info.leftKey) setPageBg(eyedrop.info.leftKey, hex);
+      if (eyedrop.info.rightKey) setPageBg(eyedrop.info.rightKey, hex);
+      return;
+    }
+    const key = scope === "left" ? eyedrop.info.leftKey : eyedrop.info.rightKey;
+    if (key) setPageBg(key, hex);
+  };
+  const endEyedropPick = () => {
+    setEyedropPick(null);
+    setEyedropHover(null);
+  };
+  const onStagePickClick = (e: ReactMouseEvent) => {
+    if (!eyedropPick) return;
+    // Capture phase: the sampling click must not reach whatever it lands
+    // on — no TOC jump, no text editor, no other edit gesture.
+    e.preventDefault();
+    e.stopPropagation();
+    // A click on an editor control (the 取色 button again, a panel) just
+    // leaves picking mode without triggering that control.
+    if ((e.target as HTMLElement).closest("[data-noprint]")) {
+      endEyedropPick();
+      return;
+    }
+    const r = sampleColorAtPoint(e.clientX, e.clientY);
+    if (r && "blocked" in r) {
+      setPrMsg(lang === "zh" ? "这张图跨域，取不了色，换个位置试试。" : "That image is cross-origin and cannot be sampled — try another spot.");
+      return;
+    }
+    if (r && "hex" in r) {
+      setEyedrop({ info: eyedropPick, color: r.hex });
+      endEyedropPick();
+      return;
+    }
+    setPrMsg(lang === "zh" ? "这个位置取不到颜色，换个位置试试。" : "No colour could be sampled there — try another spot.");
+  };
+  const onStagePickMove = (e: ReactMouseEvent) => {
+    if (!eyedropPick || pickHoverRaf.current) return;
+    const { clientX, clientY } = e;
+    pickHoverRaf.current = requestAnimationFrame(() => {
+      pickHoverRaf.current = 0;
+      const r = sampleColorAtPoint(clientX, clientY);
+      setEyedropHover(r && "hex" in r ? { hex: r.hex, x: clientX, y: clientY } : null);
+    });
+  };
+  useEffect(() => {
+    if (!eyedropPick) return;
+    const onKey = (ev: KeyboardEvent) => {
+      if (ev.key === "Escape") endEyedropPick();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      if (pickHoverRaf.current) cancelAnimationFrame(pickHoverRaf.current);
+      pickHoverRaf.current = 0;
+    };
+  }, [eyedropPick]);
   const saveAllEdits = () => {
     localStorage.setItem("remains-book-text-edits", JSON.stringify(textEdits));
     localStorage.setItem("remains-book-page-bg", JSON.stringify(pageBgEdits));
@@ -2739,7 +3004,7 @@ const CatalogBook = () => {
   };
   const generatePR = async () => {
     setPrMsg(lang === "zh" ? "正在生成 PR…" : "Creating PR…");
-    const pageBg: Record<string, PageBgKind> = { ...PAGE_BACKGROUNDS };
+    const pageBg: Record<string, PageBgValue> = { ...PAGE_BACKGROUNDS };
     for (const [k, v] of Object.entries(pageBgEdits)) {
       if (v === "global") delete pageBg[k];
       else pageBg[k] = v;
@@ -2781,7 +3046,7 @@ const CatalogBook = () => {
     noindex: true,
   });
 
-  const { ctx, pages } = useBookModel({ editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, openEditor });
+  const { ctx, pages } = useBookModel({ editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, startEyedrop, openEditor });
   // Every picture already in the book, for the background-image picker.
   const bookImages = useMemo(() => {
     const seen = new Map<string, string>();
@@ -2998,7 +3263,7 @@ const CatalogBook = () => {
     }`;
 
   return (
-    <div className={`bk-root bk-paper-${paper}${isMobile ? " bk-mobile" : ""}`} style={rootStyle}>
+    <div className={`bk-root bk-paper-${paper}${isMobile ? " bk-mobile" : ""}${eyedropPick ? " bk-eyedropping" : ""}`} style={rootStyle}>
       {/* One @page size per export: interior/complete pages, or the wide cover wrap. */}
       <style>{`@page { size: ${sheetW}in ${pageH}in; margin: 0; }`}</style>
 
@@ -3112,7 +3377,48 @@ const CatalogBook = () => {
         />
       )}
 
-      <div ref={stageRef} className="bk-stage" style={{ zoom }}>
+      {eyedropPick && (
+        <div data-noprint className="bk-editor-panel bk-eyedrop-hint">
+          <div className="bk-editor-head">
+            <span className="sans-label">{lang === "zh" ? "取色中" : "Picking a colour"}</span>
+            <span className="bk-editor-hint">{lang === "zh" ? "点页面上任意一点取它的颜色，Esc 取消" : "Click anywhere on the page to sample its colour — Esc cancels"}</span>
+          </div>
+          <div className="bk-editor-actions">
+            <button type="button" onClick={endEyedropPick}>
+              {lang === "zh" ? "取消" : "Cancel"}
+            </button>
+          </div>
+        </div>
+      )}
+      {eyedrop && (
+        <EyedropPanel
+          key={`${eyedrop.info.leftKey}|${eyedrop.info.rightKey}|${eyedrop.color}`}
+          info={eyedrop.info}
+          color={eyedrop.color}
+          onApply={applyEyedrop}
+          onPickAgain={() => {
+            const info = eyedrop.info;
+            setEyedrop(null);
+            startEyedrop(info);
+          }}
+          onClose={() => setEyedrop(null)}
+          lang={lang}
+        />
+      )}
+      {eyedropPick && eyedropHover && (
+        <div data-noprint className="bk-eyedrop-chip" style={{ left: eyedropHover.x + 14, top: eyedropHover.y + 14 }}>
+          <span className="bk-eyedrop-swatch" style={{ background: eyedropHover.hex }} />
+          <span>{eyedropHover.hex}</span>
+        </div>
+      )}
+
+      <div
+        ref={stageRef}
+        className="bk-stage"
+        style={{ zoom }}
+        onClickCapture={eyedropPick ? onStagePickClick : undefined}
+        onMouseMove={eyedropPick ? onStagePickMove : undefined}
+      >
         {(isMobile ? sheets.map((s) => [s]) : toSpreads(sheets)).map((row, i) => (
           <div
             key={i}

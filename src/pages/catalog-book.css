@@ -228,6 +228,15 @@
   color: #fffdf8;
 }
 
+/* Current eyedropper colour on a page's background control */
+.bk-pagebg-swatch {
+  flex: none;
+  align-self: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+}
+
 /* Editor-set background images (edit mode, 2026-11-08): a layer inside the
    page, behind the content. The page isolates its stacking context so the
    negative-z layer stays above the paper ground but below every word; the
@@ -340,6 +349,56 @@
   border: 1px solid rgba(0, 0, 0, 0.25);
 }
 
+/* Eyedropper (edit mode): swatch + hex in the result panel, a live chip
+   that follows the cursor during in-page picking (the no-EyeDropper-API
+   fallback), and a crosshair over the stage while picking is armed. */
+.bk-eyedrop-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.bk-eyedrop-swatch {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(255, 253, 248, 0.55);
+}
+
+.bk-eyedrop-hex {
+  width: 96px;
+  padding: 5px 7px;
+  border: 1px solid rgba(255, 253, 248, 0.4);
+  background: transparent;
+  color: inherit;
+  font-family: ui-monospace, monospace;
+  font-size: 13px;
+}
+
+.bk-eyedrop-chip {
+  position: fixed;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: #26221c;
+  color: #fffdf8;
+  font-size: 11px;
+  pointer-events: none;
+}
+
+.bk-eyedrop-chip .bk-eyedrop-swatch {
+  width: 14px;
+  height: 14px;
+}
+
+.bk-root.bk-eyedropping .bk-stage,
+.bk-root.bk-eyedropping .bk-stage * {
+  cursor: crosshair !important;
+}
+
 .bk-editor-panel {
   position: fixed;
   left: 0;
@@ -412,7 +471,8 @@
 @media print {
   .bk-pagebg-ctl,
   .bk-editor-panel,
-  .bk-editor-msg {
+  .bk-editor-msg,
+  .bk-eyedrop-chip {
     display: none !important;
   }
 }
