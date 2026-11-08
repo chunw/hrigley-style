@@ -964,7 +964,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
   const ROAD_SPREAD_TITLES = new Set([
     "Notes from the Road #2", "Notes from the Road #3", "Notes from the Road #4",
     "Notes from the Road #5", "Notes from the Road #6", "Notes from the Road #9",
-    "Notes from the Road #12", "Notes from the Road #13",
+    "Notes from the Road #12", "Notes from the Road #13", "Notes from the Road #14",
   ]);
   for (let i = 0; i < specs.length; i++) {
     const spec = specs[i];
@@ -2484,7 +2484,7 @@ function useBookModel(args: {
     const roadChapter = splitChapters.find((ch) => ch.key === "road");
     if (roadChapter) {
       const ROAD_COUNTRY_ORDER = [
-        "Notes from the Road #2", "Notes from the Road #3", "Notes from the Road #4", "Notes from the Road #9",
+        "Notes from the Road #2", "Notes from the Road #3", "Notes from the Road #4", "Notes from the Road #9", "Notes from the Road #14",
         "Notes from the Road #5", "Notes from the Road #8",
         "Notes from the Road #6", "Notes from the Road #7", "Notes from the Road #12",
         "Notes from the Road #13",
