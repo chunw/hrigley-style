@@ -1057,6 +1057,7 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
     baseRect: { x: number; y: number; w: number; h: number };
     fullAtStart: boolean;
     startPos: { x: number; y: number };
+    pagePx: { w: number; h: number } | null;
   } | null>(null);
   const [aspect, setAspect] = useState(0);
   const [frameAspect, setFrameAspect] = useState(0);
@@ -1142,7 +1143,8 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
         ...(full ? { objectPosition: `${edit?.pos?.x ?? 50}% ${edit?.pos?.y ?? 50}%` } : {}),
       }
     : {};
-  const merged: CSSProperties = { ...style, ...imgStyle };
+  const showFullPortal = full && ready && !!pageEl;
+  const merged: CSSProperties = showFullPortal ? { ...style, ...imgStyle, visibility: "hidden" } : { ...style, ...imgStyle };
 
   type Pt = { x: number; y: number };
   /** Canva-standard direct manipulation (v3, 2026-11-08): one press
@@ -1179,7 +1181,8 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
     const baseRect = exitFull
       ? { x: startRect.x, y: startRect.y, w: fx * base.scale * 100, h: fy * base.scale * 100 }
       : startRect;
-    dragRef.current = { pointerId: e.pointerId, mode, start: { x: e.clientX, y: e.clientY }, fr: { width: fr.width, height: fr.height }, base, baseRect, fullAtStart: full, startPos: { x: edit?.pos?.x ?? 50, y: edit?.pos?.y ?? 50 } };
+    const prNow = pageEl?.getBoundingClientRect();
+    dragRef.current = { pointerId: e.pointerId, mode, start: { x: e.clientX, y: e.clientY }, fr: { width: fr.width, height: fr.height }, base, baseRect, fullAtStart: full, startPos: { x: edit?.pos?.x ?? 50, y: edit?.pos?.y ?? 50 }, pagePx: prNow && prNow.width > 0 ? { w: prNow.width, h: prNow.height } : null };
   };
   const onDragMove = (e: React.PointerEvent) => {
     const d = dragRef.current;
@@ -1188,11 +1191,11 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
     let ddx = ((e.clientX - d.start.x) / d.fr.width) * 100;
     let ddy = ((e.clientY - d.start.y) / d.fr.height) * 100;
     const cur = ctx.imgEditFor(src) ?? {};
-    if (d.mode === "move" && d.fullAtStart && pageRel) {
+    if (d.mode === "move" && d.fullAtStart && (d.pagePx || pageRel)) {
       // Full bleed: dragging slides the crop window over the picture
       // (Canva's fill-position drag) instead of moving the frame.
-      const pageWpx = (pageRel.w / 100) * d.fr.width;
-      const pageHpx = (pageRel.h / 100) * d.fr.height;
+      const pageWpx = d.pagePx ? d.pagePx.w : (pageRel!.w / 100) * d.fr.width;
+      const pageHpx = d.pagePx ? d.pagePx.h : (pageRel!.h / 100) * d.fr.height;
       if (pageWpx > 0 && pageHpx > 0 && aspect > 0) {
         const pageAspect = pageWpx / pageHpx;
         const overX = aspect > pageAspect ? pageHpx * aspect - pageWpx : 0;
@@ -1276,6 +1279,28 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
     <>
       <span ref={anchorRef} className="bk-imgedit-anchor" aria-hidden="true" />
       <BookImage src={displaySrc} fallback={edit?.src ? undefined : fallback} alt={alt} className={className} style={merged} />
+      {showFullPortal &&
+        pageEl &&
+        createPortal(
+          <img
+            src={displaySrc}
+            alt={alt}
+            draggable={false}
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: `${edit?.pos?.x ?? 50}% ${edit?.pos?.y ?? 50}%`,
+              pointerEvents: ctx.editMode ? "auto" : "none",
+              touchAction: "none",
+            }}
+            onPointerDown={ctx.editMode ? (e) => onDragStart(e, "move") : undefined}
+            {...(ctx.editMode ? dragHandlers : {})}
+          />,
+          pageEl,
+        )}
       {ctx.editMode &&
         (() => {
           // The selection layer renders into the PAGE, not the frame:
