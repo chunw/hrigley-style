@@ -1999,7 +1999,7 @@ function useBookModel(args: {
           { key: "innerwilderness", number: 0, title: "Inner Wilderness 内在荒原", titleEn: "Inner Wilderness", titleZh: "内在荒原", descriptionHtml: "", years: "2017 – 2025", items: [], seriesTextId: "innerwilderness", partHead: true },
           { key: "deathvalley", number: 0, title: "Reflections in the Death Valley 死亡谷", titleEn: "Reflections in the Death Valley", titleZh: "死亡谷", descriptionHtml: "", years: yrOf(dvItems), items: [...dvItems, ...DEATH_VALLEY_PLATES.map((item) => ({ item, plate: 0 }))], seriesTextId: "deathvalley" },
           { key: "sahara", number: 0, title: "Sahara from 6 to 10: An Archive 撒哈拉", titleEn: "Sahara from 6 to 10: An Archive", titleZh: "撒哈拉", descriptionHtml: "", years: saharaItem?.year ?? "", items: saharaItem ? [{ item: saharaItem, plate: 0 }] : [], seriesTextId: "sahara" },
-          { key: "highlands", number: 0, title: "Scottish Highlands 苏格兰高地", titleEn: "Scottish Highlands", titleZh: "苏格兰高地", descriptionHtml: "", years: yrOf(hgItems), items: hgItems, seriesTextId: "highlands" },
+          { key: "highlands", number: 0, title: "Scottish Highlands - Heroism of the Vista 苏格兰高地 - 视域的英雄主义", titleEn: "Scottish Highlands - Heroism of the Vista", titleZh: "苏格兰高地 - 视域的英雄主义", descriptionHtml: "", years: yrOf(hgItems), items: hgItems, seriesTextId: "highlands" },
           { key: "theater", number: 0, title: "Theater 登场", titleEn: "Theater", titleZh: "登场", descriptionHtml: "", years: yrOf(thItems), items: thItems, seriesTextId: "theater" },
           { ...photoParent, title: "El Otro, El Mismo 另一个，同一个", titleEn: "El Otro, El Mismo", titleZh: "另一个，同一个", descriptionHtml: "", years: yrOf(elOtroItems), items: elOtroItems },
         ]

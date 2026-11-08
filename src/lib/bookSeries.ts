@@ -181,8 +181,8 @@ export const BOOK_SERIES: BookSeries[] = [
   },
   {
     id: "highlands",
-    titleEn: "Scottish Highlands",
-    titleZh: "苏格兰高地",
+    titleEn: "Scottish Highlands - Heroism of the Vista",
+    titleZh: "苏格兰高地 - 视域的英雄主义",
     years: "2024 – 2025",
     textEn: "Scottish Highlands: Heroism of the Vista.\n\nShortlisted for the LICC (London International Creative Competition).",
     textZh: "苏格兰高地：眺望的英雄主义。\n\n入围 LICC（伦敦国际创意大赛）候选名单。",
