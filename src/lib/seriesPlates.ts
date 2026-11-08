@@ -408,13 +408,13 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
 };
 
 /**
- * Extra plates appended to the Death Valley chapter: the SFMOMA-featured
- * Reflections In The Death Valley photographs, from the artist's project
+ * Extra plates appended to the Reflections in the Death Valley chapter: the SFMOMA-featured
+ * Reflections in the Death Valley photographs, from the artist's project
  * site. The other SFMOMA Submission Friday works' images are stored under
  * public/book/sfmoma/ for the day their placement in the book is decided.
  */
 export const DEATH_VALLEY_PLATES: CatalogItem[] = [1, 2, 3].map((n) => ({
-  title: "Reflections In The Death Valley",
+  title: "Reflections in the Death Valley",
   titleZh: "死亡谷的倒影",
   metaLine: "2017 · SFMOMA Submission Friday",
   mediumZh: "摄影作品",

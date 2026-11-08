@@ -110,12 +110,12 @@ export const translations = {
       categoryLabel: "Remains · 遗迹",
     },
     spirit21Catalog: {
-      subtitle: "In The Spirit of the 21st Century",
+      subtitle: "In the Spirit of the 21st Century",
       works: "works",
-      categoryLabel: "In The Spirit of the 21st Century · 21世纪精神",
+      categoryLabel: "In the Spirit of the 21st Century · 21世纪精神",
     },
     usefulCatalog: {
-      subtitle: "Slightly Useful Object",
+      subtitle: "Slightly Useful Objects",
     },
     catalogBook: {
       cta: "Art Book",
@@ -308,7 +308,7 @@ export const translations = {
     spirit21Catalog: {
       subtitle: "21世纪精神",
       works: "件作品",
-      categoryLabel: "In The Spirit of the 21st Century · 21世纪精神",
+      categoryLabel: "In the Spirit of the 21st Century · 21世纪精神",
     },
     usefulCatalog: {
       subtitle: "小有用的物件",

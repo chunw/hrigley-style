@@ -227,7 +227,7 @@ export const photographyWorks: PhotographyWork[] = [
 
   {
     id: "6",
-    title: "Reflections In The Death Valley",
+    title: "Reflections in the Death Valley",
     titleZh: "死亡谷的倒影",
     series: "II",
     showInStorefront: false,

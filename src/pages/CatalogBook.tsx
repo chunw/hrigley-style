@@ -186,8 +186,8 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     zh: "按钟点保存的沙漠档案，逐小时，从 6 点到 10 点。",
   },
   highlands: {
-    en: "Scottish Highlands: Heroism of the Vista.",
-    zh: "苏格兰高地：眺望的英雄主义。",
+    en: "Scottish Highlands - Heroism of the Vista.",
+    zh: "苏格兰高地 - 视域的英雄主义。",
   },
   theater: {
     en: "Theatrical moments found on the street.",
@@ -547,7 +547,7 @@ const REVERSE_INDEX = {
         { zh: "玻璃柜里的安静", en: "the quiet inside a glass case", to: "前言 Preface" },
         { zh: "白立方里的沉默", en: "the silence of the white cube", to: "Art.empath.io" },
         { zh: "成千上万样东西的尖叫", en: "a thousand things, screaming for attention", to: "信息流扫描仪 Feed Scanner" },
-        { zh: "在巴黎教堂偶然听到的维瓦尔第", en: "Vivaldi, overheard in a Paris church", to: "旅途笔记 Notes from the Road" },
+        { zh: "在巴黎教堂偶然听到的维瓦尔第", en: "Vivaldi, overheard in a Paris church", to: "出发 Notes from the Road" },
       ],
     },
     {
@@ -555,10 +555,10 @@ const REVERSE_INDEX = {
       en: "Temperatures",
       entries: [
         { zh: "恶水盆地上热得发亮的盐", en: "salt glittering with heat at Badwater", to: "死亡谷 Reflections in the Death Valley" },
-        { zh: "按钟点存下的沙漠的热", en: "desert heat, kept by the hour", to: "撒哈拉晚六时至早十时 Sahara from 6 to 10: An Archive" },
+        { zh: "按钟点存下的沙漠的热", en: "desert heat, kept by the hour", to: "撒哈拉晚六时至早十时 Sahara from 6 to 10" },
         { zh: "一趟旅程散掉之后，变了的天气", en: "the weather, changed after a journey ends", to: "前言 Preface" },
         { zh: "一个没被自动化的决定的温度", en: "the warmth of a decision not automated", to: "协商智能 Negotiated Intelligence" },
-        { zh: "Quiraing 雾里的冷", en: "the cold inside the Quiraing fog", to: "苏格兰高地 Scottish Highlands" },
+        { zh: "Quiraing 雾里的冷", en: "the cold inside the Quiraing fog", to: "苏格兰高地 - 视域的英雄主义 Scottish Highlands - Heroism of the Vista" },
       ],
     },
     {
@@ -571,7 +571,7 @@ const REVERSE_INDEX = {
         { zh: "不会再以同样方式回来的光", en: "light that will not come back the same way", to: "前言 Preface" },
         { zh: "一具由光组成的舞者身体", en: "a dancer's body, made of light", to: "窟舞 Cave Dance" },
         { zh: "黎明里成为镜子的盐滩", en: "salt flats, turned mirrors at dawn", to: "死亡谷 Reflections in the Death Valley" },
-        { zh: "冰岛纯净到让人落泪的蓝", en: "a blue so pure it made her cry, in Iceland", to: "旅途笔记 Notes from the Road" },
+        { zh: "冰岛纯净到让人落泪的蓝", en: "a blue so pure it made her cry, in Iceland", to: "出发 Notes from the Road" },
       ],
     },
     {
@@ -594,7 +594,7 @@ const REVERSE_INDEX = {
       zh: "没说完的话",
       en: "Unfinished Words",
       entries: [
-        { zh: "访谈里一句没说完的话", en: "a sentence in an interview, left unfinished", to: "访谈 The Interview" },
+        { zh: "访谈里一句没说完的话", en: "a sentence in an interview, left unfinished", to: "艺术家访谈 Artist Interview" },
         { zh: "会议上的一句「无可奉告」", en: "“nothing to contribute,” said at a meeting", to: "遗迹 Remains" },
         { zh: "先于陶俑消失的语言", en: "the language that vanished before the figurine did", to: "前言 Preface" },
         { zh: "机械臂写到一半的「我是人……」", en: "“I am huma—”, by a robot arm", to: "协商智能 Negotiated Intelligence" },
@@ -611,7 +611,7 @@ const REVERSE_INDEX = {
         { zh: "快要被扔掉、又被戴起来的东西", en: "things nearly thrown away, worn again", to: "Slightly Useful Objects" },
         { zh: "一块陶做的短蛋糕", en: "a shortcake, made of clay", to: "Slightly Useful Objects" },
         { zh: "一台缩成吊坠的烤面包机", en: "a toaster, shrunk to a pendant", to: "Slightly Useful Objects" },
-        { zh: "悬崖上，金刚鹦鹉的早餐", en: "breakfast on a cliff, at four in the morning", to: "旅途笔记 Notes from the Road" },
+        { zh: "悬崖上，金刚鹦鹉的早餐", en: "breakfast on a cliff, at four in the morning", to: "出发 Notes from the Road" },
       ],
     },
   ],
