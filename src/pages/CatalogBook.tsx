@@ -2436,7 +2436,14 @@ function useBookModel(args: {
       const works = firstIdx > 0
         ? [residualsChapter.items[firstIdx], ...residualsChapter.items.filter((_, i) => i !== firstIdx)]
         : residualsChapter.items;
-      residualsChapter.items = [{ item: fbdItem, plate: 0 }, ...works];
+      // Her direction (2026-11-08): the newly added Residuals #26 opens
+      // the works as the chapter's first plate, ahead of Residuals #1;
+      // the exhibition poster stays in front of it as front matter.
+      const openerIdx = works.findIndex(({ item }) => item.title === "Residuals #26");
+      const orderedWorks = openerIdx > 0
+        ? [works[openerIdx], ...works.filter((_, i) => i !== openerIdx)]
+        : works;
+      residualsChapter.items = [{ item: fbdItem, plate: 0 }, ...orderedWorks];
     }
     // Her direction (2026-11-08): the Still Things plate on
     // /watercolors/48/ — the section's last plate page — is deleted
