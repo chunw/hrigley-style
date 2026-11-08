@@ -1007,59 +1007,208 @@ function BookImage({ src, fallback, alt = "", className, style }: { src: string;
  * drafts. */
 export interface ImgEdit {
   scale?: number;
+  /** Offset of the picture from its default centred position, in
+   * percent of its frame (x: of the frame's width, y: of its height). */
+  dx?: number;
+  dy?: number;
+  /** The picture fills its whole page edge to edge (object-fit cover). */
+  full?: boolean;
   src?: string;
 }
 
+/** Live geometry of one rendered picture, registered by EdBookImage so
+ * the panel can resize around the picture's centre: the default
+ * contain-fitted rect as fractions of its frame. */
+const imgGeom = new Map<string, { fx: number; fy: number }>();
+
 /** A framed book picture with the picture-edit tool applied (her
- * direction, 2026-11-08): in edit mode the picture can be clicked to
- * select it, dragged by its corner handle to resize, and swapped for a
- * file from the computer via the panel that selection opens. Outside
- * edit mode it simply renders the staged edit, so toggling edit mode
- * off previews the result. The scale resizes the picture's box inside
- * its frame, centred — the same percentages the print CSS will see. */
+ * direction, 2026-11-08; interaction reworked the same day after her
+ * trial: the first version resized around the picture's centre from a
+ * handle parked at the frame's corner, so the picture seemed to move
+ * while it resized — "跟 Canva 似的" is the bar). Direct manipulation,
+ * Canva-style: the selection hugs the picture's own visible rect (the
+ * contain-fitted area), dragging a corner resizes with the OPPOSITE
+ * corner pinned, dragging the picture itself moves it, and the panel
+ * adds a one-click full bleed (the picture covers its whole page).
+ * Geometry lives in the edit as scale + offset from the default
+ * centred rect, in percent of the frame; outside edit mode the staged
+ * edit simply renders, so toggling edit mode off previews the result. */
 function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: BookContext; src: string; fallback?: string; alt?: string; className?: string; style?: CSSProperties }) {
   const edit = ctx.imgEditFor(src);
+  const displaySrc = edit?.src ?? src;
   const scale = edit?.scale && edit.scale > 0 ? edit.scale : 1;
-  const sized: CSSProperties =
-    scale !== 1
-      ? { width: `${scale * 100}%`, height: `${scale * 100}%`, left: `${((1 - scale) / 2) * 100}%`, top: `${((1 - scale) / 2) * 100}%` }
-      : {};
+  const dx = edit?.dx ?? 0;
+  const dy = edit?.dy ?? 0;
+  const full = !!edit?.full;
   const selected = ctx.editMode && ctx.imgSel === src;
-  const dragRef = useRef<{ x: number; y: number; scale: number } | null>(null);
-  const onHandleDown = (e: { preventDefault: () => void; stopPropagation: () => void; clientX: number; clientY: number }) => {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [aspect, setAspect] = useState(0);
+  const [frameAspect, setFrameAspect] = useState(0);
+  const [pageRel, setPageRel] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
+
+  // The picture's natural aspect, via a probe on the same URL.
+  useEffect(() => {
+    let live = true;
+    const probe = new Image();
+    probe.onload = () => {
+      if (live && probe.naturalHeight > 0) setAspect(probe.naturalWidth / probe.naturalHeight);
+    };
+    probe.src = displaySrc;
+    return () => {
+      live = false;
+    };
+  }, [displaySrc]);
+
+  // Frame aspect + the page's rect relative to the frame (for full
+  // bleed), refreshed whenever the frame's box changes (zoom, resize).
+  useEffect(() => {
+    const frame = wrapRef.current?.parentElement;
+    if (!frame) return;
+    const measure = () => {
+      const fr = frame.getBoundingClientRect();
+      if (fr.width > 0 && fr.height > 0) {
+        setFrameAspect(fr.width / fr.height);
+        const page = frame.closest('[id^="bk-page-"]');
+        if (page) {
+          const pr = page.getBoundingClientRect();
+          setPageRel({ x: ((pr.left - fr.left) / fr.width) * 100, y: ((pr.top - fr.top) / fr.height) * 100, w: (pr.width / fr.width) * 100, h: (pr.height / fr.height) * 100 });
+        }
+      }
+    };
+    measure();
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(measure) : null;
+    ro?.observe(frame);
+    return () => ro?.disconnect();
+  }, []);
+
+  // Default contain-fitted rect as fractions of the frame.
+  const ready = aspect > 0 && frameAspect > 0;
+  const fx = ready ? (aspect > frameAspect ? 1 : aspect / frameAspect) : 1;
+  const fy = ready ? (aspect > frameAspect ? frameAspect / aspect : 1) : 1;
+  if (ready) imgGeom.set(src, { fx, fy });
+  // The picture's current rect, in percent of the frame.
+  const rect = full && pageRel
+    ? pageRel
+    : {
+        x: (1 - fx) * 50 + dx + ((fx * (1 - scale)) / 2) * 100,
+        y: (1 - fy) * 50 + dy + ((fy * (1 - scale)) / 2) * 100,
+        w: fx * scale * 100,
+        h: fy * scale * 100,
+      };
+  const imgStyle: CSSProperties = ready
+    ? { left: `${rect.x}%`, top: `${rect.y}%`, width: `${rect.w}%`, height: `${rect.h}%`, objectFit: full ? "cover" : "contain" }
+    : {};
+  const merged: CSSProperties = { ...style, ...imgStyle };
+
+  const frameOf = () => wrapRef.current?.parentElement?.getBoundingClientRect();
+  type Pt = { x: number; y: number };
+  const beginDrag = (e: { preventDefault: () => void; stopPropagation: () => void; clientX: number; clientY: number }, mode: "move" | "nw" | "ne" | "sw" | "se") => {
     e.preventDefault();
     e.stopPropagation();
-    dragRef.current = { x: e.clientX, y: e.clientY, scale };
+    ctx.selectImg(src);
+    const fr = frameOf();
+    if (!fr || fr.width === 0) return;
+    const start: Pt = { x: e.clientX, y: e.clientY };
+    const startRect = { ...rect };
+    const startEdit = { scale, dx, dy };
+    // Leaving full bleed by dragging: continue from the page rect as
+    // plain geometry (its size becomes the new scale baseline).
+    const exitFull = full
+      ? (() => {
+          const s = Math.max(0.1, startRect.w / (fx * 100));
+          return {
+            scale: s,
+            dx: startRect.x - (1 - fx) * 50 - ((fx * (1 - s)) / 2) * 100,
+            dy: startRect.y - (1 - fy) * 50 - ((fy * (1 - s)) / 2) * 100,
+          };
+        })()
+      : null;
+    const base = exitFull ?? startEdit;
+    const baseRect = exitFull
+      ? { x: startRect.x, y: startRect.y, w: fx * base.scale * 100, h: fy * base.scale * 100 }
+      : startRect;
     const move = (ev: PointerEvent) => {
-      const d = dragRef.current;
-      if (!d) return;
-      const next = Math.min(3, Math.max(0.2, d.scale + (ev.clientX - d.x + (ev.clientY - d.y)) / 320));
-      ctx.setImgEdit(src, { ...(ctx.imgEditFor(src) ?? {}), scale: Math.round(next * 100) / 100 });
+      const ddx = ((ev.clientX - start.x) / fr.width) * 100;
+      const ddy = ((ev.clientY - start.y) / fr.height) * 100;
+      const cur = ctx.imgEditFor(src) ?? {};
+      if (mode === "move") {
+        ctx.setImgEdit(src, { ...cur, full: false, scale: base.scale, dx: base.dx + ddx, dy: base.dy + ddy });
+        return;
+      }
+      // Corner drag: the opposite corner of the rect stays pinned.
+      const anchor: Pt =
+        mode === "se"
+          ? { x: baseRect.x, y: baseRect.y }
+          : mode === "nw"
+            ? { x: baseRect.x + baseRect.w, y: baseRect.y + baseRect.h }
+            : mode === "ne"
+              ? { x: baseRect.x, y: baseRect.y + baseRect.h }
+              : { x: baseRect.x + baseRect.w, y: baseRect.y };
+      const corner0: Pt =
+        mode === "se"
+          ? { x: baseRect.x + baseRect.w, y: baseRect.y + baseRect.h }
+          : mode === "nw"
+            ? { x: baseRect.x, y: baseRect.y }
+            : mode === "ne"
+              ? { x: baseRect.x + baseRect.w, y: baseRect.y }
+              : { x: baseRect.x, y: baseRect.y + baseRect.h };
+      const now: Pt = { x: corner0.x + ddx, y: corner0.y + ddy };
+      const d0 = Math.hypot(corner0.x - anchor.x, corner0.y - anchor.y) || 1;
+      const d1 = Math.hypot(now.x - anchor.x, now.y - anchor.y);
+      const s = Math.min(4, Math.max(0.1, base.scale * (d1 / d0)));
+      const w = fx * s * 100;
+      const h = fy * s * 100;
+      const nx = mode === "se" || mode === "ne" ? anchor.x : anchor.x - w;
+      const ny = mode === "se" || mode === "sw" ? anchor.y : anchor.y - h;
+      ctx.setImgEdit(src, {
+        ...cur,
+        full: false,
+        scale: Math.round(s * 1000) / 1000,
+        dx: nx - (1 - fx) * 50 - ((fx * (1 - s)) / 2) * 100,
+        dy: ny - (1 - fy) * 50 - ((fy * (1 - s)) / 2) * 100,
+      });
     };
     const up = () => {
-      dragRef.current = null;
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
     };
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", up);
   };
+
+  const corners = [
+    { k: "nw", cls: "bk-imgedit-h-nw", cursor: "nwse-resize" },
+    { k: "ne", cls: "bk-imgedit-h-ne", cursor: "nesw-resize" },
+    { k: "sw", cls: "bk-imgedit-h-sw", cursor: "nesw-resize" },
+    { k: "se", cls: "bk-imgedit-h-se", cursor: "nwse-resize" },
+  ] as const;
+
   return (
     <>
-      <BookImage src={edit?.src ?? src} fallback={edit?.src ? undefined : fallback} alt={alt} className={className} style={{ ...style, ...sized }} />
+      <BookImage src={displaySrc} fallback={edit?.src ? undefined : fallback} alt={alt} className={className} style={merged} />
       {ctx.editMode && (
         <div
+          ref={wrapRef}
           className={`bk-imgedit-overlay ${selected ? "bk-imgedit-on" : ""}`}
+          style={ready ? { left: `${rect.x}%`, top: `${rect.y}%`, width: `${rect.w}%`, height: `${rect.h}%`, right: "auto", bottom: "auto" } : undefined}
           onClick={(e) => {
             e.stopPropagation();
             ctx.selectImg(src);
           }}
+          onPointerDown={(e) => {
+            if (selected) beginDrag(e, "move");
+          }}
         >
-          {selected && (
-            <div className="bk-imgedit-handle" onPointerDown={onHandleDown} title="拖动改大小 · Drag to resize">
-              ⤡
-            </div>
-          )}
+          {selected &&
+            corners.map((cn) => (
+              <div
+                key={cn.k}
+                className={`bk-imgedit-handle ${cn.cls}`}
+                style={{ cursor: cn.cursor }}
+                onPointerDown={(e) => beginDrag(e, cn.k)}
+                title="拖动改大小 · Drag to resize"
+              />
+            ))}
         </div>
       )}
     </>
@@ -1226,6 +1375,7 @@ function ImgEditPanel({
   title,
   edit,
   onScale,
+  onFull,
   onReplace,
   onReset,
   onClose,
@@ -1235,6 +1385,7 @@ function ImgEditPanel({
   title: string;
   edit: ImgEdit | undefined;
   onScale: (scale: number) => void;
+  onFull: (on: boolean) => void;
   onReplace: (dataUrl: string) => void;
   onReset: () => void;
   onClose: () => void;
@@ -1270,7 +1421,7 @@ function ImgEditPanel({
     <div data-noprint className="bk-editor-panel bk-imgedit-panel">
       <div className="bk-editor-head">
         <span className="sans-label">{zh ? "图片" : "Picture"} · {title || src}</span>
-        <span className="bk-editor-hint">{zh ? "拖图片右下角的把手也能改大小；改动自动存到本机草稿" : "Drag the picture's corner handle to resize — changes save to this browser automatically"}</span>
+        <span className="bk-editor-hint">{zh ? "拖图片四个角改大小（对角不动）、拖图片本身移动；改动自动存到本机草稿" : "Drag a corner to resize (opposite corner stays), drag the picture to move — changes save to this browser automatically"}</span>
       </div>
       <div className="bk-imgedit-row">
         <span>{zh ? "大小" : "Size"}</span>
@@ -1281,6 +1432,9 @@ function ImgEditPanel({
         {edit?.src && <span className="bk-imgedit-swapped">{zh ? "已换成本地图片" : "Swapped image"}</span>}
       </div>
       <div className="bk-editor-actions">
+        <button type="button" className={edit?.full ? "bk-pagebg-btn bk-pagebg-on" : "bk-pagebg-btn"} onClick={() => onFull(!edit?.full)}>
+          {zh ? (edit?.full ? "取消满版" : "满版（铺满整页）") : edit?.full ? "Un-full-bleed" : "Full bleed"}
+        </button>
         <label className="bk-pagebg-btn bk-bgimg-upload">
           {zh ? "从电脑换一张图片" : "Replace from computer"}
           <input type="file" accept="image/*" hidden onChange={(e) => onFile(e.target.files?.[0])} />
@@ -3784,7 +3938,19 @@ const CatalogBook = () => {
           src={imgSel}
           title={bookImages.find((im) => im.src === imgSel)?.title ?? ""}
           edit={imgEdits[imgSel]}
-          onScale={(s) => setImgEdit(imgSel, { ...(imgEdits[imgSel] ?? {}), scale: s })}
+          onScale={(s) => {
+            // The slider resizes around the picture's centre: shift the
+            // offset by half the size change so the centre stays put.
+            const g = imgGeom.get(imgSel);
+            const cur = imgEdits[imgSel] ?? {};
+            const prev = cur.scale && cur.scale > 0 ? cur.scale : 1;
+            if (g && !cur.full) {
+              setImgEdit(imgSel, { ...cur, scale: s, dx: (cur.dx ?? 0) + ((g.fx * (prev - s)) / 2) * 100, dy: (cur.dy ?? 0) + ((g.fy * (prev - s)) / 2) * 100 });
+            } else {
+              setImgEdit(imgSel, { ...cur, full: false, scale: s });
+            }
+          }}
+          onFull={(on) => setImgEdit(imgSel, { ...(imgEdits[imgSel] ?? {}), full: on })}
           onReplace={(dataUrl) => setImgEdit(imgSel, { ...(imgEdits[imgSel] ?? {}), src: dataUrl })}
           onReset={() => setImgEdit(imgSel, null)}
           onClose={() => setImgSel(null)}
