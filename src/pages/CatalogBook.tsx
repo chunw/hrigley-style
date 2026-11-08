@@ -2490,6 +2490,7 @@ function useBookModel(args: {
         "Notes from the Road #13",
         "Notes from the Road #10",
         "Notes from the Road #11",
+        "Notes from the Road #15",
       ];
       const rank = (t: string) => {
         const i = ROAD_COUNTRY_ORDER.indexOf(t);
