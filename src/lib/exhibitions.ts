@@ -96,7 +96,7 @@ export const PART_WEBSITES: Record<number, { key: string; url: string }[]> = {
 };
 
 /** The closing interview stands outside the five parts; its website line
- * follows its own credits page, under the same 线上查阅 · Online heading. */
+ * follows its own credits page, under the same 线上查阅 · Online Archives heading. */
 export const INTERVIEW_WEBSITE = {
   name: "Artist Interview · 艺术家访谈",
   url: "shoutoutatlanta.com/meet-chun-wang-artist",

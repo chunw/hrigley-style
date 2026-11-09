@@ -2718,7 +2718,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             </ul>
             {spec.chapter.key === "series:interview" && (
               <div className="bk-exhibitions-group">
-                <h4 className="bk-exhibitions-subhead shop-title">线上查阅 · Online</h4>
+                <h4 className="bk-exhibitions-subhead shop-title">线上查阅 · Online Archives</h4>
                 <ul>
                   <li>
                     <span className="bk-exhibitions-en">
@@ -2773,7 +2773,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             {groups.map((g) => (
               <div className="bk-exhibitions-group" key={`${g.key}${g.continued ? "-cont" : ""}`}>
                 {g.key === "__websites__" ? (
-                  <h4 className="bk-exhibitions-subhead shop-title">线上查阅 · Online</h4>
+                  <h4 className="bk-exhibitions-subhead shop-title">线上查阅 · Online Archives</h4>
                 ) : (
                   <h4 className="bk-exhibitions-subhead shop-title">{groupTitle(g.key)}</h4>
                 )}
@@ -3020,9 +3020,9 @@ function useBookModel(args: {
       .map((s, i) => ({
         key: s.key,
         number: i + 1,
-        title: bilingualTitle(s.key === "shop" ? "Slightly Useful Objects" : CHAPTER_TITLE[s.key](translations.en), s.key === "shop" ? "不腐" : CHAPTER_TITLE[s.key](translations.zh)),
+        title: bilingualTitle(s.key === "shop" ? "Slightly Useful Objects" : CHAPTER_TITLE[s.key](translations.en), s.key === "shop" ? "微用之物" : CHAPTER_TITLE[s.key](translations.zh)),
         titleEn: s.key === "shop" ? "Slightly Useful Objects" : CHAPTER_TITLE[s.key](translations.en),
-        titleZh: s.key === "shop" ? "不腐" : CHAPTER_TITLE[s.key](translations.zh),
+        titleZh: s.key === "shop" ? "微用之物" : CHAPTER_TITLE[s.key](translations.zh),
         partHead: s.key === "shop",
         // Sections without an essay of their own fall back to the copy the site already uses for them.
         descriptionHtml:
