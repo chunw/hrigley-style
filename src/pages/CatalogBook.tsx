@@ -2498,13 +2498,15 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // The Notes from the Road opener is a full-bleed pair of paintings
       // (the editor's per-page background images — see
       // pageBackgroundImages.ts). Her direction (2026-11-09): the giant
-      // title comes off this spread — it shows only the artwork, and each
-      // painting carries its own small credit in its page's bottom outer
-      // corner, taken from the watercolor catalog record (left page:
-      // /watercolors/19, right page: /watercolors/18). The section is
-      // left with no title page; that is her call, not an oversight.
-      const roadWork = chapter.key === "road"
-        ? watercolors.find((w) => w.id === (half === "left" ? "19" : "18"))
+      // title comes off this spread — it shows only the artwork. Her
+      // correction the same day: not a credit per painting and no work
+      // titles — the spread carries ONE credit line at the right page's
+      // bottom outer corner, year and medium only (both paintings are
+      // 2025 watercolors on paper), taken from the watercolor catalog
+      // record (right page: /watercolors/18). The section is left with
+      // no title page; that is her call, not an oversight.
+      const roadWork = chapter.key === "road" && half === "right"
+        ? watercolors.find((w) => w.id === "18")
         : undefined;
       const titleEn = chapter.titleEn ?? chapter.title;
       // Two lines across the ~16 in spread at most; a one-word title
@@ -2551,8 +2553,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             )}
           </div>
           {roadWork && (
-            <div className={`bk-opener-credit bk-opener-credit-${half}`}>
-              <div className="bk-caption-title product-title">{roadWork.title}{roadWork.titleZh && roadWork.titleZh !== roadWork.title ? ` ${roadWork.titleZh}` : ""}</div>
+            <div className="bk-opener-credit bk-opener-credit-right">
               <div className="bk-caption-meta">{[roadWork.year, roadWork.medium, roadWork.mediumZh].filter(Boolean).join(" · ")}</div>
             </div>
           )}

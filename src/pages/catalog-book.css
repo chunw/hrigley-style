@@ -929,21 +929,17 @@
 }
 
 /* Work credit on the Notes from the Road opener (her direction,
-   2026-11-09): the giant title no longer stands over the spread's two
-   paintings; each is credited instead in small type at its own page's
-   bottom outer corner, in the book's plate-credit format (title line +
-   meta line, see .bk-aphorism-workinfo for the same treatment). Both
-   paintings sit on pale paper, so the credit takes a dark ink. */
+   2026-11-09; correction the same day): the giant title no longer
+   stands over the spread's two paintings, and the spread is not
+   credited per painting — ONE credit line only, at the right page's
+   bottom outer corner, year and medium with no work titles, in the
+   book's small caption-meta type. Both paintings sit on pale paper,
+   so the credit takes a dark ink. */
 .bk-opener-credit {
   position: absolute;
   bottom: 0.42in;
   z-index: 3;
   color: #44403c;
-}
-
-.bk-opener-credit-left {
-  left: 0.55in;
-  text-align: left;
 }
 
 .bk-opener-credit-right {
@@ -952,8 +948,8 @@
 }
 
 .bk-opener-credit .bk-caption-meta {
-  margin-top: 2px;
-  color: #78716c;
+  margin-top: 0;
+  color: #44403c;
 }
 
 /* ── Front matter ──────────────────────────────────────────────────────────── */
