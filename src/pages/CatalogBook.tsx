@@ -544,9 +544,11 @@ interface Aphorism {
 }
 
 const APHORISMS: Record<string, Aphorism> = {
-  // Her direction, 2026-11-09: the English line is deleted from this
-  // spread — the Chinese stands alone on the right page.
-  "what-remains": { id: "what-remains", zh: "什么能留下？" },
+  // Her direction, 2026-11-09: both lines are deleted from this spread —
+  // first the English, then (follow-up the same day) the Chinese too.
+  // What stands is the painting itself and, on the right page, the small
+  // work credit for the painting (Notes from the Road #2).
+  "what-remains": { id: "what-remains" },
   journeys: { id: "journeys", en: "The journeys end. The moments remain.", zh: "旅程一次次散场，这些瞬间留了下来。" },
   "human-touch": { id: "human-touch", en: "The 'human touch' remains a refuge, a place machines cannot tread." },
   theme: {
@@ -2575,17 +2577,21 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const zhLen = (a.zh ?? "").length;
       const zhTier = a.long ? "para" : zhLen <= 8 ? "huge-v" : zhLen <= 30 ? "huge" : "big";
       // Each language has its own page: English only ever on the left,
-      // Chinese only ever on the right — a zh-only spread (what-remains)
-      // leaves its left page to the painting alone.
+      // Chinese only ever on the right. A spread with neither line
+      // (what-remains) leaves both pages to the painting; its right page
+      // still carries the painting's work credit, rendered below
+      // independently of any zh line.
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-aphorism bk-aphorism-${spec.half} bk-aph-${a.id}${a.long ? " bk-aphorism-long" : ""}${bgImgCls}`}>{bgImgLayer}
           {spec.half === "left" ? (
             a.en ? (
               <p className={`bk-aphorism-en bk-aphorism-en-${enTier}`}>{withRustQ(a.en)}</p>
             ) : null
-          ) : a.zh ? (
+          ) : (
             <>
-              <p className={`bk-aphorism-zh bk-aphorism-zh-${zhTier}`}>{withRustQ(a.zh)}</p>
+              {a.zh && (
+                <p className={`bk-aphorism-zh bk-aphorism-zh-${zhTier}`}>{withRustQ(a.zh)}</p>
+              )}
               {a.id === "what-remains" && (
                 <div className="bk-aphorism-workinfo">
                   <div className="bk-caption-title product-title">Notes from the Road #2 行旅拾记 其二</div>
@@ -2594,7 +2600,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 </div>
               )}
             </>
-          ) : null}
+          )}
         </Page>
       );
     }
