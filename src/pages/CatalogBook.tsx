@@ -867,6 +867,12 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // order at the head of Still Things (her direction, 2026-11-09:
     // pp. 13–16 move behind pp. 11–12), emitted with the Still Things
     // chapter pages below.
+    // Placement update (her direction, 2026-11-09, later): the
+    // Residuals opener spread stands directly after the last Remains
+    // plate, so the facsimile front matter (pp. 2–4 and 6–10) no
+    // longer precedes it — the front pages are emitted right after
+    // the opener spread, below, and open the section's run from
+    // there.
     const CANVA_KEPT_PAGES = [2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22];
     const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
     const CANVA_RESIDUALS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 13 && p < 17);
@@ -879,9 +885,6 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // Notes from the Road instead of Still Things, the section she
     // assigns them to.
     const CANVA_ROAD_PAGES = [21, 22];
-    if (chapter.key === "residuals") {
-      for (const p of CANVA_FRONT_PAGES) specs.push({ kind: "canva", page: p });
-    }
     if (chapter.key === "stillthings") {
       specs.push({ kind: "canva", page: 11 });
       // Her review (2026-11-08): facsimile p. 12 — the red-dog still
@@ -921,6 +924,13 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       if (!nextIsVerso()) specs.push({ kind: "blank" });
       specs.push({ kind: "opener", half: "left", chapter });
       specs.push({ kind: "opener", half: "right", chapter });
+    }
+    // The facsimile front matter follows the Residuals opener (her
+    // direction, 2026-11-09): the opener spread stands directly after
+    // the last Remains plate, and pp. 2–4 and 6–10 open the section's
+    // run behind it.
+    if (chapter.key === "residuals") {
+      for (const p of CANVA_FRONT_PAGES) specs.push({ kind: "canva", page: p });
     }
     // The Spirit chapter's sentence stands on its own quiet page, right
     // after the opener spread, before the chapter's text and plates
