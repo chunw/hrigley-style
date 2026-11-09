@@ -545,7 +545,9 @@ interface Aphorism {
 }
 
 const APHORISMS: Record<string, Aphorism> = {
-  "what-remains": { id: "what-remains", en: "What remains?", zh: "什么能留下？" },
+  // Her direction, 2026-11-09: the English line is deleted from this
+  // spread — the Chinese stands alone on the right page.
+  "what-remains": { id: "what-remains", zh: "什么能留下？" },
   journeys: { id: "journeys", en: "The journeys end. The moments remain.", zh: "旅程一次次散场，这些瞬间留了下来。" },
   "human-touch": { id: "human-touch", en: "The 'human touch' remains a refuge, a place machines cannot tread." },
   theme: {
@@ -2603,15 +2605,16 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const enTier = a.long ? "para" : (a.en ?? "").length <= 24 ? "huge" : "big";
       const zhLen = (a.zh ?? "").length;
       const zhTier = a.long ? "para" : zhLen <= 8 ? "huge-v" : zhLen <= 30 ? "huge" : "big";
+      // Each language has its own page: English only ever on the left,
+      // Chinese only ever on the right — a zh-only spread (what-remains)
+      // leaves its left page to the painting alone.
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-aphorism bk-aphorism-${spec.half} bk-aph-${a.id}${a.long ? " bk-aphorism-long" : ""}${bgImgCls}`}>{bgImgLayer}
           {spec.half === "left" ? (
             a.en ? (
               <p className={`bk-aphorism-en bk-aphorism-en-${enTier}`}>{withRustQ(a.en)}</p>
-            ) : a.zh ? (
-              <p className={`bk-aphorism-zh bk-aphorism-zh-${zhTier}`}>{withRustQ(a.zh)}</p>
             ) : null
-          ) : a.en && a.zh ? (
+          ) : a.zh ? (
             <>
               <p className={`bk-aphorism-zh bk-aphorism-zh-${zhTier}`}>{withRustQ(a.zh)}</p>
               {a.id === "what-remains" && (
