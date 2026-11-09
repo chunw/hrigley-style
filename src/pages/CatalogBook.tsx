@@ -181,6 +181,10 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     en: "The journeys end. The moments remain.",
     zh: "旅程会结束，瞬间留下来。",
   },
+  "series:unfinishedpart": {
+    en: "When machines learn to create, what remains human?",
+    zh: "当机器学会了创造，人身上还剩下什么？",
+  },
   "part:afterimages": {
     en: "What does an image keep, and what does it let go?",
     zh: "一幅图像留住了什么，又放走了什么？",
@@ -216,10 +220,6 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
   shop: {
     en: "My ceramics begin as functional forms - a candle holder, a cup, a bowl - then leak into surreal landscapes.",
     zh: "我的陶艺从功能性的形态开始，一只烛台、一只杯子、一只碗，然后渗漏成超现实的风景。",
-  },
-  "series:immemory": {
-    en: "When machines learn to create, what remains human?",
-    zh: "当机器学会了创造，人身上还剩下什么？",
   },
   "series:negotiated": {
     en: "Who can we still be?",
