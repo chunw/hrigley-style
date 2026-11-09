@@ -47,6 +47,11 @@ export function rgbToHex(r: number, g: number, b: number): string {
  * Remains-first). One conflict: Remains No. 5 was black in the older
  * export, white in the later Remains-chapter pass — the later, explicit
  * choice wins, so No. 5 stays white (and is not listed here).
+ *
+ * Export #11 (2026-11-08, later the same evening) restated the whole
+ * set unchanged except three Canva pages: plates 3 and 4 move from
+ * named black to the sampled near-black #171717, and plate 10 gets a
+ * warm off-white #ebeae0.
  */
 export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "contents": "white",
@@ -70,9 +75,10 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "plate:/photography/07/main.jpg": "black",
   "plate:/book/negotiated/work-chimera-haiku.jpg": "black",
   "plateGrid": "black",
+  "canva:10": "#ebeae0",
   "canva:11": "black",
   "canva:15": "black",
   "canva:16": "black",
-  "canva:3": "black",
-  "canva:4": "black",
+  "canva:3": "#171717",
+  "canva:4": "#171717",
 };

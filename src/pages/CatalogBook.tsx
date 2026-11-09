@@ -9,6 +9,7 @@ import { SHOP_URL, SITE_URL } from "@/lib/constants";
 import { getCombinedCatalogSections, type CatalogItem, type CatalogSection, type CatalogSectionKey } from "@/lib/printCatalog";
 import { translations, type Translations } from "@/lib/translations";
 import { PAGE_BACKGROUNDS, hexToRgb, isHexPageBg, rgbToHex, type PageBgKind, type PageBgValue } from "@/lib/pageBackgrounds";
+import { IMAGE_EDITS } from "@/lib/imageEdits";
 import { PAGE_BACKGROUND_IMAGES, type PageBgImage } from "@/lib/pageBackgroundImages";
 import { BOOK_SERIES } from "@/lib/bookSeries";
 import { SERIES_PLATES, DEATH_VALLEY_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
@@ -3548,7 +3549,9 @@ const CatalogBook = () => {
     });
   // Picture edits: read / write the staged edit for one picture src; a
   // null edit (or one with neither field) clears the entry.
-  const imgEditFor = (src: string): ImgEdit | undefined => imgEdits[src];
+  // Landed picture edits (src/lib/imageEdits.ts) apply everywhere;
+  // a staged editor edit for the same picture overrides them.
+  const imgEditFor = (src: string): ImgEdit | undefined => imgEdits[src] ?? IMAGE_EDITS[src];
   const setImgEdit = (src: string, edit: ImgEdit | null) =>
     setImgEdits((prev) => {
       const next = { ...prev };
