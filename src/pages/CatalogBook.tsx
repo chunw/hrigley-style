@@ -2359,13 +2359,8 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const paras = ctx.paintingChunks[spec.chunk]?.paras ?? [];
       const long = paras.map((p) => p.text).join("").length > 1400;
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={(spec.chunk === 0 ? "bk-part-intro" : "") + bgImgCls}>{bgImgLayer}
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
           <div className="bk-essay">
-            {spec.chunk === 0 && (
-              <div className="bk-essay-head">
-                <h2 className="bk-section-title shop-title gloria-title">{translations.en.catalogBook.paintingIntro} {translations.zh.catalogBook.paintingIntro}</h2>
-              </div>
-            )}
             <div className={`bk-essay-text description-html ${long ? "bk-essay-long" : ""}`}>
               {paras.map((p, i) => (
                 <p
@@ -3417,9 +3412,12 @@ function useBookModel(args: {
         ...chunkParas(prefaceParas.filter((p) => !hasCjk(p.text)), 1500, 20),
         ...chunkParas(prefaceParas.filter((p) => hasCjk(p.text)), 880, 22),
       ],
+      // One page, both languages (her direction, 2026-11-08): the
+      // introduction is short (553 EN + 218 ZH chars) and the old
+      // language split left its second page nearly empty. English
+      // first, Chinese right after, on a single page.
       paintingChunks: [
-        ...chunkParas(paintingParas.filter((p) => !hasCjk(p.text)), 1500, 20),
-        ...chunkParas(paintingParas.filter((p) => hasCjk(p.text)), 880, 22),
+        { paras: [...paintingParas.filter((p) => !hasCjk(p.text)), ...paintingParas.filter((p) => hasCjk(p.text))] },
       ],
       essayChunks,
       editMode,
