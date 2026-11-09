@@ -3114,15 +3114,19 @@ function useBookModel(args: {
     ];
     // Her review (2026-11-08): the Forms Before Dissolving exhibition
     // poster plate and the Residuals #2 and #3 plates are deleted from
-    // the book (the works stay in the watercolor catalog). The works
-    // open with the newly added Residuals #26, then Residuals #1 (her
-    // direction, 2026-11-04); the rest keep their catalog order.
+    // the book (the works stay in the watercolor catalog). The plates
+    // open with Residuals #1, then the newly added Residuals #26; the
+    // rest keep their catalog order. (Order revised 2026-11-09,
+    // superseding her 2026-11-04 direction: the chapter's essay IS the
+    // Forms Before Dissolving exhibition review of the Breakfast
+    // Residuals works, so Residuals #1 leads the plates and stands
+    // immediately after its review, with no other work between.)
     const residualsChapter = splitChapters.find((ch) => ch.key === "residuals");
     if (residualsChapter) {
       const kept = residualsChapter.items.filter(({ item }) => item.title !== "Residuals #2" && item.title !== "Residuals #3");
       const byTitle = (t: string) => kept.findIndex(({ item }) => item.title === t);
       const lead: typeof kept = [];
-      for (const t of ["Residuals #26", "Residuals #1"]) {
+      for (const t of ["Residuals #1", "Residuals #26"]) {
         const i = byTitle(t);
         if (i >= 0) lead.push(kept[i]);
       }
