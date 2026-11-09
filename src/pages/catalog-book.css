@@ -2406,3 +2406,24 @@
   text-align: right;
   font: inherit;
 }
+
+/* "Sent" marks in the book editor: an item exported by the last
+   Make PR run whose value has not changed since. */
+.bk-sent-chip {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: #3f7a3a;
+  color: #fff;
+  font-size: 10px;
+  line-height: 1.6;
+  white-space: nowrap;
+  vertical-align: 1px;
+}
+
+.bk-sent-summary {
+  align-self: center;
+  font-size: 11px;
+  opacity: 0.85;
+}

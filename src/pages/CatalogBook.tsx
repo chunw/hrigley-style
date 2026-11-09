@@ -1527,11 +1527,11 @@ function PageBgImgCtl({ marked, onOpen }: { marked: boolean; onOpen: () => void 
  * the background controls. A page carrying a note switches the button to
  * the rust "noted" state, so marked pages are visible at a glance while
  * flipping through the book. */
-function PageNoteCtl({ noted, onOpen }: { noted: boolean; onOpen: () => void }) {
+function PageNoteCtl({ noted, sent, onOpen }: { noted: boolean; sent?: boolean; onOpen: () => void }) {
   return (
     <div className="bk-pagenote-ctl" data-noprint>
       <button type="button" className={`bk-pagebg-btn ${noted ? "bk-pagenote-on" : ""}`} onClick={onOpen}>
-        {noted ? "✎ 笔记 ●" : "✎ 笔记 Note"}
+        {noted ? (sent ? "✎ 笔记 ● 已发送 Sent" : "✎ 笔记 ●") : "✎ 笔记 Note"}
       </button>
     </div>
   );
@@ -1554,6 +1554,7 @@ function ImgEditPanel({
   src,
   title,
   edit,
+  sent,
   onScale,
   onFull,
   onReplace,
@@ -1564,6 +1565,7 @@ function ImgEditPanel({
   src: string;
   title: string;
   edit: ImgEdit | undefined;
+  sent?: boolean;
   onScale: (scale: number) => void;
   onFull: (on: boolean) => void;
   onReplace: (dataUrl: string) => void;
@@ -1600,7 +1602,7 @@ function ImgEditPanel({
   return (
     <div data-noprint className="bk-editor-panel bk-imgedit-panel">
       <div className="bk-editor-head">
-        <span className="sans-label">{zh ? "图片" : "Picture"} · {title || src}</span>
+        <span className="sans-label">{zh ? "图片" : "Picture"} · {title || src}{sent && edit ? <span className="bk-sent-chip">已发送 Sent</span> : null}</span>
         <span className="bk-editor-hint">{edit?.full ? (zh ? "满版中：拖动图片调整取景位置；拖角退出满版改大小" : "Full bleed: drag the picture to reposition the crop; drag a corner to leave full bleed and resize") : zh ? "拖图片四个角改大小（对角不动）、拖图片本身移动；改动自动存到本机草稿" : "Drag a corner to resize (opposite corner stays), drag the picture to move — changes save to this browser automatically"}</span>
       </div>
       <div className="bk-imgedit-row">
@@ -1904,12 +1906,14 @@ function EyedropPanel({
 function PageNotePanel({
   info,
   current,
+  sent,
   onSave,
   onDelete,
   onClose,
 }: {
   info: PageNotePanelInfo;
   current?: PageNote;
+  sent?: boolean;
   onSave: (text: string) => void;
   onDelete: () => void;
   onClose: () => void;
@@ -1920,6 +1924,7 @@ function PageNotePanel({
       <div className="bk-editor-head">
         <span className="sans-label">
           页笔记 Page note · p.{info.number} · {info.key}
+          {sent && current?.text ? <span className="bk-sent-chip">已发送 Sent</span> : null}
         </span>
         <span className="bk-editor-hint">写这页要改什么，点「保存笔记」，再点工具栏「保存内容修改」存好 · What must change on this page</span>
       </div>
@@ -1997,6 +2002,8 @@ export interface BookContext {
   setBgImg: (key: string, value: PageBgImage | null) => void;
   openBgImagePanel: (info: BgImagePanelInfo) => void;
   pageNoteFor: (key: string | null) => PageNote | undefined;
+  /** Whether this page's note is exactly as it was at the last Make PR export. */
+  noteSentFor: (key: string | null) => boolean;
   openPageNotePanel: (info: PageNotePanelInfo) => void;
   imgEditFor: (src: string) => ImgEdit | undefined;
   setImgEdit: (src: string, edit: ImgEdit | null) => void;
@@ -2127,7 +2134,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
     ctx.editMode && (pageKey || partnerKey) ? <PageBgImgCtl marked={!!bgImg} onOpen={() => ctx.openBgImagePanel(spreadInfo)} /> : null;
   const noteCtl =
     ctx.editMode && pageKey ? (
-      <PageNoteCtl noted={!!ctx.pageNoteFor(pageKey)?.text} onOpen={() => ctx.openPageNotePanel({ key: pageKey, number })} />
+      <PageNoteCtl noted={!!ctx.pageNoteFor(pageKey)?.text} sent={ctx.noteSentFor(pageKey)} onOpen={() => ctx.openPageNotePanel({ key: pageKey, number })} />
     ) : null;
   const ctlAll = (
     <>
@@ -2843,6 +2850,7 @@ function useBookModel(args: {
   startEyedrop: BookContext["startEyedrop"];
   pageNotes: Record<string, PageNote>;
   pageNoteFor: BookContext["pageNoteFor"];
+  noteSentFor: BookContext["noteSentFor"];
   openPageNotePanel: BookContext["openPageNotePanel"];
   openEditor: BookContext["openEditor"];
   imgEdits: Record<string, ImgEdit>;
@@ -2851,7 +2859,7 @@ function useBookModel(args: {
   imgSel: string | null;
   selectImg: BookContext["selectImg"];
 }): { ctx: BookContext; pages: InteriorPage[] } {
-  const { editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, startEyedrop, pageNotes, pageNoteFor, openPageNotePanel, openEditor, imgEdits, imgEditFor, setImgEdit, imgSel, selectImg } = args;
+  const { editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, startEyedrop, pageNotes, pageNoteFor, noteSentFor, openPageNotePanel, openEditor, imgEdits, imgEditFor, setImgEdit, imgSel, selectImg } = args;
   const t = translations.en;
   const ctx = useMemo<BookContext>(() => {
     let plate = 0;
@@ -3435,6 +3443,7 @@ function useBookModel(args: {
       setBgImg,
       openBgImagePanel,
       pageNoteFor,
+      noteSentFor,
       openPageNotePanel,
       imgEditFor,
       setImgEdit,
@@ -3483,6 +3492,8 @@ const CatalogBook = () => {
     return Math.min(1, (window.innerWidth - 32) / (rowIn * PX_PER_IN));
   });
   // ── Book editor (edit mode): staged text edits + per-page backgrounds ──
+  /** Structural equality for the small JSON-shaped editor values. */
+  const eqJSON = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b);
   const loadJSON = <T,>(key: string, fallback: T): T => {
     try {
       const raw = localStorage.getItem(key);
@@ -3498,6 +3509,23 @@ const CatalogBook = () => {
   const [pageNotes, setPageNotes] = useState<Record<string, PageNote>>(() => loadJSON("remains-book-page-notes", {}));
   // Picture edits (size / replacement), keyed by picture src.
   const [imgEdits, setImgEdits] = useState<Record<string, ImgEdit>>(() => loadJSON("remains-book-img-edits", {}));
+  // "Sent" marks (her request, 2026-11-08): Make PR snapshots the five
+  // editor stores; an item whose current value still equals the
+  // snapshot shows a 已发送 chip. Editing a sent item changes its
+  // value, so the mark falls away on its own; new items were never in
+  // the snapshot and stay unmarked. Local only (localStorage), never
+  // part of the exported book-edits.json.
+  interface SentSnap {
+    t: Record<string, string>;
+    b: Record<string, PageBgValue | "global">;
+    i: Record<string, PageBgImage | null>;
+    n: Record<string, string>;
+    g: Record<string, ImgEdit>;
+  }
+  const [sentSnap, setSentSnap] = useState<SentSnap>(() => loadJSON("remains-book-sent", { t: {}, b: {}, i: {}, n: {}, g: {} }));
+  useEffect(() => {
+    localStorage.setItem("remains-book-sent", JSON.stringify(sentSnap));
+  }, [sentSnap]);
   const [imgSel, setImgSel] = useState<string | null>(null);
   // Leaving edit mode drops the picture selection with it.
   useEffect(() => {
@@ -3539,6 +3567,11 @@ const CatalogBook = () => {
   // by saveAllEdits under their own localStorage key, and exported with the
   // rest of the edits. A null value deletes the note for that page.
   const pageNoteFor = (key: string | null): PageNote | undefined => (key ? pageNotes[key] : undefined);
+  const noteSentFor = (key: string | null): boolean => {
+    if (!key) return false;
+    const note = pageNotes[key];
+    return !!note?.text && sentSnap.n?.[key] === note.text;
+  };
   const openPageNotePanel = (info: PageNotePanelInfo) => setNotePanel(info);
   const setPageNote = (key: string, note: PageNote | null) =>
     setPageNotes((prev) => {
@@ -3777,6 +3810,25 @@ const CatalogBook = () => {
         : "This browser cannot share files directly; book-edits.json downloaded instead, send it to Beignet.",
     );
   };
+  const sentStats = useMemo(() => {
+    let total = 0;
+    let sent = 0;
+    for (const [k, v] of Object.entries(textEdits)) { total++; if (sentSnap.t?.[k] === v) sent++; }
+    for (const [k, v] of Object.entries(pageBgEdits)) { total++; if (sentSnap.b?.[k] === v) sent++; }
+    for (const [k, v] of Object.entries(bgImgEdits)) { total++; if (eqJSON(sentSnap.i?.[k], v)) sent++; }
+    for (const [k, n] of Object.entries(pageNotes)) { if (!n.text.trim()) continue; total++; if (sentSnap.n?.[k] === n.text) sent++; }
+    for (const [k, v] of Object.entries(imgEdits)) { total++; if (eqJSON(sentSnap.g?.[k], v)) sent++; }
+    return { total, sent };
+  }, [textEdits, pageBgEdits, bgImgEdits, pageNotes, imgEdits, sentSnap]);
+  const markAllSent = () => {
+    setSentSnap({
+      t: { ...textEdits },
+      b: { ...pageBgEdits },
+      i: { ...bgImgEdits },
+      n: Object.fromEntries(Object.entries(pageNotes).filter(([, n]) => n.text.trim()).map(([a, n]) => [a, n.text])),
+      g: JSON.parse(JSON.stringify(imgEdits)) as Record<string, ImgEdit>,
+    });
+  };
   const generatePR = async () => {
     setPrMsg(lang === "zh" ? "正在生成 PR…" : "Creating PR…");
     const payload = buildEditsPayload();
@@ -3784,6 +3836,7 @@ const CatalogBook = () => {
       const res = await fetch("/api/book-pr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
       if (res.ok && data.url) {
+        markAllSent();
         setPrMsg(`PR: ${data.url}`);
         return;
       }
@@ -3795,6 +3848,7 @@ const CatalogBook = () => {
       a.download = "book-edits.json";
       a.click();
       URL.revokeObjectURL(a.href);
+      markAllSent();
       setPrMsg(
         lang === "zh"
           ? `自动生成失败（${err instanceof Error ? err.message : "网络问题"}），已下载 book-edits.json，把它发给 Beignet 即可生成同样的 PR。`
@@ -3811,7 +3865,7 @@ const CatalogBook = () => {
     noindex: true,
   });
 
-  const { ctx, pages } = useBookModel({ editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, startEyedrop, pageNotes, pageNoteFor, openPageNotePanel, openEditor, imgEdits, imgEditFor, setImgEdit, imgSel, selectImg });
+  const { ctx, pages } = useBookModel({ editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, startEyedrop, pageNotes, pageNoteFor, noteSentFor, openPageNotePanel, openEditor, imgEdits, imgEditFor, setImgEdit, imgSel, selectImg });
   // Every picture already in the book, for the background-image picker.
   const bookImages = useMemo(() => {
     const seen = new Map<string, string>();
@@ -4093,6 +4147,11 @@ const CatalogBook = () => {
                 <button type="button" onClick={generatePR} className={toggleClass(false)}>
                   {lang === "zh" ? "生成PR" : "Make PR"}
                 </button>
+                {sentStats.total > 0 && (
+                  <span className="bk-sent-summary sans-label">
+                    {lang === "zh" ? `已发送 ${sentStats.sent} · 未发送 ${sentStats.total - sentStats.sent}` : `Sent ${sentStats.sent} · Unsent ${sentStats.total - sentStats.sent}`}
+                  </span>
+                )}
                 <button type="button" onClick={shareToMuse} className={toggleClass(false)}>
                   {lang === "zh" ? "发送给 Muse" : "Send to Muse"}
                 </button>
@@ -4152,6 +4211,7 @@ const CatalogBook = () => {
           key={notePanel.key}
           info={notePanel}
           current={pageNotes[notePanel.key]}
+          sent={noteSentFor(notePanel.key)}
           onSave={(text) => {
             setPageNote(notePanel.key, text.trim() ? { text, folio: notePanel.number } : null);
             setNotePanel(null);
@@ -4173,6 +4233,7 @@ const CatalogBook = () => {
                 p.{n.folio} · {n.anchor}
               </button>
               <span className="bk-notes-text">{n.text}</span>
+              {noteSentFor(n.anchor) && <span className="bk-sent-chip">已发送 Sent</span>}
               <button type="button" className="bk-pagebg-btn" onClick={() => setNotePanel({ key: n.anchor, number: n.folio })}>
                 改 Edit
               </button>
@@ -4189,6 +4250,7 @@ const CatalogBook = () => {
           src={imgSel}
           title={bookImages.find((im) => im.src === imgSel)?.title ?? ""}
           edit={imgEdits[imgSel]}
+          sent={!!imgEdits[imgSel] && eqJSON(sentSnap.g?.[imgSel], imgEdits[imgSel])}
           onScale={(s) => {
             // The slider resizes around the picture's centre: shift the
             // offset by half the size change so the centre stays put.
