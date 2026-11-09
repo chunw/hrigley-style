@@ -83,7 +83,7 @@ type PageSpec =
   | { kind: "plateGrid"; chapter: Chapter; entries: { item: CatalogItem; plate: number }[] }
   | { kind: "bleed"; half: "left" | "right"; chapter: Chapter; item: CatalogItem }
   | { kind: "aphorism"; half: "left" | "right"; aphorism: Aphorism }
-  | { kind: "motto"; chapter: Chapter }
+  | { kind: "motto"; chapter: Chapter; text: { en: string; zh: string }; keySuffix?: string }
   | { kind: "about"; chunk: number }
   | { kind: "collage"; chunk: number }
   | { kind: "reverse-index"; chunk: number }
@@ -267,6 +267,18 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
 const SPIRIT_QUIET_TEXT = {
   en: "This book is more than a retrospective. It is an argument for slowness, demanding the kind of looking that contemporary life rarely permits.",
   zh: "这本书不只是一次回顾。它为缓慢辩护，要求一种当代生活难得允许的凝视。",
+};
+
+/** The Spirit chapter's bridge sentence (chosen by her, 2026-11-05),
+ *  standing alone on a quiet page at the END of the chapter, after its
+ *  last plate and before Part 1's exhibition pages (her direction,
+ *  2026-11-09). It used to sit in the essay body; the wording is
+ *  verbatim, moved, not rewritten. Book-only: it speaks for this
+ *  volume, so it stays out of the shop's shared series description in
+ *  21spirit.ts. */
+const SPIRIT_BRIDGE_TEXT = {
+  en: "Reports and data get washed away by newer information. These paintings fix them in place, this era's way of leaving something of itself.",
+  zh: "报道和数据会被新的信息冲走。这些画把它们固定下来，是这个时代留下自己的方式。",
 };
 
 /** Exhibition lines are free text carrying their date at the end; pull the
@@ -911,7 +923,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // after the opener spread, before the chapter's text and plates
     // (her direction, 2026-11-09; the text is SPIRIT_QUIET_TEXT).
     if (chapter.key === "spirit") {
-      specs.push({ kind: "motto", chapter });
+      specs.push({ kind: "motto", chapter, text: SPIRIT_QUIET_TEXT });
     }
     const essayCount = essayChunkCounts[chapter.key] ?? (chapter.seriesOnly ? 0 : 1);
     // Illustrated chapters with plates anchored inside the essay flow (see
@@ -1016,6 +1028,15 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     }
     if (chapter.key === "road") {
       for (const p of CANVA_ROAD_PAGES) specs.push({ kind: "canva", page: p });
+    }
+    // The Spirit chapter's bridge sentence closes the chapter on its own
+    // quiet page (her direction, 2026-11-09): taken out of the essay body
+    // (see the spirit essay assembly below) and set alone after the
+    // chapter's last plate, before the part's exhibition pages — the
+    // same motto treatment as the chapter's opening quiet page (the
+    // text is SPIRIT_BRIDGE_TEXT).
+    if (chapter.key === "spirit") {
+      specs.push({ kind: "motto", chapter, text: SPIRIT_BRIDGE_TEXT, keySuffix: "bridge" });
     }
     // Exhibition & award credits close the part, not the section (her
     // direction, 2026-11-08): when the next chapter belongs to another
@@ -1486,7 +1507,7 @@ function pageKeyOf(spec: PageSpec): string | null {
     case "aphorism":
       return `aphorism:${spec.aphorism.id}:${spec.half}`;
     case "motto":
-      return `motto:${spec.chapter.key}`;
+      return `motto:${spec.chapter.key}${spec.keySuffix ? `:${spec.keySuffix}` : ""}`;
     case "plate":
       // Stable by work, not by sequence number (her exports, 2026-11-08:
       // backgrounds keyed to plate numbers silently retargeted other
@@ -2885,16 +2906,18 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
     }
 
     case "motto": {
-      // The Spirit chapter's quiet page (her direction, 2026-11-09):
-      // its sentence alone on a white page, set small in the treatment
-      // of the old book's p. 30 — see the .bk-quiet styles.
+      // A quiet page (her direction, 2026-11-09): one text alone on a
+      // white page, set small in the treatment of the old book's p. 30 —
+      // see the .bk-quiet styles. The Spirit chapter carries two: its
+      // former epigraph after the opener (SPIRIT_QUIET_TEXT) and its
+      // bridge sentence closing the chapter (SPIRIT_BRIDGE_TEXT).
       const { chapter } = spec;
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-motto-page${bgImgCls}`}>{bgImgLayer}
           <div className="bk-quiet">
             <div className="bk-quiet-rule" />
-            <p className="bk-quiet-p">{SPIRIT_QUIET_TEXT.en}</p>
-            <p className="bk-quiet-p">{SPIRIT_QUIET_TEXT.zh}</p>
+            <p className="bk-quiet-p">{spec.text.en}</p>
+            <p className="bk-quiet-p">{spec.text.zh}</p>
           </div>
           <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
         </Page>
@@ -3416,14 +3439,11 @@ function useBookModel(args: {
         const ovZh = fieldItems("spirit", "zh");
         ovEn.forEach((it, i) => pushBoth(it, ovZh[i]));
         for (let j = ovEn.length; j < ovZh.length; j++) zhStream.push(ovZh[j]);
-        // Her bridge sentence (chosen by her, 2026-11-05): it ties the
-        // series to the book's theme — reports and data wash away, the
-        // paintings hold them. Book-only: it speaks for this volume, so it
-        // stays out of the shop's shared series description in 21spirit.ts.
-        pushBoth(
-          { html: "<p>Reports and data get washed away by newer information. These paintings fix them in place, this era's way of leaving something of itself.</p>", edit: "spiritbridge" },
-          { html: "<p>报道和数据会被新的信息冲走。这些画把它们固定下来，是这个时代留下自己的方式。</p>", edit: "spiritbridge" },
-        );
+        // Her bridge sentence (chosen by her, 2026-11-05) no longer
+        // stands in this essay body: it closes the chapter on its own
+        // quiet page instead (her direction, 2026-11-09 — see
+        // SPIRIT_BRIDGE_TEXT and the motto push at the end of this
+        // chapter in paginate()).
         // Her own first-person post on the painting Inundated (WeChat
         // Moments, March 28, 2018) stands right after the series overview,
         // ahead of the borrowed background texts: her voice first, then the
