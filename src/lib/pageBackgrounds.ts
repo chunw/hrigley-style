@@ -46,13 +46,25 @@ export function rgbToHex(r: number, g: number, b: number): string {
  * she exported from (studio site: Residuals-first; #188 preview:
  * Remains-first). One conflict: Remains No. 5 was black in the older
  * export, white in the later Remains-chapter pass — the later, explicit
- * choice wins, so No. 5 stays white (and is not listed here).
+ * choice won at the time, so No. 5 stayed white. (Superseded by the
+ * export #17 ruling below: her #17 table is applied wholesale, and it
+ * says black — No. 5 is listed again.)
  *
  * Export #11 (2026-11-08, later the same evening) restated the whole
  * set unchanged except three Canva pages: plates 3 and 4 move from
  * named black to the sampled near-black #171717, and plate 10 got a
  * warm off-white #ebeae0 — which export #14 then withdrew again, so
  * plate 10 stands at the default background below.
+ *
+ * Export #17 (2026-11-09): her ruling — the export's pageBg table is
+ * applied wholesale; wherever the book differed, the table won.
+ * canva:21 goes white and watercolor 60 goes cream; nine Notes from
+ * the Road plates (watercolors 49–52, 55–59) get grounds for the
+ * first time — black, pink (55) and cream (56, 58). The table's
+ * legacy positional keys were resolved under the current plate
+ * order: plate:5 → Remains No. 5 and plate:36 → Photography No. 1,
+ * both now black per the table (plate:6/7/8/9/10 already resolved to
+ * black pages).
  */
 export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "contents": "white",
@@ -60,6 +72,7 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "plate:/remains/02/main.jpg": "black",
   "plate:/remains/03/main.jpg": "black",
   "plate:/remains/04/main.jpg": "black",
+  "plate:/remains/05/main.jpg": "black",
   "plate:/remains/06/main.jpg": "black",
   "plate:/watercolors/54/main.jpg": "black",
   "plate:/watercolors/01/main.jpg": "black",
@@ -71,8 +84,18 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "plate:/watercolors/46/main.jpg": "black",
   "plate:/watercolors/47/main.jpg": "black",
   "plate:/watercolors/53/main.jpg": "black",
-  "plate:/watercolors/60/main.jpg": "black",
-  "canva:21": "black",
+  "plate:/watercolors/60/main.jpg": "cream",
+  "canva:21": "white",
+  "plate:/watercolors/49/main.jpg": "black",
+  "plate:/watercolors/50/main.jpg": "black",
+  "plate:/watercolors/51/main.jpg": "black",
+  "plate:/watercolors/52/main.jpg": "black",
+  "plate:/watercolors/57/main.jpg": "black",
+  "plate:/watercolors/59/main.jpg": "black",
+  "plate:/watercolors/55/main.jpg": "pink",
+  "plate:/watercolors/56/main.jpg": "cream",
+  "plate:/watercolors/58/main.jpg": "cream",
+  "plate:/photography/01/main.jpg": "black",
   "plate:/photography/07/main.jpg": "black",
   "plate:/book/negotiated/work-chimera-haiku.jpg": "black",
   "plateGrid": "black",

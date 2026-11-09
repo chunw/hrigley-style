@@ -1902,6 +1902,11 @@
    spreads keep the tiers above. */
 .bk-aph-what-remains .bk-aphorism-en-huge {
   font-size: 0.92in;
+  /* Her note (exports #15/#17): the English face looks wrong — it was
+     inheriting the page sans because .bk-aphorism-en points at a
+     --serif variable that is never defined. Set the book's serif
+     stack directly (same stack as the essay section heads). */
+  font-family: "Cormorant Garamond", "Zhuque Fangsong (technical preview)", "Zhuque Fangsong", Georgia, serif;
 }
 
 .bk-aph-what-remains .bk-aphorism-zh-huge-v {
