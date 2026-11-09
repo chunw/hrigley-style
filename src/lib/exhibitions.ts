@@ -72,3 +72,32 @@ export const EXHIBITIONS: Record<string, { en: string; zh: string }[]> = {
     { en: "Artist Interview: Shoutout Atlanta, published February 7, 2024", zh: "艺术家访谈：Shoutout Atlanta，2024年2月7日发表" },
   ],
 };
+
+/** Website lines printed at the end of a part, after its exhibition and
+ * award credits (her direction, 2026-11-09: the paper book's readers
+ * cannot click, so works and projects with a site carry their address as
+ * visible text). Keyed by book part (the contents page's numbering);
+ * each line names its section by key so the printed name follows the
+ * section's own title. Only addresses verified live are listed: Feed
+ * Scanner has no line yet (undecided), Unfinished Archive has no site,
+ * and Negotiated Intelligence prints the pavilion's own live site — its
+ * page on thewrong.org is gone (404) since the biennale closed. */
+export const PART_WEBSITES: Record<number, { key: string; url: string }[]> = {
+  1: [{ key: "remains", url: "chunwangshop.com/remains-catalog" }],
+  3: [
+    { key: "series:google", url: "github.com/chunw/GoogleSearches" },
+    { key: "series:artempath", url: "art.empath.io" },
+  ],
+  4: [
+    { key: "series:immemory", url: "covid-immemory.com" },
+    { key: "series:cavedance", url: "cavedance.art" },
+    { key: "series:negotiated", url: "negotiated-intelligence.org" },
+  ],
+};
+
+/** The closing interview stands outside the five parts; its website line
+ * follows its own credits page, under the same Websites heading. */
+export const INTERVIEW_WEBSITE = {
+  name: "Artist Interview · 艺术家访谈",
+  url: "shoutoutatlanta.com/meet-chun-wang-artist",
+};
