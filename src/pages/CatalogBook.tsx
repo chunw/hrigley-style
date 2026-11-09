@@ -16,6 +16,7 @@ import { SERIES_PLATES, DEATH_VALLEY_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_E
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS, INTERVIEW_WEBSITE, PART_WEBSITES } from "@/lib/exhibitions";
+import { watercolors } from "@/lib/watercolors";
 
 // ── Book geometry ─────────────────────────────────────────────────────────────
 // US Letter trim so the PDF prints 1:1 on a home/office printer, and matches the standard
@@ -2504,6 +2505,19 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         shop: 5,
       };
       const partNumber = partOpener ? PART_NUMBER[chapter.key] : undefined;
+      // The Notes from the Road opener is a full-bleed pair of paintings
+      // (the editor's per-page background images — see
+      // pageBackgroundImages.ts). Her direction (2026-11-09): the giant
+      // title comes off this spread — it shows only the artwork. Her
+      // correction the same day: not a credit per painting and no work
+      // titles — the spread carries ONE credit line at the right page's
+      // bottom outer corner, year and medium only (both paintings are
+      // 2025 watercolors on paper), taken from the watercolor catalog
+      // record (right page: /watercolors/18). The section is left with
+      // no title page; that is her call, not an oversight.
+      const roadWork = chapter.key === "road" && half === "right"
+        ? watercolors.find((w) => w.id === "18")
+        : undefined;
       const titleEn = chapter.titleEn ?? chapter.title;
       // Two lines across the ~16 in spread at most; a one-word title
       // cannot wrap, so it is sized to fit the spread on one line
@@ -2527,6 +2541,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 ))}
               </div>
             )}
+            {chapter.key !== "road" && (
             <Collage
               title={stackedTitle(chapter)}
               titleSize={titleSize}
@@ -2545,7 +2560,13 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 </>
               }
             />
+            )}
           </div>
+          {roadWork && (
+            <div className="bk-opener-credit bk-opener-credit-right">
+              <div className="bk-caption-meta">{[roadWork.year, roadWork.medium, roadWork.mediumZh].filter(Boolean).join(" · ")}</div>
+            </div>
+          )}
         </Page>
       );
     }
