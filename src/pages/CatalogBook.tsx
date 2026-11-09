@@ -3653,12 +3653,12 @@ const CatalogBook = () => {
   const [pageNotes, setPageNotes] = useState<Record<string, PageNote>>(() => loadJSON("remains-book-page-notes", {}));
   // Picture edits (size / replacement), keyed by picture src.
   const [imgEdits, setImgEdits] = useState<Record<string, ImgEdit>>(() => loadJSON("remains-book-img-edits", {}));
-  // "Sent" marks (her request, 2026-11-08): Make PR snapshots the five
-  // editor stores; an item whose current value still equals the
-  // snapshot shows a 已发送 chip. Editing a sent item changes its
-  // value, so the mark falls away on its own; new items were never in
-  // the snapshot and stay unmarked. Local only (localStorage), never
-  // part of the exported book-edits.json.
+  // "Sent" marks (her request, 2026-11-08): Make PR used to snapshot
+  // the five editor stores and show a 已发送 chip on items still equal
+  // to the snapshot. Superseded 2026-11-09 by clear-after-PR (see
+  // clearAllEdits): the stores and this snapshot are wiped at Make PR,
+  // so in practice the snapshot stays empty and no chips accumulate.
+  // Local only (localStorage), never part of book-edits.json.
   interface SentSnap {
     t: Record<string, string>;
     b: Record<string, PageBgValue | "global">;
@@ -3926,14 +3926,27 @@ const CatalogBook = () => {
     for (const [k, v] of Object.entries(imgEdits)) { total++; if (eqJSON(sentSnap.g?.[k], v)) sent++; }
     return { total, sent };
   }, [textEdits, pageBgEdits, bgImgEdits, pageNotes, imgEdits, sentSnap]);
-  const markAllSent = () => {
-    setSentSnap({
-      t: { ...textEdits },
-      b: { ...pageBgEdits },
-      i: { ...bgImgEdits },
-      n: Object.fromEntries(Object.entries(pageNotes).filter(([, n]) => n.text.trim()).map(([a, n]) => [a, n.text])),
-      g: JSON.parse(JSON.stringify(imgEdits)) as Record<string, ImgEdit>,
-    });
+  // Rule (artist, 2026-11-09): once Make PR has handed the edits off,
+  // the editor clears ALL local edits — the next Make PR must contain
+  // only new edits, never accumulated stock (「不要记存量」). This
+  // replaces the 2026-11-08 "sent" snapshot: instead of marking what
+  // was sent, the stores are wiped, and the sent snapshot goes with
+  // them so no stale 已发送 mark can resurface on a future edit.
+  // buildEditsPayload's pageBg / pageBgImages maps are NOT affected:
+  // they are rebuilt from the committed source maps on every Make PR,
+  // which is how revocations still propagate server-side; only the
+  // local edit stores are cleared.
+  const clearAllEdits = () => {
+    setTextEdits({});
+    setPageBgEdits({});
+    setBgImgEdits({});
+    setPageNotes({});
+    setImgEdits({});
+    setSentSnap({ t: {}, b: {}, i: {}, n: {}, g: {} });
+    for (const k of ["remains-book-text-edits", "remains-book-page-bg", "remains-book-bgimg", "remains-book-page-notes", "remains-book-img-edits", "remains-book-sent"]) {
+      localStorage.removeItem(k);
+    }
+    setSavedSnapshot(JSON.stringify({ t: {}, b: {}, i: {}, n: {}, g: {} }));
   };
   const generatePR = async () => {
     setPrMsg(lang === "zh" ? "正在生成 PR…" : "Creating PR…");
@@ -3942,8 +3955,12 @@ const CatalogBook = () => {
       const res = await fetch("/api/book-pr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
       if (res.ok && data.url) {
-        markAllSent();
-        setPrMsg(`PR: ${data.url}`);
+        clearAllEdits();
+        setPrMsg(
+          lang === "zh"
+            ? `PR: ${data.url} 编辑已清空 — 下次生成 PR 只包含新的编辑。`
+            : `PR: ${data.url} Edits cleared — the next Make PR will include only new edits.`,
+        );
         return;
       }
       throw new Error(data.error || `HTTP ${res.status}`);
@@ -3954,11 +3971,11 @@ const CatalogBook = () => {
       a.download = "book-edits.json";
       a.click();
       URL.revokeObjectURL(a.href);
-      markAllSent();
+      clearAllEdits();
       setPrMsg(
         lang === "zh"
-          ? `自动生成失败（${err instanceof Error ? err.message : "网络问题"}），已下载 book-edits.json，把它发给 Beignet 即可生成同样的 PR。`
-          : "Automatic PR failed; book-edits.json downloaded instead, send it to Beignet.",
+          ? `自动生成失败（${err instanceof Error ? err.message : "网络问题"}），已下载 book-edits.json，把它发给 Beignet 即可生成同样的 PR。编辑已清空 — 下次生成 PR 只包含新的编辑。`
+          : "Automatic PR failed; book-edits.json downloaded instead, send it to Beignet. Edits cleared — the next Make PR will include only new edits.",
       );
     }
   };
