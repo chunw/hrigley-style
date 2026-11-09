@@ -22,4 +22,8 @@ export const IMAGE_EDITS: Record<string, LandedImgEdit> = {
   // carries #11's #171717 backgrounds but none of the Canva items),
   // withdrew both edits and the warm background on canva:10. The
   // withdrawals are landed here: the record stands empty.
+  //
+  // Export #15 (2026-11-09): the Canva facsimile plate 3 picture is
+  // scaled up a touch and nudged — her editor values, verbatim.
+  "/book/canva-paintings/p03.jpg": { scale: 1.121, dx: 6.055278761279304, dy: -4.433956606725688, full: false },
 };

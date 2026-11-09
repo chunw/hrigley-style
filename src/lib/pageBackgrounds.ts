@@ -80,5 +80,8 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "canva:15": "black",
   "canva:16": "black",
   "canva:3": "#171717",
-  "canva:4": "#171717",
+  // Export #15 (2026-11-09) restates plate 4 as plain black, and her
+  // ruling on that export is that the editor wins on picked colours —
+  // so plate 4 returns to black here (#171717 stands only on plate 3).
+  "canva:4": "black",
 };
