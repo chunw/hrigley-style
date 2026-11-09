@@ -913,13 +913,15 @@
 }
 
 /* Chapter number on opener spreads (her direction, 2026-11-09): no
-   longer a small boxed label in the title row — a large gray display
-   numeral standing as its own block above the title, in the book's
-   serif. Opener scope only: the essay-head and back-cover settings of
-   .bk-num-box are untouched. */
+   longer a small boxed label in the title row — a large display
+   numeral standing as its own block above the title, in the plainest
+   sans (the serif looked strange to her) and sized up again the same
+   day. Gray on the black section openers; on the rust part openers it
+   takes the opener's cream, not gray. Opener scope only: the
+   essay-head and back-cover settings of .bk-num-box are untouched. */
 .bk-opener-num {
-  font-family: "Cormorant Garamond", "Zhuque Fangsong (technical preview)", "Zhuque Fangsong", Georgia, serif;
-  font-size: 1.9in;
+  font-family: Aileron, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 2.8in;
   font-weight: 400;
   line-height: 1;
   color: #8a8a8a;
@@ -1773,10 +1775,10 @@
   color: #fff3c2;
 }
 
-/* On the rust part openers the big numeral takes a lighter warm gray,
-   so it stays readable on the brown and still reads as gray. */
+/* On the rust part openers the big numeral takes the opener's cream,
+   same as the title — no gray on the brown (her direction, 2026-11-09). */
 .bk-opener-part .bk-opener-num {
-  color: #b3a696;
+  color: #fff3c2;
 }
 
 .bk-part-intro {

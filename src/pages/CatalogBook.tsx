@@ -2498,10 +2498,10 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               titleSize={titleSize}
               above={
                 <>
-                  {/* Chapter number as a large gray display numeral, its
-                      own block above the title (her direction,
-                      2026-11-09) — styled by .bk-opener-num, opener
-                      scope only. */}
+                  {/* Chapter number as a large plain-sans display
+                      numeral, its own block above the title (her
+                      direction, 2026-11-09) — styled by .bk-opener-num,
+                      opener scope only. */}
                   {chapter.number > 0 && <div className="bk-opener-num">{pad2(chapter.number)}</div>}
                   <div className="bk-collage-row">
                     <span className="bk-opener-label" />
