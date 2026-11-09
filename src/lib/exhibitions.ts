@@ -78,12 +78,12 @@ export const EXHIBITIONS: Record<string, { en: string; zh: string }[]> = {
  * cannot click, so works and projects with a site carry their address as
  * visible text). Keyed by book part (the contents page's numbering);
  * each line names its section by key so the printed name follows the
- * section's own title. Only addresses verified live are listed: Feed
- * Scanner has no line yet (undecided), Unfinished Archive has no site,
+ * section's own title. Only addresses verified live are listed: Part 1
+ * carries no group (her review, 2026-11-09: the Remains line was cut),
+ * Feed Scanner has no line yet (undecided), Unfinished Archive has no site,
  * and Negotiated Intelligence prints the pavilion's own live site — its
  * page on thewrong.org is gone (404) since the biennale closed. */
 export const PART_WEBSITES: Record<number, { key: string; url: string }[]> = {
-  1: [{ key: "remains", url: "chunwangshop.com/remains-catalog" }],
   3: [
     { key: "series:google", url: "github.com/chunw/GoogleSearches" },
     { key: "series:artempath", url: "art.empath.io" },
@@ -96,7 +96,7 @@ export const PART_WEBSITES: Record<number, { key: string; url: string }[]> = {
 };
 
 /** The closing interview stands outside the five parts; its website line
- * follows its own credits page, under the same Websites heading. */
+ * follows its own credits page, under the same 线上查阅 · Online Archives heading. */
 export const INTERVIEW_WEBSITE = {
   name: "Artist Interview · 艺术家访谈",
   url: "shoutoutatlanta.com/meet-chun-wang-artist",
