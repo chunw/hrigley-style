@@ -764,7 +764,6 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       const collageChapter: Chapter = { key: "collage", number: 0, title: "Collage as Method · 作为方法的拼贴", titleEn: "Collage as Method", titleZh: "作为方法的拼贴", descriptionHtml: "", items: [], years: "2018" };
       specs.push({ kind: "plate", chapter: collageChapter, item: REMAINS_ORIGIN_PLATES[0], plate: 0 });
       specs.push({ kind: "collage", chunk: 0 });
-      specs.push({ kind: "collage", chunk: 1 });
       firstChapter = false;
     }
     // The earlier printed painting book (Canva, "Chun Wang: Paintings
@@ -1400,7 +1399,12 @@ function pageKeyOf(spec: PageSpec): string | null {
     case "aphorism":
       return `aphorism:${spec.aphorism.id}:${spec.half}`;
     case "plate":
-      return `plate:${spec.plate}`;
+      // Stable by work, not by sequence number (her exports, 2026-11-08:
+      // backgrounds keyed to plate numbers silently retargeted other
+      // works whenever the chapter order changed — Remains moving first
+      // in Part 1 would have repainted six other pages). The image path
+      // is unique per work and survives any reorder.
+      return `plate:${spec.item.image_url}`;
     case "bleed":
       return `bleed:${spec.chapter.key}:${spec.half}`;
     case "about":
@@ -2398,7 +2402,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const zhLen = (a.zh ?? "").length;
       const zhTier = a.long ? "para" : zhLen <= 8 ? "huge-v" : zhLen <= 30 ? "huge" : "big";
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-aphorism bk-aphorism-${spec.half}${a.long ? " bk-aphorism-long" : ""}${bgImgCls}`}>{bgImgLayer}
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-aphorism bk-aphorism-${spec.half} bk-aph-${a.id}${a.long ? " bk-aphorism-long" : ""}${bgImgCls}`}>{bgImgLayer}
           {spec.half === "left" ? (
             a.en ? (
               <p className={`bk-aphorism-en bk-aphorism-en-${enTier}`}>{withRustQ(a.en)}</p>
@@ -2406,7 +2410,16 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               <p className={`bk-aphorism-zh bk-aphorism-zh-${zhTier}`}>{withRustQ(a.zh)}</p>
             ) : null
           ) : a.en && a.zh ? (
-            <p className={`bk-aphorism-zh bk-aphorism-zh-${zhTier}`}>{withRustQ(a.zh)}</p>
+            <>
+              <p className={`bk-aphorism-zh bk-aphorism-zh-${zhTier}`}>{withRustQ(a.zh)}</p>
+              {a.id === "what-remains" && (
+                <div className="bk-aphorism-workinfo">
+                  <div className="bk-caption-title product-title">Notes from the Road #2 行旅拾记 其二</div>
+                  <div className="bk-caption-meta">2026 · Watercolor on paper 纸本水彩</div>
+                  <div className="bk-caption-meta">San Cristóbal de las Casas, Chiapas, Mexico · 墨西哥，恰帕斯州，圣克里斯托瓦尔-德拉斯卡萨斯</div>
+                </div>
+              )}
+            </>
           ) : null}
         </Page>
       );
@@ -2512,9 +2525,11 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
           <div className="bk-essay">
-            <div className="bk-essay-head">
-              <h2 className="bk-section-title shop-title gloria-title">{stackedPair("About the Author", "关于作者")}</h2>
-            </div>
+            {spec.chunk === 0 && (
+              <div className="bk-essay-head">
+                <h2 className="bk-section-title shop-title gloria-title">{stackedPair("About the Author", "关于作者")}</h2>
+              </div>
+            )}
             <div className="bk-essay-text bk-about-text description-html" dangerouslySetInnerHTML={{ __html: spec.chunk === 0 ? artistBioHTML("en") : artistBioHTML("zh") }} />
           </div>
           <Folio number={number} tag={`${b.title} | ${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`} />
@@ -2528,11 +2543,12 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
                 <div className="bk-essay-meta sans-label">Collage as Method · 作为方法的拼贴</div>
-                <h2 className="bk-section-title shop-title gloria-title">{stackedPair("Collage as Method", "作为方法的拼贴")}</h2>
+                <h2 className="bk-section-title bk-collage-method-title shop-title gloria-title">{stackedPair("Collage as Method", "作为方法的拼贴")}</h2>
               </div>
             )}
             <div className="bk-essay-text description-html">
-              <p>{spec.chunk === 0 ? COLLAGE_METHOD.en : COLLAGE_METHOD.zh}</p>
+              <p>{COLLAGE_METHOD.en}</p>
+              <p>{COLLAGE_METHOD.zh}</p>
             </div>
           </div>
           <Folio number={number} tag={`${b.title} | Collage as Method · 作为方法的拼贴`} />

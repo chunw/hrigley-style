@@ -34,22 +34,41 @@ export function rgbToHex(r: number, g: number, b: number): string {
 
 /**
  * Per-page paper overrides for the book, keyed by stable page key
- * (see pageKeyOf in CatalogBook.tsx: "preface:0", "essay:photography:1",
- * "plate:41", "divider:remains", "opener:spirit:left", ...).
- * Pages not listed follow the toolbar paper choice.
- * Written by the book editor's 生成PR flow (api/book-pr.js); edit by hand if needed.
+ * (see pageKeyOf in CatalogBook.tsx: "preface:0", "plate:<image path>",
+ * "opener:spirit:left", ...). Plate keys carry the work's image path,
+ * NOT its sequence number — sequence numbers retarget whenever the
+ * chapter order changes, and silently repainted other works twice
+ * before this was fixed (2026-11-08). Pages not listed follow the
+ * toolbar paper choice.
+ *
+ * The black set below is the union of her editor exports #7–#10
+ * (2026-11-08 evening), resolved to works under both chapter orders
+ * she exported from (studio site: Residuals-first; #188 preview:
+ * Remains-first). One conflict: Remains No. 5 was black in the older
+ * export, white in the later Remains-chapter pass — the later, explicit
+ * choice wins, so No. 5 stays white (and is not listed here).
  */
 export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "contents": "white",
-  "plate:5": "black",
-  "plate:6": "black",
-  "plate:7": "black",
-  "plate:8": "black",
-  "plate:9": "black",
-  "plate:10": "black",
-  "plate:26": "black",
-  "plate:27": "black",
-  "plate:98": "black",
+  "plate:/remains/01/main.jpg": "black",
+  "plate:/remains/02/main.jpg": "black",
+  "plate:/remains/03/main.jpg": "black",
+  "plate:/remains/04/main.jpg": "black",
+  "plate:/remains/06/main.jpg": "black",
+  "plate:/watercolors/54/main.jpg": "black",
+  "plate:/watercolors/01/main.jpg": "black",
+  "plate:/watercolors/05/main.jpg": "black",
+  "plate:/watercolors/13/main.jpg": "black",
+  "plate:/watercolors/43/main.jpg": "black",
+  "plate:/watercolors/14/main.jpg": "black",
+  "plate:/watercolors/45/main.jpg": "black",
+  "plate:/watercolors/46/main.jpg": "black",
+  "plate:/watercolors/47/main.jpg": "black",
+  "plate:/watercolors/53/main.jpg": "black",
+  "plate:/watercolors/60/main.jpg": "black",
+  "canva:21": "black",
+  "plate:/photography/07/main.jpg": "black",
+  "plate:/book/negotiated/work-chimera-haiku.jpg": "black",
   "plateGrid": "black",
   "canva:11": "black",
   "canva:15": "black",
