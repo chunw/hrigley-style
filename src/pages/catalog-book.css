@@ -1345,6 +1345,14 @@
   line-height: 1.7;
 }
 
+/* Collage as Method head only (her note, 2026-11-08: this title font is
+   too big): the all-caps serif at the standard section size out-shouts
+   the short text under it, so this one head runs smaller. Other section
+   titles keep 0.56in. */
+.bk-collage-method-title {
+  font-size: 0.4in;
+}
+
 .bk-essay-text p {
   margin: 0 0 1.1em;
 }

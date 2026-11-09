@@ -2530,7 +2530,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
                 <div className="bk-essay-meta sans-label">Collage as Method · 作为方法的拼贴</div>
-                <h2 className="bk-section-title shop-title gloria-title">{stackedPair("Collage as Method", "作为方法的拼贴")}</h2>
+                <h2 className="bk-section-title bk-collage-method-title shop-title gloria-title">{stackedPair("Collage as Method", "作为方法的拼贴")}</h2>
               </div>
             )}
             <div className="bk-essay-text description-html">
