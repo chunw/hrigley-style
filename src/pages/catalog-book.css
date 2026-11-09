@@ -912,19 +912,19 @@
   gap: 0.14in;
 }
 
-/* Chapter number on opener spreads (her direction, 2026-11-09): no
-   longer a small boxed label in the title row — a large display
-   numeral standing as its own block above the title, in the plainest
-   sans (the serif looked strange to her) and sized up again the same
-   day. Gray on the black section openers; on the rust part openers it
-   takes the opener's cream, not gray. Opener scope only: the
-   essay-head and back-cover settings of .bk-num-box are untouched. */
+/* Part number on the five part openers (her direction, 2026-11-09):
+   a large display numeral standing as its own block above the title,
+   in the plainest sans (the serif looked strange to her), showing the
+   PART number 01–05. It renders only on part openers — all of them
+   rust-brown — so it takes the opener's cream; section openers carry
+   no number in any form. The essay-head settings of .bk-num-box are
+   untouched. */
 .bk-opener-num {
   font-family: Aileron, "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 2.8in;
   font-weight: 400;
   line-height: 1;
-  color: #8a8a8a;
+  color: #fff3c2;
   margin-bottom: 0.16in;
 }
 
@@ -1772,12 +1772,6 @@
 
 .bk-opener-part .bk-num-box {
   border-color: rgba(255, 243, 194, 0.65);
-  color: #fff3c2;
-}
-
-/* On the rust part openers the big numeral takes the opener's cream,
-   same as the title — no gray on the brown (her direction, 2026-11-09). */
-.bk-opener-part .bk-opener-num {
   color: #fff3c2;
 }
 

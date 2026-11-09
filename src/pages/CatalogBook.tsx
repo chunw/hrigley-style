@@ -2470,6 +2470,19 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // appears before the section itself.
       const epigraph = CHAPTER_EPIGRAPH[chapter.key];
       const partOpener = !!(chapter.partIntro || chapter.partHead);
+      // The big opener numeral belongs to the five parts only, and it
+      // is the PART number (her direction, 2026-11-09, superseding the
+      // chapter-number scope): Part 1's synthetic head, then the head
+      // chapters of Parts 2–5 — the same heads PART_HEAD_KEY resolves
+      // for the contents. Section openers carry no number in any form.
+      const PART_NUMBER: Record<string, number> = {
+        "part:afterimages": 1,
+        innerwilderness: 2,
+        "series:unfinishedpart": 3,
+        "series:triptych": 4,
+        shop: 5,
+      };
+      const partNumber = partOpener ? PART_NUMBER[chapter.key] : undefined;
       const titleEn = chapter.titleEn ?? chapter.title;
       // Two lines across the ~16 in spread at most; a one-word title
       // cannot wrap, so it is sized to fit the spread on one line
@@ -2498,11 +2511,12 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               titleSize={titleSize}
               above={
                 <>
-                  {/* Chapter number as a large plain-sans display
-                      numeral, its own block above the title (her
-                      direction, 2026-11-09) — styled by .bk-opener-num,
-                      opener scope only. */}
-                  {chapter.number > 0 && <div className="bk-opener-num">{pad2(chapter.number)}</div>}
+                  {/* Part number as a large plain-sans display numeral,
+                      its own block above the title, on the five part
+                      openers only (her direction, 2026-11-09) — styled
+                      by .bk-opener-num. Section openers show no number
+                      in any form: no big numeral, no small box. */}
+                  {partNumber !== undefined && <div className="bk-opener-num">{pad2(partNumber)}</div>}
                   <div className="bk-collage-row">
                     <span className="bk-opener-label" />
                     <span>{chapter.years}</span>
