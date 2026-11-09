@@ -9,6 +9,7 @@ import { SHOP_URL, SITE_URL } from "@/lib/constants";
 import { getCombinedCatalogSections, type CatalogItem, type CatalogSection, type CatalogSectionKey } from "@/lib/printCatalog";
 import { translations, type Translations } from "@/lib/translations";
 import { PAGE_BACKGROUNDS, hexToRgb, isHexPageBg, rgbToHex, type PageBgKind, type PageBgValue } from "@/lib/pageBackgrounds";
+import { IMAGE_EDITS } from "@/lib/imageEdits";
 import { PAGE_BACKGROUND_IMAGES, type PageBgImage } from "@/lib/pageBackgroundImages";
 import { BOOK_SERIES } from "@/lib/bookSeries";
 import { SERIES_PLATES, DEATH_VALLEY_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
@@ -180,6 +181,17 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     en: "The journeys end. The moments remain.",
     zh: "旅程会结束，瞬间留下来。",
   },
+  "series:unfinishedpart": {
+    en: "When machines learn to create, what remains human?",
+    zh: "当机器学会了创造，人身上还剩下什么？",
+  },
+  // IMMEMORY keeps its title spread, but its sentence moved to the
+  // Part 3 opener above (her direction, 2026-11-08): the empty entry
+  // holds the spread open with no sentence printed on it.
+  "series:immemory": {
+    en: "",
+    zh: "",
+  },
   "part:afterimages": {
     en: "What does an image keep, and what does it let go?",
     zh: "一幅图像留住了什么，又放走了什么？",
@@ -215,10 +227,6 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
   shop: {
     en: "My ceramics begin as functional forms - a candle holder, a cup, a bowl - then leak into surreal landscapes.",
     zh: "我的陶艺从功能性的形态开始，一只烛台、一只杯子、一只碗，然后渗漏成超现实的风景。",
-  },
-  "series:immemory": {
-    en: "When machines learn to create, what remains human?",
-    zh: "当机器学会了创造，人身上还剩下什么？",
   },
   "series:negotiated": {
     en: "Who can we still be?",
@@ -783,12 +791,12 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       if (!nextIsVerso()) specs.push({ kind: "blank" });
       specs.push({ kind: "opener", half: "left", chapter: part1Head });
       specs.push({ kind: "opener", half: "right", chapter: part1Head });
-      for (let i = 0; i < paintingChunkCount; i++) specs.push({ kind: "painting-intro", chunk: i });
-      // The page facing the merged introduction stays blank (her
-      // direction, 2026-11-08): with both languages on the intro page
-      // its old second page is left empty — nothing is pulled forward
-      // and the page sequence behind it does not move.
-      specs.push({ kind: "blank" });
+      // No standalone introduction page (her direction, 2026-11-08,
+      // late): the bilingual introduction text moves onto the right
+      // page of the Part 1 opener spread above (see the opener render),
+      // and its old page plus the blank that faced it are both
+      // cancelled — an even shift, so every later verso alignment and
+      // the part page numbers in the contents simply move up two.
       // Collage as Method stands with its work (her direction, 2026-11-05):
       // the 2018 Untitled (Collage) plate and the method essay together,
       // right after the painting part's introduction. The essay leaves the
@@ -2402,11 +2410,18 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-opener bk-opener-${half}${partOpener ? " bk-opener-part" : ""}${bgImgCls}`}>{bgImgLayer}
           <div className="bk-spread-canvas">
-            {epigraph && (
+            {epigraph && epigraph.en && (
               <p className="bk-opener-epigraph">
                 {epigraph.en}
                 <span className="bk-opener-epigraph-zh">{epigraph.zh}</span>
               </p>
+            )}
+            {chapter.key === "part:afterimages" && (
+              <div className="bk-opener-intro">
+                {(ctx.paintingChunks[0]?.paras ?? []).map((p, i) => (
+                  <p key={i}>{p.text}</p>
+                ))}
+              </div>
             )}
             <Collage
               title={stackedTitle(chapter)}
@@ -3548,7 +3563,9 @@ const CatalogBook = () => {
     });
   // Picture edits: read / write the staged edit for one picture src; a
   // null edit (or one with neither field) clears the entry.
-  const imgEditFor = (src: string): ImgEdit | undefined => imgEdits[src];
+  // Landed picture edits (src/lib/imageEdits.ts) apply everywhere;
+  // a staged editor edit for the same picture overrides them.
+  const imgEditFor = (src: string): ImgEdit | undefined => imgEdits[src] ?? IMAGE_EDITS[src];
   const setImgEdit = (src: string, edit: ImgEdit | null) =>
     setImgEdits((prev) => {
       const next = { ...prev };
@@ -3909,12 +3926,15 @@ const CatalogBook = () => {
     }
     const section = q.get("section");
     if (!section) return null;
+    if (section === "painting-intro") {
+      // The introduction lives on the Part 1 opener spread now.
+      return pages.find((p) => p.spec.kind === "opener" && "chapter" in p.spec && p.spec.chapter.key === "part:afterimages")?.number ?? null;
+    }
     if (
       section === "title" ||
       section === "contents" ||
       section === "preface" ||
       section === "about" ||
-      section === "painting-intro" ||
       section === "reverse-index" ||
       section === "canva"
     ) {
