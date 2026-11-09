@@ -20,4 +20,7 @@ export const IMAGE_EDITS: Record<string, LandedImgEdit> = {
   // bleed, its crop window dragged to the right (object-position
   // 85.7% / 50%).
   "/book/canva-paintings/p10.jpg": { full: true, scale: 1, dx: 0.10201373453206383, dy: 0, pos: { x: 85.7, y: 50 } },
+  // Export #13 (2026-11-08): this Canva facsimile page goes full
+  // bleed too (default centred crop).
+  "/book/canva-paintings/p04.jpg": { full: true },
 };
