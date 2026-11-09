@@ -2406,3 +2406,22 @@
   text-align: right;
   font: inherit;
 }
+
+/* The painting introduction on the Part 1 opener spread (her
+   direction, 2026-11-08): the bilingual text sits on the right page,
+   in the open field between the epigraph above and the title below,
+   cream on the rust ground like everything else on the spread. */
+.bk-opener-intro {
+  position: absolute;
+  left: calc(var(--trim-w) + var(--bleed) + 0.8in);
+  top: calc(var(--bleed) + 2.7in);
+  width: 5.9in;
+  z-index: 10;
+  color: #fff3c2;
+  font-size: 0.148in;
+  line-height: 1.8;
+}
+
+.bk-opener-intro p {
+  margin: 0 0 0.16in;
+}

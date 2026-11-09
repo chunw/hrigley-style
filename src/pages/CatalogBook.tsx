@@ -784,12 +784,12 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       if (!nextIsVerso()) specs.push({ kind: "blank" });
       specs.push({ kind: "opener", half: "left", chapter: part1Head });
       specs.push({ kind: "opener", half: "right", chapter: part1Head });
-      for (let i = 0; i < paintingChunkCount; i++) specs.push({ kind: "painting-intro", chunk: i });
-      // The page facing the merged introduction stays blank (her
-      // direction, 2026-11-08): with both languages on the intro page
-      // its old second page is left empty — nothing is pulled forward
-      // and the page sequence behind it does not move.
-      specs.push({ kind: "blank" });
+      // No standalone introduction page (her direction, 2026-11-08,
+      // late): the bilingual introduction text moves onto the right
+      // page of the Part 1 opener spread above (see the opener render),
+      // and its old page plus the blank that faced it are both
+      // cancelled — an even shift, so every later verso alignment and
+      // the part page numbers in the contents simply move up two.
       // Collage as Method stands with its work (her direction, 2026-11-05):
       // the 2018 Untitled (Collage) plate and the method essay together,
       // right after the painting part's introduction. The essay leaves the
@@ -2409,6 +2409,13 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 <span className="bk-opener-epigraph-zh">{epigraph.zh}</span>
               </p>
             )}
+            {chapter.key === "part:afterimages" && (
+              <div className="bk-opener-intro">
+                {(ctx.paintingChunks[0]?.paras ?? []).map((p, i) => (
+                  <p key={i}>{p.text}</p>
+                ))}
+              </div>
+            )}
             <Collage
               title={stackedTitle(chapter)}
               titleSize={titleSize}
@@ -3950,12 +3957,15 @@ const CatalogBook = () => {
     }
     const section = q.get("section");
     if (!section) return null;
+    if (section === "painting-intro") {
+      // The introduction lives on the Part 1 opener spread now.
+      return pages.find((p) => p.spec.kind === "opener" && "chapter" in p.spec && p.spec.chapter.key === "part:afterimages")?.number ?? null;
+    }
     if (
       section === "title" ||
       section === "contents" ||
       section === "preface" ||
       section === "about" ||
-      section === "painting-intro" ||
       section === "reverse-index" ||
       section === "canva"
     ) {
