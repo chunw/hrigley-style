@@ -60,6 +60,26 @@
   z-index: 40;
 }
 
+/* Pending-edits reminder bar: sticky at the very top of the editor,
+   above all other chrome (toolbar 40, panels 80); rust + cream, the
+   book's part-opener palette, so it reads at a glance. In-flow, so it
+   pushes the page down 38px rather than covering book content. */
+.bk-pending-bar {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  padding: 0 16px;
+  background: #8a3c00;
+  color: #fff3c2;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
 /* ── Preview stage ─────────────────────────────────────────────────────────── */
 .bk-stage {
   display: flex;

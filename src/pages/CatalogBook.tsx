@@ -4266,6 +4266,20 @@ const CatalogBook = () => {
       {/* One @page size per export: interior/complete pages, or the wide cover wrap. */}
       <style>{`@page { size: ${sheetW}in ${pageH}in; margin: 0; }`}</style>
 
+      {/* Pending-edits reminder (artist, 2026-11-09): while unsent edits
+          exist, a bar sits at the very top of the editor so they are not
+          forgotten before export. Pending = entries in the five edit
+          stores that differ from the sent snapshot (same count as the
+          toolbar's Unsent). Make PR clears the stores, so the bar
+          disappears on its own; it never renders outside edit mode. */}
+      {editMode && sentStats.total - sentStats.sent > 0 && (
+        <div data-noprint className="bk-pending-bar">
+          {lang === "zh"
+            ? `有 pending 编辑，记得导出（${sentStats.total - sentStats.sent}）`
+            : `You have pending edits — remember to export (${sentStats.total - sentStats.sent})`}
+        </div>
+      )}
+
       <div data-noprint className="bk-toolbar border-b border-border bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap items-center justify-between gap-3">
           <Link
