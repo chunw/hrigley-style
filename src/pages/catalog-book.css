@@ -912,6 +912,22 @@
   gap: 0.14in;
 }
 
+/* Part number on the five part openers (her direction, 2026-11-09):
+   a large display numeral standing as its own block above the title,
+   in the plainest sans (the serif looked strange to her), showing the
+   PART number 01–05. It renders only on part openers — all of them
+   rust-brown — so it takes the opener's cream; section openers carry
+   no number in any form. The essay-head settings of .bk-num-box are
+   untouched. */
+.bk-opener-num {
+  font-family: Aileron, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 2.8in;
+  font-weight: 400;
+  line-height: 1;
+  color: #fff3c2;
+  margin-bottom: 0.16in;
+}
+
 /* ── Front matter ──────────────────────────────────────────────────────────── */
 .bk-half-block {
   text-align: center;
