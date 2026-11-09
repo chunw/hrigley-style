@@ -784,6 +784,11 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       specs.push({ kind: "opener", half: "left", chapter: part1Head });
       specs.push({ kind: "opener", half: "right", chapter: part1Head });
       for (let i = 0; i < paintingChunkCount; i++) specs.push({ kind: "painting-intro", chunk: i });
+      // The page facing the merged introduction stays blank (her
+      // direction, 2026-11-08): with both languages on the intro page
+      // its old second page is left empty — nothing is pulled forward
+      // and the page sequence behind it does not move.
+      specs.push({ kind: "blank" });
       // Collage as Method stands with its work (her direction, 2026-11-05):
       // the 2018 Untitled (Collage) plate and the method essay together,
       // right after the painting part's introduction. The essay leaves the
