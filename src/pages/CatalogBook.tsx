@@ -16,6 +16,7 @@ import { SERIES_PLATES, DEATH_VALLEY_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_E
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS, INTERVIEW_WEBSITE, PART_WEBSITES } from "@/lib/exhibitions";
+import { watercolors } from "@/lib/watercolors";
 
 // ── Book geometry ─────────────────────────────────────────────────────────────
 // US Letter trim so the PDF prints 1:1 on a home/office printer, and matches the standard
@@ -544,7 +545,11 @@ interface Aphorism {
 }
 
 const APHORISMS: Record<string, Aphorism> = {
-  "what-remains": { id: "what-remains", en: "What remains?", zh: "什么能留下？" },
+  // Her direction, 2026-11-09: both lines are deleted from this spread —
+  // first the English, then (follow-up the same day) the Chinese too.
+  // What stands is the painting itself and, on the right page, the small
+  // work credit for the painting (Notes from the Road #2).
+  "what-remains": { id: "what-remains" },
   journeys: { id: "journeys", en: "The journeys end. The moments remain.", zh: "旅程一次次散场，这些瞬间留了下来。" },
   "human-touch": { id: "human-touch", en: "The 'human touch' remains a refuge, a place machines cannot tread." },
   theme: {
@@ -867,6 +872,12 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // order at the head of Still Things (her direction, 2026-11-09:
     // pp. 13–16 move behind pp. 11–12), emitted with the Still Things
     // chapter pages below.
+    // Placement update (her direction, 2026-11-09, later): the
+    // Residuals opener spread stands directly after the last Remains
+    // plate, so the facsimile front matter (pp. 2–4 and 6–10) no
+    // longer precedes it — the front pages are emitted right after
+    // the opener spread, below, and open the section's run from
+    // there.
     const CANVA_KEPT_PAGES = [2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22];
     const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
     const CANVA_RESIDUALS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 13 && p < 17);
@@ -879,9 +890,6 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // Notes from the Road instead of Still Things, the section she
     // assigns them to.
     const CANVA_ROAD_PAGES = [21, 22];
-    if (chapter.key === "residuals") {
-      for (const p of CANVA_FRONT_PAGES) specs.push({ kind: "canva", page: p });
-    }
     if (chapter.key === "stillthings") {
       specs.push({ kind: "canva", page: 11 });
       // Her review (2026-11-08): facsimile p. 12 — the red-dog still
@@ -921,6 +929,13 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       if (!nextIsVerso()) specs.push({ kind: "blank" });
       specs.push({ kind: "opener", half: "left", chapter });
       specs.push({ kind: "opener", half: "right", chapter });
+    }
+    // The facsimile front matter follows the Residuals opener (her
+    // direction, 2026-11-09): the opener spread stands directly after
+    // the last Remains plate, and pp. 2–4 and 6–10 open the section's
+    // run behind it.
+    if (chapter.key === "residuals") {
+      for (const p of CANVA_FRONT_PAGES) specs.push({ kind: "canva", page: p });
     }
     // The Spirit chapter's sentence stands on its own quiet page, right
     // after the opener spread, before the chapter's text and plates
@@ -2494,6 +2509,21 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         shop: 5,
       };
       const partNumber = partOpener ? PART_NUMBER[chapter.key] : undefined;
+      // The Notes from the Road opener is a full-bleed pair of paintings
+      // (the editor's per-page background images — see
+      // pageBackgroundImages.ts). Her direction (2026-11-09): the giant
+      // title comes off this spread — it shows only the artwork. Her
+      // corrections the same day: not a credit per painting and no work
+      // titles — the spread carries ONE credit block (year-and-medium
+      // line plus the Sugamo production-note line) at the LEFT page's
+      // bottom-left corner; the right page carries no credit. Values
+      // from the watercolor catalog record (/watercolors/18 — both
+      // paintings are 2025 watercolors on paper, so one line covers
+      // the spread). The section is left with no title page; that is
+      // her call, not an oversight.
+      const roadWork = chapter.key === "road" && half === "left"
+        ? watercolors.find((w) => w.id === "18")
+        : undefined;
       const titleEn = chapter.titleEn ?? chapter.title;
       // Two lines across the ~16 in spread at most; a one-word title
       // cannot wrap, so it is sized to fit the spread on one line
@@ -2517,6 +2547,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 ))}
               </div>
             )}
+            {chapter.key !== "road" && (
             <Collage
               title={stackedTitle(chapter)}
               titleSize={titleSize}
@@ -2535,7 +2566,18 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 </>
               }
             />
+            )}
           </div>
+          {roadWork && (
+            <div className="bk-opener-credit bk-opener-credit-left">
+              <div className="bk-caption-meta">{[roadWork.year, roadWork.medium, roadWork.mediumZh].filter(Boolean).join(" · ")}</div>
+              {/* Production note for this spread, her wording (2026-11-09):
+                  painted at a residence in Sugamo, Tokyo, during a Japan
+                  trip. (It was first mis-filed to the Japanese Pottery
+                  caption; she ruled it belongs here, on the Road opener.) */}
+              <div className="bk-caption-meta">Painted during a trip to Japan, at a residence in Sugamo, Tokyo · 绘于日本旅行中位于东京巢鸭的住所</div>
+            </div>
+          )}
         </Page>
       );
     }
@@ -2572,17 +2614,22 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const enTier = a.long ? "para" : (a.en ?? "").length <= 24 ? "huge" : "big";
       const zhLen = (a.zh ?? "").length;
       const zhTier = a.long ? "para" : zhLen <= 8 ? "huge-v" : zhLen <= 30 ? "huge" : "big";
+      // Each language has its own page: English only ever on the left,
+      // Chinese only ever on the right. A spread with neither line
+      // (what-remains) leaves both pages to the painting; its right page
+      // still carries the painting's work credit, rendered below
+      // independently of any zh line.
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-aphorism bk-aphorism-${spec.half} bk-aph-${a.id}${a.long ? " bk-aphorism-long" : ""}${bgImgCls}`}>{bgImgLayer}
           {spec.half === "left" ? (
             a.en ? (
               <p className={`bk-aphorism-en bk-aphorism-en-${enTier}`}>{withRustQ(a.en)}</p>
-            ) : a.zh ? (
-              <p className={`bk-aphorism-zh bk-aphorism-zh-${zhTier}`}>{withRustQ(a.zh)}</p>
             ) : null
-          ) : a.en && a.zh ? (
+          ) : (
             <>
-              <p className={`bk-aphorism-zh bk-aphorism-zh-${zhTier}`}>{withRustQ(a.zh)}</p>
+              {a.zh && (
+                <p className={`bk-aphorism-zh bk-aphorism-zh-${zhTier}`}>{withRustQ(a.zh)}</p>
+              )}
               {a.id === "what-remains" && (
                 <div className="bk-aphorism-workinfo">
                   <div className="bk-caption-title product-title">Notes from the Road #2 行旅拾记 其二</div>
@@ -2591,7 +2638,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 </div>
               )}
             </>
-          ) : null}
+          )}
         </Page>
       );
     }
@@ -3119,15 +3166,19 @@ function useBookModel(args: {
     ];
     // Her review (2026-11-08): the Forms Before Dissolving exhibition
     // poster plate and the Residuals #2 and #3 plates are deleted from
-    // the book (the works stay in the watercolor catalog). The works
-    // open with the newly added Residuals #26, then Residuals #1 (her
-    // direction, 2026-11-04); the rest keep their catalog order.
+    // the book (the works stay in the watercolor catalog). The plates
+    // open with Residuals #1, then the newly added Residuals #26; the
+    // rest keep their catalog order. (Order revised 2026-11-09,
+    // superseding her 2026-11-04 direction: the chapter's essay IS the
+    // Forms Before Dissolving exhibition review of the Breakfast
+    // Residuals works, so Residuals #1 leads the plates and stands
+    // immediately after its review, with no other work between.)
     const residualsChapter = splitChapters.find((ch) => ch.key === "residuals");
     if (residualsChapter) {
       const kept = residualsChapter.items.filter(({ item }) => item.title !== "Residuals #2" && item.title !== "Residuals #3");
       const byTitle = (t: string) => kept.findIndex(({ item }) => item.title === t);
       const lead: typeof kept = [];
-      for (const t of ["Residuals #26", "Residuals #1"]) {
+      for (const t of ["Residuals #1", "Residuals #26"]) {
         const i = byTitle(t);
         if (i >= 0) lead.push(kept[i]);
       }
@@ -4265,6 +4316,20 @@ const CatalogBook = () => {
     <div className={`bk-root bk-paper-${paper}${isMobile ? " bk-mobile" : ""}${eyedropPick ? " bk-eyedropping" : ""}`} style={rootStyle}>
       {/* One @page size per export: interior/complete pages, or the wide cover wrap. */}
       <style>{`@page { size: ${sheetW}in ${pageH}in; margin: 0; }`}</style>
+
+      {/* Pending-edits reminder (artist, 2026-11-09): while unsent edits
+          exist, a bar sits at the very top of the editor so they are not
+          forgotten before export. Pending = entries in the five edit
+          stores that differ from the sent snapshot (same count as the
+          toolbar's Unsent). Make PR clears the stores, so the bar
+          disappears on its own; it never renders outside edit mode. */}
+      {editMode && sentStats.total - sentStats.sent > 0 && (
+        <div data-noprint className="bk-pending-bar">
+          {lang === "zh"
+            ? `有 pending 编辑，记得导出（${sentStats.total - sentStats.sent}）`
+            : `You have pending edits — remember to export (${sentStats.total - sentStats.sent})`}
+        </div>
+      )}
 
       <div data-noprint className="bk-toolbar border-b border-border bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap items-center justify-between gap-3">

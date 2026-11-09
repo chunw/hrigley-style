@@ -60,6 +60,26 @@
   z-index: 40;
 }
 
+/* Pending-edits reminder bar: sticky at the very top of the editor,
+   above all other chrome (toolbar 40, panels 80); rust + cream, the
+   book's part-opener palette, so it reads at a glance. In-flow, so it
+   pushes the page down 38px rather than covering book content. */
+.bk-pending-bar {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  padding: 0 16px;
+  background: #8a3c00;
+  color: #fff3c2;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
 /* ── Preview stage ─────────────────────────────────────────────────────────── */
 .bk-stage {
   display: flex;
@@ -926,6 +946,31 @@
   line-height: 1;
   color: #fff3c2;
   margin-bottom: 0.16in;
+}
+
+/* Work credit on the Notes from the Road opener (her direction,
+   2026-11-09; corrections the same day): the giant title no longer
+   stands over the spread's two paintings, and the spread is not
+   credited per painting — ONE credit block only, at the LEFT page's
+   bottom-left corner, left-aligned: a year-and-medium line (no work
+   titles) plus the Sugamo production-note line, in the book's small
+   caption-meta type. The right page carries no credit. Both
+   paintings sit on pale paper, so the credit takes a dark ink. */
+.bk-opener-credit {
+  position: absolute;
+  bottom: 0.42in;
+  z-index: 3;
+  color: #44403c;
+}
+
+.bk-opener-credit-left {
+  left: 0.55in;
+  text-align: left;
+}
+
+.bk-opener-credit .bk-caption-meta {
+  margin-top: 0;
+  color: #44403c;
 }
 
 /* ── Front matter ──────────────────────────────────────────────────────────── */
@@ -1902,6 +1947,11 @@
    spreads keep the tiers above. */
 .bk-aph-what-remains .bk-aphorism-en-huge {
   font-size: 0.92in;
+  /* Her note (exports #15/#17): the English face looks wrong — it was
+     inheriting the page sans because .bk-aphorism-en points at a
+     --serif variable that is never defined. Set the book's serif
+     stack directly (same stack as the essay section heads). */
+  font-family: "Cormorant Garamond", "Zhuque Fangsong (technical preview)", "Zhuque Fangsong", Georgia, serif;
 }
 
 .bk-aph-what-remains .bk-aphorism-zh-huge-v {
@@ -1910,11 +1960,15 @@
 
 /* Work credit on the what-remains right page (her note: 加上作品信息,
    参考出发章节 — the spread's background image is Notes from the Road
-   #2, credited the way the Road chapter captions its plates). */
+   #2, credited the way the Road chapter captions its plates). The
+   bottom offset puts the whole block below the painting: the wash's
+   lowest grey reaches 0.84in above the sheet's bottom edge, and her
+   direction (2026-11-09) is that the credit clear the artwork
+   entirely, so the block's top sits at 0.79in. */
 .bk-aphorism-workinfo {
   position: absolute;
   right: 0.55in;
-  bottom: 0.85in;
+  bottom: 0.28in;
   max-width: 5.6in;
   text-align: right;
 }
