@@ -843,10 +843,13 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       // and its old page plus the blank that faced it are both
       // cancelled — an even shift, so every later verso alignment and
       // the part page numbers in the contents simply move up two.
-      // Collage as Method no longer stands here (her direction,
-      // 2026-11-09): the 2018 collage plate and the method essay close
-      // Part 1 instead — they are emitted at the part boundary below,
-      // after the Spirit chapter, before the part's exhibition pages.
+      // Collage as Method stands with its work (her direction, 2026-11-05):
+      // the 2018 Untitled (Collage) plate and the method essay together,
+      // right after the painting part's introduction. The essay leaves the
+      // front matter; the plate leaves the end of the Remains chapter.
+      const collageChapter: Chapter = { key: "collage", number: 0, title: "Collage as Method · 作为方法的拼贴", titleEn: "Collage as Method", titleZh: "作为方法的拼贴", descriptionHtml: "", items: [], years: "2018" };
+      specs.push({ kind: "plate", chapter: collageChapter, item: REMAINS_ORIGIN_PLATES[0], plate: 0 });
+      specs.push({ kind: "collage", chunk: 0 });
       firstChapter = false;
     }
     // The earlier printed painting book (Canva, "Chun Wang: Paintings
@@ -1049,14 +1052,6 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       const nextChapter = chapters[chapterIdx + 1];
       const nextPart = nextChapter ? SECTION_PART[nextChapter.key] : undefined;
       if (nextPart !== sectionPart) {
-        // Collage as Method closes Part 1 (her direction, 2026-11-09):
-        // the 2018 Untitled (Collage) plate and the method essay stand
-        // together after the part's last chapter, before its credits.
-        if (sectionPart === 1) {
-          const collageChapter: Chapter = { key: "collage", number: 0, title: "Collage as Method · 作为方法的拼贴", titleEn: "Collage as Method", titleZh: "作为方法的拼贴", descriptionHtml: "", items: [], years: "2018" };
-          specs.push({ kind: "plate", chapter: collageChapter, item: REMAINS_ORIGIN_PLATES[0], plate: 0 });
-          specs.push({ kind: "collage", chunk: 0 });
-        }
         const chunks = partExhibitionChunks(sectionPart);
         for (let i = 0; i < chunks.length; i++) specs.push({ kind: "part-exhibitions", part: sectionPart, chunk: i });
       }
@@ -2873,7 +2868,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               <div className="bk-caption-body">
                 <div className="bk-caption-title product-title">Japanese Pottery 日本陶器</div>
                 <div className="bk-caption-meta">2025 · Watercolor on paper · 纸本水彩</div>
-                <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: "Japan.<br />日本。" }} />
+                <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: "Painted during a trip to Japan, at a residence in Sugamo, Tokyo<br />绘于日本旅行中位于东京巢鸭的住所" }} />
               </div>
             </div>
           )}
