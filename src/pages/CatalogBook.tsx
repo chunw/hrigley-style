@@ -180,6 +180,14 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     en: "The journeys end. The moments remain.",
     zh: "旅程会结束，瞬间留下来。",
   },
+  "part:afterimages": {
+    en: "What does an image keep, and what does it let go?",
+    zh: "一幅图像留住了什么，又放走了什么？",
+  },
+  "series:triptych": {
+    en: "The subject is what remains. The method is the archive.",
+    zh: "主题是存留。方法是档案。",
+  },
   innerwilderness: {
     en: "The land comes first, before language, before the self.",
     zh: "土地在先，在语言之前，在自我之前。",
@@ -756,7 +764,31 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     const chapter = chapters[chapterIdx];
     if (firstChapter) {
       pushAphorism(APHORISMS["what-remains"]);
+      // Part 1 opens with the same rust-brown spread as every other
+      // part (her direction, 2026-11-08 evening). The part has no head
+      // chapter of its own — its introduction is the painting essay —
+      // so a synthetic part head carries the spread; the painting
+      // introduction follows it as the part's sentences.
+      const part1Head: Chapter = {
+        key: "part:afterimages",
+        number: 1,
+        title: "Afterimages 余像",
+        titleEn: "Afterimages",
+        titleZh: "余像",
+        descriptionHtml: "",
+        items: [],
+        years: "",
+        partHead: true,
+      };
+      if (!nextIsVerso()) specs.push({ kind: "blank" });
+      specs.push({ kind: "opener", half: "left", chapter: part1Head });
+      specs.push({ kind: "opener", half: "right", chapter: part1Head });
       for (let i = 0; i < paintingChunkCount; i++) specs.push({ kind: "painting-intro", chunk: i });
+      // The page facing the merged introduction stays blank (her
+      // direction, 2026-11-08): with both languages on the intro page
+      // its old second page is left empty — nothing is pulled forward
+      // and the page sequence behind it does not move.
+      specs.push({ kind: "blank" });
       // Collage as Method stands with its work (her direction, 2026-11-05):
       // the 2018 Untitled (Collage) plate and the method essay together,
       // right after the painting part's introduction. The essay leaves the
@@ -814,14 +846,19 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // chapters open with the same spread; their essay count can be 0.
     // Her direction (2026-11-08): a spread that carries nothing but the
     // chapter's name duplicates the contents and the head of the
-    // chapter's own text, so openers print only where the chapter's
-    // epigraph gives the spread content of its own. Chapters without an
-    // epigraph (Still Things, the Unfinished Archive part head and its
-    // Life section, The Loss of Childhood, the Rooms/Scores/Decisions
-    // part head) open directly with their first text or plate page; the
-    // Unfinished Archive part head, which has no text or plates at all,
-    // prints no page and stands in the contents alone.
-    if (CHAPTER_EPIGRAPH[chapter.key]) {
+    // chapter's own text, so section openers print only where the
+    // chapter's epigraph gives the spread content of its own. Section
+    // chapters without an epigraph (Still Things, the Life section,
+    // The Loss of Childhood) open directly with their first text or
+    // plate page.
+    // Her direction (2026-11-08, evening — supersedes the same-day rule
+    // for part heads): every part opens with the rust-brown opener
+    // spread, the Inner Wilderness pattern, whether or not its head
+    // carries an epigraph; the part's introduction or first work
+    // follows the spread. Part heads without an epigraph (the
+    // Unfinished Archive, which has no introduction text at all) print
+    // the title alone.
+    if (CHAPTER_EPIGRAPH[chapter.key] || chapter.partHead || chapter.partIntro) {
       if (!nextIsVerso()) specs.push({ kind: "blank" });
       specs.push({ kind: "opener", half: "left", chapter });
       specs.push({ kind: "opener", half: "right", chapter });
@@ -2171,7 +2208,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         return { en: head?.titleEn ?? head?.title ?? "", zh: head?.titleZh };
       };
       const partPage = (p: number): number => {
-        if (p === 1) return startOf((s) => s.kind === "painting-intro");
+        if (p === 1) return startOf((s) => s.kind === "opener" && "chapter" in s && s.chapter.key === "part:afterimages") || startOf((s) => s.kind === "painting-intro");
         const headPage = startOf((s) => "chapter" in s && s.chapter.key === PART_HEAD_KEY[p]);
         if (headPage > 0) return headPage;
         // A part head that prints no page of its own (the Unfinished
@@ -2327,13 +2364,8 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const paras = ctx.paintingChunks[spec.chunk]?.paras ?? [];
       const long = paras.map((p) => p.text).join("").length > 1400;
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={(spec.chunk === 0 ? "bk-part-intro" : "") + bgImgCls}>{bgImgLayer}
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
           <div className="bk-essay">
-            {spec.chunk === 0 && (
-              <div className="bk-essay-head">
-                <h2 className="bk-section-title shop-title gloria-title">{translations.en.catalogBook.paintingIntro} {translations.zh.catalogBook.paintingIntro}</h2>
-              </div>
-            )}
             <div className={`bk-essay-text description-html ${long ? "bk-essay-long" : ""}`}>
               {paras.map((p, i) => (
                 <p
@@ -2359,8 +2391,16 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // carries one, sits small in the upper field. Text only: no artwork
       // appears before the section itself.
       const epigraph = CHAPTER_EPIGRAPH[chapter.key];
+      const partOpener = !!(chapter.partIntro || chapter.partHead);
+      const titleEn = chapter.titleEn ?? chapter.title;
+      // Two lines across the ~16 in spread at most; a one-word title
+      // cannot wrap, so it is sized to fit the spread on one line
+      // (Afterimages at the standard part scale ran off the edge).
+      const titleSize = partOpener && !/\s/.test(titleEn.trim())
+        ? displaySize(titleEn, 15.5, 2.6)
+        : displaySize(titleEn, 2 * 15.5, partOpener ? 2.6 : 1.9);
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-opener bk-opener-${half}${chapter.partIntro || chapter.partHead ? " bk-opener-part" : ""}${bgImgCls}`}>{bgImgLayer}
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-opener bk-opener-${half}${partOpener ? " bk-opener-part" : ""}${bgImgCls}`}>{bgImgLayer}
           <div className="bk-spread-canvas">
             {epigraph && (
               <p className="bk-opener-epigraph">
@@ -2370,8 +2410,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             )}
             <Collage
               title={stackedTitle(chapter)}
-              // Two lines across the ~16 in spread at most.
-              titleSize={displaySize(chapter.titleEn ?? chapter.title, 2 * 15.5, chapter.partIntro || chapter.partHead ? 2.6 : 1.9)}
+              titleSize={titleSize}
               above={
                 <div className="bk-collage-row">
                   <span className="bk-opener-label">
@@ -3378,9 +3417,12 @@ function useBookModel(args: {
         ...chunkParas(prefaceParas.filter((p) => !hasCjk(p.text)), 1500, 20),
         ...chunkParas(prefaceParas.filter((p) => hasCjk(p.text)), 880, 22),
       ],
+      // One page, both languages (her direction, 2026-11-08): the
+      // introduction is short (553 EN + 218 ZH chars) and the old
+      // language split left its second page nearly empty. English
+      // first, Chinese right after, on a single page.
       paintingChunks: [
-        ...chunkParas(paintingParas.filter((p) => !hasCjk(p.text)), 1500, 20),
-        ...chunkParas(paintingParas.filter((p) => hasCjk(p.text)), 880, 22),
+        { paras: [...paintingParas.filter((p) => !hasCjk(p.text)), ...paintingParas.filter((p) => hasCjk(p.text))] },
       ],
       essayChunks,
       editMode,
