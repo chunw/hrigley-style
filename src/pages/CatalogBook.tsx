@@ -864,10 +864,12 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // into the two sections they belong to, so Residuals and Still
     // Things each read as one continuous run. The facsimile front
     // matter (pp. 2–4 and 6–10) opens the pair, ahead of the Residuals
-    // opener; the facsimile Residuals chapter (pp. 11–16) closes the
-    // Residuals section and the facsimile Still Things chapter
-    // (pp. 17–22) closes Still Things — those two groups are emitted
-    // at the end of each chapter's run, below.
+    // opener; the facsimile Still Things chapter (pp. 17–22) closes
+    // Still Things, emitted at the end of its chapter's run, below.
+    // The facsimile pages pp. 11–16 stand as one cluster in page
+    // order at the head of Still Things (her direction, 2026-11-09:
+    // pp. 13–16 move behind pp. 11–12), emitted with the Still Things
+    // chapter pages below.
     const CANVA_KEPT_PAGES = [2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22];
     const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
     const CANVA_RESIDUALS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 13 && p < 17);
@@ -892,6 +894,12 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       // and the blue bag) are deleted from the book (removed from
       // CANVA_KEPT_PAGES above).
       specs.push({ kind: "canva", page: 12 });
+      // Her direction (2026-11-09): the facsimile Residuals chapter
+      // (pp. 13–16), which used to close the Residuals section, moves
+      // behind pp. 11–12, so the six facsimile pages pp. 11–16 stand
+      // as one cluster in page order at the head of Still Things,
+      // right after the Residuals plates.
+      for (const p of CANVA_RESIDUALS_PAGES) specs.push({ kind: "canva", page: p });
     }
     const aphorismId = APHORISM_BEFORE_CHAPTER[chapter.key];
     if (aphorismId) pushAphorism(APHORISMS[aphorismId]);
@@ -1015,12 +1023,10 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       }
     }
     // Facsimile chapters close their own sections (see the placement
-    // note at the facsimile block above): the printed book's Residuals
-    // chapter ends the Residuals run and its Still Things chapter ends
-    // the Still Things run, so no page of either section stands apart.
-    if (chapter.key === "residuals") {
-      for (const p of CANVA_RESIDUALS_PAGES) specs.push({ kind: "canva", page: p });
-    }
+    // note at the facsimile block above): the printed book's Still
+    // Things chapter ends the Still Things run, so no page of the
+    // section stands apart. (The facsimile Residuals chapter moved to
+    // the head of Still Things with pp. 11–12 — see above.)
     if (chapter.key === "stillthings") {
       for (const p of CANVA_STILLTHINGS_PAGES) specs.push({ kind: "canva", page: p });
     }
@@ -3421,10 +3427,19 @@ function useBookModel(args: {
           fieldTexts[`series:${s.id}:en`] = enT;
           fieldTexts[`series:${s.id}:zh`] = zhT;
         }
-        essayChunks[chapter.key] = langChunks(
-          enT ? pBlocks(asParas(enT)).map((html) => ({ html, edit: `series:${s?.id}:en` })) : [],
-          zhT ? pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s?.id}:zh` })) : [],
-        );
+        // Still Things carries no body text at all (its BOOK_SERIES
+        // entry is empty): langChunks' empty-text sentinel would give
+        // the section one blank text page. She deletes that page (her
+        // direction, 2026-11-09), so an empty text here means zero
+        // essay chunks and the section's plates follow its Canva
+        // pages directly.
+        essayChunks[chapter.key] =
+          chapter.key === "stillthings" && !enT && !zhT
+            ? []
+            : langChunks(
+                enT ? pBlocks(asParas(enT)).map((html) => ({ html, edit: `series:${s?.id}:en` })) : [],
+                zhT ? pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s?.id}:zh` })) : [],
+              );
       } else if (chapter.key === "spirit") {
         // Essay layout (her direction, 2026-11-06, replacing the
         // 2026-11-05 paragraph-pair interleave): the whole English essay
