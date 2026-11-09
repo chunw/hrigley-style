@@ -26,4 +26,14 @@ export const IMAGE_EDITS: Record<string, LandedImgEdit> = {
   // Export #15 (2026-11-09): the Canva facsimile plate 3 picture is
   // scaled up a touch and nudged — her editor values, verbatim.
   "/book/canva-paintings/p03.jpg": { scale: 1.121, dx: 6.055278761279304, dy: -4.433956606725688, full: false },
+  // Export #17 (2026-11-09): her newest export re-asserts the two
+  // full-bleed Canva edits that #14 withdrew (p04 centred, p10
+  // cropped), adds a hairline nudge on p02, a scale-up on the
+  // watercolor plate 14, and a positioned full-bleed on plate 46 —
+  // her editor values, verbatim.
+  "/book/canva-paintings/p04.jpg": { full: true },
+  "/book/canva-paintings/p10.jpg": { full: true },
+  "/book/canva-paintings/p02.jpg": { full: false, scale: 1, dx: 0.042613218914391515, dy: -0.0634831823366115 },
+  "/watercolors/14/main.jpg": { full: false, scale: 1.343, dx: -7.2721581120530026, dy: 2.9039708327036458 },
+  "/watercolors/46/main.jpg": { full: true, scale: 1, dx: 0, dy: -0.03786177244433036, pos: { x: 57.9, y: 50 } },
 };
