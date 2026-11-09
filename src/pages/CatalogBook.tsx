@@ -2511,13 +2511,15 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // (the editor's per-page background images — see
       // pageBackgroundImages.ts). Her direction (2026-11-09): the giant
       // title comes off this spread — it shows only the artwork. Her
-      // correction the same day: not a credit per painting and no work
-      // titles — the spread carries ONE credit line at the right page's
-      // bottom outer corner, year and medium only (both paintings are
-      // 2025 watercolors on paper), taken from the watercolor catalog
-      // record (right page: /watercolors/18). The section is left with
-      // no title page; that is her call, not an oversight.
-      const roadWork = chapter.key === "road" && half === "right"
+      // corrections the same day: not a credit per painting and no work
+      // titles — the spread carries ONE credit block (year-and-medium
+      // line plus the Sugamo production-note line) at the LEFT page's
+      // bottom-left corner; the right page carries no credit. Values
+      // from the watercolor catalog record (/watercolors/18 — both
+      // paintings are 2025 watercolors on paper, so one line covers
+      // the spread). The section is left with no title page; that is
+      // her call, not an oversight.
+      const roadWork = chapter.key === "road" && half === "left"
         ? watercolors.find((w) => w.id === "18")
         : undefined;
       const titleEn = chapter.titleEn ?? chapter.title;
@@ -2565,8 +2567,13 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             )}
           </div>
           {roadWork && (
-            <div className="bk-opener-credit bk-opener-credit-right">
+            <div className="bk-opener-credit bk-opener-credit-left">
               <div className="bk-caption-meta">{[roadWork.year, roadWork.medium, roadWork.mediumZh].filter(Boolean).join(" · ")}</div>
+              {/* Production note for this spread, her wording (2026-11-09):
+                  painted at a residence in Sugamo, Tokyo, during a Japan
+                  trip. (It was first mis-filed to the Japanese Pottery
+                  caption; she ruled it belongs here, on the Road opener.) */}
+              <div className="bk-caption-meta">Painted during a trip to Japan, at a residence in Sugamo, Tokyo · 绘于日本旅行中位于东京巢鸭的住所</div>
             </div>
           )}
         </Page>

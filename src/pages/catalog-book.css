@@ -949,12 +949,13 @@
 }
 
 /* Work credit on the Notes from the Road opener (her direction,
-   2026-11-09; correction the same day): the giant title no longer
+   2026-11-09; corrections the same day): the giant title no longer
    stands over the spread's two paintings, and the spread is not
-   credited per painting — ONE credit line only, at the right page's
-   bottom outer corner, year and medium with no work titles, in the
-   book's small caption-meta type. Both paintings sit on pale paper,
-   so the credit takes a dark ink. */
+   credited per painting — ONE credit block only, at the LEFT page's
+   bottom-left corner, left-aligned: a year-and-medium line (no work
+   titles) plus the Sugamo production-note line, in the book's small
+   caption-meta type. The right page carries no credit. Both
+   paintings sit on pale paper, so the credit takes a dark ink. */
 .bk-opener-credit {
   position: absolute;
   bottom: 0.42in;
@@ -962,9 +963,9 @@
   color: #44403c;
 }
 
-.bk-opener-credit-right {
-  right: 0.55in;
-  text-align: right;
+.bk-opener-credit-left {
+  left: 0.55in;
+  text-align: left;
 }
 
 .bk-opener-credit .bk-caption-meta {
