@@ -161,9 +161,7 @@ export const translations = {
         "拉康说，自我诞生于一面镜子：一个比身体本身更完整的形象。我们从不直接遇见自己，我们总是绕道他人的面孔抵达。这一组作品里，他人的肖像与自画像轮流出现，轮换比相像更重要。陌生人停住，回望我的注视；然后我走进画面，成为那个陌生人。他者，然后自身，然后又是他者。如果身份是从外部借来的认领，那么肖像就不是「某人是谁」的记录，而是两个人互相借出一个自我的瞬间。",
       ],
       paintingIntroBody: [
-        "Five series of paintings are gathered here. In the Spirit of the 21st Century takes its subjects from the news and from sociology research, the public world translated into figures. Remains is the museum pottery figurines from the preface, small ancient survivors re-employed in modern life. Residuals collects the lingering warmth left by human activity. Still Things picks up the odds and ends of a grotesque world. Notes from the Road is sketches made while traveling.",
         "Different tempers, one question. What does an image keep, and what does it let go?",
-        "这一章收了五个绘画系列。In the Spirit of the 21st Century 从新闻和社会学研究里取材，把公共世界翻译成人物。Remains 就是前言里说的那些博物馆陶俑，古代的小幸存者，在现代生活里重新就业。Residuals 收集人生活动后的余温。Still Things 捡起怪奇世界的零零散散。Notes from the Road 是旅行途中的速写。",
         "性情各不相同，问题只有一个：一幅图像留住了什么，又放走了什么？",
       ],
       page: "Page",
@@ -357,9 +355,7 @@ export const translations = {
         "拉康说，自我诞生于一面镜子：一个比身体本身更完整的形象。我们从不直接遇见自己，我们总是绕道他人的面孔抵达。这一组作品里，他人的肖像与自画像轮流出现，轮换比相像更重要。陌生人停住，回望我的注视；然后我走进画面，成为那个陌生人。他者，然后自身，然后又是他者。如果身份是从外部借来的认领，那么肖像就不是「某人是谁」的记录，而是两个人互相借出一个自我的瞬间。",
       ],
       paintingIntroBody: [
-        "Five series of paintings are gathered here. In the Spirit of the 21st Century takes its subjects from the news and from sociology research, the public world translated into figures. Remains is the museum pottery figurines from the preface, small ancient survivors re-employed in modern life. Residuals collects the lingering warmth left by human activity. Still Things picks up the odds and ends of a grotesque world. Notes from the Road is sketches made while traveling.",
         "Different tempers, one question. What does an image keep, and what does it let go?",
-        "这一章收了五个绘画系列。In the Spirit of the 21st Century 从新闻和社会学研究里取材，把公共世界翻译成人物。Remains 就是前言里说的那些博物馆陶俑，古代的小幸存者，在现代生活里重新就业。Residuals 收集人生活动后的余温。Still Things 捡起怪奇世界的零零散散。Notes from the Road 是旅行途中的速写。",
         "性情各不相同，问题只有一个：一幅图像留住了什么，又放走了什么？",
       ],
       page: "页码",
