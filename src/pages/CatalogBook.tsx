@@ -307,7 +307,7 @@ function exhibitionParts(text: string): { year: string; rest: string } {
  * Sections that stand outside the five parts (the closing interview) keep
  * their own per-section exhibitions page. */
 const PART_SECTIONS: Record<number, string[]> = {
-  1: ["residuals", "stillthings", "road", "remains", "spirit"],
+  1: ["remains", "residuals", "stillthings", "road", "spirit"],
   2: ["innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography"],
   3: ["series:unfinished", "series:google", "series:feedscanner", "series:earlyline", "series:artempath"],
   4: ["series:immemory", "series:cavedance", "series:negotiated"],
@@ -2515,7 +2515,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             <div className="bk-essay-head">
               <h2 className="bk-section-title shop-title gloria-title">{stackedPair("About the Author", "关于作者")}</h2>
             </div>
-            <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: spec.chunk === 0 ? artistBioHTML("en") : artistBioHTML("zh") }} />
+            <div className="bk-essay-text bk-about-text description-html" dangerouslySetInnerHTML={{ __html: spec.chunk === 0 ? artistBioHTML("en") : artistBioHTML("zh") }} />
           </div>
           <Folio number={number} tag={`${b.title} | ${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`} />
         </Page>
@@ -2938,7 +2938,7 @@ function useBookModel(args: {
     // ahead of Remains — the part now runs Residuals, Still Things,
     // Notes from the Road, Remains, and Spirit last.
     const SECTION_ORDER = [
-      "residuals", "stillthings", "road", "remains", "spirit",
+      "remains", "residuals", "stillthings", "road", "spirit",
       "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography",
       "series:unfinishedpart", "series:unfinished", "series:google",
       "series:feedscanner", "series:earlyline", "series:artempath",
