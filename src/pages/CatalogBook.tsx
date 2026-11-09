@@ -185,6 +185,13 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     en: "When machines learn to create, what remains human?",
     zh: "当机器学会了创造，人身上还剩下什么？",
   },
+  // IMMEMORY keeps its title spread, but its sentence moved to the
+  // Part 3 opener above (her direction, 2026-11-08): the empty entry
+  // holds the spread open with no sentence printed on it.
+  "series:immemory": {
+    en: "",
+    zh: "",
+  },
   "part:afterimages": {
     en: "What does an image keep, and what does it let go?",
     zh: "一幅图像留住了什么，又放走了什么？",
@@ -2403,7 +2410,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-opener bk-opener-${half}${partOpener ? " bk-opener-part" : ""}${bgImgCls}`}>{bgImgLayer}
           <div className="bk-spread-canvas">
-            {epigraph && (
+            {epigraph && epigraph.en && (
               <p className="bk-opener-epigraph">
                 {epigraph.en}
                 <span className="bk-opener-epigraph-zh">{epigraph.zh}</span>
