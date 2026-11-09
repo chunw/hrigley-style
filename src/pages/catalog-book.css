@@ -1910,11 +1910,15 @@
 
 /* Work credit on the what-remains right page (her note: 加上作品信息,
    参考出发章节 — the spread's background image is Notes from the Road
-   #2, credited the way the Road chapter captions its plates). */
+   #2, credited the way the Road chapter captions its plates). The
+   bottom offset puts the whole block below the painting: the wash's
+   lowest grey reaches 0.84in above the sheet's bottom edge, and her
+   direction (2026-11-09) is that the credit clear the artwork
+   entirely, so the block's top sits at 0.79in. */
 .bk-aphorism-workinfo {
   position: absolute;
   right: 0.55in;
-  bottom: 0.85in;
+  bottom: 0.28in;
   max-width: 5.6in;
   text-align: right;
 }
