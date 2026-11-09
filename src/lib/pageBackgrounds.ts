@@ -75,7 +75,6 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "plate:/photography/07/main.jpg": "black",
   "plate:/book/negotiated/work-chimera-haiku.jpg": "black",
   "plateGrid": "black",
-  "canva:10": "#ebeae0",
   "canva:11": "black",
   "canva:15": "black",
   "canva:16": "black",

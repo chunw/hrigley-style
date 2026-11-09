@@ -16,11 +16,10 @@ export interface LandedImgEdit {
 }
 
 export const IMAGE_EDITS: Record<string, LandedImgEdit> = {
-  // Export #11 (2026-11-08): this Canva facsimile page goes full
-  // bleed, its crop window dragged to the right (object-position
-  // 85.7% / 50%).
-  "/book/canva-paintings/p10.jpg": { full: true, scale: 1, dx: 0.10201373453206383, dy: 0, pos: { x: 85.7, y: 50 } },
-  // Export #13 (2026-11-08): this Canva facsimile page goes full
-  // bleed too (default centred crop).
-  "/book/canva-paintings/p04.jpg": { full: true },
+  // Exports #11 and #13 (2026-11-08) set full-bleed edits on two
+  // Canva facsimile pictures (p10.jpg cropped, p04.jpg centred);
+  // export #14, seven minutes later from the same editor store (it
+  // carries #11's #171717 backgrounds but none of the Canva items),
+  // withdrew both edits and the warm background on canva:10. The
+  // withdrawals are landed here: the record stands empty.
 };
