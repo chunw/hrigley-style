@@ -2497,12 +2497,17 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               title={stackedTitle(chapter)}
               titleSize={titleSize}
               above={
-                <div className="bk-collage-row">
-                  <span className="bk-opener-label">
-                    {chapter.number > 0 && <span className="bk-num-box">{pad2(chapter.number)}</span>}
-                  </span>
-                  <span>{chapter.years}</span>
-                </div>
+                <>
+                  {/* Chapter number as a large gray display numeral, its
+                      own block above the title (her direction,
+                      2026-11-09) — styled by .bk-opener-num, opener
+                      scope only. */}
+                  {chapter.number > 0 && <div className="bk-opener-num">{pad2(chapter.number)}</div>}
+                  <div className="bk-collage-row">
+                    <span className="bk-opener-label" />
+                    <span>{chapter.years}</span>
+                  </div>
+                </>
               }
             />
           </div>

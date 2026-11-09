@@ -912,6 +912,20 @@
   gap: 0.14in;
 }
 
+/* Chapter number on opener spreads (her direction, 2026-11-09): no
+   longer a small boxed label in the title row — a large gray display
+   numeral standing as its own block above the title, in the book's
+   serif. Opener scope only: the essay-head and back-cover settings of
+   .bk-num-box are untouched. */
+.bk-opener-num {
+  font-family: "Cormorant Garamond", "Zhuque Fangsong (technical preview)", "Zhuque Fangsong", Georgia, serif;
+  font-size: 1.9in;
+  font-weight: 400;
+  line-height: 1;
+  color: #8a8a8a;
+  margin-bottom: 0.16in;
+}
+
 /* ── Front matter ──────────────────────────────────────────────────────────── */
 .bk-half-block {
   text-align: center;
@@ -1757,6 +1771,12 @@
 .bk-opener-part .bk-num-box {
   border-color: rgba(255, 243, 194, 0.65);
   color: #fff3c2;
+}
+
+/* On the rust part openers the big numeral takes a lighter warm gray,
+   so it stays readable on the brown and still reads as gray. */
+.bk-opener-part .bk-opener-num {
+  color: #b3a696;
 }
 
 .bk-part-intro {
