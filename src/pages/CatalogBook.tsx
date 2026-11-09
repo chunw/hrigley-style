@@ -15,7 +15,7 @@ import { BOOK_SERIES } from "@/lib/bookSeries";
 import { SERIES_PLATES, DEATH_VALLEY_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
-import { EXHIBITIONS } from "@/lib/exhibitions";
+import { EXHIBITIONS, INTERVIEW_WEBSITE, PART_WEBSITES } from "@/lib/exhibitions";
 
 // ── Book geometry ─────────────────────────────────────────────────────────────
 // US Letter trim so the PDF prints 1:1 on a home/office printer, and matches the standard
@@ -368,7 +368,10 @@ const CANONICAL_SECTION_TITLE: Record<string, { en: string; zh?: string }> = {
  * moves up into the eyebrow as the attribution. */
 const CREDITS_TITLE = { en: "Exhibitions and Awards", zh: "展览与奖项" };
 
-type ExhibitionGroupChunk = { key: string; entries: { en: string; zh: string }[]; continued: boolean };
+/** A credits entry; website lines carry `url` + `nameKey` instead of the
+ * en/zh pair (their printed name follows the named section's title). */
+type ExhibitionChunkEntry = { en: string; zh: string; url?: string; nameKey?: string };
+type ExhibitionGroupChunk = { key: string; entries: ExhibitionChunkEntry[]; continued: boolean };
 /** Page budgets in inches for the credits lists, from the .bk-exhibitions
  * metrics (page content height 9.15in; first page also pays the list's top
  * margin and the part head, continuation pages only the top margin). Entry
@@ -377,13 +380,25 @@ type ExhibitionGroupChunk = { key: string; entries: { en: string; zh: string }[]
 const EXHIBITIONS_FIRST_PAGE_IN = 7.55;
 const EXHIBITIONS_CONT_PAGE_IN = 8.55;
 const EXHIBITIONS_GROUP_HEAD_IN = 0.92;
-const exhibitionEntryIn = (e: { en: string; zh: string }): number =>
-  Math.ceil(e.en.length / 82) * 0.219 + Math.ceil(e.zh.length / 50) * 0.201 + 0.26;
+const exhibitionEntryIn = (e: ExhibitionChunkEntry): number =>
+  e.url
+    ? 0.52
+    : Math.ceil(e.en.length / 82) * 0.219 + Math.ceil(e.zh.length / 50) * 0.201 + 0.26;
 
 function partExhibitionChunks(part: number): ExhibitionGroupChunk[][] {
-  const groups = (PART_SECTIONS[part] ?? [])
+  const groups: { key: string; entries: ExhibitionChunkEntry[] }[] = (PART_SECTIONS[part] ?? [])
     .filter((k) => EXHIBITIONS[k]?.length)
     .map((k) => ({ key: k, entries: EXHIBITIONS[k] }));
+  // The part's website lines stand as the credits list's last group,
+  // after every exhibition and award entry (her direction, 2026-11-09);
+  // the chunker flows the group to the next page when it no longer fits.
+  const sites = PART_WEBSITES[part] ?? [];
+  if (sites.length) {
+    groups.push({
+      key: "__websites__",
+      entries: sites.map((s) => ({ en: "", zh: "", url: s.url, nameKey: s.key })),
+    });
+  }
   const pages: ExhibitionGroupChunk[][] = [];
   let cur: ExhibitionGroupChunk[] = [];
   let budget = EXHIBITIONS_FIRST_PAGE_IN;
@@ -2682,6 +2697,18 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 );
               })}
             </ul>
+            {spec.chapter.key === "series:interview" && (
+              <div className="bk-exhibitions-group">
+                <h4 className="bk-exhibitions-subhead shop-title">网站 · Websites</h4>
+                <ul>
+                  <li>
+                    <span className="bk-exhibitions-en">
+                      {INTERVIEW_WEBSITE.name} — {INTERVIEW_WEBSITE.url}
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
         </Page>
       );
@@ -2708,6 +2735,15 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         const ch = chapters.find((c) => c.key === key);
         return stackedPair(canon?.en ?? ch?.titleEn ?? ch?.title ?? key, canon?.zh ?? ch?.titleZh);
       };
+      /** One-line section name for the website lines: EN · 中文, from the
+       * same canonical sources as the group heads above. */
+      const sectionName = (key: string) => {
+        const canon = CANONICAL_SECTION_TITLE[key];
+        const ch = chapters.find((c) => c.key === key);
+        const en = canon?.en ?? ch?.titleEn ?? ch?.title ?? key;
+        const zh = canon?.zh ?? ch?.titleZh;
+        return zh ? `${en} · ${zh}` : en;
+      };
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
           <div className="bk-eyebrow">{[partTitle.zh, partTitle.en].filter(Boolean).join(" · ")}</div>
@@ -2717,9 +2753,22 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             )}
             {groups.map((g) => (
               <div className="bk-exhibitions-group" key={`${g.key}${g.continued ? "-cont" : ""}`}>
-                <h4 className="bk-exhibitions-subhead shop-title">{groupTitle(g.key)}</h4>
+                {g.key === "__websites__" ? (
+                  <h4 className="bk-exhibitions-subhead shop-title">网站 · Websites</h4>
+                ) : (
+                  <h4 className="bk-exhibitions-subhead shop-title">{groupTitle(g.key)}</h4>
+                )}
                 <ul>
                   {g.entries.map((e, i) => {
+                    if (e.url) {
+                      return (
+                        <li key={i}>
+                          <span className="bk-exhibitions-en">
+                            {sectionName(e.nameKey ?? "")} — {e.url}
+                          </span>
+                        </li>
+                      );
+                    }
                     const en = exhibitionParts(e.en);
                     const zh = exhibitionParts(e.zh);
                     return (
