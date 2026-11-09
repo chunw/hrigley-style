@@ -1196,23 +1196,38 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
-.bk-motto {
-  margin-top: 1.9in;
+/* ── Quiet pages ─────────────────────────────────────────────────────────────
+   The small-type page from the old printed book — her photograph of
+   its p. 30, approved again 2026-11-09: a short rule, then the text
+   set small in the serif, its line-height opened to 2, right-aligned
+   in a narrow measure, alone in the page's upper-middle field. Used
+   by the Spirit chapter's intro page (the "motto" page spec) and by
+   aphorisms flagged quiet (theme, keep). The metrics revive the
+   retired .bk-motto-body: 0.135in, line-height 2, max-width 4.7in,
+   #44403c. */
+.bk-quiet {
+  margin-top: 2.6in;
+  margin-left: auto;
+  max-width: 4.7in;
+  text-align: right;
+  font-family: "Cormorant Garamond", "Zhuque Fangsong (technical preview)", "Zhuque Fangsong", Georgia, serif;
+  color: #44403c;
 }
 
-.bk-motto-q {
-  font-family: var(--serif);
-  font-size: 0.4in;
-  line-height: 1.32;
-  max-width: 5.4in;
+.bk-quiet-rule {
+  width: 0.85in;
+  margin: 0 auto 0.55in;
+  border-top: 1px solid #44403c;
 }
 
-.bk-motto-body {
-  margin-top: 0.5in;
+.bk-quiet-p {
+  margin: 0;
   font-size: 0.135in;
   line-height: 2;
-  max-width: 4.7in;
-  color: #44403c;
+}
+
+.bk-quiet-p + .bk-quiet-p {
+  margin-top: 0.38in;
 }
 
 .bk-contents {

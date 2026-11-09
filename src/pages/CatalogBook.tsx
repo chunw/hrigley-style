@@ -83,6 +83,7 @@ type PageSpec =
   | { kind: "plateGrid"; chapter: Chapter; entries: { item: CatalogItem; plate: number }[] }
   | { kind: "bleed"; half: "left" | "right"; chapter: Chapter; item: CatalogItem }
   | { kind: "aphorism"; half: "left" | "right"; aphorism: Aphorism }
+  | { kind: "motto"; chapter: Chapter }
   | { kind: "about"; chunk: number }
   | { kind: "collage"; chunk: number }
   | { kind: "reverse-index"; chunk: number }
@@ -165,9 +166,14 @@ const indentItem = (item: EssayItem, end = false): EssayItem => ({
  *  Nothing is written for the slot. Chapters whose book text carries no such
  *  line (Still Things, Unfinished Archive) get none. */
 const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
+  // Spirit keeps its title spread, but its sentence stands on its own
+  // quiet page inside the chapter (her direction, 2026-11-09 — the
+  // small-type page from her screenshot of the old book, its p. 30):
+  // the empty entry holds the spread open with no sentence printed on
+  // it. The sentence itself lives in SPIRIT_QUIET_TEXT below.
   spirit: {
-    en: "This book is more than a retrospective. It is an argument for slowness, demanding the kind of looking that contemporary life rarely permits.",
-    zh: "这本书不只是一次回顾。它为缓慢辩护，要求一种当代生活难得允许的凝视。",
+    en: "",
+    zh: "",
   },
   remains: {
     en: "The figurines have outlasted an empire. They will probably outlast the video call.",
@@ -252,6 +258,15 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     en: "Art, for me, is not just a form of expression but a mode of exploration and discovery.",
     zh: "对我来说，艺术不只是一种表达方式，更是一种探索与发现的方式。",
   },
+};
+
+/** The Spirit chapter's sentence, standing alone on a quiet page right
+ *  after the chapter's opener spread (the "motto" page spec in
+ *  paginate()). Verbatim — it is the chapter's former opener epigraph,
+ *  moved, not rewritten. */
+const SPIRIT_QUIET_TEXT = {
+  en: "This book is more than a retrospective. It is an argument for slowness, demanding the kind of looking that contemporary life rarely permits.",
+  zh: "这本书不只是一次回顾。它为缓慢辩护，要求一种当代生活难得允许的凝视。",
 };
 
 /** Exhibition lines are free text carrying their date at the end; pull the
@@ -494,15 +509,21 @@ interface Aphorism {
   zh?: string;
   /** Longer breathing texts (a short paragraph, not one sentence) set smaller. */
   long?: boolean;
+  /** Quiet pages (her direction, 2026-11-09): the spread is set small
+   *  like the old book's motto page — a short rule, small serif type,
+   *  the languages stacked on the spread's left page, its right page
+   *  left empty. See the .bk-quiet styles. */
+  quiet?: boolean;
 }
 
 const APHORISMS: Record<string, Aphorism> = {
   "what-remains": { id: "what-remains", en: "What remains?", zh: "什么能留下？" },
   journeys: { id: "journeys", en: "The journeys end. The moments remain.", zh: "旅程一次次散场，这些瞬间留了下来。" },
-  keep: { id: "keep", en: "I keep what is about to disappear." },
+  keep: { id: "keep", en: "I keep what is about to disappear.", quiet: true },
   "human-touch": { id: "human-touch", en: "The 'human touch' remains a refuge, a place machines cannot tread." },
   theme: {
     id: "theme",
+    quiet: true,
     en: "The theme of this book is what remains, and its method is the archive.",
     zh: "留下了什么，是这本书的主题；档案，是它的方法。",
   },
@@ -870,6 +891,12 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       if (!nextIsVerso()) specs.push({ kind: "blank" });
       specs.push({ kind: "opener", half: "left", chapter });
       specs.push({ kind: "opener", half: "right", chapter });
+    }
+    // The Spirit chapter's sentence stands on its own quiet page, right
+    // after the opener spread, before the chapter's text and plates
+    // (her direction, 2026-11-09; the text is SPIRIT_QUIET_TEXT).
+    if (chapter.key === "spirit") {
+      specs.push({ kind: "motto", chapter });
     }
     const essayCount = essayChunkCounts[chapter.key] ?? (chapter.seriesOnly ? 0 : 1);
     // Illustrated chapters with plates anchored inside the essay flow (see
@@ -1443,6 +1470,8 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `opener:${spec.chapter.key}:${spec.half}`;
     case "aphorism":
       return `aphorism:${spec.aphorism.id}:${spec.half}`;
+    case "motto":
+      return `motto:${spec.chapter.key}`;
     case "plate":
       // Stable by work, not by sequence number (her exports, 2026-11-08:
       // backgrounds keyed to plate numbers silently retargeted other
@@ -2450,6 +2479,23 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // top-right. Plain white ground (the rust-and-cream full ground was
       // retired the same day: the cover, title page and part pages already
       // use it too much) — the only rust on the page is the question mark.
+      // Quiet aphorisms (her direction, 2026-11-09) leave the poster
+      // tiers below: the whole sentence, both languages stacked, is set
+      // small on the spread's left page in the motto-page treatment
+      // (.bk-quiet); the right page stays empty.
+      if (a.quiet) {
+        return (
+          <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-aphorism bk-aphorism-${spec.half} bk-aph-${a.id} bk-aphorism-quiet${bgImgCls}`}>{bgImgLayer}
+            {spec.half === "left" && (
+              <div className="bk-quiet">
+                <div className="bk-quiet-rule" />
+                {a.en && <p className="bk-quiet-p">{a.en}</p>}
+                {a.zh && <p className="bk-quiet-p">{a.zh}</p>}
+              </div>
+            )}
+          </Page>
+        );
+      }
       // Size tiers keep the longer sentences and the one paragraph-length
       // text readable on one page.
       const enTier = a.long ? "para" : (a.en ?? "").length <= 24 ? "huge" : "big";
@@ -2785,6 +2831,23 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             ))}
           </div>
           <Folio number={number} tag={`${b.title} | An Index of What Remains · 反向索引`} />
+        </Page>
+      );
+    }
+
+    case "motto": {
+      // The Spirit chapter's quiet page (her direction, 2026-11-09):
+      // its sentence alone on a white page, set small in the treatment
+      // of the old book's p. 30 — see the .bk-quiet styles.
+      const { chapter } = spec;
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-motto-page${bgImgCls}`}>{bgImgLayer}
+          <div className="bk-quiet">
+            <div className="bk-quiet-rule" />
+            <p className="bk-quiet-p">{SPIRIT_QUIET_TEXT.en}</p>
+            <p className="bk-quiet-p">{SPIRIT_QUIET_TEXT.zh}</p>
+          </div>
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
         </Page>
       );
     }
