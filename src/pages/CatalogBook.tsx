@@ -582,7 +582,10 @@ const withRustQ = (text: string) =>
 /** Aphorism spreads placed immediately before these chapters. The first
  * one ("What remains?") goes after the front matter, before chapter one. */
 const APHORISM_BEFORE_CHAPTER: Record<string, string> = {
-  "series:immemory": "human-touch",
+  // Her direction, 2026-11-09: the "human-touch" aphorism spread before
+  // IMMEMORY is deleted — the binding is removed so the spread is never
+  // pushed. (The sentence still stands inside the Spirit essay, where it
+  // is body text, not an aphorism page.)
   "series:interview": "theme",
   "series:negotiated": "cover-story",
 };
