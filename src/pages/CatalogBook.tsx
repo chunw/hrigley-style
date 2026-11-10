@@ -82,6 +82,7 @@ type PageSpec =
   | { kind: "part-exhibitions"; part: number; chunk: number }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
   | { kind: "plateGrid"; chapter: Chapter; entries: { item: CatalogItem; plate: number }[] }
+  | { kind: "plateSpread"; half: "left" | "right"; chapter: Chapter; entries: { item: CatalogItem; plate: number }[] }
   | { kind: "bleed"; half: "left" | "right"; chapter: Chapter; item: CatalogItem }
   | { kind: "aphorism"; half: "left" | "right"; aphorism: Aphorism }
   | { kind: "motto"; chapter: Chapter; text: { en: string; zh: string }; keySuffix?: string }
@@ -805,6 +806,23 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     specs.push({ kind: "aphorism", half: "left", aphorism: a });
     specs.push({ kind: "aphorism", half: "right", aphorism: a });
   };
+  // IMMEMORY's pandemic journal plates are the artist's informal
+  // handnotes, not formal works (her direction, 2026-11-09): they no
+  // longer take a page each. A contiguous run of them is packed into
+  // dense grid fields that fill whole spreads — one continuous canvas
+  // across both pages, up to 18 cells (6 x 3) per spread, each image
+  // keeping only its small title + meta caption.
+  const isJournalPlate = (chapter: Chapter, item: CatalogItem) =>
+    chapter.key === "series:immemory" && item.image_url.includes("/book/immemory/journal-");
+  const JOURNAL_PER_SPREAD = 18;
+  const pushJournalRun = (chapter: Chapter, run: { item: CatalogItem; plate: number }[]) => {
+    for (let i = 0; i < run.length; i += JOURNAL_PER_SPREAD) {
+      const entries = run.slice(i, i + JOURNAL_PER_SPREAD);
+      if (!nextIsVerso()) specs.push({ kind: "blank" });
+      specs.push({ kind: "plateSpread", half: "left", chapter, entries });
+      specs.push({ kind: "plateSpread", half: "right", chapter, entries });
+    }
+  };
 
   specs.push({ kind: "title" });
   specs.push({ kind: "colophon" });
@@ -973,8 +991,20 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         specs.push({ kind: "essay", chapter, chunk: emitted });
         emitted++;
       }
-      for (const { item, plate } of chapter.items) {
-        if (!anchoredUrls.has(item.image_url)) specs.push({ kind: "plate", chapter, item, plate });
+      const unanchored = chapter.items.filter(({ item }) => !anchoredUrls.has(item.image_url));
+      for (let ui = 0; ui < unanchored.length; ui++) {
+        const { item, plate } = unanchored[ui];
+        if (isJournalPlate(chapter, item)) {
+          const run: { item: CatalogItem; plate: number }[] = [];
+          while (ui < unanchored.length && isJournalPlate(chapter, unanchored[ui].item)) {
+            run.push(unanchored[ui]);
+            ui++;
+          }
+          ui--;
+          pushJournalRun(chapter, run);
+        } else {
+          specs.push({ kind: "plate", chapter, item, plate });
+        }
       }
     } else {
       // Held-back trailing essay chunks (see Chapter.essayAfterPlate) are
@@ -1025,8 +1055,19 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         }
         flushGroup();
       } else {
-        for (const { item, plate } of chapter.items) {
-          specs.push({ kind: "plate", chapter, item, plate });
+        for (let ii = 0; ii < chapter.items.length; ii++) {
+          const { item, plate } = chapter.items[ii];
+          if (isJournalPlate(chapter, item)) {
+            const run: { item: CatalogItem; plate: number }[] = [];
+            while (ii < chapter.items.length && isJournalPlate(chapter, chapter.items[ii].item)) {
+              run.push(chapter.items[ii]);
+              ii++;
+            }
+            ii--;
+            pushJournalRun(chapter, run);
+          } else {
+            specs.push({ kind: "plate", chapter, item, plate });
+          }
           if (holdBack && item.image_url === holdBack.imageUrl) emitHeldBack();
         }
       }
@@ -1539,6 +1580,8 @@ function pageKeyOf(spec: PageSpec): string | null {
       // in Part 1 would have repainted six other pages). The image path
       // is unique per work and survives any reorder.
       return `plate:${spec.item.image_url}`;
+    case "plateSpread":
+      return `plateSpread:${spec.chapter.key}:${spec.entries[0]?.item.image_url ?? ""}:${spec.half}`;
     case "bleed":
       return `bleed:${spec.chapter.key}:${spec.half}`;
     case "about":
@@ -2716,6 +2759,35 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 </div>
               </div>
             ))}
+          </div>
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+        </Page>
+      );
+    }
+
+    case "plateSpread": {
+      // One continuous dense grid field across the whole spread (the
+      // opener/bleed canvas trick): each half renders the same canvas,
+      // shifted, so the journal handnotes pack both pages edge to edge.
+      // Cells carry only the small title + meta caption — the plates'
+      // shared boilerplate description is not repeated here.
+      const { chapter, entries } = spec;
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-plate-spread bk-plate-spread-${spec.half}${bgImgCls}`}>{bgImgLayer}
+          <div className="bk-spread-canvas">
+            <div className="bk-journal-grid">
+              {entries.map(({ item }) => (
+                <div className="bk-journal-cell" key={item.image_url}>
+                  <div className="bk-journal-frame">
+                    <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
+                  </div>
+                  <div className="bk-journal-caption">
+                    <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
+                    {item.metaLine && <div className="bk-caption-meta">{item.metaLine}</div>}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
           <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
         </Page>
