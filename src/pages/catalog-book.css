@@ -2066,6 +2066,61 @@
   margin-top: 0.28in;
 }
 
+/* Back cover: 关于作者 bio block — her official-site Chinese bio as its own
+   block under a small heading, set apart from the blurb above by a blank
+   gap (local mock, 2026-11-10). Heading follows the back cover's own small
+   type idiom (cf. .bk-face-sub: 8pt, wide letterspacing, muted white). */
+.bk-back-bio {
+  margin-top: 0.55in;
+}
+
+.bk-back-bio-head {
+  font-size: 8pt;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 0 0.24in;
+}
+
+/* The full bio at blurb size (10pt/1.7) overruns the barcode band; the
+   bio block steps down so the whole back cover fits above the barcode
+   row. Her overflow fix (2026-11-10): shrink type, floor 8pt — final
+   8pt/1.475, both columns, measured EN bottom 9.35in vs the 9.40in band. */
+.bk-back-bio .bk-back-blurb {
+  font-size: 8pt;
+  line-height: 1.475;
+}
+
+/* Back cover two-column layout (mock, 2026-11-10): English left, Chinese
+   right, top-aligned, one gutter. Barcode stays lower right — the foot
+   row right-aligns its single box (the left studio mark was deleted
+   2026-11-09, leaving space-between with nothing to push against). */
+.bk-back-cols {
+  display: flex;
+  gap: 0.35in;
+  align-items: flex-start;
+}
+
+.bk-back-col {
+  min-width: 0;
+}
+
+/* Her width correction (2026-11-10): at 50/50 the English column still
+   overflowed visually, so the split widens English to ≈57% / Chinese
+   ≈43% (gutter unchanged). Measured at 57/43: EN column bottom 8.63in,
+   ZH column bottom 7.98in — both clear of the 9.40in barcode band. */
+.bk-back-col:first-child {
+  flex: 57 1 0;
+}
+
+.bk-back-col:last-child {
+  flex: 43 1 0;
+}
+
+.bk-back-foot {
+  justify-content: flex-end;
+}
+
 /* Interview questions / spirit background group heads stand as their own blocks. */
 .bk-essay-q {
   margin-top: 1.6em;

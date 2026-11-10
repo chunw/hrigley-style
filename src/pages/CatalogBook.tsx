@@ -2252,26 +2252,61 @@ export function FrontCoverFace({ ctx }: { ctx: BookContext }) {
 
 
 export function BackCoverFace() {
-  // Back cover, after the Nauman-style reference she chose (2026-10-18): one text
-  // block high on the page, a large quiet field below, and a blank white barcode
-  // box at lower right (the ISBN is still to come). The studio imprint line that
-  // sat at lower left is deleted (her direction, 2026-11-09).
-  // The first sentence carries who she is, so the book explains itself.
+  // Back cover, after the Nauman-style reference she chose (2026-10-18): text
+  // high on the page, a large quiet field below, and a blank white barcode
+  // box at lower right (the ISBN is still to come). The studio imprint line
+  // that sat at lower left is deleted (her direction, 2026-11-09).
+  // Layout mock (2026-11-10, local only, awaiting her approval): two columns,
+  // English left / Chinese right, the English following the Chinese structure
+  // （英文按照中文来） — blurb first (image sentences, then materials/theme),
+  // then the author bio under a small heading in each language. The blurb no
+  // longer carries the identity sentence; that role moved to the bio block.
+  // EN bio = the official site's CURRENT EN About, pulled 2026-11-10 from
+  // chunwangart main about.html (inline i18n aboutText, links stripped);
+  // ZH bio = the site's CN About, both verbatim.
   return (
     <div className="bk-face bk-face-back">
-      <div className="bk-back-body">
-        <p className="bk-back-blurb">
-          Remains gathers works by Chun Wang from 2017 to 2026, a multidisciplinary artist and curator based in New York City, across painting, photography, ceramics and objects, web-based projects, and live performance. Ancient figurines clock back in for video meetings. After the show, the red velvet seats sit empty in the dark, waiting for the next one. Search histories, pandemic testimony, and fleeting performances are gathered before they can disappear. The materials change from series to series. The habit underneath them does not. The theme of this book is what remains, and its method is the archive, assembled slowly, in print, the older technology of staying.
-        </p>
-        <p className="bk-back-blurb">
-          古代陶俑重新上岗，去开视频会议。散场之后，红丝绒座椅在暗处空着，等下一场。搜索记录、疫情证言、转瞬即逝的表演，都在消失之前被收了进来。
-        </p>
-        <p className="bk-back-blurb">
-          材料从一个系列到下一个系列一直在变。材料之下的习惯不变。这本书问的是：什么留得下来？她的方法是档案。用印刷慢慢装订成书，一种更古老的存留技术。
-        </p>
-        <p className="bk-back-blurb">
-          《Remains》收录了王淳 2017 至 2026 年的作品。她是艺术家，也是策展人，现居纽约。她的创作包括绘画、摄影、陶艺与物件，还有网络项目和现场表演。
-        </p>
+      <div className="bk-back-body bk-back-cols">
+        <div className="bk-back-col">
+          <p className="bk-back-blurb">
+            Ancient figurines clock back in for video meetings. After the show, the red velvet seats sit empty in the dark, waiting for the next one. Search histories, pandemic testimony, and fleeting performances are gathered before they can disappear.
+          </p>
+          <p className="bk-back-blurb">
+            The materials change from series to series. The habit underneath them does not. The theme of this book is what remains, and its method is the archive, assembled slowly, in print, the older technology of staying.
+          </p>
+          <div className="bk-back-bio">
+            <h3 className="bk-back-bio-head">About the Author</h3>
+            <p className="bk-back-blurb">
+              Chun Wang (b. 1991) is a multidisciplinary artist, technologist, and curator based in New York City. Her practice spans photography, painting, art objects, and digital works. With the archive as her method, she moves among ancient remains, everyday remnants, and digital records, tracing how things are preserved, forgotten, and reactivated. She was previously Lead Creative Technologist and Strategy Researcher at Harvard University’s FAS CAMLab.
+            </p>
+            <p className="bk-back-blurb">
+              Negotiated Intelligence: Unearthing Power Dynamics in Human-AI Co-Creation and IMMEMORY: On COVID-19, both initiated, curated, and produced by her, have received international recognition: the former is an official pavilion of the seventh edition of the Wrong Biennale and received a Silver Award in the Arts and Culture Websites category at the 21st w3 Awards; the latter was an Official Nominee in the Cultural Blog/Website category at the 25th Webby Awards. Her curatorial work consistently centers on individuals in the midst of the upheavals of their time, tracing how they comprehend, absorb, and transform the disruption around them.
+            </p>
+            <p className="bk-back-blurb">
+              Her photography has also won recognition from the International Photography Awards (IPA), the London International Creative Competition (LICC), the Siena International Photo Awards, the International Color Awards, and the Moscow International Foto Awards, among others. Her work has also been featured in print, including Artsin Square’s 5x7 Photobook (Vol. 1, 2025; Vol. 2, 2026) and the Passepartout Photo Prize Catalogue. Her work has been exhibited at the United Nations Headquarters in New York, SFMOMA, Harvard University, and the Anderson Collection at Stanford University, and has also been presented in Shanghai, London, Istanbul, Budapest, and Kitakyushu, among other places.
+            </p>
+          </div>
+        </div>
+        <div className="bk-back-col">
+          <p className="bk-back-blurb">
+            古代陶俑重新上岗，去开视频会议。散场之后，红丝绒座椅在暗处空着，等下一场。搜索记录、疫情证言、转瞬即逝的表演，都在消失之前被收了进来。
+          </p>
+          <p className="bk-back-blurb">
+            材料从一个系列到下一个系列一直在变。材料之下的习惯不变。这本书问的是：什么留得下来？她的方法是档案。用印刷慢慢装订成书，一种更古老的存留技术。
+          </p>
+          <div className="bk-back-bio">
+            <h3 className="bk-back-bio-head">关于作者</h3>
+            <p className="bk-back-blurb">
+              王淳 Chun Wang（1991年生）是一位现居纽约的多学科艺术家、工程师与策展人。她的创作横跨摄影、绘画、艺术物件与数字作品。她以档案为方法，在古代遗存、日常残余与数字记录之间，追踪事物如何被保存、遗忘，又被重新激活。她曾任哈佛大学文理学院 CAMLab（FAS CAMLab）首席创意技术专家与战略研究员。
+            </p>
+            <p className="bk-back-blurb">
+              她发起、策展并制作的《Negotiated Intelligence: Unearthing Power Dynamics in Human-AI Co-Creation》与《IMMEMORY: On COVID-19》均获国际奖项：前者为The Wrong Biennale第七届官方展馆，并获第 21 届 w3 Awards艺术与文化类网站银奖；后者获第 25 届 Webby 奖文化类网站官方提名。她的策展工作始终以时代动荡中的个体为核心，记录他们理解、吸纳并转化外部冲击的历程。
+            </p>
+            <p className="bk-back-blurb">
+              其摄影多次获奖，包括国际摄影奖（IPA）、伦敦国际创意大赛（LICC）、锡耶纳国际摄影奖、国际色彩奖与莫斯科国际摄影奖等。她的作品还收录于Artsin Square《5x7 Photobook》（第一辑，2025；第二辑，2026）与《Passepartout 摄影奖图录》等出版物。作品曾在纽约联合国总部、旧金山现代艺术博物馆（SFMOMA）、哈佛大学与斯坦福大学安德森收藏馆展出，并在上海、伦敦、伊斯坦布尔、布达佩斯与北九州等地呈现。
+            </p>
+          </div>
+        </div>
       </div>
       <div className="bk-back-foot">
         <div className="bk-back-barcode" aria-hidden="true" />
