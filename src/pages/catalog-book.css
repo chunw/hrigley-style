@@ -1514,6 +1514,64 @@
   margin-top: 2px;
 }
 
+/* IMMEMORY journal handnotes: one dense grid field filling a whole
+   spread (her direction, 2026-11-09 — informal notes, packed tight,
+   not one formal plate page each). The field sits on the shared
+   spread canvas; the left page shows its left half, the right page is
+   shifted by one trim width. */
+.bk-plate-spread-left .bk-spread-canvas {
+  left: 0;
+}
+
+.bk-plate-spread-right .bk-spread-canvas {
+  left: calc(-1 * var(--trim-w));
+}
+
+.bk-journal-grid {
+  position: absolute;
+  inset: 0;
+  padding: 0.3in 0.32in 0.68in;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 0.16in 0.15in;
+}
+
+.bk-journal-cell {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.bk-journal-frame {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.bk-journal-frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.bk-journal-caption {
+  margin-top: 0.06in;
+}
+
+.bk-journal-caption .bk-caption-title {
+  font-size: 7pt;
+  line-height: 1.25;
+}
+
+.bk-journal-caption .bk-caption-meta {
+  font-size: 6.5pt;
+  margin-top: 1px;
+}
+
 .bk-caption {
   display: grid;
   grid-template-columns: 0.75in 1fr;
