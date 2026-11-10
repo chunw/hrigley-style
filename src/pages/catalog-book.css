@@ -301,7 +301,7 @@
    positioned and z-index applies without touching position or layout —
    text, captions, folios and plates all clear the image. The two editor
    control clusters keep their own z-index 30 and are excluded. */
-.bk-page.bk-has-bgimg > :not(.bk-bgimg-layer):not(.bk-pagebg-ctl):not(.bk-pagebgimg-ctl):not(.bk-pagenote-ctl) {
+.bk-page.bk-has-bgimg > :not(.bk-bgimg-layer):not(.bk-pagebg-ctl):not(.bk-pagebgimg-ctl) {
   z-index: 1;
 }
 
@@ -310,50 +310,6 @@
   top: calc(var(--bleed) + 0.52in);
   right: 0.16in;
   z-index: 30;
-}
-
-/* Page notes (edit mode): the third button in the per-page control stack,
-   and the rust "noted" state that marks a page carrying a note. */
-.bk-pagenote-ctl {
-  position: absolute;
-  top: calc(var(--bleed) + 0.88in);
-  right: 0.16in;
-  z-index: 30;
-}
-
-.bk-pagenote-on {
-  background: #b3402a;
-  border-color: #b3402a;
-  color: #fffdf8;
-}
-
-/* Page-notes overview (edit mode, screen only): the list under the
-   toolbar — anchor key, current folio, note text; jump to the page,
-   edit or delete in place. */
-.bk-notes-panel {
-  background: #fffdf8;
-  border-bottom: 2px solid #26221c;
-  padding: 10px 20px 12px;
-}
-
-.bk-notes-head {
-  font-size: 11px;
-  margin-bottom: 4px;
-}
-
-.bk-notes-row {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  padding: 6px 0;
-  border-top: 1px dashed rgba(0, 0, 0, 0.18);
-}
-
-.bk-notes-text {
-  flex: 1;
-  font-size: 13px;
-  line-height: 1.5;
-  white-space: pre-wrap;
 }
 
 /* Background-image picker panel (edit mode, screen only) */
@@ -547,8 +503,6 @@
 @media print {
   .bk-pagebg-ctl,
   .bk-pagebgimg-ctl,
-  .bk-pagenote-ctl,
-  .bk-notes-panel,
   .bk-editor-panel,
   .bk-editor-msg,
   .bk-eyedrop-chip {
