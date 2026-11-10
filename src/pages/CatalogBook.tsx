@@ -353,7 +353,7 @@ function exhibitionParts(text: string): { year: string; rest: string } {
 const PART_SECTIONS: Record<number, string[]> = {
   1: ["remains", "residuals", "stillthings", "road", "spirit"],
   2: ["innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography"],
-  3: ["series:unfinished", "series:google", "series:feedscanner", "series:earlyline", "series:artempath"],
+  3: ["series:unfinished", "series:google", "series:feedscanner", "series:artempath"],
   4: ["series:immemory", "series:cavedance", "series:negotiated"],
   5: ["shop"],
 };
@@ -674,7 +674,6 @@ const REVERSE_INDEX = {
         { zh: "会议上的一句「无可奉告」", en: "“nothing to contribute,” said at a meeting", to: "遗迹 Remains" },
         { zh: "先于陶俑消失的语言", en: "the language that vanished before the figurine did", to: "前言 Preface" },
         { zh: "机械臂写到一半的「我是人……」", en: "“I am huma—”, by a robot arm", to: "协商智能 Negotiated Intelligence" },
-        { zh: "她自己的跟评，断在半句", en: "her own comment, breaking off mid-sentence", to: "消失的童年 The Loss of Childhood" },
         { zh: "没人回答的问题：我们还能成为谁", en: "unanswered: who can we still be?", to: "协商智能 Negotiated Intelligence" },
       ],
     },
@@ -915,9 +914,8 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // chapter's name duplicates the contents and the head of the
     // chapter's own text, so section openers print only where the
     // chapter's epigraph gives the spread content of its own. Section
-    // chapters without an epigraph (Still Things, the Life section,
-    // The Loss of Childhood) open directly with their first text or
-    // plate page.
+    // chapters without an epigraph (Still Things, the Life section)
+    // open directly with their first text or plate page.
     // Her direction (2026-11-08, evening — supersedes the same-day rule
     // for part heads): every part opens with the rust-brown opener
     // spread, the Inner Wilderness pattern, whether or not its head
@@ -2300,7 +2298,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const PART_OF: Record<string, number> = {
         spirit: 1, remains: 1, residuals: 1, stillthings: 1, road: 1,
         innerwilderness: 2, deathvalley: 2, sahara: 2, highlands: 2, theater: 2, photography: 2,
-        "series:unfinished": 3, "series:google": 3, "series:feedscanner": 3, "series:earlyline": 3, "series:artempath": 3,
+        "series:unfinished": 3, "series:google": 3, "series:feedscanner": 3, "series:artempath": 3,
         "series:immemory": 4, "series:cavedance": 4, "series:negotiated": 4,
         shop: 5,
       };
@@ -3233,7 +3231,7 @@ function useBookModel(args: {
       "remains", "residuals", "stillthings", "road", "spirit",
       "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography",
       "series:unfinishedpart", "series:unfinished", "series:google",
-      "series:feedscanner", "series:earlyline", "series:artempath",
+      "series:feedscanner", "series:artempath",
       "series:triptych", "series:immemory", "series:cavedance", "series:negotiated",
       "shop",
       "series:interview",
@@ -3433,25 +3431,6 @@ function useBookModel(args: {
             }
           } else {
             essayChunks[chapter.key] = langChunks(enBlocks, zhBlocks);
-          }
-        } else if (s?.id === "earlyline" && (enT || zhT)) {
-          // The placeholder section's plate, a full-page screenshot of the
-          // Loss of Childhood series website, stands between the two works:
-          // the Mundane Details text, from its heading on, is held back and
-          // emitted right after the plate (see Chapter.essayAfterPlate). The
-          // split is computed from the field text itself, so inline text
-          // edits keep the arrangement.
-          const splitAtMundane = (t: string, edit: string) => {
-            const blocks = t ? pBlocks(asParas(t)).map((html) => ({ html, edit })) : [];
-            const idx = blocks.findIndex((b) => b.html.includes("<strong>The Mundane Details of Life</strong>"));
-            return idx < 0 ? { lead: blocks, tail: [] as typeof blocks } : { lead: blocks.slice(0, idx), tail: blocks.slice(idx) };
-          };
-          const enSplit = splitAtMundane(enT, "series:earlyline:en");
-          const zhSplit = splitAtMundane(zhT, "series:earlyline:zh");
-          const trailing = langChunks(enSplit.tail, zhSplit.tail);
-          essayChunks[chapter.key] = [...langChunks(enSplit.lead, zhSplit.lead), ...trailing];
-          if (enSplit.tail.length > 0 || zhSplit.tail.length > 0) {
-            chapter.essayAfterPlate = { imageUrl: "/book/earlyline/lost-series-page.png", trailingChunks: trailing.length };
           }
         } else {
           essayChunks[chapter.key] =
