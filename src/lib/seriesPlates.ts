@@ -15,10 +15,12 @@ const plate = (
   zh: string,
   img: string,
   titleZh?: string,
+  metaZh?: string,
 ): CatalogItem => ({
   title,
   ...(titleZh ? { titleZh } : {}),
   metaLine,
+  ...(metaZh ? { metaZh } : {}),
   year,
   description: `<p>${en}<br />${zh}</p>`,
   category: "Series plates",
@@ -196,18 +198,6 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
       "From the pandemic journal page", "2020 · chunwang.me", "2020",
       "An image from the artist's pandemic journal page (February 24, 2020), included here as a placeholder plate.",
       "疫情日志页配图（2020 年 2 月 24 日），此处为占位图版。",
-      "/book/immemory/journal-08.jpg",
-    ),
-    plate(
-      "From the pandemic journal page", "2020 · chunwang.me", "2020",
-      "An image from the artist's pandemic journal page (February 24, 2020), included here as a placeholder plate.",
-      "疫情日志页配图（2020 年 2 月 24 日），此处为占位图版。",
-      "/book/immemory/journal-09.jpg",
-    ),
-    plate(
-      "From the pandemic journal page", "2020 · chunwang.me", "2020",
-      "An image from the artist's pandemic journal page (February 24, 2020), included here as a placeholder plate.",
-      "疫情日志页配图（2020 年 2 月 24 日），此处为占位图版。",
       "/book/immemory/journal-10.jpg",
     ),
     plate(
@@ -265,12 +255,6 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
       "A page from the curator's diary, June 23, 2025: on creative autonomy and the tyranny of efficiency.",
       "策展人日记的一页，2025 年 6 月 23 日，写创作自主与效率的暴政。",
       "/book/negotiated/diary-page.jpg",
-    ),
-    plate(
-      "Awwwards nominee page", "2026 · Awwwards", "2026",
-      "The pavilion site on its Awwwards nominee page: “When machines learn to make art, who can we still be?”",
-      "展亭网站在 Awwwards 提名页上的呈现：“当机器学会做艺术时，我们还能成为谁？”",
-      "/book/negotiated/awwwards-nominee.jpg",
     ),
     plate(
       "Elsewhere Gallery", "Daria Belkina · The Wrong Biennale, 7th Edition", "2025",
@@ -465,16 +449,19 @@ export const REMAINS_ORIGIN_PLATES: CatalogItem[] = [
 ];
 
 /**
- * Full-bleed spread plate for the objects chapter (her direction,
- * 2026-11-05): Pre-iPhone Era, one of the SFMOMA Submission Friday
+ * Full-bleed spread plate (her direction, 2026-11-05; moved 2026-11-10
+ * to stand immediately before the Part 5 opener spread, as the last
+ * spread of Part 4): Pre-iPhone Era, one of the SFMOMA Submission Friday
  * works, printed across two pages with no margins. The photograph is
  * the used-electronics flat lay from her project site (titled there
  * Pre-iPhone Days); she asked for the spread to be built with this
  * image and will confirm the identification on the PR.
  */
 export const PRE_IPHONE_ERA_PLATE: CatalogItem = plate(
-  "Pre-iPhone Era", "2018 · SFMOMA Submission Friday", "2018",
+  "Pre-iPhone Era", "2018 · Photography · Featured by SFMOMA", "2018",
   "Used electronics, photographed from above: a cassette Walkman, an iPod shuffle, a red compact camera, an electronic dictionary, a keypad phone, a watch and a USB drive, with a black mask at the center, joined by unspooled cassette tape.",
   "旧电子设备，俯拍：磁带随身听、iPod shuffle、红色卡片相机、电子词典、按键手机、手表和 U 盘，中间一张黑面具，被抽出的磁带连在一起。",
   "/book/sfmoma/pre-iphone-era.jpg",
+  undefined,
+  "2018 · 摄影作品 · SFMOMA 专题推荐",
 );
