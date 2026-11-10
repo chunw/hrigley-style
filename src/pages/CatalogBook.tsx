@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { createPortal } from "react-dom";
-import { ArrowLeft, ChevronLeft, ChevronRight, Printer } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Download, Printer } from "lucide-react";
 import "./catalog-book.css";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { artistBioHTML } from "@/lib/artistBio";
@@ -4349,6 +4349,39 @@ const CatalogBook = () => {
     window.print();
   };
 
+  // Download PDF (artist, 2026-11-10): the prominent reader-facing export.
+  // Always prints the standard file — part "complete", bleed off, exact
+  // 8.5×11in pages — whatever the toolbar currently shows, then restores
+  // the previous part/bleed selection once the print dialog closes.
+  const handleDownloadPdf = async () => {
+    if (!stageRef.current || preparing) return;
+    const prevPart = part;
+    const prevBleed = bleed;
+    if (prevPart !== "complete" || prevBleed) {
+      setPart("complete");
+      setBleed(false);
+      const restore = () => {
+        setPart(prevPart);
+        setBleed(prevBleed);
+      };
+      const timer = window.setTimeout(restore, 600_000);
+      window.addEventListener(
+        "afterprint",
+        () => {
+          window.clearTimeout(timer);
+          restore();
+        },
+        { once: true }
+      );
+      // Wait for the standard layout (and its @page rule) to render.
+      await new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+      );
+      await new Promise((resolve) => setTimeout(resolve, 60));
+    }
+    await handleSave();
+  };
+
   const rootStyle = {
     "--bleed": `${bleedIn}in`,
     "--spine": `${spine}in`,
@@ -4443,6 +4476,20 @@ const CatalogBook = () => {
               <Printer className="h-4 w-4" />
               {preparing ? b.preparing : b.savePdf}
             </button>
+            <div className="ml-auto flex flex-col items-end gap-1">
+              <button
+                type="button"
+                onClick={handleDownloadPdf}
+                disabled={preparing}
+                className="sans-label inline-flex items-center gap-2 text-xs tracking-widest px-4 py-2 bg-primary text-primary-foreground disabled:opacity-60"
+              >
+                <Download className="h-4 w-4" />
+                {preparing ? b.preparing : b.downloadPdf}
+              </button>
+              <span className="max-w-[340px] text-[11px] normal-case tracking-normal leading-snug text-right text-foreground/60">
+                In the dialog, choose “Save as PDF” — size, margins and backgrounds are already set. 在弹窗里选「另存为 PDF」即可，尺寸、边距和背景都已设好。
+              </span>
+            </div>
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-3 flex flex-wrap justify-between gap-2 text-[11px] uppercase tracking-[0.18em] text-foreground/60">
