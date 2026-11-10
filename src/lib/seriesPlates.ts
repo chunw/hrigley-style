@@ -433,6 +433,30 @@ export const DEATH_VALLEY_PLATES: CatalogItem[] = [1, 2, 3].map((n) => ({
 }));
 
 /**
+ * Extra plate appended at the end of the El Otro, El Mismo chapter: a
+ * black-and-white photograph from the series' puppetry portraits — a
+ * figure in a white doll dress slumped over a striped box, strings tied
+ * to her arms. The artist sent it on 2026-11-10 and directed it into the
+ * book's El Otro section, the same day it joined the series on
+ * chunwang.art. The work is untitled, like the series plate that already
+ * closes the chapter (photography id 8, which the book prints as
+ * "Untitled"), and her records give it no year or location, so the
+ * caption prints the medium line only.
+ */
+export const EL_OTRO_EXTRA_PLATES: CatalogItem[] = [
+  {
+    title: "Untitled",
+    titleZh: null,
+    metaLine: "Photography",
+    mediumZh: "摄影作品",
+    year: "",
+    category: "Inner Wilderness",
+    image_url: "/book/elotro/marionette-box.jpg",
+    fallback_image_url: "/book/elotro/marionette-box.jpg",
+  },
+];
+
+/**
  * Extra plate appended to the Remains chapter: an untitled collage dated
  * February 14, 2018, cut fragments reassembled on a single sheet. It
  * predates the Remains figurines by five years and shows the book's archive

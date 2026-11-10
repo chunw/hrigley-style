@@ -12,7 +12,7 @@ import { PAGE_BACKGROUNDS, hexToRgb, isHexPageBg, rgbToHex, type PageBgKind, typ
 import { IMAGE_EDITS } from "@/lib/imageEdits";
 import { PAGE_BACKGROUND_IMAGES, type PageBgImage } from "@/lib/pageBackgroundImages";
 import { BOOK_SERIES } from "@/lib/bookSeries";
-import { SERIES_PLATES, DEATH_VALLEY_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
+import { SERIES_PLATES, DEATH_VALLEY_PLATES, EL_OTRO_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS, PART_WEBSITES } from "@/lib/exhibitions";
@@ -3461,7 +3461,12 @@ function useBookModel(args: {
     const thItems = [...thKnown, ...["10", "11"].map(mkPhotoItem).filter((x): x is CatalogItem => !!x).map((item) => ({ item, plate: 0 }))];
     const saharaItem = mkPhotoItem("7");
     const usedPhoto = new Set([...dvItems, ...hgItems, ...thKnown]);
-    const elOtroItems = photoItems.filter((p) => !usedPhoto.has(p));
+    // Her direction (2026-11-10): the puppetry photograph she sent
+    // closes the El Otro, El Mismo chapter (see EL_OTRO_EXTRA_PLATES).
+    const elOtroItems = [
+      ...photoItems.filter((p) => !usedPhoto.has(p)),
+      ...EL_OTRO_EXTRA_PLATES.map((item) => ({ item, plate: 0 })),
+    ];
     const photoChapters: Chapter[] = photoParent
       ? [
           { key: "innerwilderness", number: 0, title: "Inner Wilderness 内在荒原", titleEn: "Inner Wilderness", titleZh: "内在荒原", descriptionHtml: "", years: "2017 – 2025", items: [], seriesTextId: "innerwilderness", partHead: true },
