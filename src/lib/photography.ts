@@ -231,7 +231,7 @@ export const photographyWorks: PhotographyWork[] = [
     titleZh: "死亡谷的倒影",
     series: "II",
     showInStorefront: false,
-    printInCatalog: true,
+    printInCatalog: false,
     year: "2017",
     medium: "Photography",
     mediumZh: "摄影作品",

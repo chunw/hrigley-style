@@ -111,7 +111,7 @@ const rawProducts = [
     currency: "USD",
     description: "Corporate Surrealism for the daily commuter and the trendsetter alike.",
     detailed_description_html: `
-  <p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank" rel="noreferrer">Official Selection</a> for 2024 London International Creative Competition (LICC) in Create/Art category, <i>Remains</i> was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions, making them perfect companions for the mundane modern office. <br>
+  <p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank" rel="noreferrer">Official Selection</a> for 2024 London International Creative Competition (LICC) in Create/Art category, <i>Remains</i> is a series made by collaging drawings on paper with digital drawings, born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions, making them perfect companions for the mundane modern office. <br>
 This tote is crafted from durable 100% cotton twill. Its sturdy cotton handles ensure comfort and resilience for frequent use. <br>
 Dimension: 35 x 35 cm</p>
     `.trim(),
@@ -143,7 +143,7 @@ Dimension: 35 x 35 cm</p>
     currency: "USD",
     description: "We have nothing to contribute to",
     detailed_description_html: `
-  <p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank" rel="noreferrer">Official Selection</a> for 2024 London International Creative Competition (LICC) in Create/Art category, <i><a href="/remains-catalog">Remains</a></i> was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions, making them perfect companions for the mundane modern office. <br>
+  <p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank" rel="noreferrer">Official Selection</a> for 2024 London International Creative Competition (LICC) in Create/Art category, <i><a href="/remains-catalog">Remains</a></i> is a series made by collaging drawings on paper with digital drawings, born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions, making them perfect companions for the mundane modern office. <br>
 This unisex oversized t-shirt is crafted from soft, premium cotton for everyday comfort. <br>
 One size.</p>
     `.trim(),
@@ -175,7 +175,7 @@ One size.</p>
     currency: "USD",
     description: "Ancient office workers, now adhesive.",
     detailed_description_html: `
-  <p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank" rel="noreferrer">Official Selection</a> for 2024 London International Creative Competition (LICC) in Create/Art category, <i><a href="/remains-catalog">Remains</a></i> was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions, making them perfect companions for the mundane modern office.</p>
+  <p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank" rel="noreferrer">Official Selection</a> for 2024 London International Creative Competition (LICC) in Create/Art category, <i><a href="/remains-catalog">Remains</a></i> is a series made by collaging drawings on paper with digital drawings, born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions, making them perfect companions for the mundane modern office.</p>
     `.trim(),
     dimensions: ``,
     edition_info: null,
@@ -205,7 +205,7 @@ One size.</p>
     currency: "USD",
     description: "Every flush is a new beginning.",
     detailed_description_html: `
-  <p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank" rel="noreferrer">Official Selection</a> for 2024 London International Creative Competition (LICC) in Create/Art category, <i>Remains</i> was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions, making them perfect companions for the mundane modern office.</p>
+  <p><a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank" rel="noreferrer">Official Selection</a> for 2024 London International Creative Competition (LICC) in Create/Art category, <i>Remains</i> is a series made by collaging drawings on paper with digital drawings, born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions, making them perfect companions for the mundane modern office.</p>
     `.trim(),
     dimensions: ``,
     edition_info: null,

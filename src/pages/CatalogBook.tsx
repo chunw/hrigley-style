@@ -174,6 +174,14 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     en: "",
     zh: "",
   },
+  // Still Things gets its opener spread (her direction, 2026-11-10):
+  // the section had none because it carried no epigraph. The empty
+  // entry holds the spread open with no sentence printed on it (the
+  // IMMEMORY/Spirit precedent) — title and number only.
+  stillthings: {
+    en: "",
+    zh: "",
+  },
   remains: {
     en: "The figurines have outlasted an empire. They will probably outlast the video call.",
     zh: "陶俑熬过了一个帝国。它们大概也将熬过视频会议。",
@@ -197,9 +205,15 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     en: "",
     zh: "",
   },
+  // Her direction, 2026-11-10: the Part 1 introduction question is
+  // deleted from the book (paintingIntroBody emptied the same day);
+  // this epigraph was that text's second sentence, printed on this
+  // same opener spread. The empty entry holds the Part 1 opener
+  // spread open with no sentence printed on it (the IMMEMORY/Spirit
+  // precedent).
   "part:afterimages": {
-    en: "What does an image keep, and what does it let go?",
-    zh: "一幅图像留住了什么，又放走了什么？",
+    en: "",
+    zh: "",
   },
   // Her direction, 2026-11-09: the sentence that stood here is deleted
   // from the book. The empty entry holds the Part 4 opener spread open
@@ -222,7 +236,7 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
   },
   highlands: {
     en: "Scottish Highlands - Heroism of the Vista.",
-    zh: "苏格兰高地 - 视域的英雄主义。",
+    zh: "苏格兰高地：视域的英雄主义。",
   },
   theater: {
     en: "Theatrical moments found on the street.",
@@ -373,7 +387,7 @@ const SECTION_PART: Record<string, number> = Object.fromEntries(
 const CANONICAL_SECTION_TITLE: Record<string, { en: string; zh?: string }> = {
   deathvalley: { en: "Reflections in the Death Valley", zh: "死亡谷" },
   sahara: { en: "Sahara from 6 to 10: An Archive", zh: "撒哈拉晚六时至早十时" },
-  highlands: { en: "Scottish Highlands - Heroism of the Vista", zh: "苏格兰高地 - 视域的英雄主义" },
+  highlands: { en: "Scottish Highlands - Heroism of the Vista", zh: "苏格兰高地：视域的英雄主义" },
 };
 
 /** Fixed title of every credits page (her direction, 2026-11-08: a part's
@@ -638,7 +652,7 @@ const REVERSE_INDEX = {
         { zh: "按钟点存下的沙漠的热", en: "desert heat, kept by the hour", to: "撒哈拉晚六时至早十时 Sahara from 6 to 10" },
         { zh: "一趟旅程散掉之后，变了的天气", en: "the weather, changed after a journey ends", to: "前言 Preface" },
         { zh: "一个没被自动化的决定的温度", en: "the warmth of a decision not automated", to: "协商智能 Negotiated Intelligence" },
-        { zh: "Quiraing 雾里的冷", en: "the cold inside the Quiraing fog", to: "苏格兰高地 - 视域的英雄主义 Scottish Highlands - Heroism of the Vista" },
+        { zh: "Quiraing 雾里的冷", en: "the cold inside the Quiraing fog", to: "苏格兰高地：视域的英雄主义 Scottish Highlands - Heroism of the Vista" },
       ],
     },
     {
@@ -898,7 +912,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // longer precedes it — the front pages are emitted right after
     // the opener spread, below, and open the section's run from
     // there.
-    const CANVA_KEPT_PAGES = [2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22];
+    const CANVA_KEPT_PAGES = [2, 3, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22];
     const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
     const CANVA_RESIDUALS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 13 && p < 17);
     const CANVA_STILLTHINGS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 17 && p <= 20);
@@ -956,9 +970,18 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     if (chapter.key === "residuals") {
       for (const p of CANVA_FRONT_PAGES) specs.push({ kind: "canva", page: p });
     }
-    // The Spirit chapter's sentence stands on its own quiet page, right
-    // after the opener spread, before the chapter's text and plates
-    // (her direction, 2026-11-09; the text is SPIRIT_QUIET_TEXT).
+    // The Spirit chapter's sentence stands on its own quiet page,
+    // right after the opener spread, before the chapter's text and
+    // plates (her direction, 2026-11-09; the text is SPIRIT_QUIET_TEXT).
+    // NOTE 2026-11-10: two same-day orders touched this page — one
+    // ordered a page deleted that was described as carrying BOTH the
+    // machines sentence and this slowness text, and a later one ordered
+    // THIS page (slowness text alone) moved before the Contents.
+    // Source inspection shows no page carries both sentences: the
+    // machines sentence renders only on the Part 3 opener and inside
+    // the Negotiated Intelligence text. Both orders are therefore
+    // HELD, unexecuted, pending her decision on which one wins; the
+    // page stands here exactly as before.
     if (chapter.key === "spirit") {
       specs.push({ kind: "motto", chapter, text: SPIRIT_QUIET_TEXT });
     }
@@ -1012,7 +1035,14 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       // emitted right after their marked plate; if that plate is absent they
       // close the plate sequence instead, so no text is ever dropped.
       const holdBack = chapter.essayAfterPlate;
-      const leadCount = holdBack ? Math.max(0, essayCount - holdBack.trailingChunks) : essayCount;
+      // Residuals (her direction, 2026-11-10): the section's review
+      // (the chapter essay) no longer interrupts the plates. The other
+      // plates run first, then the review (EN page, then ZH page),
+      // then Residuals #1 and #26 close the section as its final
+      // spread, in that left/right order. So for this chapter the
+      // essay lead count is zero and the essay chunks are emitted
+      // inside the plate loop, right before the #1/#26 pair.
+      const leadCount = chapter.key === "residuals" ? 0 : holdBack ? Math.max(0, essayCount - holdBack.trailingChunks) : essayCount;
       for (let i = 0; i < leadCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
       // The objects chapter carries one full-bleed spread (her direction,
       // 2026-11-05): Pre-iPhone Era across two pages, edge to edge, after
@@ -1056,18 +1086,26 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         }
         flushGroup();
       } else {
-        for (let ii = 0; ii < chapter.items.length; ii++) {
-          const { item, plate } = chapter.items[ii];
+        // Residuals plate order (her direction, 2026-11-10): rotate
+        // the two lead plates (#1, #26) to the end of the run so the
+        // review can stand before them (see the leadCount note above);
+        // every other chapter keeps its item order untouched.
+        const plateSeq = chapter.key === "residuals" ? [...chapter.items.slice(2), ...chapter.items.slice(0, 2)] : chapter.items;
+        for (let ii = 0; ii < plateSeq.length; ii++) {
+          const { item, plate } = plateSeq[ii];
           if (isJournalPlate(chapter, item)) {
             const run: { item: CatalogItem; plate: number }[] = [];
-            while (ii < chapter.items.length && isJournalPlate(chapter, chapter.items[ii].item)) {
-              run.push(chapter.items[ii]);
+            while (ii < plateSeq.length && isJournalPlate(chapter, plateSeq[ii].item)) {
+              run.push(plateSeq[ii]);
               ii++;
             }
             ii--;
             pushJournalRun(chapter, run);
           } else {
             specs.push({ kind: "plate", chapter, item, plate });
+          }
+          if (chapter.key === "residuals" && ii === plateSeq.length - 3) {
+            for (let ci = 0; ci < essayCount; ci++) specs.push({ kind: "essay", chapter, chunk: ci });
           }
           if (holdBack && item.image_url === holdBack.imageUrl) emitHeldBack();
         }
@@ -3273,6 +3311,15 @@ function useBookModel(args: {
         return i === -1 ? ROAD_COUNTRY_ORDER.length : i;
       };
       roadChapter.items = [...roadChapter.items].sort((a, b) => rank(a.item.title ?? "") - rank(b.item.title ?? ""));
+      // Her direction (2026-11-10): Notes from the Road #9 (Oaxaca,
+      // 2023) moves to the head of the section's plate sequence — the
+      // first work after the opener spread and the chapter's essay
+      // pages. All other plates keep the country order above.
+      const nineIdx = roadChapter.items.findIndex(({ item }) => item.title === "Notes from the Road #9");
+      if (nineIdx > 0) {
+        const [nine] = roadChapter.items.splice(nineIdx, 1);
+        roadChapter.items.unshift(nine);
+      }
     }
     // Her direction (2026-11-08): the Still Things plate on
     // /watercolors/48/ — the section's last plate page — is deleted
@@ -3360,11 +3407,26 @@ function useBookModel(args: {
           { key: "innerwilderness", number: 0, title: "Inner Wilderness 内在荒原", titleEn: "Inner Wilderness", titleZh: "内在荒原", descriptionHtml: "", years: "2017 – 2025", items: [], seriesTextId: "innerwilderness", partHead: true },
           { key: "deathvalley", number: 0, title: "Reflections in the Death Valley 死亡谷", titleEn: "Reflections in the Death Valley", titleZh: "死亡谷", descriptionHtml: "", years: yrOf(dvItems), items: [...dvItems, ...DEATH_VALLEY_PLATES.map((item) => ({ item, plate: 0 }))], seriesTextId: "deathvalley" },
           { key: "sahara", number: 0, title: "Sahara from 6 to 10: An Archive 撒哈拉晚六时至早十时", titleEn: "Sahara from 6 to 10: An Archive", titleZh: "撒哈拉晚六时至早十时", descriptionHtml: "", years: saharaItem?.year ?? "", items: saharaItem ? [{ item: saharaItem, plate: 0 }] : [], seriesTextId: "sahara" },
-          { key: "highlands", number: 0, title: "Scottish Highlands - Heroism of the Vista 苏格兰高地 - 视域的英雄主义", titleEn: "Scottish Highlands - Heroism of the Vista", titleZh: "苏格兰高地 - 视域的英雄主义", descriptionHtml: "", years: yrOf(hgItems), items: hgItems, seriesTextId: "highlands" },
+          { key: "highlands", number: 0, title: "Scottish Highlands - Heroism of the Vista 苏格兰高地：视域的英雄主义", titleEn: "Scottish Highlands - Heroism of the Vista", titleZh: "苏格兰高地：视域的英雄主义", descriptionHtml: "", years: yrOf(hgItems), items: hgItems, seriesTextId: "highlands" },
           { key: "theater", number: 0, title: "Theater 登场", titleEn: "Theater", titleZh: "登场", descriptionHtml: "", years: yrOf(thItems), items: thItems, seriesTextId: "theater" },
           { ...photoParent, title: "El Otro, El Mismo 另一个，同一个", titleEn: "El Otro, El Mismo", titleZh: "另一个，同一个", descriptionHtml: "", years: yrOf(elOtroItems), items: elOtroItems },
         ]
       : [];
+    // Her direction (2026-11-10): in the Theater section, the
+    // Theater #3 plate moves to immediately after Theater #1, so the
+    // run starts #1, #3, then the remaining plates in their current
+    // relative order. Caption and background key travel with the work
+    // (backgrounds key on the image path, not the sequence).
+    const theaterChapter = photoChapters.find((ch) => ch.key === "theater");
+    if (theaterChapter) {
+      const t3 = theaterChapter.items.findIndex(({ item }) => item.title === "Theater #3");
+      const t1 = theaterChapter.items.findIndex(({ item }) => item.title === "Theater #1");
+      if (t3 >= 0 && t1 >= 0 && t3 !== t1 + 1) {
+        const [moved] = theaterChapter.items.splice(t3, 1);
+        const t1After = theaterChapter.items.findIndex(({ item }) => item.title === "Theater #1");
+        theaterChapter.items.splice(t1After + 1, 0, moved);
+      }
+    }
     const byChapterKey = new Map([...catalogChapters, ...photoChapters, ...seriesChapters, ...splitChapters].map((ch) => [ch.key, ch]));
     let chapterNo = 0;
     const chapters = SECTION_ORDER.map((k) => byChapterKey.get(k))
@@ -3529,9 +3591,9 @@ function useBookModel(args: {
         // verbatim; the Chinese is Beignet's translation, pending her
         // review. It stands after the source line, which belongs to the
         // Facebook post alone.
-        const stmtEn1: EssayItem = { html: "<p>Remains was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions.</p>" };
+        const stmtEn1: EssayItem = { html: "<p>Remains is a series made by collaging drawings on paper with digital drawings, born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions.</p>" };
         const stmtEn2: EssayItem = { html: "<p>The series borrows its visual grammar from these figurines from different civilizations and historical periods, and drops them into the theater of contemporary daily life.</p>" };
-        const stmtZh1: EssayItem = { html: "<p>《遗迹》是一个综合材料系列，起于一种微妙的荒诞感。研究古代陶俑时，我被它们的表情吸引：亲切，笨拙，像是什么都没有做，就停在那一刻。</p>" };
+        const stmtZh1: EssayItem = { html: "<p>《遗迹》是纸上绘画与数字绘图拼贴而成的系列，源于一种微妙的荒诞感。研究古代陶俑时，我被它们的表情吸引：亲切，笨拙，像是什么都没有做，就停在那一刻。</p>" };
         const stmtZh2: EssayItem = { html: "<p>这个系列的视觉语法就借自这些陶俑。它们来自不同的文明、不同的历史时期，我把它们放进当代日常生活的剧场。</p>" };
         essayChunks[chapter.key] = langChunks([indentItem(leadEn), ...paraItems(paras.filter((p) => !hasCjk(p.text))).map(indentItem), indentItem(noteEn, true), stmtEn1, stmtEn2], [indentItem(leadZh), ...paraItems(paras.filter((p) => hasCjk(p.text))).map(indentItem), indentItem(noteZh, true), stmtZh1, stmtZh2]);
       } else if (chapter.key === "photography") {
@@ -3552,12 +3614,14 @@ function useBookModel(args: {
           fieldTexts[`series:${s.id}:en`] = enT;
           fieldTexts[`series:${s.id}:zh`] = zhT;
         }
-        // Still Things carries no body text at all (its BOOK_SERIES
-        // entry is empty): langChunks' empty-text sentinel would give
-        // the section one blank text page. She deletes that page (her
-        // direction, 2026-11-09), so an empty text here means zero
-        // essay chunks and the section's plates follow its Canva
-        // pages directly.
+        // Still Things long carried no body text at all (its
+        // BOOK_SERIES entry was empty): langChunks' empty-text
+        // sentinel would give the section one blank text page. She
+        // deleted that page (her direction, 2026-11-09), so an empty
+        // text here means zero essay chunks. Since 2026-11-10 the
+        // entry carries her placeholder "todo" (the Unfinished
+        // Archive convention), so the section paginates intro pages
+        // like its siblings until she supplies the real text.
         essayChunks[chapter.key] =
           chapter.key === "stillthings" && !enT && !zhT
             ? []

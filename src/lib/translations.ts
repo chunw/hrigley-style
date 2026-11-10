@@ -157,13 +157,10 @@ export const translations = {
         "里维拉的这间博物馆可谓存续文化遗产的典范机构，收藏家凭热心发掘那些富象征性的碎片，并以当代人理解的语汇宣告其存在。随着历史转变的继续加速，过去本身也成为最超现实的题材——使我们有可能在消失的事物中发现新的美。",
       ],
       elOtroEssayBody: [
-        "Lacan wrote that the self is born in a mirror: an image more whole than the body that claims it. We never meet ourselves directly. We arrive by way of other faces. In this series, portraits of others and self-portraits take turns, and the turn matters more than the likeness. A stranger holds still and returns my looking. Then I step into the frame and become the stranger. Other, then same, then other again. If identity is a recognition borrowed from outside, then a portrait is not a record of who someone is. It is the moment two people lend each other a self.",
-        "拉康说，自我诞生于一面镜子：一个比身体本身更完整的形象。我们从不直接遇见自己，我们总是绕道他人的面孔抵达。这一组作品里，他人的肖像与自画像轮流出现，轮换比相像更重要。陌生人停住，回望我的注视；然后我走进画面，成为那个陌生人。他者，然后自身，然后又是他者。如果身份是从外部借来的认领，那么肖像就不是「某人是谁」的记录，而是两个人互相借出一个自我的瞬间。",
+        "Lacan wrote that the self is born in a mirror: an image more whole than the body that claims it. We never meet ourselves directly. We arrive by way of other faces. In this series, portraits of others and self-portraits alternate. A stranger stops and returns my looking. Then I step into the frame and become the stranger. If identity is a recognition borrowed from outside, then a portrait is not a record of who someone is. It is the moment two people lend each other a self.",
+        "拉康说，自我诞生于一面镜子：一个比身体本身更完整的形象。我们从不直接遇见自己，我们总是绕道他人的面孔抵达。这一组里，他人的肖像与自画像交替出现。陌生人停下来，回望我的注视；然后我走进画面，成为那个陌生人。如果身份是从外部借来的认领，那么肖像就不是「某人是谁」的记录，而是两个人互相借出一个自我的瞬间。",
       ],
-      paintingIntroBody: [
-        "Different tempers, one question. What does an image keep, and what does it let go?",
-        "性情各不相同，问题只有一个：一幅图像留住了什么，又放走了什么？",
-      ],
+      paintingIntroBody: [],
       page: "Page",
       rights: "All rights reserved. No part of this publication may be reproduced, stored in a retrieval system, or transmitted in any form or by any means without the prior written permission of the artist.",
       artworkCredit: "All works © Chun Wang. Photography of artworks by the artist.",
@@ -217,7 +214,7 @@ export const translations = {
     about: {
       title: "关于",
       body: "一切始于那些微小古怪的日常小事，我总是忍不住多看一眼、多想一层，最终变成了那些奇趣的手工物件：可以用、可以送人，也可以静静摆在那里，供你生出一点存在主义式的好奇。\n\n每一件作品都独一无二，由我亲手在纽约工作室设计制作，全球发货。",
-      bio: "<a style=\"color:hsl(var(--primary))\" class=\"text-primary\" href=\"https://chunwang.art\" target=\"_blank\" rel=\"noopener noreferrer\">王淳</a>是一位多学科艺术家、工程师与策展人，现居纽约。她的创作横跨摄影、绘画、艺术物件与数字作品。她以档案为方法，在古代遗存、日常残余与数字记录之间，追踪事物如何被保存、遗忘，又被重新激活。她曾任哈佛大学文理学院 CAMLab 首席创意技术专家与战略研究员。\n\n她发起、策展并制作的《<em>Negotiated Intelligence: Unearthing Power Dynamics in Human-AI Co-Creation</em>》与《<em>IMMEMORY: On COVID-19</em>》均获国际奖项：前者为 The Wrong Biennale 第七届官方展馆，并获第 21 届 w3 Awards 艺术与文化类网站银奖；后者获第 25 届 Webby 奖文化类网站官方提名。她的策展工作始终以时代动荡中的个体为核心，记录他们理解、吸纳并转化外部冲击的历程。\n\n其摄影多次获奖，包括国际摄影奖（IPA）、伦敦国际创意大赛（LICC）、锡耶纳国际摄影奖、国际色彩奖与莫斯科国际摄影奖等。她的作品还收录于 Artsin Square《5x7 Photobook》（2025、2026 两辑）与 Passepartout 摄影奖图录等出版物。作品曾在纽约联合国总部、旧金山现代艺术博物馆（SFMOMA）、哈佛大学与斯坦福大学安德森收藏馆展出，并在上海、伦敦、伊斯坦布尔、布达佩斯与北九州等地呈现。",
+      bio: "<a style=\"color:hsl(var(--primary))\" class=\"text-primary\" href=\"https://chunwang.art\" target=\"_blank\" rel=\"noopener noreferrer\">王淳</a>是一位多学科艺术家、工程师与策展人，现居纽约。她的创作横跨摄影、绘画、艺术物件与数字作品。她以档案为方法，在古代遗存、日常残余与数字记录之间，追踪事物如何被保存、遗忘，又被重新激活。她曾任哈佛大学文理学院 CAMLab 首席创意技术专家与战略研究员。\n\n她发起、策展并制作的《<em>Negotiated Intelligence: Unearthing Power Dynamics in Human-AI Co-Creation</em>》与《<em>IMMEMORY: On COVID-19</em>》均获国际奖项：前者为 The Wrong Biennale 第七届官方展馆，并获第 21 届 w3 Awards 艺术与文化类网站银奖；后者获第 25 届 Webby 奖文化类网站官方提名。她的策展工作始终以时代动荡中的个体为核心，记录他们理解、吸纳并转化外部冲击的历程。\n\n其摄影多次获奖，包括国际摄影奖（IPA）、伦敦国际创意大赛（LICC）、锡耶纳国际摄影奖、国际色彩奖与莫斯科国际摄影奖等。她的作品还收录于 Artsin Square《5x7 Photobook》（2025、2026 两辑）与 Passepartout 摄影奖图录等出版物。作品曾在纽约联合国总部、旧金山现代艺术博物馆、哈佛大学与斯坦福大学安德森收藏馆展出，并在上海、伦敦、伊斯坦布尔、布达佩斯与北九州等地呈现。",
       artistLabel: "关于艺术家",
       backToShop: "返回商店",
     },
@@ -351,13 +348,10 @@ export const translations = {
         "里维拉的这间博物馆可谓存续文化遗产的典范机构，收藏家凭热心发掘那些富象征性的碎片，并以当代人理解的语汇宣告其存在。随着历史转变的继续加速，过去本身也成为最超现实的题材——使我们有可能在消失的事物中发现新的美。",
       ],
       elOtroEssayBody: [
-        "Lacan wrote that the self is born in a mirror: an image more whole than the body that claims it. We never meet ourselves directly. We arrive by way of other faces. In this series, portraits of others and self-portraits take turns, and the turn matters more than the likeness. A stranger holds still and returns my looking. Then I step into the frame and become the stranger. Other, then same, then other again. If identity is a recognition borrowed from outside, then a portrait is not a record of who someone is. It is the moment two people lend each other a self.",
-        "拉康说，自我诞生于一面镜子：一个比身体本身更完整的形象。我们从不直接遇见自己，我们总是绕道他人的面孔抵达。这一组作品里，他人的肖像与自画像轮流出现，轮换比相像更重要。陌生人停住，回望我的注视；然后我走进画面，成为那个陌生人。他者，然后自身，然后又是他者。如果身份是从外部借来的认领，那么肖像就不是「某人是谁」的记录，而是两个人互相借出一个自我的瞬间。",
+        "Lacan wrote that the self is born in a mirror: an image more whole than the body that claims it. We never meet ourselves directly. We arrive by way of other faces. In this series, portraits of others and self-portraits alternate. A stranger stops and returns my looking. Then I step into the frame and become the stranger. If identity is a recognition borrowed from outside, then a portrait is not a record of who someone is. It is the moment two people lend each other a self.",
+        "拉康说，自我诞生于一面镜子：一个比身体本身更完整的形象。我们从不直接遇见自己，我们总是绕道他人的面孔抵达。这一组里，他人的肖像与自画像交替出现。陌生人停下来，回望我的注视；然后我走进画面，成为那个陌生人。如果身份是从外部借来的认领，那么肖像就不是「某人是谁」的记录，而是两个人互相借出一个自我的瞬间。",
       ],
-      paintingIntroBody: [
-        "Different tempers, one question. What does an image keep, and what does it let go?",
-        "性情各不相同，问题只有一个：一幅图像留住了什么，又放走了什么？",
-      ],
+      paintingIntroBody: [],
       page: "页码",
       rights: "版权所有。未经艺术家事先书面许可，不得以任何形式或任何方式复制、存储或传播本出版物的任何部分。",
       artworkCredit: "所有作品 © 王淳。作品图片由艺术家本人拍摄。",
