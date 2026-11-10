@@ -203,9 +203,12 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     en: "What does an image keep, and what does it let go?",
     zh: "一幅图像留住了什么，又放走了什么？",
   },
+  // Her direction, 2026-11-09: the sentence that stood here is deleted
+  // from the book. The empty entry holds the Part 4 opener spread open
+  // with no sentence printed on it (the IMMEMORY/Spirit precedent).
   "series:triptych": {
-    en: "The subject is what remains. The method is the archive.",
-    zh: "主题是存留。方法是档案。",
+    en: "",
+    zh: "",
   },
   innerwilderness: {
     en: "The land comes first, before language, before the self.",
