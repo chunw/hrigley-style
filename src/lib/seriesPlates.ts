@@ -166,18 +166,6 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
       "From the pandemic journal page", "2020 · chunwang.me", "2020",
       "An image from the artist's pandemic journal page (February 24, 2020), included here as a placeholder plate.",
       "疫情日志页配图（2020 年 2 月 24 日），此处为占位图版。",
-      "/book/immemory/journal-11.jpg",
-    ),
-    plate(
-      "From the pandemic journal page", "2020 · chunwang.me", "2020",
-      "An image from the artist's pandemic journal page (February 24, 2020), included here as a placeholder plate.",
-      "疫情日志页配图（2020 年 2 月 24 日），此处为占位图版。",
-      "/book/immemory/journal-12.jpg",
-    ),
-    plate(
-      "From the pandemic journal page", "2020 · chunwang.me", "2020",
-      "An image from the artist's pandemic journal page (February 24, 2020), included here as a placeholder plate.",
-      "疫情日志页配图（2020 年 2 月 24 日），此处为占位图版。",
       "/book/immemory/journal-13.jpg",
     ),
     plate(
