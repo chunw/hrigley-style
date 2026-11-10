@@ -539,7 +539,7 @@ export const watercolors: Watercolor[] = [
      title: "Residuals #7",
     titleZh: "残留 其七",
     series: "I",
-    printInCatalog: true,
+    printInCatalog: false,
     showInStorefront: true,
     year: "2025",
     medium: "Watercolor on paper",

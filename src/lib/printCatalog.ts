@@ -47,6 +47,8 @@ export interface CatalogItem {
   /** Chinese title from the artist's own records, shown beside the title in the book's bilingual captions. */
   titleZh?: string | null;
   metaLine?: string | null;
+  /** Full Chinese meta line, rendered under metaLine where a caption carries both (e.g. the Pre-iPhone Era bleed spread). */
+  metaZh?: string | null;
   year?: string | null;
   medium?: string | null;
   /** Chinese medium from the artist's own records, appended to the book's caption meta line. */

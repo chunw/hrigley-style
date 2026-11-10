@@ -20,7 +20,7 @@ export const EXHIBITIONS: Record<string, { en: string; zh: string }[]> = {
   ],
   "shop": [
     { en: "POP UP GALLERY NEW YORK, Hotel Alameda High Line, New York, July 11, 2026", zh: "POP UP GALLERY NEW YORK，Hotel Alameda High Line，纽约，2026年7月11日" },
-    { en: "Leaky Boundaries @ LIC Arts Open (Visions in Ceramics), Metropolitan Building, Long Island City, New York, May 13 – 17, 2026", zh: "《泄漏的边界》@ LIC Arts Open（陶之视界），Metropolitan Building，长岛市，纽约，2026年5月13 – 17日" },
+    { en: "Leaky Boundaries, Visions in Ceramics, LIC Arts Open, Metropolitan Building, Long Island City, New York, May 13 – 17, 2026", zh: "《泄漏的边界》，「陶之视界」，LIC Arts Open，Metropolitan Building，长岛市，纽约，2026年5月13 – 17日" },
   ],
   "photography": [
     { en: "2021 Passepartout Photo Prize, Rome, Italy, March 2022 · Winner of Catalogue Prize", zh: "2021 Passepartout 摄影奖，罗马，意大利，2022年3月 · 图录奖得主" },
@@ -66,7 +66,8 @@ export const EXHIBITIONS: Record<string, { en: string; zh: string }[]> = {
     { en: "Civilizations in Fusion: The Sound of Camel Bells, Silk Road Art Exhibition, Beijing Minsheng Art Museum, Beijing, January 13 – July 13, 2024", zh: "《文明的融合：驼铃声响——丝绸之路艺术大展》，北京民生现代美术馆，北京，2024年1月13日 – 7月13日" },
   ],
   "series:artempath": [
-    { en: "Art.empath.io, San Francisco Museum of Modern Art, San Francisco, and Anderson Collection at Stanford University, May 2018", zh: "Art.empath.io，旧金山现代艺术博物馆，旧金山，及斯坦福大学 Anderson Collection，2018年5月" },
+    { en: "Art.empath.io, San Francisco Museum of Modern Art, San Francisco, May 6, 2018", zh: "Art.empath.io，旧金山现代艺术博物馆，旧金山，2018年5月6日" },
+    { en: "Art.empath.io, Anderson Collection at Stanford University, Stanford, May 11, 2018", zh: "Art.empath.io，斯坦福大学 Anderson Collection，斯坦福，2018年5月11日" },
   ],
   "series:interview": [
     { en: "Artist Interview: Shoutout Atlanta, published February 7, 2024", zh: "艺术家访谈：Shoutout Atlanta，2024年2月7日发表" },

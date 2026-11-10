@@ -15,7 +15,7 @@ import { BOOK_SERIES } from "@/lib/bookSeries";
 import { SERIES_PLATES, DEATH_VALLEY_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
-import { EXHIBITIONS, INTERVIEW_WEBSITE, PART_WEBSITES } from "@/lib/exhibitions";
+import { EXHIBITIONS, PART_WEBSITES } from "@/lib/exhibitions";
 import { watercolors } from "@/lib/watercolors";
 
 // ── Book geometry ─────────────────────────────────────────────────────────────
@@ -174,6 +174,14 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     en: "",
     zh: "",
   },
+  // Still Things gets its opener spread (her direction, 2026-11-10):
+  // the section had none because it carried no epigraph. The empty
+  // entry holds the spread open with no sentence printed on it (the
+  // IMMEMORY/Spirit precedent) — title and number only.
+  stillthings: {
+    en: "",
+    zh: "",
+  },
   remains: {
     en: "The figurines have outlasted an empire. They will probably outlast the video call.",
     zh: "陶俑熬过了一个帝国。它们大概也将熬过视频会议。",
@@ -197,9 +205,15 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     en: "",
     zh: "",
   },
+  // Her direction, 2026-11-10: the Part 1 introduction question is
+  // deleted from the book (paintingIntroBody emptied the same day);
+  // this epigraph was that text's second sentence, printed on this
+  // same opener spread. The empty entry holds the Part 1 opener
+  // spread open with no sentence printed on it (the IMMEMORY/Spirit
+  // precedent).
   "part:afterimages": {
-    en: "What does an image keep, and what does it let go?",
-    zh: "一幅图像留住了什么，又放走了什么？",
+    en: "",
+    zh: "",
   },
   // Her direction, 2026-11-09: the sentence that stood here is deleted
   // from the book. The empty entry holds the Part 4 opener spread open
@@ -222,7 +236,7 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
   },
   highlands: {
     en: "Scottish Highlands - Heroism of the Vista.",
-    zh: "苏格兰高地 - 视域的英雄主义。",
+    zh: "苏格兰高地：视域的英雄主义。",
   },
   theater: {
     en: "Theatrical moments found on the street.",
@@ -232,13 +246,15 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     en: "We never meet ourselves directly. We arrive by way of other faces.",
     zh: "我们从不直接遇见自己，我们总是绕道他人的面孔抵达。",
   },
-  shop: {
-    en: "My ceramics begin as functional forms - a candle holder, a cup, a bowl - then leak into surreal landscapes.",
-    zh: "我的陶艺从功能性的形态开始，一只烛台、一只杯子、一只碗，然后渗漏成超现实的风景。",
-  },
+  // Shop chapter: no standalone epigraph (her direction, 2026-11-10:
+  // the ceramics sentence is folded into the chapter's essay text as
+  // its opening line instead of standing alone on the opener spread).
+  // Her direction, 2026-11-10: the short question that stood here is
+  // replaced by the full sentence (the same sentence the Awwwards
+  // nominee page caption quotes).
   "series:negotiated": {
-    en: "Who can we still be?",
-    zh: "我们还能成为谁？",
+    en: "When machines learn to make art, who can we still be?",
+    zh: "当机器学会了做艺术，我们还能成为谁？",
   },
   "series:google": {
     en: "Your internet search history is a recycling bin for traces of intellectual and emotional output from your brain.",
@@ -256,10 +272,11 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     en: "Opening dialogues between the artist and the viewer as well as among viewers themselves.",
     zh: "在艺术家与观众之间、观众与观众之间开启对话。",
   },
-  "series:interview": {
-    en: "Art, for me, is not just a form of expression but a mode of exploration and discovery.",
-    zh: "对我来说，艺术不只是一种表达方式，更是一种探索与发现的方式。",
-  },
+  // Her direction, 2026-11-10: the interview chapter's opener spread
+  // is deleted — its epigraph is removed here so no opener is pushed
+  // and the chapter begins with its first content page. (The sentence
+  // itself stays inside the interview body, where it is quoted from
+  // the Shoutout Atlanta interview.)
 };
 
 /** The Spirit chapter's sentence, standing alone on a quiet page right
@@ -373,7 +390,7 @@ const SECTION_PART: Record<string, number> = Object.fromEntries(
 const CANONICAL_SECTION_TITLE: Record<string, { en: string; zh?: string }> = {
   deathvalley: { en: "Reflections in the Death Valley", zh: "死亡谷" },
   sahara: { en: "Sahara from 6 to 10: An Archive", zh: "撒哈拉晚六时至早十时" },
-  highlands: { en: "Scottish Highlands - Heroism of the Vista", zh: "苏格兰高地 - 视域的英雄主义" },
+  highlands: { en: "Scottish Highlands - Heroism of the Vista", zh: "苏格兰高地：视域的英雄主义" },
 };
 
 /** Fixed title of every credits page (her direction, 2026-11-08: a part's
@@ -587,8 +604,14 @@ const APHORISM_BEFORE_CHAPTER: Record<string, string> = {
   // IMMEMORY is deleted — the binding is removed so the spread is never
   // pushed. (The sentence still stands inside the Spirit essay, where it
   // is body text, not an aphorism page.)
-  "series:interview": "theme",
-  "series:negotiated": "cover-story",
+  // Her direction, 2026-11-10: the "theme" aphorism spread before the
+  // interview is deleted — the binding is removed so the spread is
+  // never pushed, and the interview follows what precedes it directly.
+  // Her direction, 2026-11-10: the "cover-story" aphorism no longer
+  // stands as a spread before Negotiated Intelligence — it is a single
+  // quiet page inside the chapter, right after its opener spread (see
+  // the motto push in paginate() below). The binding is removed so the
+  // spread is never pushed.
 };
 
 /** "Collage as Method", a short front-matter essay standing right after
@@ -638,7 +661,7 @@ const REVERSE_INDEX = {
         { zh: "按钟点存下的沙漠的热", en: "desert heat, kept by the hour", to: "撒哈拉晚六时至早十时 Sahara from 6 to 10" },
         { zh: "一趟旅程散掉之后，变了的天气", en: "the weather, changed after a journey ends", to: "前言 Preface" },
         { zh: "一个没被自动化的决定的温度", en: "the warmth of a decision not automated", to: "协商智能 Negotiated Intelligence" },
-        { zh: "Quiraing 雾里的冷", en: "the cold inside the Quiraing fog", to: "苏格兰高地 - 视域的英雄主义 Scottish Highlands - Heroism of the Vista" },
+        { zh: "Quiraing 雾里的冷", en: "the cold inside the Quiraing fog", to: "苏格兰高地：视域的英雄主义 Scottish Highlands - Heroism of the Vista" },
       ],
     },
     {
@@ -898,7 +921,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // longer precedes it — the front pages are emitted right after
     // the opener spread, below, and open the section's run from
     // there.
-    const CANVA_KEPT_PAGES = [2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22];
+    const CANVA_KEPT_PAGES = [2, 3, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22];
     const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
     const CANVA_RESIDUALS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 13 && p < 17);
     const CANVA_STILLTHINGS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 17 && p <= 20);
@@ -944,10 +967,30 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // follows the spread. Part heads without an epigraph (the
     // Unfinished Archive, which has no introduction text at all) print
     // the title alone.
+    // Her direction, 2026-11-10: the Pre-iPhone Era full-bleed spread
+    // leaves the shop chapter and stands immediately before the Part 5
+    // opener spread, as the last spread of Part 4 (it was previously
+    // pushed inside the shop chapter, after its opening text).
+    if (chapter.key === "shop") {
+      if (!nextIsVerso()) specs.push({ kind: "blank" });
+      specs.push({ kind: "bleed", half: "left", chapter, item: PRE_IPHONE_ERA_PLATE });
+      specs.push({ kind: "bleed", half: "right", chapter, item: PRE_IPHONE_ERA_PLATE });
+    }
     if (CHAPTER_EPIGRAPH[chapter.key] || chapter.partHead || chapter.partIntro) {
       if (!nextIsVerso()) specs.push({ kind: "blank" });
       specs.push({ kind: "opener", half: "left", chapter });
       specs.push({ kind: "opener", half: "right", chapter });
+    }
+    // The cover-story text stands as ONE quiet page inside Negotiated
+    // Intelligence, immediately after the chapter's opener spread and
+    // before its essay (her direction, 2026-11-10 — it was an aphorism
+    // spread before the chapter; she asked for a single page in the
+    // quiet-page treatment instead). Texts verbatim from APHORISMS.
+    if (chapter.key === "series:negotiated") {
+      const cs = APHORISMS["cover-story"];
+      if (cs.en && cs.zh) {
+        specs.push({ kind: "motto", chapter, text: { en: cs.en, zh: cs.zh }, keySuffix: "cover-story" });
+      }
     }
     // The facsimile front matter follows the Residuals opener (her
     // direction, 2026-11-09): the opener spread stands directly after
@@ -956,9 +999,18 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     if (chapter.key === "residuals") {
       for (const p of CANVA_FRONT_PAGES) specs.push({ kind: "canva", page: p });
     }
-    // The Spirit chapter's sentence stands on its own quiet page, right
-    // after the opener spread, before the chapter's text and plates
-    // (her direction, 2026-11-09; the text is SPIRIT_QUIET_TEXT).
+    // The Spirit chapter's sentence stands on its own quiet page,
+    // right after the opener spread, before the chapter's text and
+    // plates (her direction, 2026-11-09; the text is SPIRIT_QUIET_TEXT).
+    // NOTE 2026-11-10: two same-day orders touched this page — one
+    // ordered a page deleted that was described as carrying BOTH the
+    // machines sentence and this slowness text, and a later one ordered
+    // THIS page (slowness text alone) moved before the Contents.
+    // Source inspection shows no page carries both sentences: the
+    // machines sentence renders only on the Part 3 opener and inside
+    // the Negotiated Intelligence text. Both orders are therefore
+    // HELD, unexecuted, pending her decision on which one wins; the
+    // page stands here exactly as before.
     if (chapter.key === "spirit") {
       specs.push({ kind: "motto", chapter, text: SPIRIT_QUIET_TEXT });
     }
@@ -1012,17 +1064,19 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       // emitted right after their marked plate; if that plate is absent they
       // close the plate sequence instead, so no text is ever dropped.
       const holdBack = chapter.essayAfterPlate;
-      const leadCount = holdBack ? Math.max(0, essayCount - holdBack.trailingChunks) : essayCount;
+      // Residuals (her direction, 2026-11-10): the section's review
+      // (the chapter essay) no longer interrupts the plates. The other
+      // plates run first, then the review (EN page, then ZH page),
+      // then Residuals #1 and #26 close the section as its final
+      // spread, in that left/right order. So for this chapter the
+      // essay lead count is zero and the essay chunks are emitted
+      // inside the plate loop, right before the #1/#26 pair.
+      const leadCount = chapter.key === "residuals" ? 0 : holdBack ? Math.max(0, essayCount - holdBack.trailingChunks) : essayCount;
       for (let i = 0; i < leadCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
-      // The objects chapter carries one full-bleed spread (her direction,
-      // 2026-11-05): Pre-iPhone Era across two pages, edge to edge, after
-      // the chapter's opening text and before its plates, aligned to a
-      // verso like the chapter openers.
-      if (chapter.key === "shop") {
-        if (!nextIsVerso()) specs.push({ kind: "blank" });
-        specs.push({ kind: "bleed", half: "left", chapter, item: PRE_IPHONE_ERA_PLATE });
-        specs.push({ kind: "bleed", half: "right", chapter, item: PRE_IPHONE_ERA_PLATE });
-      }
+      // The Pre-iPhone Era full-bleed spread no longer stands here:
+      // it moved to just before this chapter's opener spread, as the
+      // last spread of Part 4 (her direction, 2026-11-10; see the
+      // bleed push ahead of the opener in this loop).
       let heldBackEmitted = false;
       const emitHeldBack = () => {
         if (holdBack && !heldBackEmitted) {
@@ -1056,18 +1110,26 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         }
         flushGroup();
       } else {
-        for (let ii = 0; ii < chapter.items.length; ii++) {
-          const { item, plate } = chapter.items[ii];
+        // Residuals plate order (her direction, 2026-11-10): rotate
+        // the two lead plates (#1, #26) to the end of the run so the
+        // review can stand before them (see the leadCount note above);
+        // every other chapter keeps its item order untouched.
+        const plateSeq = chapter.key === "residuals" ? [...chapter.items.slice(2), ...chapter.items.slice(0, 2)] : chapter.items;
+        for (let ii = 0; ii < plateSeq.length; ii++) {
+          const { item, plate } = plateSeq[ii];
           if (isJournalPlate(chapter, item)) {
             const run: { item: CatalogItem; plate: number }[] = [];
-            while (ii < chapter.items.length && isJournalPlate(chapter, chapter.items[ii].item)) {
-              run.push(chapter.items[ii]);
+            while (ii < plateSeq.length && isJournalPlate(chapter, plateSeq[ii].item)) {
+              run.push(plateSeq[ii]);
               ii++;
             }
             ii--;
             pushJournalRun(chapter, run);
           } else {
             specs.push({ kind: "plate", chapter, item, plate });
+          }
+          if (chapter.key === "residuals" && ii === plateSeq.length - 3) {
+            for (let ci = 0; ci < essayCount; ci++) specs.push({ kind: "essay", chapter, chunk: ci });
           }
           if (holdBack && item.image_url === holdBack.imageUrl) emitHeldBack();
         }
@@ -2190,26 +2252,61 @@ export function FrontCoverFace({ ctx }: { ctx: BookContext }) {
 
 
 export function BackCoverFace() {
-  // Back cover, after the Nauman-style reference she chose (2026-10-18): one text
-  // block high on the page, a large quiet field below, and a blank white barcode
-  // box at lower right (the ISBN is still to come). The studio imprint line that
-  // sat at lower left is deleted (her direction, 2026-11-09).
-  // The first sentence carries who she is, so the book explains itself.
+  // Back cover, after the Nauman-style reference she chose (2026-10-18): text
+  // high on the page, a large quiet field below, and a blank white barcode
+  // box at lower right (the ISBN is still to come). The studio imprint line
+  // that sat at lower left is deleted (her direction, 2026-11-09).
+  // Layout mock (2026-11-10, local only, awaiting her approval): two columns,
+  // English left / Chinese right, the English following the Chinese structure
+  // （英文按照中文来） — blurb first (image sentences, then materials/theme),
+  // then the author bio under a small heading in each language. The blurb no
+  // longer carries the identity sentence; that role moved to the bio block.
+  // EN bio = the official site's CURRENT EN About, pulled 2026-11-10 from
+  // chunwangart main about.html (inline i18n aboutText, links stripped);
+  // ZH bio = the site's CN About, both verbatim.
   return (
     <div className="bk-face bk-face-back">
-      <div className="bk-back-body">
-        <p className="bk-back-blurb">
-          Remains gathers a decade of work by Chun Wang, a multidisciplinary artist and curator based in New York City, across painting, photography, ceramics and objects, web-based projects, and live performance. Ancient figurines clock back in for video meetings. A stranger's face is held for one second before the train moves on. Search histories, pandemic testimony, and fleeting performances are gathered before they can disappear. The materials change from series to series. The habit underneath them does not. The theme of this book is what remains, and its method is the archive, assembled slowly, in print, the older technology of staying.
-        </p>
-        <p className="bk-back-blurb">
-          古代陶俑重新上岗，去开视频会议。火车开动之前，一张陌生人的脸多留了一秒。搜索记录、疫情证言、转瞬即逝的表演，都在消失之前被收了进来。
-        </p>
-        <p className="bk-back-blurb">
-          材料从一个系列到下一个系列一直在变。材料之下的习惯不变。这本书问的是：什么留得下来？她的方法是档案。用印刷慢慢装订成书，一种更古老的存留技术。
-        </p>
-        <p className="bk-back-blurb">
-          《Remains》收录的作品作于 2017 至 2026 年，前后十年。王淳是艺术家，也是策展人，现居纽约。她的创作包括绘画、摄影、陶艺与物件，还有网络项目和现场表演。
-        </p>
+      <div className="bk-back-body bk-back-cols">
+        <div className="bk-back-col">
+          <p className="bk-back-blurb">
+            Ancient figurines clock back in for video meetings. After the show, the red velvet seats sit empty in the dark, waiting for the next one. Search histories, pandemic testimony, and fleeting performances are gathered before they can disappear.
+          </p>
+          <p className="bk-back-blurb">
+            The materials change from series to series. The habit underneath them does not. The theme of this book is what remains, and its method is the archive, assembled slowly, in print, the older technology of staying.
+          </p>
+          <div className="bk-back-bio">
+            <h3 className="bk-back-bio-head">About the Author</h3>
+            <p className="bk-back-blurb">
+              Chun Wang (b. 1991) is a multidisciplinary artist, technologist, and curator based in New York City. Her practice spans photography, painting, art objects, and digital works. With the archive as her method, she moves among ancient remains, everyday remnants, and digital records, tracing how things are preserved, forgotten, and reactivated. She was previously Lead Creative Technologist and Strategy Researcher at Harvard University’s FAS CAMLab.
+            </p>
+            <p className="bk-back-blurb">
+              Negotiated Intelligence: Unearthing Power Dynamics in Human-AI Co-Creation and IMMEMORY: On COVID-19, both initiated, curated, and produced by her, have received international recognition: the former is an official pavilion of the seventh edition of the Wrong Biennale and received a Silver Award in the Arts and Culture Websites category at the 21st w3 Awards; the latter was an Official Nominee in the Cultural Blog/Website category at the 25th Webby Awards. Her curatorial work consistently centers on individuals in the midst of the upheavals of their time, tracing how they comprehend, absorb, and transform the disruption around them.
+            </p>
+            <p className="bk-back-blurb">
+              Her photography has also won recognition from the International Photography Awards (IPA), the London International Creative Competition (LICC), the Siena International Photo Awards, the International Color Awards, and the Moscow International Foto Awards, among others. Her work has also been featured in print, including Artsin Square’s 5x7 Photobook (Vol. 1, 2025; Vol. 2, 2026) and the Passepartout Photo Prize Catalogue. Her work has been exhibited at the United Nations Headquarters in New York, SFMOMA, Harvard University, and the Anderson Collection at Stanford University, and has also been presented in Shanghai, London, Istanbul, Budapest, and Kitakyushu, among other places.
+            </p>
+          </div>
+        </div>
+        <div className="bk-back-col">
+          <p className="bk-back-blurb">
+            古代陶俑重新上岗，去开视频会议。散场之后，红丝绒座椅在暗处空着，等下一场。搜索记录、疫情证言、转瞬即逝的表演，都在消失之前被收了进来。
+          </p>
+          <p className="bk-back-blurb">
+            材料从一个系列到下一个系列一直在变。材料之下的习惯不变。这本书问的是：什么留得下来？她的方法是档案。用印刷慢慢装订成书，一种更古老的存留技术。
+          </p>
+          <div className="bk-back-bio">
+            <h3 className="bk-back-bio-head">关于作者</h3>
+            <p className="bk-back-blurb">
+              王淳 Chun Wang（1991年生）是一位现居纽约的多学科艺术家、工程师与策展人。她的创作横跨摄影、绘画、艺术物件与数字作品。她以档案为方法，在古代遗存、日常残余与数字记录之间，追踪事物如何被保存、遗忘，又被重新激活。她曾任哈佛大学文理学院 CAMLab（FAS CAMLab）首席创意技术专家与战略研究员。
+            </p>
+            <p className="bk-back-blurb">
+              她发起、策展并制作的《Negotiated Intelligence: Unearthing Power Dynamics in Human-AI Co-Creation》与《IMMEMORY: On COVID-19》均获国际奖项：前者为The Wrong Biennale第七届官方展馆，并获第 21 届 w3 Awards艺术与文化类网站银奖；后者获第 25 届 Webby 奖文化类网站官方提名。她的策展工作始终以时代动荡中的个体为核心，记录他们理解、吸纳并转化外部冲击的历程。
+            </p>
+            <p className="bk-back-blurb">
+              其摄影多次获奖，包括国际摄影奖（IPA）、伦敦国际创意大赛（LICC）、锡耶纳国际摄影奖、国际色彩奖与莫斯科国际摄影奖等。她的作品还收录于Artsin Square《5x7 Photobook》（第一辑，2025；第二辑，2026）与《Passepartout 摄影奖图录》等出版物。作品曾在纽约联合国总部、旧金山现代艺术博物馆（SFMOMA）、哈佛大学与斯坦福大学安德森收藏馆展出，并在上海、伦敦、伊斯坦布尔、布达佩斯与北九州等地呈现。
+            </p>
+          </div>
+        </div>
       </div>
       <div className="bk-back-foot">
         <div className="bk-back-barcode" aria-hidden="true" />
@@ -2575,12 +2672,21 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         ? watercolors.find((w) => w.id === "18")
         : undefined;
       const titleEn = chapter.titleEn ?? chapter.title;
-      // Two lines across the ~16 in spread at most; a one-word title
-      // cannot wrap, so it is sized to fit the spread on one line
-      // (Afterimages at the standard part scale ran off the edge).
-      const titleSize = partOpener && !/\s/.test(titleEn.trim())
-        ? displaySize(titleEn, 15.5, 2.6)
-        : displaySize(titleEn, 2 * 15.5, partOpener ? 2.6 : 1.9);
+      // Two lines across the ~16 in spread at most — but a title's
+      // longest word cannot wrap, so the size must ALSO fit that word
+      // on one line across the spread. The old formula spent the whole
+      // two-line budget on any title: the one-word ART.EMPATH.IO ran
+      // off the spread's right edge, and INNER WILDERNESS's second word
+      // overflowed the same way (her screenshot, 2026-11-10). Titles
+      // that already fit keep their exact old size: the longest-word
+      // constraint binds only where the old size overflowed.
+      const titleWords = titleEn.trim().split(/\s+/);
+      const longestWord = Math.max(4, ...titleWords.map((w) => w.length));
+      const titleSize = displaySize(
+        titleEn,
+        Math.min(2 * 15.5, (15.5 * Math.max(titleEn.length, 4)) / longestWord),
+        partOpener ? 2.6 : 1.9,
+      );
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-opener bk-opener-${half}${partOpener ? " bk-opener-part" : ""}${bgImgCls}`}>{bgImgLayer}
           <div className="bk-spread-canvas">
@@ -2811,6 +2917,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               <div className="bk-bleed-caption">
                 <div className="bk-caption-title product-title">{item.title}</div>
                 <div className="bk-caption-meta">{item.metaLine}</div>
+                {item.metaZh && <div className="bk-caption-meta">{item.metaZh}</div>}
               </div>
             )}
           </div>
@@ -2879,18 +2986,9 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 );
               })}
             </ul>
-            {spec.chapter.key === "series:interview" && (
-              <div className="bk-exhibitions-group">
-                <h4 className="bk-exhibitions-subhead shop-title">线上查阅 · Online Archives</h4>
-                <ul>
-                  <li>
-                    <span className="bk-exhibitions-en">
-                      {INTERVIEW_WEBSITE.name} — {INTERVIEW_WEBSITE.url}
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            )}
+            {/* Her direction, 2026-11-10: the interview's Online Archives
+                block (the Shoutout Atlanta link) is deleted; the credits
+                entries above stand alone. */}
           </div>
         </Page>
       );
@@ -2934,7 +3032,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               <h3 className="bk-exhibitions-head shop-title">{stackedPair(CREDITS_TITLE.en, CREDITS_TITLE.zh)}</h3>
             )}
             {groups.map((g) => (
-              <div className="bk-exhibitions-group" key={`${g.key}${g.continued ? "-cont" : ""}`}>
+              <div className={`bk-exhibitions-group${g.key === "__websites__" ? " bk-exhibitions-websites" : ""}`} key={`${g.key}${g.continued ? "-cont" : ""}`}>
                 {g.key === "__websites__" ? (
                   <h4 className="bk-exhibitions-subhead shop-title">线上查阅 · Online Archives</h4>
                 ) : (
@@ -3273,6 +3371,15 @@ function useBookModel(args: {
         return i === -1 ? ROAD_COUNTRY_ORDER.length : i;
       };
       roadChapter.items = [...roadChapter.items].sort((a, b) => rank(a.item.title ?? "") - rank(b.item.title ?? ""));
+      // Her direction (2026-11-10): Notes from the Road #9 (Oaxaca,
+      // 2023) moves to the head of the section's plate sequence — the
+      // first work after the opener spread and the chapter's essay
+      // pages. All other plates keep the country order above.
+      const nineIdx = roadChapter.items.findIndex(({ item }) => item.title === "Notes from the Road #9");
+      if (nineIdx > 0) {
+        const [nine] = roadChapter.items.splice(nineIdx, 1);
+        roadChapter.items.unshift(nine);
+      }
     }
     // Her direction (2026-11-08): the Still Things plate on
     // /watercolors/48/ — the section's last plate page — is deleted
@@ -3360,11 +3467,26 @@ function useBookModel(args: {
           { key: "innerwilderness", number: 0, title: "Inner Wilderness 内在荒原", titleEn: "Inner Wilderness", titleZh: "内在荒原", descriptionHtml: "", years: "2017 – 2025", items: [], seriesTextId: "innerwilderness", partHead: true },
           { key: "deathvalley", number: 0, title: "Reflections in the Death Valley 死亡谷", titleEn: "Reflections in the Death Valley", titleZh: "死亡谷", descriptionHtml: "", years: yrOf(dvItems), items: [...dvItems, ...DEATH_VALLEY_PLATES.map((item) => ({ item, plate: 0 }))], seriesTextId: "deathvalley" },
           { key: "sahara", number: 0, title: "Sahara from 6 to 10: An Archive 撒哈拉晚六时至早十时", titleEn: "Sahara from 6 to 10: An Archive", titleZh: "撒哈拉晚六时至早十时", descriptionHtml: "", years: saharaItem?.year ?? "", items: saharaItem ? [{ item: saharaItem, plate: 0 }] : [], seriesTextId: "sahara" },
-          { key: "highlands", number: 0, title: "Scottish Highlands - Heroism of the Vista 苏格兰高地 - 视域的英雄主义", titleEn: "Scottish Highlands - Heroism of the Vista", titleZh: "苏格兰高地 - 视域的英雄主义", descriptionHtml: "", years: yrOf(hgItems), items: hgItems, seriesTextId: "highlands" },
+          { key: "highlands", number: 0, title: "Scottish Highlands - Heroism of the Vista 苏格兰高地：视域的英雄主义", titleEn: "Scottish Highlands - Heroism of the Vista", titleZh: "苏格兰高地：视域的英雄主义", descriptionHtml: "", years: yrOf(hgItems), items: hgItems, seriesTextId: "highlands" },
           { key: "theater", number: 0, title: "Theater 登场", titleEn: "Theater", titleZh: "登场", descriptionHtml: "", years: yrOf(thItems), items: thItems, seriesTextId: "theater" },
           { ...photoParent, title: "El Otro, El Mismo 另一个，同一个", titleEn: "El Otro, El Mismo", titleZh: "另一个，同一个", descriptionHtml: "", years: yrOf(elOtroItems), items: elOtroItems },
         ]
       : [];
+    // Her direction (2026-11-10): in the Theater section, the
+    // Theater #3 plate moves to immediately after Theater #1, so the
+    // run starts #1, #3, then the remaining plates in their current
+    // relative order. Caption and background key travel with the work
+    // (backgrounds key on the image path, not the sequence).
+    const theaterChapter = photoChapters.find((ch) => ch.key === "theater");
+    if (theaterChapter) {
+      const t3 = theaterChapter.items.findIndex(({ item }) => item.title === "Theater #3");
+      const t1 = theaterChapter.items.findIndex(({ item }) => item.title === "Theater #1");
+      if (t3 >= 0 && t1 >= 0 && t3 !== t1 + 1) {
+        const [moved] = theaterChapter.items.splice(t3, 1);
+        const t1After = theaterChapter.items.findIndex(({ item }) => item.title === "Theater #1");
+        theaterChapter.items.splice(t1After + 1, 0, moved);
+      }
+    }
     const byChapterKey = new Map([...catalogChapters, ...photoChapters, ...seriesChapters, ...splitChapters].map((ch) => [ch.key, ch]));
     let chapterNo = 0;
     const chapters = SECTION_ORDER.map((k) => byChapterKey.get(k))
@@ -3529,9 +3651,9 @@ function useBookModel(args: {
         // verbatim; the Chinese is Beignet's translation, pending her
         // review. It stands after the source line, which belongs to the
         // Facebook post alone.
-        const stmtEn1: EssayItem = { html: "<p>Remains was a mixed media series born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions.</p>" };
+        const stmtEn1: EssayItem = { html: "<p>Remains is a series made by collaging drawings on paper with digital drawings, born from a subtle sense of the absurd. While studying ancient terracotta figurines, I was captivated by their familiar, awkward, and caught mid-nothing expressions.</p>" };
         const stmtEn2: EssayItem = { html: "<p>The series borrows its visual grammar from these figurines from different civilizations and historical periods, and drops them into the theater of contemporary daily life.</p>" };
-        const stmtZh1: EssayItem = { html: "<p>《遗迹》是一个综合材料系列，起于一种微妙的荒诞感。研究古代陶俑时，我被它们的表情吸引：亲切，笨拙，像是什么都没有做，就停在那一刻。</p>" };
+        const stmtZh1: EssayItem = { html: "<p>《遗迹》是纸上绘画与数字绘图拼贴而成的系列，源于一种微妙的荒诞感。研究古代陶俑时，我被它们的表情吸引：亲切，笨拙，像是什么都没有做，就停在那一刻。</p>" };
         const stmtZh2: EssayItem = { html: "<p>这个系列的视觉语法就借自这些陶俑。它们来自不同的文明、不同的历史时期，我把它们放进当代日常生活的剧场。</p>" };
         essayChunks[chapter.key] = langChunks([indentItem(leadEn), ...paraItems(paras.filter((p) => !hasCjk(p.text))).map(indentItem), indentItem(noteEn, true), stmtEn1, stmtEn2], [indentItem(leadZh), ...paraItems(paras.filter((p) => hasCjk(p.text))).map(indentItem), indentItem(noteZh, true), stmtZh1, stmtZh2]);
       } else if (chapter.key === "photography") {
@@ -3552,12 +3674,14 @@ function useBookModel(args: {
           fieldTexts[`series:${s.id}:en`] = enT;
           fieldTexts[`series:${s.id}:zh`] = zhT;
         }
-        // Still Things carries no body text at all (its BOOK_SERIES
-        // entry is empty): langChunks' empty-text sentinel would give
-        // the section one blank text page. She deletes that page (her
-        // direction, 2026-11-09), so an empty text here means zero
-        // essay chunks and the section's plates follow its Canva
-        // pages directly.
+        // Still Things long carried no body text at all (its
+        // BOOK_SERIES entry was empty): langChunks' empty-text
+        // sentinel would give the section one blank text page. She
+        // deleted that page (her direction, 2026-11-09), so an empty
+        // text here means zero essay chunks. Since 2026-11-10 the
+        // entry carries her placeholder "todo" (the Unfinished
+        // Archive convention), so the section paginates intro pages
+        // like its siblings until she supplies the real text.
         essayChunks[chapter.key] =
           chapter.key === "stillthings" && !enT && !zhT
             ? []

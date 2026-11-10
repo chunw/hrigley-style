@@ -578,9 +578,13 @@
   justify-content: center;
 }
 
-/* Bilingual display titles: Chinese on its own line under the English. */
+/* Bilingual display titles: Chinese on its own line under the English.
+   One shared EN→ZH gap for the whole book (her direction, 2026-11-10:
+   the two lines sat too close; every stacked title — section heads,
+   openers, essay heads, contents, credits heads — takes this value). */
 .bk-title-zh-line {
   display: block;
+  margin-top: 0.18em;
 }
 
 /* ── Running heads, folios, small labels ───────────────────────────────────── */
@@ -941,7 +945,9 @@
    untouched. */
 .bk-opener-num {
   font-family: Aileron, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 2.8in;
+  /* One third of the 2.8in set in #201 (her direction, 2026-11-10:
+     the numbers were too big). */
+  font-size: 0.93in;
   font-weight: 400;
   line-height: 1;
   color: #fff3c2;
@@ -1163,6 +1169,18 @@
   margin-bottom: 0.26in;
 }
 
+/* Online Archives entries are single lines; the credits pair gap
+   (0.26in above) reads too airy between them (her note, 2026-11-10),
+   so the websites groups tighten to a plain list rhythm. The group
+   heading spacing is unchanged. */
+.bk-exhibitions-websites li {
+  margin-bottom: 0.12in;
+}
+
+.bk-exhibitions-websites li:last-child {
+  margin-bottom: 0;
+}
+
 .bk-exhibitions-en {
   display: block;
   font-size: 0.125in;
@@ -1363,9 +1381,10 @@
   padding-left: 0.28in;
 }
 
-/* Contents titles print English and Chinese on separate lines. */
+/* Contents titles print English and Chinese on separate lines. The
+   EN→ZH gap is the shared .bk-title-zh-line value (normalized
+   2026-11-10; this rule used to carry its own 3px). */
 .bk-contents-title .bk-title-zh-line {
-  margin-top: 3px;
   font-size: 10.5pt;
   letter-spacing: 0.04em;
   color: var(--muted);
@@ -2045,6 +2064,61 @@
 
 .bk-back-blurb + .bk-back-blurb {
   margin-top: 0.28in;
+}
+
+/* Back cover: 关于作者 bio block — her official-site Chinese bio as its own
+   block under a small heading, set apart from the blurb above by a blank
+   gap (local mock, 2026-11-10). Heading follows the back cover's own small
+   type idiom (cf. .bk-face-sub: 8pt, wide letterspacing, muted white). */
+.bk-back-bio {
+  margin-top: 0.55in;
+}
+
+.bk-back-bio-head {
+  font-size: 8pt;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 0 0.24in;
+}
+
+/* The full bio at blurb size (10pt/1.7) overruns the barcode band; the
+   bio block steps down so the whole back cover fits above the barcode
+   row. Her overflow fix (2026-11-10): shrink type, floor 8pt — final
+   8pt/1.475, both columns, measured EN bottom 9.35in vs the 9.40in band. */
+.bk-back-bio .bk-back-blurb {
+  font-size: 8pt;
+  line-height: 1.475;
+}
+
+/* Back cover two-column layout (mock, 2026-11-10): English left, Chinese
+   right, top-aligned, one gutter. Barcode stays lower right — the foot
+   row right-aligns its single box (the left studio mark was deleted
+   2026-11-09, leaving space-between with nothing to push against). */
+.bk-back-cols {
+  display: flex;
+  gap: 0.35in;
+  align-items: flex-start;
+}
+
+.bk-back-col {
+  min-width: 0;
+}
+
+/* Her width correction (2026-11-10): at 50/50 the English column still
+   overflowed visually, so the split widens English to ≈57% / Chinese
+   ≈43% (gutter unchanged). Measured at 57/43: EN column bottom 8.63in,
+   ZH column bottom 7.98in — both clear of the 9.40in barcode band. */
+.bk-back-col:first-child {
+  flex: 57 1 0;
+}
+
+.bk-back-col:last-child {
+  flex: 43 1 0;
+}
+
+.bk-back-foot {
+  justify-content: flex-end;
 }
 
 /* Interview questions / spirit background group heads stand as their own blocks. */

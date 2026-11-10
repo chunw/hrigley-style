@@ -56,6 +56,17 @@ export function rgbToHex(r: number, g: number, b: number): string {
  * warm off-white #ebeae0 — which export #14 then withdrew again, so
  * plate 10 stands at the default background below.
  *
+ * Exports book-edits-4, book-edits__1, then book-edits__2-2
+ * (2026-11-10): the full-table rule applied each time, with __2-2
+ * governing as the final state (41 keys). Against main, the actual
+ * changes are four added photography grounds: photography/02 white,
+ * photography/03 black, photography/04 black, photography/08 black.
+ * photography/01 went black -> white (__1) -> black (__2-2), so it
+ * stands at black, unchanged; watercolors/55 went pink -> cream
+ * (book-edits-4) -> pink (__1), also unchanged. All other entries
+ * (canva:3/4 at #171717 included) and all three pageBgImages entries
+ * were already in effect verbatim.
+ *
  * Export #17 (2026-11-09): her ruling — the export's pageBg table is
  * applied wholesale; wherever the book differed, the table won.
  * canva:21 goes white and watercolor 60 goes cream; nine Notes from
@@ -96,6 +107,10 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "plate:/watercolors/56/main.jpg": "cream",
   "plate:/watercolors/58/main.jpg": "cream",
   "plate:/photography/01/main.jpg": "black",
+  "plate:/photography/02/main.jpg": "white",
+  "plate:/photography/03/main.jpg": "black",
+  "plate:/photography/04/main.jpg": "black",
+  "plate:/photography/08/main.jpg": "black",
   "plate:/photography/07/main.jpg": "black",
   "plate:/book/negotiated/work-chimera-haiku.jpg": "black",
   "plateGrid": "black",
