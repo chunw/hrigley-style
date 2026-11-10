@@ -80,13 +80,17 @@ export const EXHIBITIONS: Record<string, { en: string; zh: string }[]> = {
  * each line names its section by key so the printed name follows the
  * section's own title. Only addresses verified live are listed: Part 1
  * carries no group (her review, 2026-11-09: the Remains line was cut),
- * Feed Scanner has no line yet (undecided), Unfinished Archive has no site,
- * and Negotiated Intelligence prints the pavilion's own live site — its
- * page on thewrong.org is gone (404) since the biennale closed. */
+ * Feed Scanner prints its source repository (her direction, 2026-11-09:
+ * the line was missing and she named the source code), Art.empath.io's
+ * line was removed the same evening at her direction (the section itself
+ * stays in the book; only its archives line goes), Unfinished Archive has
+ * no site, and Negotiated Intelligence prints the pavilion's own live
+ * site — its page on thewrong.org is gone (404) since the biennale
+ * closed. */
 export const PART_WEBSITES: Record<number, { key: string; url: string }[]> = {
   3: [
     { key: "series:google", url: "github.com/chunw/GoogleSearches" },
-    { key: "series:artempath", url: "art.empath.io" },
+    { key: "series:feedscanner", url: "github.com/chunw/FeedScanner" },
   ],
   4: [
     { key: "series:immemory", url: "covid-immemory.com" },

@@ -25,8 +25,6 @@ const TRIM_W = 8.5;
 const TRIM_H = 11;
 const BLEED = 0.125;
 const PX_PER_IN = 96;
-// Interior page counts are padded to a multiple of 4 (one printed signature).
-const SIGNATURE = 4;
 // Spine width estimate for a perfect-bound paperback on ~80# (120gsm) uncoated stock:
 // pages / 444 in + 0.06 in for the cover board. Swap in your printer's own formula.
 export const spineWidth = (pages: number) => Math.round((pages / 444 + 0.06) * 1000) / 1000;
@@ -82,6 +80,7 @@ type PageSpec =
   | { kind: "part-exhibitions"; part: number; chunk: number }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
   | { kind: "plateGrid"; chapter: Chapter; entries: { item: CatalogItem; plate: number }[] }
+  | { kind: "plateSpread"; half: "left" | "right"; chapter: Chapter; entries: { item: CatalogItem; plate: number }[] }
   | { kind: "bleed"; half: "left" | "right"; chapter: Chapter; item: CatalogItem }
   | { kind: "aphorism"; half: "left" | "right"; aphorism: Aphorism }
   | { kind: "motto"; chapter: Chapter; text: { en: string; zh: string }; keySuffix?: string }
@@ -89,8 +88,7 @@ type PageSpec =
   | { kind: "collage"; chunk: number }
   | { kind: "reverse-index"; chunk: number }
   | { kind: "canva"; page: number }
-  | { kind: "blank" }
-  | { kind: "end" };
+  | { kind: "blank" };
 
 export interface InteriorPage {
   spec: PageSpec;
@@ -203,9 +201,12 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     en: "What does an image keep, and what does it let go?",
     zh: "一幅图像留住了什么，又放走了什么？",
   },
+  // Her direction, 2026-11-09: the sentence that stood here is deleted
+  // from the book. The empty entry holds the Part 4 opener spread open
+  // with no sentence printed on it (the IMMEMORY/Spirit precedent).
   "series:triptych": {
-    en: "The subject is what remains. The method is the archive.",
-    zh: "主题是存留。方法是档案。",
+    en: "",
+    zh: "",
   },
   innerwilderness: {
     en: "The land comes first, before language, before the self.",
@@ -353,7 +354,7 @@ function exhibitionParts(text: string): { year: string; rest: string } {
 const PART_SECTIONS: Record<number, string[]> = {
   1: ["remains", "residuals", "stillthings", "road", "spirit"],
   2: ["innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography"],
-  3: ["series:unfinished", "series:google", "series:feedscanner", "series:earlyline", "series:artempath"],
+  3: ["series:unfinished", "series:google", "series:feedscanner", "series:artempath"],
   4: ["series:immemory", "series:cavedance", "series:negotiated"],
   5: ["shop"],
 };
@@ -582,7 +583,10 @@ const withRustQ = (text: string) =>
 /** Aphorism spreads placed immediately before these chapters. The first
  * one ("What remains?") goes after the front matter, before chapter one. */
 const APHORISM_BEFORE_CHAPTER: Record<string, string> = {
-  "series:immemory": "human-touch",
+  // Her direction, 2026-11-09: the "human-touch" aphorism spread before
+  // IMMEMORY is deleted — the binding is removed so the spread is never
+  // pushed. (The sentence still stands inside the Spirit essay, where it
+  // is body text, not an aphorism page.)
   "series:interview": "theme",
   "series:negotiated": "cover-story",
 };
@@ -674,7 +678,6 @@ const REVERSE_INDEX = {
         { zh: "会议上的一句「无可奉告」", en: "“nothing to contribute,” said at a meeting", to: "遗迹 Remains" },
         { zh: "先于陶俑消失的语言", en: "the language that vanished before the figurine did", to: "前言 Preface" },
         { zh: "机械臂写到一半的「我是人……」", en: "“I am huma—”, by a robot arm", to: "协商智能 Negotiated Intelligence" },
-        { zh: "她自己的跟评，断在半句", en: "her own comment, breaking off mid-sentence", to: "消失的童年 The Loss of Childhood" },
         { zh: "没人回答的问题：我们还能成为谁", en: "unanswered: who can we still be?", to: "协商智能 Negotiated Intelligence" },
       ],
     },
@@ -805,6 +808,23 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     specs.push({ kind: "aphorism", half: "left", aphorism: a });
     specs.push({ kind: "aphorism", half: "right", aphorism: a });
   };
+  // IMMEMORY's pandemic journal plates are the artist's informal
+  // handnotes, not formal works (her direction, 2026-11-09): they no
+  // longer take a page each. A contiguous run of them is packed into
+  // dense grid fields that fill whole spreads — one continuous canvas
+  // across both pages, up to 18 cells (6 x 3) per spread, each image
+  // keeping only its small title + meta caption.
+  const isJournalPlate = (chapter: Chapter, item: CatalogItem) =>
+    chapter.key === "series:immemory" && item.image_url.includes("/book/immemory/journal-");
+  const JOURNAL_PER_SPREAD = 18;
+  const pushJournalRun = (chapter: Chapter, run: { item: CatalogItem; plate: number }[]) => {
+    for (let i = 0; i < run.length; i += JOURNAL_PER_SPREAD) {
+      const entries = run.slice(i, i + JOURNAL_PER_SPREAD);
+      if (!nextIsVerso()) specs.push({ kind: "blank" });
+      specs.push({ kind: "plateSpread", half: "left", chapter, entries });
+      specs.push({ kind: "plateSpread", half: "right", chapter, entries });
+    }
+  };
 
   specs.push({ kind: "title" });
   specs.push({ kind: "colophon" });
@@ -915,9 +935,8 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // chapter's name duplicates the contents and the head of the
     // chapter's own text, so section openers print only where the
     // chapter's epigraph gives the spread content of its own. Section
-    // chapters without an epigraph (Still Things, the Life section,
-    // The Loss of Childhood) open directly with their first text or
-    // plate page.
+    // chapters without an epigraph (Still Things, the Life section)
+    // open directly with their first text or plate page.
     // Her direction (2026-11-08, evening — supersedes the same-day rule
     // for part heads): every part opens with the rust-brown opener
     // spread, the Inner Wilderness pattern, whether or not its head
@@ -973,8 +992,20 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         specs.push({ kind: "essay", chapter, chunk: emitted });
         emitted++;
       }
-      for (const { item, plate } of chapter.items) {
-        if (!anchoredUrls.has(item.image_url)) specs.push({ kind: "plate", chapter, item, plate });
+      const unanchored = chapter.items.filter(({ item }) => !anchoredUrls.has(item.image_url));
+      for (let ui = 0; ui < unanchored.length; ui++) {
+        const { item, plate } = unanchored[ui];
+        if (isJournalPlate(chapter, item)) {
+          const run: { item: CatalogItem; plate: number }[] = [];
+          while (ui < unanchored.length && isJournalPlate(chapter, unanchored[ui].item)) {
+            run.push(unanchored[ui]);
+            ui++;
+          }
+          ui--;
+          pushJournalRun(chapter, run);
+        } else {
+          specs.push({ kind: "plate", chapter, item, plate });
+        }
       }
     } else {
       // Held-back trailing essay chunks (see Chapter.essayAfterPlate) are
@@ -1025,8 +1056,19 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         }
         flushGroup();
       } else {
-        for (const { item, plate } of chapter.items) {
-          specs.push({ kind: "plate", chapter, item, plate });
+        for (let ii = 0; ii < chapter.items.length; ii++) {
+          const { item, plate } = chapter.items[ii];
+          if (isJournalPlate(chapter, item)) {
+            const run: { item: CatalogItem; plate: number }[] = [];
+            while (ii < chapter.items.length && isJournalPlate(chapter, chapter.items[ii].item)) {
+              run.push(chapter.items[ii]);
+              ii++;
+            }
+            ii--;
+            pushJournalRun(chapter, run);
+          } else {
+            specs.push({ kind: "plate", chapter, item, plate });
+          }
           if (holdBack && item.image_url === holdBack.imageUrl) emitHeldBack();
         }
       }
@@ -1088,9 +1130,9 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     specs.push({ kind: "reverse-index", chunk });
   }
 
-  // Closing page sits on the final (verso) page of the last signature.
-  while ((specs.length + 1) % SIGNATURE !== 0) specs.push({ kind: "blank" });
-  specs.push({ kind: "end" });
+  // The book ends at its last content page: the closing imprint page and the
+  // trailing signature padding are both deleted (her direction, 2026-11-09),
+  // so the total is no longer padded to a multiple of 4.
 
   return specs.map((spec, i) => ({ spec, number: i + 1 }));
 }
@@ -1539,6 +1581,8 @@ function pageKeyOf(spec: PageSpec): string | null {
       // in Part 1 would have repainted six other pages). The image path
       // is unique per work and survives any reorder.
       return `plate:${spec.item.image_url}`;
+    case "plateSpread":
+      return `plateSpread:${spec.chapter.key}:${spec.entries[0]?.item.image_url ?? ""}:${spec.half}`;
     case "bleed":
       return `bleed:${spec.chapter.key}:${spec.half}`;
     case "about":
@@ -2147,8 +2191,9 @@ export function FrontCoverFace({ ctx }: { ctx: BookContext }) {
 
 export function BackCoverFace() {
   // Back cover, after the Nauman-style reference she chose (2026-10-18): one text
-  // block high on the page, a large quiet field below, the studio line at lower
-  // left and a blank white barcode box at lower right (the ISBN is still to come).
+  // block high on the page, a large quiet field below, and a blank white barcode
+  // box at lower right (the ISBN is still to come). The studio imprint line that
+  // sat at lower left is deleted (her direction, 2026-11-09).
   // The first sentence carries who she is, so the book explains itself.
   return (
     <div className="bk-face bk-face-back">
@@ -2157,11 +2202,16 @@ export function BackCoverFace() {
           Remains gathers a decade of work by Chun Wang, a multidisciplinary artist and curator based in New York City, across painting, photography, ceramics and objects, web-based projects, and live performance. Ancient figurines clock back in for video meetings. A stranger's face is held for one second before the train moves on. Search histories, pandemic testimony, and fleeting performances are gathered before they can disappear. The materials change from series to series. The habit underneath them does not. The theme of this book is what remains, and its method is the archive, assembled slowly, in print, the older technology of staying.
         </p>
         <p className="bk-back-blurb">
-          《Remains》收拢了王淳十年的作品。王淳是常驻纽约的跨领域艺术家与策展人，创作横跨绘画、摄影、陶艺与物件、网络项目与现场表演。古代陶俑重新上岗，去开视频会议；火车开动之前，一张陌生人的脸被多留了一秒；搜索记录、疫情证言、转瞬即逝的表演，在消失之前先被收集起来。材料从一个系列到下一个系列一直在变，其下的习惯不变。这本书的主题是存留，方法是档案，用印刷慢慢装订起来，用更古老的存留技术。
+          古代陶俑重新上岗，去开视频会议。火车开动之前，一张陌生人的脸多留了一秒。搜索记录、疫情证言、转瞬即逝的表演，都在消失之前被收了进来。
+        </p>
+        <p className="bk-back-blurb">
+          材料从一个系列到下一个系列一直在变。材料之下的习惯不变。这本书问的是：什么留得下来？她的方法是档案。用印刷慢慢装订成书，一种更古老的存留技术。
+        </p>
+        <p className="bk-back-blurb">
+          《Remains》收录的作品作于 2017 至 2026 年，前后十年。王淳是艺术家，也是策展人，现居纽约。她的创作包括绘画、摄影、陶艺与物件，还有网络项目和现场表演。
         </p>
       </div>
       <div className="bk-back-foot">
-        <div className="bk-back-mark shop-title gloria-title">{translations.en.catalogBook.publisher} · {translations.zh.catalogBook.publisher}</div>
         <div className="bk-back-barcode" aria-hidden="true" />
       </div>
     </div>
@@ -2300,7 +2350,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const PART_OF: Record<string, number> = {
         spirit: 1, remains: 1, residuals: 1, stillthings: 1, road: 1,
         innerwilderness: 2, deathvalley: 2, sahara: 2, highlands: 2, theater: 2, photography: 2,
-        "series:unfinished": 3, "series:google": 3, "series:feedscanner": 3, "series:earlyline": 3, "series:artempath": 3,
+        "series:unfinished": 3, "series:google": 3, "series:feedscanner": 3, "series:artempath": 3,
         "series:immemory": 4, "series:cavedance": 4, "series:negotiated": 4,
         shop: 5,
       };
@@ -2722,6 +2772,35 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       );
     }
 
+    case "plateSpread": {
+      // One continuous dense grid field across the whole spread (the
+      // opener/bleed canvas trick): each half renders the same canvas,
+      // shifted, so the journal handnotes pack both pages edge to edge.
+      // Cells carry only the small title + meta caption — the plates'
+      // shared boilerplate description is not repeated here.
+      const { chapter, entries } = spec;
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-plate-spread bk-plate-spread-${spec.half}${bgImgCls}`}>{bgImgLayer}
+          <div className="bk-spread-canvas">
+            <div className="bk-journal-grid">
+              {entries.map(({ item }) => (
+                <div className="bk-journal-cell" key={item.image_url}>
+                  <div className="bk-journal-frame">
+                    <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
+                  </div>
+                  <div className="bk-journal-caption">
+                    <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
+                    {item.metaLine && <div className="bk-caption-meta">{item.metaLine}</div>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+        </Page>
+      );
+    }
+
     case "bleed": {
       const { item } = spec;
       return (
@@ -3006,16 +3085,6 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       );
     }
 
-    case "end":
-      return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-center${bgImgCls}`}>{bgImgLayer}
-          <div className="bk-end">
-            <div className="shop-title gloria-title">{translations.en.catalogBook.publisher} · {translations.zh.catalogBook.publisher}</div>
-            <div className="bk-end-sub">{years}</div>
-          </div>
-        </Page>
-      );
-
     case "blank":
       return <Page id={pageId} side={side} bg={bg} ctl={ctlAll} />;
   }
@@ -3233,7 +3302,7 @@ function useBookModel(args: {
       "remains", "residuals", "stillthings", "road", "spirit",
       "innerwilderness", "deathvalley", "sahara", "highlands", "theater", "photography",
       "series:unfinishedpart", "series:unfinished", "series:google",
-      "series:feedscanner", "series:earlyline", "series:artempath",
+      "series:feedscanner", "series:artempath",
       "series:triptych", "series:immemory", "series:cavedance", "series:negotiated",
       "shop",
       "series:interview",
@@ -3433,25 +3502,6 @@ function useBookModel(args: {
             }
           } else {
             essayChunks[chapter.key] = langChunks(enBlocks, zhBlocks);
-          }
-        } else if (s?.id === "earlyline" && (enT || zhT)) {
-          // The placeholder section's plate, a full-page screenshot of the
-          // Loss of Childhood series website, stands between the two works:
-          // the Mundane Details text, from its heading on, is held back and
-          // emitted right after the plate (see Chapter.essayAfterPlate). The
-          // split is computed from the field text itself, so inline text
-          // edits keep the arrangement.
-          const splitAtMundane = (t: string, edit: string) => {
-            const blocks = t ? pBlocks(asParas(t)).map((html) => ({ html, edit })) : [];
-            const idx = blocks.findIndex((b) => b.html.includes("<strong>The Mundane Details of Life</strong>"));
-            return idx < 0 ? { lead: blocks, tail: [] as typeof blocks } : { lead: blocks.slice(0, idx), tail: blocks.slice(idx) };
-          };
-          const enSplit = splitAtMundane(enT, "series:earlyline:en");
-          const zhSplit = splitAtMundane(zhT, "series:earlyline:zh");
-          const trailing = langChunks(enSplit.tail, zhSplit.tail);
-          essayChunks[chapter.key] = [...langChunks(enSplit.lead, zhSplit.lead), ...trailing];
-          if (enSplit.tail.length > 0 || zhSplit.tail.length > 0) {
-            chapter.essayAfterPlate = { imageUrl: "/book/earlyline/lost-series-page.png", trailingChunks: trailing.length };
           }
         } else {
           essayChunks[chapter.key] =
