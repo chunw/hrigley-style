@@ -25,8 +25,6 @@ const TRIM_W = 8.5;
 const TRIM_H = 11;
 const BLEED = 0.125;
 const PX_PER_IN = 96;
-// Interior page counts are padded to a multiple of 4 (one printed signature).
-const SIGNATURE = 4;
 // Spine width estimate for a perfect-bound paperback on ~80# (120gsm) uncoated stock:
 // pages / 444 in + 0.06 in for the cover board. Swap in your printer's own formula.
 export const spineWidth = (pages: number) => Math.round((pages / 444 + 0.06) * 1000) / 1000;
@@ -89,8 +87,7 @@ type PageSpec =
   | { kind: "collage"; chunk: number }
   | { kind: "reverse-index"; chunk: number }
   | { kind: "canva"; page: number }
-  | { kind: "blank" }
-  | { kind: "end" };
+  | { kind: "blank" };
 
 export interface InteriorPage {
   spec: PageSpec;
@@ -1088,9 +1085,9 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     specs.push({ kind: "reverse-index", chunk });
   }
 
-  // Closing page sits on the final (verso) page of the last signature.
-  while ((specs.length + 1) % SIGNATURE !== 0) specs.push({ kind: "blank" });
-  specs.push({ kind: "end" });
+  // The book ends at its last content page: the closing imprint page and the
+  // trailing signature padding are both deleted (her direction, 2026-11-09),
+  // so the total is no longer padded to a multiple of 4.
 
   return specs.map((spec, i) => ({ spec, number: i + 1 }));
 }
@@ -2147,8 +2144,9 @@ export function FrontCoverFace({ ctx }: { ctx: BookContext }) {
 
 export function BackCoverFace() {
   // Back cover, after the Nauman-style reference she chose (2026-10-18): one text
-  // block high on the page, a large quiet field below, the studio line at lower
-  // left and a blank white barcode box at lower right (the ISBN is still to come).
+  // block high on the page, a large quiet field below, and a blank white barcode
+  // box at lower right (the ISBN is still to come). The studio imprint line that
+  // sat at lower left is deleted (her direction, 2026-11-09).
   // The first sentence carries who she is, so the book explains itself.
   return (
     <div className="bk-face bk-face-back">
@@ -2157,11 +2155,16 @@ export function BackCoverFace() {
           Remains gathers a decade of work by Chun Wang, a multidisciplinary artist and curator based in New York City, across painting, photography, ceramics and objects, web-based projects, and live performance. Ancient figurines clock back in for video meetings. A stranger's face is held for one second before the train moves on. Search histories, pandemic testimony, and fleeting performances are gathered before they can disappear. The materials change from series to series. The habit underneath them does not. The theme of this book is what remains, and its method is the archive, assembled slowly, in print, the older technology of staying.
         </p>
         <p className="bk-back-blurb">
-          《Remains》收拢了王淳十年的作品。王淳是常驻纽约的跨领域艺术家与策展人，创作横跨绘画、摄影、陶艺与物件、网络项目与现场表演。古代陶俑重新上岗，去开视频会议；火车开动之前，一张陌生人的脸被多留了一秒；搜索记录、疫情证言、转瞬即逝的表演，在消失之前先被收集起来。材料从一个系列到下一个系列一直在变，其下的习惯不变。这本书的主题是存留，方法是档案，用印刷慢慢装订起来，用更古老的存留技术。
+          古代陶俑重新上岗，去开视频会议。火车开动之前，一张陌生人的脸多留了一秒。搜索记录、疫情证言、转瞬即逝的表演，都在消失之前被收了进来。
+        </p>
+        <p className="bk-back-blurb">
+          材料从一个系列到下一个系列一直在变。材料之下的习惯不变。这本书问的是：什么留得下来？她的方法是档案。用印刷慢慢装订成书，一种更古老的存留技术。
+        </p>
+        <p className="bk-back-blurb">
+          《Remains》收录的作品作于 2017 至 2026 年，前后十年。王淳是艺术家，也是策展人，现居纽约。她的创作包括绘画、摄影、陶艺与物件，还有网络项目和现场表演。
         </p>
       </div>
       <div className="bk-back-foot">
-        <div className="bk-back-mark shop-title gloria-title">{translations.en.catalogBook.publisher} · {translations.zh.catalogBook.publisher}</div>
         <div className="bk-back-barcode" aria-hidden="true" />
       </div>
     </div>
@@ -3005,16 +3008,6 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         </Page>
       );
     }
-
-    case "end":
-      return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-center${bgImgCls}`}>{bgImgLayer}
-          <div className="bk-end">
-            <div className="shop-title gloria-title">{translations.en.catalogBook.publisher} · {translations.zh.catalogBook.publisher}</div>
-            <div className="bk-end-sub">{years}</div>
-          </div>
-        </Page>
-      );
 
     case "blank":
       return <Page id={pageId} side={side} bg={bg} ctl={ctlAll} />;
