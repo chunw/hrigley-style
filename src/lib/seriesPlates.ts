@@ -445,7 +445,7 @@ export const DEATH_VALLEY_PLATES: CatalogItem[] = [1, 2, 3].map((n) => ({
  */
 export const SAHARA_EXTRA_PLATES: CatalogItem[] = [
   {
-    title: "Untitled",
+    title: "",
     titleZh: null,
     metaLine: "2022 · Photography",
     mediumZh: "摄影作品",
@@ -466,12 +466,14 @@ export const SAHARA_EXTRA_PLATES: CatalogItem[] = [
  * 2026-11-10 and directed them into the book's El Otro section, the same
  * day they joined the series on chunwang.art. The works are untitled,
  * like the series plate that already closes the chapter (photography
- * id 8, which the book prints as "Untitled"), and her records give them
- * no year or location, so the captions print the medium line only.
+ * id 8, likewise untitled), and her records give them no year or
+ * location, so the captions print the medium line only. Their titles
+ * stay empty: the book never prints "Untitled" as a work name (her
+ * rule, 2026-11-10).
  */
 export const EL_OTRO_EXTRA_PLATES: CatalogItem[] = [
   {
-    title: "Untitled",
+    title: "",
     titleZh: null,
     metaLine: "Photography",
     mediumZh: "摄影作品",
@@ -481,7 +483,7 @@ export const EL_OTRO_EXTRA_PLATES: CatalogItem[] = [
     fallback_image_url: "/book/elotro/marionette-box.jpg",
   },
   {
-    title: "Untitled",
+    title: "",
     titleZh: null,
     metaLine: "Photography",
     mediumZh: "摄影作品",
@@ -566,7 +568,7 @@ export const ROAD_THAILAND_SPREAD_PLATE: CatalogItem = plate(
  */
 export const THEATER_EXTRA_PLATES: CatalogItem[] = [
   {
-    title: "Untitled",
+    title: "",
     titleZh: null,
     metaLine: "Photography",
     mediumZh: "摄影作品",
@@ -576,7 +578,7 @@ export const THEATER_EXTRA_PLATES: CatalogItem[] = [
     fallback_image_url: "/book/theater/balcony-man.jpg",
   },
   {
-    title: "Untitled",
+    title: "",
     titleZh: null,
     metaLine: "Photography",
     mediumZh: "摄影作品",
@@ -587,7 +589,7 @@ export const THEATER_EXTRA_PLATES: CatalogItem[] = [
   },
   {
     // PLACEHOLDER （占位图） — artist will supply a replacement file (2026-11-10).
-    title: "Untitled",
+    title: "",
     titleZh: null,
     metaLine: "Photography",
     mediumZh: "摄影作品",

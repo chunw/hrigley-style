@@ -2857,8 +2857,11 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               {/* Notes from the Road plates print no work titles (her
                   direction, 2026-11-10): the caption opens with the meta
                   line. Book-presentation rule only — the works keep
-                  their titles in the catalog data and the shop. */}
-              {chapter.key !== "road" && (
+                  their titles in the catalog data and the shop. A work
+                  with no title prints no title line at all: the book
+                  never prints "Untitled" as a work name (her rule,
+                  2026-11-10). */}
+              {chapter.key !== "road" && item.title && (
                 <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
               )}
               {(item.metaLine || item.dimensions || item.mediumZh || item.dimensionsZh) && (
@@ -3342,7 +3345,11 @@ function useBookModel(args: {
               : s.key === "remains" && ii === 3
                 ? "<p>THE MEETING HAS BEGUN / WE HAVE NOTHING TO CONTRIBUTE<br />会议已经开始 / 我们无可奉告</p>"
                 : undefined;
-          return { item: { ...item, title: item.title || t.catalogBook.untitled, ...(caption ? { description: caption } : {}) }, plate: ++plate };
+          // No "Untitled" fallback (her rule, 2026-11-10: the book never
+          // prints "Untitled" as a work name) — a work without a title
+          // keeps its empty title, and the plate renderer opens its
+          // caption with the meta line instead.
+          return { item: { ...item, ...(caption ? { description: caption } : {}) }, plate: ++plate };
         }),
         years: yearRange(s.items.map((item) => item.year)),
       }));
