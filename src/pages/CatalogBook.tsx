@@ -951,9 +951,11 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // same day): p. 11 — the printed book's "II. Still Things" chapter
     // page — opens the Still Things section as its only chapter page
     // (the section's own text page no longer prints a title head), and
-    // pp. 21–22 (the three small still lifes and the brown box) close
-    // Notes from the Road instead of Still Things, the section she
-    // assigns them to.
+    // pp. 21–22 (the three small still lifes and the brown box) belong
+    // to Notes from the Road instead of Still Things, the section she
+    // assigns them to. They closed that chapter until 2026-11-10, when
+    // she moved them up behind its opener spread — see the emission
+    // right after the opener push below.
     const CANVA_ROAD_PAGES = [21, 22];
     if (chapter.key === "stillthings") {
       specs.push({ kind: "canva", page: 11 });
@@ -1002,6 +1004,14 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       if (!nextIsVerso()) specs.push({ kind: "blank" });
       specs.push({ kind: "opener", half: "left", chapter });
       specs.push({ kind: "opener", half: "right", chapter });
+    }
+    // Japanese Pottery — facsimile pp. 21–22 — stands immediately behind
+    // the road chapter's opener spread (her direction, 2026-11-10:
+    // 紧跟着巢鸭跨页): the two Japan sheets follow the Sugamo painting
+    // spread, ahead of the chapter's text and plates. Until today they
+    // closed the chapter (the old emission stood at the chapter end).
+    if (chapter.key === "road") {
+      for (const p of CANVA_ROAD_PAGES) specs.push({ kind: "canva", page: p });
     }
     // The cover-story text stands as ONE quiet page inside Negotiated
     // Intelligence, immediately after the chapter's opener spread and
@@ -1169,12 +1179,14 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       for (const p of CANVA_STILLTHINGS_PAGES) specs.push({ kind: "canva", page: p });
     }
     if (chapter.key === "road") {
-      for (const p of CANVA_ROAD_PAGES) specs.push({ kind: "canva", page: p });
       // The chapter's last plate is book-only (ROAD_EXTRA_PLATES in
       // seriesPlates.ts): the Hawaii watercolor of 2022, appended
       // after the facsimile pages so it closes the section (her
       // direction, 2026-11-10). It is not in the watercolor catalog,
-      // so it never surfaces in the shop.
+      // so it never surfaces in the shop. The facsimile pages it
+      // followed here moved to the chapter's head later the same day
+      // (see the emission behind the opener spread above); the Hawaii
+      // plate still closes the section, now behind the road plates.
       for (const item of ROAD_EXTRA_PLATES) specs.push({ kind: "plate", chapter, item, plate: 0 });
     }
     // The Spirit chapter's bridge sentence closes the chapter on its own
