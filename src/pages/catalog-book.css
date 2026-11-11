@@ -883,6 +883,34 @@
   color: #20211d;
 }
 
+/* Road chapter bleed spread (Notes from the Road #13, the monkeys):
+   the work info stands in white at the spread's bottom-left corner,
+   on the left page — the treatment she directed for the Thailand
+   spread (2026-11-10). Inset mirrors the road opener's bottom-left
+   credit. Flat white type: no shadow, no background box (her
+   direction, 2026-11-10). Type stepped up from the 7pt bleed-caption
+   size she found too small: meta line 9.5pt, place lines 9pt —
+   above the ordinary plate captions (meta 7pt, desc 7.5pt) and at
+   the book's body-text scale. Scoped to this spread's caption only;
+   the Thailand and Pre-iPhone bleed captions keep their own sizes. */
+.bk-bleed-caption-road {
+  left: calc(var(--bleed) + 0.55in);
+  bottom: 0.42in;
+  color: #fff;
+}
+
+.bk-bleed-caption-road .bk-caption-meta {
+  color: #fff;
+  font-size: 9.5pt;
+  line-height: 1.45;
+}
+
+.bk-bleed-caption-road .bk-caption-meta:nth-child(2) {
+  margin-top: 6px;
+  font-size: 9pt;
+  line-height: 1.55;
+}
+
 
 .bk-opener-label {
   display: inline-flex;

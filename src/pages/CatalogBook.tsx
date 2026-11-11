@@ -12,7 +12,7 @@ import { PAGE_BACKGROUNDS, hexToRgb, isHexPageBg, rgbToHex, type PageBgKind, typ
 import { IMAGE_EDITS } from "@/lib/imageEdits";
 import { PAGE_BACKGROUND_IMAGES, type PageBgImage } from "@/lib/pageBackgroundImages";
 import { BOOK_SERIES } from "@/lib/bookSeries";
-import { SERIES_PLATES, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, RESIDUALS_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
+import { SERIES_PLATES, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, RESIDUALS_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS, PART_WEBSITES } from "@/lib/exhibitions";
@@ -74,7 +74,7 @@ type PageSpec =
   | { kind: "contents"; chunk: number }
   | { kind: "preface"; chunk: number }
   | { kind: "painting-intro"; chunk: number }
-  | { kind: "opener"; half: "left" | "right"; chapter: Chapter }
+  | { kind: "opener"; half: "left" | "right"; chapter: Chapter; titleSpread?: boolean }
   | { kind: "essay"; chapter: Chapter; chunk: number }
   | { kind: "exhibitions"; chapter: Chapter }
   | { kind: "part-exhibitions"; part: number; chunk: number }
@@ -183,7 +183,7 @@ const SAHARA_NOTE = {
  *  Sourcing rule (her discipline): only lines that already stand in this book
  *  for that chapter, the chapter's own text, verbatim, or her own words.
  *  Nothing is written for the slot. Chapters whose book text carries no such
- *  line (Still Things, Unfinished Archive) get none. */
+ *  line (Unfinished Archive) get none. */
 const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
   // Spirit keeps its title spread, but its sentence stands on its own
   // quiet page inside the chapter (her direction, 2026-11-09 — the
@@ -195,12 +195,14 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     zh: "",
   },
   // Still Things gets its opener spread (her direction, 2026-11-10):
-  // the section had none because it carried no epigraph. The empty
-  // entry holds the spread open with no sentence printed on it (the
-  // IMMEMORY/Spirit precedent) — title and number only.
+  // the section had none because it carried no epigraph. She then
+  // supplied the section's own line and directed it onto this title
+  // spread (her direction, 2026-11-10, correcting its brief stand as
+  // the section's intro text): her Chinese verbatim; the EN is a
+  // faithful translation of it, pending her review.
   stillthings: {
-    en: "",
-    zh: "",
+    en: "Picking up the scattered bits and pieces of a strange world.",
+    zh: "捡起怪奇世界的零零散散",
   },
   remains: {
     en: "The figurines have outlasted an empire. They will probably outlast the video call.",
@@ -949,9 +951,11 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // same day): p. 11 — the printed book's "II. Still Things" chapter
     // page — opens the Still Things section as its only chapter page
     // (the section's own text page no longer prints a title head), and
-    // pp. 21–22 (the three small still lifes and the brown box) close
-    // Notes from the Road instead of Still Things, the section she
-    // assigns them to.
+    // pp. 21–22 (the three small still lifes and the brown box) belong
+    // to Notes from the Road instead of Still Things, the section she
+    // assigns them to. They closed that chapter until 2026-11-10, when
+    // she moved them up behind its opener spread — see the emission
+    // right after the opener push below.
     const CANVA_ROAD_PAGES = [21, 22];
     if (chapter.key === "stillthings") {
       specs.push({ kind: "canva", page: 11 });
@@ -998,8 +1002,26 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     }
     if (CHAPTER_EPIGRAPH[chapter.key] || chapter.partHead || chapter.partIntro) {
       if (!nextIsVerso()) specs.push({ kind: "blank" });
+      // Her direction (2026-11-10): the road chapter gains a title
+      // spread — the standard black section opener, the bilingual
+      // title only, no epigraph and no number — standing immediately
+      // before its full-bleed painting spread, which until now opened
+      // the chapter with no title page at all. The painting spread
+      // itself follows unchanged.
+      if (chapter.key === "road") {
+        specs.push({ kind: "opener", half: "left", chapter, titleSpread: true });
+        specs.push({ kind: "opener", half: "right", chapter, titleSpread: true });
+      }
       specs.push({ kind: "opener", half: "left", chapter });
       specs.push({ kind: "opener", half: "right", chapter });
+    }
+    // Japanese Pottery — facsimile pp. 21–22 — stands immediately behind
+    // the road chapter's opener spread (her direction, 2026-11-10:
+    // 紧跟着巢鸭跨页): the two Japan sheets follow the Sugamo painting
+    // spread, ahead of the chapter's text and plates. Until today they
+    // closed the chapter (the old emission stood at the chapter end).
+    if (chapter.key === "road") {
+      for (const p of CANVA_ROAD_PAGES) specs.push({ kind: "canva", page: p });
     }
     // The cover-story text stands as ONE quiet page inside Negotiated
     // Intelligence, immediately after the chapter's opener spread and
@@ -1137,7 +1159,19 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         const plateSeq = chapter.key === "residuals" ? [...chapter.items.slice(2), ...chapter.items.slice(0, 2)] : chapter.items;
         for (let ii = 0; ii < plateSeq.length; ii++) {
           const { item, plate } = plateSeq[ii];
-          if (isJournalPlate(chapter, item)) {
+          if (chapter.key === "road" && item.image_url.includes("/watercolors/58/")) {
+            // Her direction (2026-11-10, trial — "试试"): Notes from
+            // the Road #13 (the capuchin monkeys, Manuel Antonio,
+            // Costa Rica) converts from a single plate page into a
+            // full-bleed spread in its current position in the run,
+            // reusing the Pre-iPhone Era bleed mechanism. Its work
+            // info stands on the spread in white at the bottom-left,
+            // with no title (the chapter's no-titles rule) — see the
+            // bleed render case.
+            if (!nextIsVerso()) specs.push({ kind: "blank" });
+            specs.push({ kind: "bleed", half: "left", chapter, item });
+            specs.push({ kind: "bleed", half: "right", chapter, item });
+          } else if (isJournalPlate(chapter, item)) {
             const run: { item: CatalogItem; plate: number }[] = [];
             while (ii < plateSeq.length && isJournalPlate(chapter, plateSeq[ii].item)) {
               run.push(plateSeq[ii]);
@@ -1167,7 +1201,15 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       for (const p of CANVA_STILLTHINGS_PAGES) specs.push({ kind: "canva", page: p });
     }
     if (chapter.key === "road") {
-      for (const p of CANVA_ROAD_PAGES) specs.push({ kind: "canva", page: p });
+      // The chapter's last plate is book-only (ROAD_EXTRA_PLATES in
+      // seriesPlates.ts): the Hawaii watercolor of 2022, appended
+      // after the facsimile pages so it closes the section (her
+      // direction, 2026-11-10). It is not in the watercolor catalog,
+      // so it never surfaces in the shop. The facsimile pages it
+      // followed here moved to the chapter's head later the same day
+      // (see the emission behind the opener spread above); the Hawaii
+      // plate still closes the section, now behind the road plates.
+      for (const item of ROAD_EXTRA_PLATES) specs.push({ kind: "plate", chapter, item, plate: 0 });
     }
     // The Spirit chapter's bridge sentence closes the chapter on its own
     // quiet page (her direction, 2026-11-09): taken out of the essay body
@@ -1651,7 +1693,13 @@ function pageKeyOf(spec: PageSpec): string | null {
     case "part-exhibitions":
       return `part-exhibitions:${spec.part}:${spec.chunk}`;
     case "opener":
-      return `opener:${spec.chapter.key}:${spec.half}`;
+      // A chapter's separate title spread (the road chapter's, added
+      // 2026-11-10) keys apart from the chapter's own opening spread,
+      // so the painting spread's background images and per-page
+      // grounds stay attached to the painting spread alone.
+      return spec.titleSpread
+        ? `opener:${spec.chapter.key}:title:${spec.half}`
+        : `opener:${spec.chapter.key}:${spec.half}`;
     case "aphorism":
       return `aphorism:${spec.aphorism.id}:${spec.half}`;
     case "motto":
@@ -2578,7 +2626,12 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // across the bottom; the chapter's epigraph, where its own book text
       // carries one, sits small in the upper field. Text only: no artwork
       // appears before the section itself.
-      const epigraph = CHAPTER_EPIGRAPH[chapter.key];
+      // A titleSpread page (the road chapter's new title spread) is a
+      // plain section opener: the bilingual title only — it never
+      // carries the chapter's epigraph, which stays where it was (on
+      // the road chapter, that is the painting spread right after).
+      const titleSpread = !!spec.titleSpread;
+      const epigraph = titleSpread ? undefined : CHAPTER_EPIGRAPH[chapter.key];
       const partOpener = !!(chapter.partIntro || chapter.partHead);
       // The big opener numeral belongs to the five parts only, and it
       // is the PART number (her direction, 2026-11-09, superseding the
@@ -2603,9 +2656,11 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // bottom-left corner; the right page carries no credit. Values
       // from the watercolor catalog record (/watercolors/18 — both
       // paintings are 2025 watercolors on paper, so one line covers
-      // the spread). The section is left with no title page; that is
-      // her call, not an oversight.
-      const roadWork = chapter.key === "road" && half === "left"
+      // the spread). The section long had no title page (her call
+      // then); her direction of 2026-11-10 puts a separate title
+      // spread in front of this one — the titleSpread opener specs in
+      // paginate — and this spread still shows only the artwork.
+      const roadWork = chapter.key === "road" && half === "left" && !titleSpread
         ? watercolors.find((w) => w.id === "18")
         : undefined;
       const titleEn = chapter.titleEn ?? chapter.title;
@@ -2640,7 +2695,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 ))}
               </div>
             )}
-            {chapter.key !== "road" && (
+            {(chapter.key !== "road" || titleSpread) && (
             <Collage
               title={stackedTitle(chapter)}
               titleSize={titleSize}
@@ -2779,7 +2834,13 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           </div>
           <div className="bk-caption">
             <div className="bk-caption-body">
-              <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
+              {/* Notes from the Road plates print no work titles (her
+                  direction, 2026-11-10): the caption opens with the meta
+                  line. Book-presentation rule only — the works keep
+                  their titles in the catalog data and the shop. */}
+              {chapter.key !== "road" && (
+                <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
+              )}
               {(item.metaLine || item.dimensions || item.mediumZh || item.dimensionsZh) && (
                 <div className="bk-caption-meta">{[item.metaLine, item.dimensions, item.mediumZh && item.mediumZh !== item.medium && !(item.metaLine ?? "").includes(item.mediumZh) ? item.mediumZh : "", item.dimensionsZh && item.dimensionsZh !== item.dimensions ? item.dimensionsZh : ""].filter(Boolean).join(" · ")}</div>
               )}
@@ -2846,11 +2907,27 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
 
     case "bleed": {
       const { item } = spec;
+      // The road chapter's bleed spread (Notes from the Road #13, the
+      // monkeys — her trial conversion, 2026-11-10) carries its work
+      // info the way she directed for the Thailand spread: white type
+      // at the spread's bottom-left corner, standing on the left page.
+      // No title (the chapter's no-titles rule): the meta line exactly
+      // as the plate caption composes it, then the place lines from
+      // the work's description. Other bleed spreads (Pre-iPhone Era)
+      // keep their right-page caption untouched.
+      const roadSpread = spec.chapter.key === "road";
+      const spreadMeta = [item.metaLine, item.dimensions, item.mediumZh && item.mediumZh !== item.medium && !(item.metaLine ?? "").includes(item.mediumZh) ? item.mediumZh : "", item.dimensionsZh && item.dimensionsZh !== item.dimensions ? item.dimensionsZh : ""].filter(Boolean).join(" · ");
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-bleed bk-bleed-${spec.half}${bgImgCls}`}>{bgImgLayer}
           <div className="bk-spread-canvas">
             <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} className="bk-bleed-img" />
-            {spec.half === "right" && (
+            {roadSpread && spec.half === "left" && (
+              <div className="bk-bleed-caption bk-bleed-caption-road">
+                {spreadMeta && <div className="bk-caption-meta">{spreadMeta}</div>}
+                {item.description && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: item.description }} />}
+              </div>
+            )}
+            {!roadSpread && spec.half === "right" && (
               <div className="bk-bleed-caption">
                 <div className="bk-caption-title product-title">{item.title}</div>
                 <div className="bk-caption-meta">{item.metaLine}</div>
@@ -3032,9 +3109,12 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           {spec.page === 21 && (
             <div className="bk-caption">
               <div className="bk-caption-body">
+                {/* Exception to the chapter's no-titles rule: this page
+                    closes the Notes from the Road chapter, but the artist
+                    decided Japanese Pottery KEEPS its title (2026-11-10). */}
                 <div className="bk-caption-title product-title">Japanese Pottery 日本陶器</div>
                 <div className="bk-caption-meta">2025 · Watercolor on paper · 纸本水彩</div>
-                <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: "Japan.<br />日本。" }} />
+                <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: "Japan Folk Crafts Museum, Tokyo.<br />东京，日本民艺馆。" }} />
               </div>
             </div>
           )}
@@ -3627,9 +3707,14 @@ function useBookModel(args: {
         // sentinel would give the section one blank text page. She
         // deleted that page (her direction, 2026-11-09), so an empty
         // text here means zero essay chunks. Since 2026-11-10 the
-        // entry carries her placeholder "todo" (the Unfinished
-        // Archive convention), so the section paginates intro pages
-        // like its siblings until she supplies the real text.
+        // entry carried her placeholder "todo" (the Unfinished
+        // Archive convention), so the section paginated intro pages
+        // like its siblings; later that day she supplied the
+        // section's line （捡起怪奇世界的零零散散）, which stood as
+        // the intro text in place of the placeholder until she
+        // directed it onto the chapter's opener spread instead (her
+        // direction, 2026-11-10 — see CHAPTER_EPIGRAPH), so the entry
+        // is empty again and the section has no intro pages.
         const enStream: EssayItem[] = enT ? pBlocks(asParas(enT)).map((html) => ({ html, edit: `series:${s?.id}:en` })) : [];
         const zhStream: EssayItem[] = zhT ? pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s?.id}:zh` })) : [];
         if (chapter.key === "sahara") {
