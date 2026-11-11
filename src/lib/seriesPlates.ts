@@ -445,7 +445,7 @@ export const DEATH_VALLEY_PLATES: CatalogItem[] = [1, 2, 3].map((n) => ({
  */
 export const SAHARA_EXTRA_PLATES: CatalogItem[] = [
   {
-    title: "Untitled",
+    title: "",
     titleZh: null,
     metaLine: "2022 · Photography",
     mediumZh: "摄影作品",
@@ -466,12 +466,14 @@ export const SAHARA_EXTRA_PLATES: CatalogItem[] = [
  * 2026-11-10 and directed them into the book's El Otro section, the same
  * day they joined the series on chunwang.art. The works are untitled,
  * like the series plate that already closes the chapter (photography
- * id 8, which the book prints as "Untitled"), and her records give them
- * no year or location, so the captions print the medium line only.
+ * id 8, likewise untitled), and her records give them no year or
+ * location, so the captions print the medium line only. Their titles
+ * stay empty: the book never prints "Untitled" as a work name (her
+ * rule, 2026-11-10).
  */
 export const EL_OTRO_EXTRA_PLATES: CatalogItem[] = [
   {
-    title: "Untitled",
+    title: "",
     titleZh: null,
     metaLine: "Photography",
     mediumZh: "摄影作品",
@@ -481,7 +483,7 @@ export const EL_OTRO_EXTRA_PLATES: CatalogItem[] = [
     fallback_image_url: "/book/elotro/marionette-box.jpg",
   },
   {
-    title: "Untitled",
+    title: "",
     titleZh: null,
     metaLine: "Photography",
     mediumZh: "摄影作品",
@@ -527,6 +529,26 @@ export const PRE_IPHONE_ERA_PLATE: CatalogItem = plate(
 );
 
 /**
+ * Full-bleed spread plate (her direction, 2026-11-10): an untitled
+ * watercolor close-up of a Thai meal — a red tomato dish, leafy greens
+ * and a pale fruit — printed across two pages with no margins inside
+ * Notes from the Road, after the chapter's essay pages and before its
+ * plate run. It fills the book's long-open travel-spread slot (board
+ * todo #70); the chapter's own plates stay one to a page. She supplied
+ * no title and no year; works in this chapter print no title in their
+ * captions (her rule), so the annotation is the place-and-medium
+ * lines only, set in white at the spread's bottom-left corner.
+ */
+export const ROAD_THAILAND_SPREAD_PLATE: CatalogItem = plate(
+  "Untitled", "Chiang Mai, Thailand · Watercolor on paper", "",
+  "",
+  "",
+  "/book/road/road-thailand-spread.jpg",
+  undefined,
+  "泰国清迈 · 纸本水彩",
+);
+
+/**
  * Extra plates appended at the end of the Theater chapter (her
  * direction, 2026-11-10). The first two are final plates: theatre
  * balcony photographs from the same world as the chapter's Buenos
@@ -546,7 +568,7 @@ export const PRE_IPHONE_ERA_PLATE: CatalogItem = plate(
  */
 export const THEATER_EXTRA_PLATES: CatalogItem[] = [
   {
-    title: "Untitled",
+    title: "",
     titleZh: null,
     metaLine: "Photography",
     mediumZh: "摄影作品",
@@ -556,7 +578,7 @@ export const THEATER_EXTRA_PLATES: CatalogItem[] = [
     fallback_image_url: "/book/theater/balcony-man.jpg",
   },
   {
-    title: "Untitled",
+    title: "",
     titleZh: null,
     metaLine: "Photography",
     mediumZh: "摄影作品",
@@ -567,7 +589,7 @@ export const THEATER_EXTRA_PLATES: CatalogItem[] = [
   },
   {
     // PLACEHOLDER （占位图） — artist will supply a replacement file (2026-11-10).
-    title: "Untitled",
+    title: "",
     titleZh: null,
     metaLine: "Photography",
     mediumZh: "摄影作品",
@@ -607,16 +629,21 @@ export const RESIDUALS_EXTRA_PLATES: CatalogItem[] = [
 ];
 
 /**
- * Extra plate appended at the end of the Notes from the Road （出发）
- * chapter (her direction, 2026-11-10): a sepia watercolor landscape —
- * a road running diagonally past a small truck lettered "Exotic Fruit
- * & Coconuts", trees and hills under a big washed sky. She places it
- * in this chapter and dates it herself: Hawaii, 2022. It stands
- * outside the watercolor catalog on purpose: the chapter's plates are
- * split out of that catalog by title, and a catalog entry would
- * surface the work in the shop; the chapter assembly appends this
- * plate after the catalog run and the chapter's facsimile pages, so
- * it closes the section.
+ * Extra plate for the Notes from the Road （出发） chapter (her
+ * direction, 2026-11-10): a sepia watercolor landscape — a road
+ * running diagonally past a small truck lettered "Exotic Fruit &
+ * Coconuts", trees and hills under a big washed sky. She places it in
+ * this chapter and dates it herself: Hawaii, 2022. It stands outside
+ * the watercolor catalog on purpose: the chapter's plates are split
+ * out of that catalog by title, and a catalog entry would surface the
+ * work in the shop; the chapter assembly interleaves this plate into
+ * the catalog run instead.
+ *
+ * Placement (revised 2026-11-10, her same-country principle — 相同国家
+ * 的图放在一起，连着）: it stands immediately after Notes from the
+ * Road #10 (New York City), so the two United States plates are
+ * neighbours. As first added it closed the section, behind the Norway
+ * and China plates; that split the USA plates, so it moved up.
  *
  * The title is empty on purpose: this chapter's works print no title
  * in their captions (her rule for the chapter, 2026-11-10) — the
