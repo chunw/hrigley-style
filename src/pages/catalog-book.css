@@ -883,6 +883,20 @@
   color: #20211d;
 }
 
+/* Thailand spread annotation (her direction, 2026-11-10): the caption
+   lines in white at the bottom-left corner of the spread's left page,
+   no background box. The canvas is shared across both pages, so the
+   left page's corner sits at the canvas's own left edge plus the page
+   margin; same bottom offset and caption sizes as the house caption. */
+.bk-bleed-caption-bl {
+  left: calc(var(--bleed) + 0.45in);
+  color: #fff;
+}
+
+.bk-bleed-caption-bl .bk-caption-meta {
+  color: #fff;
+}
+
 
 .bk-opener-label {
   display: inline-flex;

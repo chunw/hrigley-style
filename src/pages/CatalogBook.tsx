@@ -1001,20 +1001,6 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       specs.push({ kind: "opener", half: "left", chapter });
       specs.push({ kind: "opener", half: "right", chapter });
     }
-    // The Thailand watercolor full-bleed spread stands inside Notes
-    // from the Road immediately after the chapter's opener spread,
-    // before the chapter's text and plate run (her direction,
-    // 2026-11-10; it fills the long-open travel-spread slot, board
-    // todo #70). The chapter's own plates stay one to a page — the
-    // spread is a separate full-bleed piece, on the Pre-iPhone Era
-    // pattern above. The opener spread ends on a recto, so the spread
-    // starts on a verso by construction; the blank guard keeps that
-    // invariant if the chapter's head ever changes.
-    if (chapter.key === "road") {
-      if (!nextIsVerso()) specs.push({ kind: "blank" });
-      specs.push({ kind: "bleed", half: "left", chapter, item: ROAD_THAILAND_SPREAD_PLATE });
-      specs.push({ kind: "bleed", half: "right", chapter, item: ROAD_THAILAND_SPREAD_PLATE });
-    }
     // The cover-story text stands as ONE quiet page inside Negotiated
     // Intelligence, immediately after the chapter's opener spread and
     // before its essay (her direction, 2026-11-10 — it was an aphorism
@@ -1107,6 +1093,21 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       // inside the plate loop, right before the #1/#26 pair.
       const leadCount = chapter.key === "residuals" ? 0 : holdBack ? Math.max(0, essayCount - holdBack.trailingChunks) : essayCount;
       for (let i = 0; i < leadCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
+      // The Thailand watercolor full-bleed spread stands inside Notes
+      // from the Road AFTER the chapter's essay pages and before its
+      // plate run (her direction, 2026-11-10 — correcting the same-day
+      // placement directly behind the opener spread: the essay comes
+      // first, then the spread). It fills the long-open travel-spread
+      // slot (board todo #70); the chapter's own plates stay one to a
+      // page — the spread is a separate full-bleed piece, on the
+      // Pre-iPhone Era pattern. The essay ends on a recto, so the
+      // spread starts on a verso by construction; the blank guard
+      // keeps that invariant if the chapter's head ever changes.
+      if (chapter.key === "road") {
+        if (!nextIsVerso()) specs.push({ kind: "blank" });
+        specs.push({ kind: "bleed", half: "left", chapter, item: ROAD_THAILAND_SPREAD_PLATE });
+        specs.push({ kind: "bleed", half: "right", chapter, item: ROAD_THAILAND_SPREAD_PLATE });
+      }
       // The Pre-iPhone Era full-bleed spread no longer stands here:
       // it moved to just before this chapter's opener spread, as the
       // last spread of Part 4 (her direction, 2026-11-10; see the
@@ -2860,13 +2861,23 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
 
     case "bleed": {
       const { item } = spec;
+      // The Thailand spread (Notes from the Road) carries its work
+      // annotation differently (her direction, 2026-11-10): white text
+      // at the bottom-left corner of the LEFT page, no background box,
+      // and no work title — works in this chapter print no title in
+      // their captions (her rule) — so only the place-and-medium lines
+      // show. The Pre-iPhone Era spread keeps the house treatment:
+      // the full caption in dark text on the right page, low by the
+      // spine.
+      const thailand = spec.chapter.key === "road";
+      const showCaption = thailand ? spec.half === "left" : spec.half === "right";
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-bleed bk-bleed-${spec.half}${bgImgCls}`}>{bgImgLayer}
           <div className="bk-spread-canvas">
             <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} className="bk-bleed-img" />
-            {spec.half === "right" && (
-              <div className="bk-bleed-caption">
-                <div className="bk-caption-title product-title">{item.title}</div>
+            {showCaption && (
+              <div className={thailand ? "bk-bleed-caption bk-bleed-caption-bl" : "bk-bleed-caption"}>
+                {!thailand && <div className="bk-caption-title product-title">{item.title}</div>}
                 <div className="bk-caption-meta">{item.metaLine}</div>
                 {item.metaZh && <div className="bk-caption-meta">{item.metaZh}</div>}
               </div>
