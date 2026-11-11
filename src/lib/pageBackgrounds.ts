@@ -76,6 +76,10 @@ export function rgbToHex(r: number, g: number, b: number): string {
  * order: plate:5 → Remains No. 5 and plate:36 → Photography No. 1,
  * both now black per the table (plate:6/7/8/9/10 already resolved to
  * black pages).
+ *
+ * 2026-11-10 (her direction in chat): watercolors/55 — Notes from
+ * the Road #10, the pigeon — goes from pink to cream, the paper the
+ * editor palette itself labels 米色 (#FAF5EA). No other page moves.
  */
 export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "contents": "white",
@@ -103,7 +107,7 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "plate:/watercolors/52/main.jpg": "black",
   "plate:/watercolors/57/main.jpg": "black",
   "plate:/watercolors/59/main.jpg": "black",
-  "plate:/watercolors/55/main.jpg": "pink",
+  "plate:/watercolors/55/main.jpg": "cream",
   "plate:/watercolors/56/main.jpg": "cream",
   "plate:/watercolors/58/main.jpg": "cream",
   "plate:/photography/01/main.jpg": "black",

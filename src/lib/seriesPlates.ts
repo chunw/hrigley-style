@@ -597,3 +597,35 @@ export const THEATER_EXTRA_PLATES: CatalogItem[] = [
     fallback_image_url: "/book/theater/placeholder-festival.jpg",
   },
 ];
+
+/**
+ * Extra plate appended at the end of the Notes from the Road （出发）
+ * chapter (her direction, 2026-11-10): a sepia watercolor landscape —
+ * a road running diagonally past a small truck lettered "Exotic Fruit
+ * & Coconuts", trees and hills under a big washed sky. She places it
+ * in this chapter and dates it herself: Hawaii, 2022. It stands
+ * outside the watercolor catalog on purpose: the chapter's plates are
+ * split out of that catalog by title, and a catalog entry would
+ * surface the work in the shop; the chapter assembly appends this
+ * plate after the catalog run and the chapter's facsimile pages, so
+ * it closes the section.
+ *
+ * The title is empty on purpose: this chapter's works print no title
+ * in their captions (her rule for the chapter, 2026-11-10) — the
+ * caption carries only the medium line and the place line, as the
+ * chapter's own plates print "2022 · Watercolor on paper · 纸本水彩"
+ * over "Hawaii, 2022. / 夏威夷，2022。".
+ */
+export const ROAD_EXTRA_PLATES: CatalogItem[] = [
+  {
+    title: "",
+    titleZh: null,
+    metaLine: "2022 · Watercolor on paper",
+    mediumZh: "纸本水彩",
+    year: "2022",
+    description: "Hawaii, 2022.<br />夏威夷，2022。",
+    category: "Notes from the Road",
+    image_url: "/book/road/road-hawaii-2022.jpg",
+    fallback_image_url: "/book/road/road-hawaii-2022.jpg",
+  },
+];
