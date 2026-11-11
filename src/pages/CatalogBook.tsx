@@ -1174,15 +1174,20 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         const plateSeq = chapter.key === "residuals" ? [...chapter.items.slice(2), ...chapter.items.slice(0, 2)] : chapter.items;
         for (let ii = 0; ii < plateSeq.length; ii++) {
           const { item, plate } = plateSeq[ii];
-          if (chapter.key === "road" && item.image_url.includes("/watercolors/58/")) {
-            // Her direction (2026-11-10, trial — "试试"): Notes from
-            // the Road #13 (the capuchin monkeys, Manuel Antonio,
-            // Costa Rica) converts from a single plate page into a
-            // full-bleed spread in its current position in the run,
-            // reusing the Pre-iPhone Era bleed mechanism. Its work
-            // info stands on the spread in white at the bottom-left,
-            // with no title (the chapter's no-titles rule) — see the
-            // bleed render case.
+          if (chapter.key === "road" && (item.image_url.includes("/watercolors/58/") || item.image_url.includes("/watercolors/45/"))) {
+            // Her directions (2026-11-10): two road plates convert
+            // from single plate pages into full-bleed spreads in
+            // their current positions in the run, reusing the
+            // Pre-iPhone Era bleed mechanism — #13 (the capuchin
+            // monkeys, Manuel Antonio, Costa Rica; trial — "试试")
+            // and #2 (the San Cristóbal breakfast — "做成跨页，删掉
+            // 单页", then "两个都要做成跨页": both this painting and
+            // the #4 car painting become spreads). #13's work info
+            // stands on its spread in white at the bottom-left, with
+            // no title (the chapter's no-titles rule); the breakfast
+            // spread carries NO work info at all (her direction —
+            // "早餐图跨页那张不需要信息表明") — see the bleed render
+            // case.
             if (!nextIsVerso()) specs.push({ kind: "blank" });
             specs.push({ kind: "bleed", half: "left", chapter, item });
             specs.push({ kind: "bleed", half: "right", chapter, item });
@@ -2933,7 +2938,9 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // The road chapter's bleed spreads carry their work info in
       // white at the bottom-left corner of the LEFT page, no
       // background box and no work title (the chapter's no-titles
-      // rule, her directions 2026-11-10). Two treatments share that
+      // rule, her directions 2026-11-10) — except the breakfast
+      // spread (#2), which carries no work info at all (see
+      // `breakfast` below). Two treatments share that
       // placement: the Thailand spread prints its two
       // place-and-medium lines at the house caption size
       // (bk-bleed-caption-bl); the monkey spread (Notes from the
@@ -2943,7 +2950,14 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // description. Other bleed spreads (Pre-iPhone Era) keep
       // their right-page caption untouched.
       const thailand = item.image_url === ROAD_THAILAND_SPREAD_PLATE.image_url;
-      const roadSpread = spec.chapter.key === "road" && !thailand;
+      // The breakfast spread (#2, watercolors/45) prints no caption
+      // anywhere on the spread — no meta line, no place lines,
+      // nothing (her direction, 2026-11-10: "早餐图跨页那张不需要
+      // 信息表明"). It is singled out here so neither the road
+      // caption treatment nor the default right-page caption fires
+      // for it.
+      const breakfast = item.image_url.includes("/watercolors/45/");
+      const roadSpread = spec.chapter.key === "road" && !thailand && !breakfast;
       const spreadMeta = [item.metaLine, item.dimensions, item.mediumZh && item.mediumZh !== item.medium && !(item.metaLine ?? "").includes(item.mediumZh) ? item.mediumZh : "", item.dimensionsZh && item.dimensionsZh !== item.dimensions ? item.dimensionsZh : ""].filter(Boolean).join(" \u00b7 ");
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-bleed bk-bleed-${spec.half}${bgImgCls}`}>{bgImgLayer}
@@ -2961,7 +2975,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 {item.description && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: item.description }} />}
               </div>
             )}
-            {!thailand && !roadSpread && spec.half === "right" && (
+            {!thailand && !roadSpread && !breakfast && spec.half === "right" && (
               <div className="bk-bleed-caption">
                 <div className="bk-caption-title product-title">{item.title}</div>
                 <div className="bk-caption-meta">{item.metaLine}</div>
