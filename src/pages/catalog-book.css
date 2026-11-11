@@ -897,16 +897,18 @@
   color: #fff;
 }
 
-/* Road chapter bleed spread (Notes from the Road #13, the monkeys):
-   the work info stands in white at the spread's bottom-left corner,
-   on the left page — the treatment she directed for the Thailand
-   spread (2026-11-10). Inset mirrors the road opener's bottom-left
+/* Road chapter bleed spreads (Notes from the Road #13, the monkeys,
+   and #4): the work info stands in white at a bottom corner —
+   bottom-left on the left page for the monkeys (the treatment she
+   directed for the Thailand spread, 2026-11-10), bottom-right for
+   the car spread (#4; see .bk-bleed-caption-road-br below). Inset mirrors the road opener's bottom-left
    credit. Flat white type: no shadow, no background box (her
    direction, 2026-11-10). Type stepped up from the 7pt bleed-caption
    size she found too small: meta line 9.5pt, place lines 9pt —
    above the ordinary plate captions (meta 7pt, desc 7.5pt) and at
-   the book's body-text scale. Scoped to this spread's caption only;
-   the Thailand and Pre-iPhone bleed captions keep their own sizes. */
+   the book's body-text scale. Scoped to these spreads' captions
+   only; the Thailand and Pre-iPhone bleed captions keep their
+   own sizes. */
 .bk-bleed-caption-road {
   left: calc(var(--bleed) + 0.55in);
   bottom: 0.42in;
@@ -923,6 +925,20 @@
   margin-top: 6px;
   font-size: 9pt;
   line-height: 1.55;
+}
+
+/* Bottom-right variant (her direction, 2026-11-10, later the same
+   evening): the car spread's (#4) work info stands at the spread's
+   bottom-right corner instead — on the right page. The shared
+   canvas spans both pages, so anchoring to its right edge puts the
+   block on the right page; the inset mirrors the bottom-left
+   treatment (0.55in in from the trim, 0.42in up), and the lines
+   right-align so they hug the corner. Same flat white type, same
+   stepped-up sizes (inherited from .bk-bleed-caption-road). */
+.bk-bleed-caption-road-br {
+  left: auto;
+  right: calc(var(--bleed) + 0.55in);
+  text-align: right;
 }
 
 

@@ -1174,20 +1174,22 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         const plateSeq = chapter.key === "residuals" ? [...chapter.items.slice(2), ...chapter.items.slice(0, 2)] : chapter.items;
         for (let ii = 0; ii < plateSeq.length; ii++) {
           const { item, plate } = plateSeq[ii];
-          if (chapter.key === "road" && (item.image_url.includes("/watercolors/58/") || item.image_url.includes("/watercolors/45/"))) {
-            // Her directions (2026-11-10): two road plates convert
+          if (chapter.key === "road" && (item.image_url.includes("/watercolors/58/") || item.image_url.includes("/watercolors/45/") || item.image_url.includes("/watercolors/47/"))) {
+            // Her directions (2026-11-10): three road plates convert
             // from single plate pages into full-bleed spreads in
             // their current positions in the run, reusing the
             // Pre-iPhone Era bleed mechanism — #13 (the capuchin
-            // monkeys, Manuel Antonio, Costa Rica; trial — "试试")
-            // and #2 (the San Cristóbal breakfast — "做成跨页，删掉
+            // monkeys, Manuel Antonio, Costa Rica; trial — "试试"),
+            // #2 (the San Cristóbal breakfast — "做成跨页，删掉
             // 单页", then "两个都要做成跨页": both this painting and
-            // the #4 car painting become spreads). #13's work info
-            // stands on its spread in white at the bottom-left, with
-            // no title (the chapter's no-titles rule); the breakfast
+            // the #4 car painting become spreads) and #4 (the San
+            // Cristóbal car painting; "做成跨页，删掉单页").
+            // #13's work info stands on its spread in white at the
+            // bottom-left and #4's at the bottom-right, with no
+            // title (the chapter's no-titles rule); the breakfast
             // spread carries NO work info at all (her direction —
-            // "早餐图跨页那张不需要信息表明") — see the bleed render
-            // case.
+            // "早餐图跨页那张不需要信息表明") — see the bleed
+            // render case.
             if (!nextIsVerso()) specs.push({ kind: "blank" });
             specs.push({ kind: "bleed", half: "left", chapter, item });
             specs.push({ kind: "bleed", half: "right", chapter, item });
@@ -2936,16 +2938,18 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
     case "bleed": {
       const { item } = spec;
       // The road chapter's bleed spreads carry their work info in
-      // white at the bottom-left corner of the LEFT page, no
-      // background box and no work title (the chapter's no-titles
-      // rule, her directions 2026-11-10) — except the breakfast
-      // spread (#2), which carries no work info at all (see
-      // `breakfast` below). Two treatments share that
-      // placement: the Thailand spread prints its two
+      // white at a bottom corner, no background box and no work
+      // title (the chapter's no-titles rule, her directions
+      // 2026-11-10) — the bottom-left of the LEFT page, except the
+      // breakfast spread (#2), which carries no work info at all
+      // (see `breakfast` below), and the car spread (#4), whose
+      // info she moved to the bottom-right (see carSpread below).
+      // Two treatments share that placement: the Thailand spread
+      // prints its two
       // place-and-medium lines at the house caption size
-      // (bk-bleed-caption-bl); the monkey spread (Notes from the
-      // Road #13, her trial conversion) steps the type up
-      // (bk-bleed-caption-road) and composes its meta line from the
+      // (bk-bleed-caption-bl); the converted plate spreads (Notes
+      // from the Road #13, her trial conversion, and #4) step the
+      // type up (bk-bleed-caption-road) and compose the meta line from the
       // plate's fields, then the place lines from the work's
       // description. Other bleed spreads (Pre-iPhone Era) keep
       // their right-page caption untouched.
@@ -2958,6 +2962,12 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // for it.
       const breakfast = item.image_url.includes("/watercolors/45/");
       const roadSpread = spec.chapter.key === "road" && !thailand && !breakfast;
+      // Her direction (2026-11-10, later the same evening): of the
+      // converted road spreads, the car plate's (#4, San Cristóbal)
+      // work info stands at the spread's BOTTOM-RIGHT corner — on
+      // the right page — instead of the bottom-left. The monkey
+      // spread keeps the bottom-left treatment.
+      const carSpread = item.image_url.includes("/watercolors/47/");
       const spreadMeta = [item.metaLine, item.dimensions, item.mediumZh && item.mediumZh !== item.medium && !(item.metaLine ?? "").includes(item.mediumZh) ? item.mediumZh : "", item.dimensionsZh && item.dimensionsZh !== item.dimensions ? item.dimensionsZh : ""].filter(Boolean).join(" \u00b7 ");
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-bleed bk-bleed-${spec.half}${bgImgCls}`}>{bgImgLayer}
@@ -2969,8 +2979,14 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 {item.metaZh && <div className="bk-caption-meta">{item.metaZh}</div>}
               </div>
             )}
-            {roadSpread && spec.half === "left" && (
+            {roadSpread && !carSpread && spec.half === "left" && (
               <div className="bk-bleed-caption bk-bleed-caption-road">
+                {spreadMeta && <div className="bk-caption-meta">{spreadMeta}</div>}
+                {item.description && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: item.description }} />}
+              </div>
+            )}
+            {roadSpread && carSpread && spec.half === "right" && (
+              <div className="bk-bleed-caption bk-bleed-caption-road bk-bleed-caption-road-br">
                 {spreadMeta && <div className="bk-caption-meta">{spreadMeta}</div>}
                 {item.description && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: item.description }} />}
               </div>
