@@ -183,7 +183,7 @@ const SAHARA_NOTE = {
  *  Sourcing rule (her discipline): only lines that already stand in this book
  *  for that chapter, the chapter's own text, verbatim, or her own words.
  *  Nothing is written for the slot. Chapters whose book text carries no such
- *  line (Still Things, Unfinished Archive) get none. */
+ *  line (Unfinished Archive) get none. */
 const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
   // Spirit keeps its title spread, but its sentence stands on its own
   // quiet page inside the chapter (her direction, 2026-11-09 — the
@@ -195,12 +195,14 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     zh: "",
   },
   // Still Things gets its opener spread (her direction, 2026-11-10):
-  // the section had none because it carried no epigraph. The empty
-  // entry holds the spread open with no sentence printed on it (the
-  // IMMEMORY/Spirit precedent) — title and number only.
+  // the section had none because it carried no epigraph. She then
+  // supplied the section's own line and directed it onto this title
+  // spread (her direction, 2026-11-10, correcting its brief stand as
+  // the section's intro text): her Chinese verbatim; the EN is a
+  // faithful translation of it, pending her review.
   stillthings: {
-    en: "",
-    zh: "",
+    en: "Picking up the scattered bits and pieces of a strange world.",
+    zh: "捡起怪奇世界的零零散散",
   },
   remains: {
     en: "The figurines have outlasted an empire. They will probably outlast the video call.",
@@ -3623,8 +3625,11 @@ function useBookModel(args: {
         // entry carried her placeholder "todo" (the Unfinished
         // Archive convention), so the section paginated intro pages
         // like its siblings; later that day she supplied the
-        // section's line （捡起怪奇世界的零零散散）, which now stands
-        // as the intro text in place of the placeholder.
+        // section's line （捡起怪奇世界的零零散散）, which stood as
+        // the intro text in place of the placeholder until she
+        // directed it onto the chapter's opener spread instead (her
+        // direction, 2026-11-10 — see CHAPTER_EPIGRAPH), so the entry
+        // is empty again and the section has no intro pages.
         const enStream: EssayItem[] = enT ? pBlocks(asParas(enT)).map((html) => ({ html, edit: `series:${s?.id}:en` })) : [];
         const zhStream: EssayItem[] = zhT ? pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s?.id}:zh` })) : [];
         if (chapter.key === "sahara") {

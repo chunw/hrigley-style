@@ -126,10 +126,12 @@ export const BOOK_SERIES: BookSeries[] = [
     titleEn: "Still Things",
     titleZh: "静物",
     years: "",
-    // Her line for the section (her direction, 2026-11-10): the EN is a
-    // faithful translation of her Chinese, pending her review.
-    textEn: "Picking up the scattered bits and pieces of a strange world.",
-    textZh: "捡起怪奇世界的零零散散",
+    // No body text: her line for the section （捡起怪奇世界的零零散散）
+    // stands on the chapter's opener spread as its epigraph instead
+    // (her direction, 2026-11-10 — see CHAPTER_EPIGRAPH in
+    // CatalogBook.tsx). Empty text paginates zero intro pages.
+    textEn: "",
+    textZh: "",
     mergedInto: "watercolor-split",
   },
   {
