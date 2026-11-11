@@ -12,7 +12,7 @@ import { PAGE_BACKGROUNDS, hexToRgb, isHexPageBg, rgbToHex, type PageBgKind, typ
 import { IMAGE_EDITS } from "@/lib/imageEdits";
 import { PAGE_BACKGROUND_IMAGES, type PageBgImage } from "@/lib/pageBackgroundImages";
 import { BOOK_SERIES } from "@/lib/bookSeries";
-import { SERIES_PLATES, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE, ROAD_THAILAND_SPREAD_PLATE } from "@/lib/seriesPlates";
+import { SERIES_PLATES, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, RESIDUALS_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE, ROAD_THAILAND_SPREAD_PLATE } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS, PART_WEBSITES } from "@/lib/exhibitions";
@@ -1174,16 +1174,22 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         const plateSeq = chapter.key === "residuals" ? [...chapter.items.slice(2), ...chapter.items.slice(0, 2)] : chapter.items;
         for (let ii = 0; ii < plateSeq.length; ii++) {
           const { item, plate } = plateSeq[ii];
-          if (chapter.key === "road" && (item.image_url.includes("/watercolors/58/") || item.image_url.includes("/watercolors/47/"))) {
-            // Her directions (2026-11-10): two road plates stand as
-            // full-bleed spreads in their current positions in the
-            // run, reusing the Pre-iPhone Era bleed mechanism —
-            // #13 (the capuchin monkeys, Manuel Antonio, Costa Rica;
-            // trial — "试试") and #4 (the San Cristóbal plate;
-            // "做成跨页，删掉单页" — the spread replaces its single
-            // page). Their work info stands on the spread in white
-            // at the bottom-left, with no title (the chapter's
-            // no-titles rule) — see the bleed render case.
+          if (chapter.key === "road" && (item.image_url.includes("/watercolors/58/") || item.image_url.includes("/watercolors/45/") || item.image_url.includes("/watercolors/47/"))) {
+            // Her directions (2026-11-10): three road plates convert
+            // from single plate pages into full-bleed spreads in
+            // their current positions in the run, reusing the
+            // Pre-iPhone Era bleed mechanism — #13 (the capuchin
+            // monkeys, Manuel Antonio, Costa Rica; trial — "试试"),
+            // #2 (the San Cristóbal breakfast — "做成跨页，删掉
+            // 单页", then "两个都要做成跨页": both this painting and
+            // the #4 car painting become spreads) and #4 (the San
+            // Cristóbal car painting; "做成跨页，删掉单页").
+            // #13's work info stands on its spread in white at the
+            // bottom-left and #4's at the bottom-right, with no
+            // title (the chapter's no-titles rule); the breakfast
+            // spread carries NO work info at all (her direction —
+            // "早餐图跨页那张不需要信息表明") — see the bleed
+            // render case.
             if (!nextIsVerso()) specs.push({ kind: "blank" });
             specs.push({ kind: "bleed", half: "left", chapter, item });
             specs.push({ kind: "bleed", half: "right", chapter, item });
@@ -2935,8 +2941,11 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // white at a bottom corner, no background box and no work
       // title (the chapter's no-titles rule, her directions
       // 2026-11-10) — the bottom-left of the LEFT page, except the
-      // car spread (#4), whose info she moved to the bottom-right
-      // (see carSpread below). Two treatments share that placement: the Thailand spread prints its two
+      // breakfast spread (#2), which carries no work info at all
+      // (see `breakfast` below), and the car spread (#4), whose
+      // info she moved to the bottom-right (see carSpread below).
+      // Two treatments share that placement: the Thailand spread
+      // prints its two
       // place-and-medium lines at the house caption size
       // (bk-bleed-caption-bl); the converted plate spreads (Notes
       // from the Road #13, her trial conversion, and #4) step the
@@ -2945,7 +2954,14 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // description. Other bleed spreads (Pre-iPhone Era) keep
       // their right-page caption untouched.
       const thailand = item.image_url === ROAD_THAILAND_SPREAD_PLATE.image_url;
-      const roadSpread = spec.chapter.key === "road" && !thailand;
+      // The breakfast spread (#2, watercolors/45) prints no caption
+      // anywhere on the spread — no meta line, no place lines,
+      // nothing (her direction, 2026-11-10: "早餐图跨页那张不需要
+      // 信息表明"). It is singled out here so neither the road
+      // caption treatment nor the default right-page caption fires
+      // for it.
+      const breakfast = item.image_url.includes("/watercolors/45/");
+      const roadSpread = spec.chapter.key === "road" && !thailand && !breakfast;
       // Her direction (2026-11-10, later the same evening): of the
       // converted road spreads, the car plate's (#4, San Cristóbal)
       // work info stands at the spread's BOTTOM-RIGHT corner — on
@@ -2975,7 +2991,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 {item.description && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: item.description }} />}
               </div>
             )}
-            {!thailand && !roadSpread && spec.half === "right" && (
+            {!thailand && !roadSpread && !breakfast && spec.half === "right" && (
               <div className="bk-bleed-caption">
                 <div className="bk-caption-title product-title">{item.title}</div>
                 <div className="bk-caption-meta">{item.metaLine}</div>
@@ -3415,6 +3431,13 @@ function useBookModel(args: {
         if (i >= 0) lead.push(kept[i]);
       }
       residualsChapter.items = [...lead, ...kept.filter(({ item }) => item.title !== "Residuals #26" && item.title !== "Residuals #1")];
+      // Her direction (2026-11-10): the untitled black-and-white
+      // watercolor still life she sent joins the chapter as a book-only
+      // plate (see RESIDUALS_EXTRA_PLATES in seriesPlates.ts). Appended
+      // after the catalog run, the chapter's plate rotation places it
+      // as the last plate of the main run, just before the review and
+      // the #1/#26 closing spread.
+      residualsChapter.items = [...residualsChapter.items, ...RESIDUALS_EXTRA_PLATES.map((item) => ({ item, plate: 0 }))];
     }
     // Her direction (2026-11-08): the road chapter's plates are grouped
     // by country — Mexico first (the chapter's original run), then
