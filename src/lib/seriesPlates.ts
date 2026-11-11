@@ -579,13 +579,13 @@ export const THEATER_EXTRA_PLATES: CatalogItem[] = [
 ];
 
 /**
- * Extra plate for the Residuals chapter: an untitled black-and-white
- * watercolor still life — a teapot seen from above, cups and a fork on
- * a breakfast table, in grey washes. The artist sent it on 2026-11-10
- * and directed it into the book's Residuals section, giving no title
- * and no year, so the caption prints the title as "Untitled" and the
- * medium line only — the same line the chapter's watercolor plates
- * print without a year ("Watercolor on paper · 纸本水彩"). It has no
+ * Extra plate for the Residuals chapter: a black-and-white watercolor
+ * still life — a teapot seen from above, cups and a fork on a breakfast
+ * table, in grey washes. The artist sent it on 2026-11-10 and directed
+ * it into the book's Residuals section. She corrected the caption the
+ * same evening: no "Untitled" as a work name, so the plate prints no
+ * title at all, and the year is 2026, so the whole caption is the one
+ * house-format line "2026 · Watercolor on paper · 纸本水彩". It has no
  * shop catalog record: the chapter's plates are split from the
  * watercolor catalog by title, and a record there would also surface
  * in the store's painting catalog, so it is kept book-only here and
@@ -595,11 +595,11 @@ export const THEATER_EXTRA_PLATES: CatalogItem[] = [
  */
 export const RESIDUALS_EXTRA_PLATES: CatalogItem[] = [
   {
-    title: "Untitled",
+    title: "",
     titleZh: null,
-    metaLine: "Watercolor on paper",
+    metaLine: "2026 · Watercolor on paper",
     mediumZh: "纸本水彩",
-    year: "",
+    year: "2026",
     category: "Watercolor",
     image_url: "/book/residuals/residuals-teapot-bw.jpg",
     fallback_image_url: "/book/residuals/residuals-teapot-bw.jpg",
