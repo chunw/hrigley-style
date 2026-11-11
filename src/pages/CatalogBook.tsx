@@ -2779,7 +2779,13 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           </div>
           <div className="bk-caption">
             <div className="bk-caption-body">
-              <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
+              {/* Notes from the Road plates print no work titles (her
+                  direction, 2026-11-10): the caption opens with the meta
+                  line. Book-presentation rule only — the works keep
+                  their titles in the catalog data and the shop. */}
+              {chapter.key !== "road" && (
+                <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
+              )}
               {(item.metaLine || item.dimensions || item.mediumZh || item.dimensionsZh) && (
                 <div className="bk-caption-meta">{[item.metaLine, item.dimensions, item.mediumZh && item.mediumZh !== item.medium && !(item.metaLine ?? "").includes(item.mediumZh) ? item.mediumZh : "", item.dimensionsZh && item.dimensionsZh !== item.dimensions ? item.dimensionsZh : ""].filter(Boolean).join(" · ")}</div>
               )}
@@ -3032,7 +3038,9 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           {spec.page === 21 && (
             <div className="bk-caption">
               <div className="bk-caption-body">
-                <div className="bk-caption-title product-title">Japanese Pottery 日本陶器</div>
+                {/* No work title here either: this page closes the Notes
+                    from the Road chapter, whose plates print no work
+                    titles (her direction, 2026-11-10). */}
                 <div className="bk-caption-meta">2025 · Watercolor on paper · 纸本水彩</div>
                 <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: "Japan.<br />日本。" }} />
               </div>
