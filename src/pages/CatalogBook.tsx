@@ -12,7 +12,7 @@ import { PAGE_BACKGROUNDS, hexToRgb, isHexPageBg, rgbToHex, type PageBgKind, typ
 import { IMAGE_EDITS } from "@/lib/imageEdits";
 import { PAGE_BACKGROUND_IMAGES, type PageBgImage } from "@/lib/pageBackgroundImages";
 import { BOOK_SERIES } from "@/lib/bookSeries";
-import { SERIES_PLATES, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
+import { SERIES_PLATES, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE, ROAD_THAILAND_SPREAD_PLATE } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS, PART_WEBSITES } from "@/lib/exhibitions";
@@ -1000,6 +1000,20 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       if (!nextIsVerso()) specs.push({ kind: "blank" });
       specs.push({ kind: "opener", half: "left", chapter });
       specs.push({ kind: "opener", half: "right", chapter });
+    }
+    // The Thailand watercolor full-bleed spread stands inside Notes
+    // from the Road immediately after the chapter's opener spread,
+    // before the chapter's text and plate run (her direction,
+    // 2026-11-10; it fills the long-open travel-spread slot, board
+    // todo #70). The chapter's own plates stay one to a page — the
+    // spread is a separate full-bleed piece, on the Pre-iPhone Era
+    // pattern above. The opener spread ends on a recto, so the spread
+    // starts on a verso by construction; the blank guard keeps that
+    // invariant if the chapter's head ever changes.
+    if (chapter.key === "road") {
+      if (!nextIsVerso()) specs.push({ kind: "blank" });
+      specs.push({ kind: "bleed", half: "left", chapter, item: ROAD_THAILAND_SPREAD_PLATE });
+      specs.push({ kind: "bleed", half: "right", chapter, item: ROAD_THAILAND_SPREAD_PLATE });
     }
     // The cover-story text stands as ONE quiet page inside Negotiated
     // Intelligence, immediately after the chapter's opener spread and
