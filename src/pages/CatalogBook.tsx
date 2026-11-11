@@ -3114,7 +3114,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                     decided Japanese Pottery KEEPS its title (2026-11-10). */}
                 <div className="bk-caption-title product-title">Japanese Pottery 日本陶器</div>
                 <div className="bk-caption-meta">2025 · Watercolor on paper · 纸本水彩</div>
-                <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: "Japan.<br />日本。" }} />
+                <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: "Japan Folk Crafts Museum, Tokyo.<br />东京，日本民艺馆。" }} />
               </div>
             </div>
           )}
