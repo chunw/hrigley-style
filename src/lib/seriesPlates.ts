@@ -538,12 +538,12 @@ export const PRE_IPHONE_ERA_PLATE: CatalogItem = plate(
  * lines only, set in white at the spread's bottom-left corner.
  */
 export const ROAD_THAILAND_SPREAD_PLATE: CatalogItem = plate(
-  "Untitled", "Thailand · Watercolor on paper", "",
+  "Untitled", "Chiang Mai, Thailand · Watercolor on paper", "",
   "",
   "",
   "/book/road/road-thailand-spread.jpg",
   undefined,
-  "泰国 · 纸本水彩",
+  "泰国清迈 · 纸本水彩",
 );
 
 /**
