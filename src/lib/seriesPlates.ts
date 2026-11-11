@@ -599,16 +599,21 @@ export const THEATER_EXTRA_PLATES: CatalogItem[] = [
 ];
 
 /**
- * Extra plate appended at the end of the Notes from the Road （出发）
- * chapter (her direction, 2026-11-10): a sepia watercolor landscape —
- * a road running diagonally past a small truck lettered "Exotic Fruit
- * & Coconuts", trees and hills under a big washed sky. She places it
- * in this chapter and dates it herself: Hawaii, 2022. It stands
- * outside the watercolor catalog on purpose: the chapter's plates are
- * split out of that catalog by title, and a catalog entry would
- * surface the work in the shop; the chapter assembly appends this
- * plate after the catalog run and the chapter's facsimile pages, so
- * it closes the section.
+ * Extra plate for the Notes from the Road （出发） chapter (her
+ * direction, 2026-11-10): a sepia watercolor landscape — a road
+ * running diagonally past a small truck lettered "Exotic Fruit &
+ * Coconuts", trees and hills under a big washed sky. She places it in
+ * this chapter and dates it herself: Hawaii, 2022. It stands outside
+ * the watercolor catalog on purpose: the chapter's plates are split
+ * out of that catalog by title, and a catalog entry would surface the
+ * work in the shop; the chapter assembly interleaves this plate into
+ * the catalog run instead.
+ *
+ * Placement (revised 2026-11-10, her same-country principle — 相同国家
+ * 的图放在一起，连着）: it stands immediately after Notes from the
+ * Road #10 (New York City), so the two United States plates are
+ * neighbours. As first added it closed the section, behind the Norway
+ * and China plates; that split the USA plates, so it moved up.
  *
  * The title is empty on purpose: this chapter's works print no title
  * in their captions (her rule for the chapter, 2026-11-10) — the

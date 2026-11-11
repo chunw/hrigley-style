@@ -1197,6 +1197,18 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
           } else {
             specs.push({ kind: "plate", chapter, item, plate });
           }
+          if (chapter.key === "road" && item.title === "Notes from the Road #10") {
+            // Her principle for this chapter (2026-11-10): plates from
+            // the same country stand together, consecutively （相同国家
+            // 的图放在一起，连着）. The book-only Hawaii plate
+            // (ROAD_EXTRA_PLATES in seriesPlates.ts — not in the
+            // watercolor catalog, so it never surfaces in the shop)
+            // therefore stands immediately after #10 (New York City),
+            // so the two United States plates are neighbours. Until
+            // this direction it was appended at the chapter's end,
+            // behind Norway and China, splitting the USA plates.
+            for (const extra of ROAD_EXTRA_PLATES) specs.push({ kind: "plate", chapter, item: extra, plate: 0 });
+          }
           if (chapter.key === "residuals" && ii === plateSeq.length - 3) {
             for (let ci = 0; ci < essayCount; ci++) specs.push({ kind: "essay", chapter, chunk: ci });
           }
@@ -1215,17 +1227,10 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     if (chapter.key === "stillthings") {
       for (const p of CANVA_STILLTHINGS_PAGES) specs.push({ kind: "canva", page: p });
     }
-    if (chapter.key === "road") {
-      // The chapter's last plate is book-only (ROAD_EXTRA_PLATES in
-      // seriesPlates.ts): the Hawaii watercolor of 2022, appended
-      // after the facsimile pages so it closes the section (her
-      // direction, 2026-11-10). It is not in the watercolor catalog,
-      // so it never surfaces in the shop. The facsimile pages it
-      // followed here moved to the chapter's head later the same day
-      // (see the emission behind the opener spread above); the Hawaii
-      // plate still closes the section, now behind the road plates.
-      for (const item of ROAD_EXTRA_PLATES) specs.push({ kind: "plate", chapter, item, plate: 0 });
-    }
+    // (The road chapter's book-only Hawaii plate is no longer emitted
+    // here at the chapter's end: it now stands inside the plate run,
+    // immediately after Notes from the Road #10 — see the interleave in
+    // the plate loop above; same-country plates stand together.)
     // The Spirit chapter's bridge sentence closes the chapter on its own
     // quiet page (her direction, 2026-11-09): taken out of the essay body
     // (see the spirit essay assembly below) and set alone after the
