@@ -3050,7 +3050,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                     from the Road chapter, whose plates print no work
                     titles (her direction, 2026-11-10). */}
                 <div className="bk-caption-meta">2025 · Watercolor on paper · 纸本水彩</div>
-                <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: "Japan.<br />日本。" }} />
+                <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: "Japan Folk Crafts Museum, Tokyo.<br />东京，日本民艺馆。" }} />
               </div>
             </div>
           )}
