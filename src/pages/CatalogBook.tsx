@@ -3109,9 +3109,10 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           {spec.page === 21 && (
             <div className="bk-caption">
               <div className="bk-caption-body">
-                {/* No work title here either: this page closes the Notes
-                    from the Road chapter, whose plates print no work
-                    titles (her direction, 2026-11-10). */}
+                {/* Exception to the chapter's no-titles rule: this page
+                    closes the Notes from the Road chapter, but the artist
+                    decided Japanese Pottery KEEPS its title (2026-11-10). */}
+                <div className="bk-caption-title product-title">Japanese Pottery 日本陶器</div>
                 <div className="bk-caption-meta">2025 · Watercolor on paper · 纸本水彩</div>
                 <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: "Japan.<br />日本。" }} />
               </div>
