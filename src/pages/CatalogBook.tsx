@@ -3620,9 +3620,11 @@ function useBookModel(args: {
         // sentinel would give the section one blank text page. She
         // deleted that page (her direction, 2026-11-09), so an empty
         // text here means zero essay chunks. Since 2026-11-10 the
-        // entry carries her placeholder "todo" (the Unfinished
-        // Archive convention), so the section paginates intro pages
-        // like its siblings until she supplies the real text.
+        // entry carried her placeholder "todo" (the Unfinished
+        // Archive convention), so the section paginated intro pages
+        // like its siblings; later that day she supplied the
+        // section's line （捡起怪奇世界的零零散散）, which now stands
+        // as the intro text in place of the placeholder.
         const enStream: EssayItem[] = enT ? pBlocks(asParas(enT)).map((html) => ({ html, edit: `series:${s?.id}:en` })) : [];
         const zhStream: EssayItem[] = zhT ? pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s?.id}:zh` })) : [];
         if (chapter.key === "sahara") {

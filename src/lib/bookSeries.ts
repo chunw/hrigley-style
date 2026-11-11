@@ -126,8 +126,10 @@ export const BOOK_SERIES: BookSeries[] = [
     titleEn: "Still Things",
     titleZh: "静物",
     years: "",
-    textEn: "todo",
-    textZh: "todo",
+    // Her line for the section (her direction, 2026-11-10): the EN is a
+    // faithful translation of her Chinese, pending her review.
+    textEn: "Picking up the scattered bits and pieces of a strange world.",
+    textZh: "捡起怪奇世界的零零散散",
     mergedInto: "watercolor-split",
   },
   {
