@@ -74,7 +74,7 @@ type PageSpec =
   | { kind: "contents"; chunk: number }
   | { kind: "preface"; chunk: number }
   | { kind: "painting-intro"; chunk: number }
-  | { kind: "opener"; half: "left" | "right"; chapter: Chapter }
+  | { kind: "opener"; half: "left" | "right"; chapter: Chapter; titleSpread?: boolean }
   | { kind: "essay"; chapter: Chapter; chunk: number }
   | { kind: "exhibitions"; chapter: Chapter }
   | { kind: "part-exhibitions"; part: number; chunk: number }
@@ -1002,6 +1002,16 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     }
     if (CHAPTER_EPIGRAPH[chapter.key] || chapter.partHead || chapter.partIntro) {
       if (!nextIsVerso()) specs.push({ kind: "blank" });
+      // Her direction (2026-11-10): the road chapter gains a title
+      // spread — the standard black section opener, the bilingual
+      // title only, no epigraph and no number — standing immediately
+      // before its full-bleed painting spread, which until now opened
+      // the chapter with no title page at all. The painting spread
+      // itself follows unchanged.
+      if (chapter.key === "road") {
+        specs.push({ kind: "opener", half: "left", chapter, titleSpread: true });
+        specs.push({ kind: "opener", half: "right", chapter, titleSpread: true });
+      }
       specs.push({ kind: "opener", half: "left", chapter });
       specs.push({ kind: "opener", half: "right", chapter });
     }
@@ -1671,7 +1681,13 @@ function pageKeyOf(spec: PageSpec): string | null {
     case "part-exhibitions":
       return `part-exhibitions:${spec.part}:${spec.chunk}`;
     case "opener":
-      return `opener:${spec.chapter.key}:${spec.half}`;
+      // A chapter's separate title spread (the road chapter's, added
+      // 2026-11-10) keys apart from the chapter's own opening spread,
+      // so the painting spread's background images and per-page
+      // grounds stay attached to the painting spread alone.
+      return spec.titleSpread
+        ? `opener:${spec.chapter.key}:title:${spec.half}`
+        : `opener:${spec.chapter.key}:${spec.half}`;
     case "aphorism":
       return `aphorism:${spec.aphorism.id}:${spec.half}`;
     case "motto":
@@ -2598,7 +2614,12 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // across the bottom; the chapter's epigraph, where its own book text
       // carries one, sits small in the upper field. Text only: no artwork
       // appears before the section itself.
-      const epigraph = CHAPTER_EPIGRAPH[chapter.key];
+      // A titleSpread page (the road chapter's new title spread) is a
+      // plain section opener: the bilingual title only — it never
+      // carries the chapter's epigraph, which stays where it was (on
+      // the road chapter, that is the painting spread right after).
+      const titleSpread = !!spec.titleSpread;
+      const epigraph = titleSpread ? undefined : CHAPTER_EPIGRAPH[chapter.key];
       const partOpener = !!(chapter.partIntro || chapter.partHead);
       // The big opener numeral belongs to the five parts only, and it
       // is the PART number (her direction, 2026-11-09, superseding the
@@ -2623,9 +2644,11 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // bottom-left corner; the right page carries no credit. Values
       // from the watercolor catalog record (/watercolors/18 — both
       // paintings are 2025 watercolors on paper, so one line covers
-      // the spread). The section is left with no title page; that is
-      // her call, not an oversight.
-      const roadWork = chapter.key === "road" && half === "left"
+      // the spread). The section long had no title page (her call
+      // then); her direction of 2026-11-10 puts a separate title
+      // spread in front of this one — the titleSpread opener specs in
+      // paginate — and this spread still shows only the artwork.
+      const roadWork = chapter.key === "road" && half === "left" && !titleSpread
         ? watercolors.find((w) => w.id === "18")
         : undefined;
       const titleEn = chapter.titleEn ?? chapter.title;
@@ -2660,7 +2683,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 ))}
               </div>
             )}
-            {chapter.key !== "road" && (
+            {(chapter.key !== "road" || titleSpread) && (
             <Collage
               title={stackedTitle(chapter)}
               titleSize={titleSize}
