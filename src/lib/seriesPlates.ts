@@ -433,15 +433,16 @@ export const DEATH_VALLEY_PLATES: CatalogItem[] = [1, 2, 3].map((n) => ({
 }));
 
 /**
- * Extra plate appended at the end of the El Otro, El Mismo chapter: a
- * black-and-white photograph from the series' puppetry portraits — a
- * figure in a white doll dress slumped over a striped box, strings tied
- * to her arms. The artist sent it on 2026-11-10 and directed it into the
- * book's El Otro section, the same day it joined the series on
- * chunwang.art. The work is untitled, like the series plate that already
- * closes the chapter (photography id 8, which the book prints as
- * "Untitled"), and her records give it no year or location, so the
- * caption prints the medium line only.
+ * Extra plates appended at the end of the El Otro, El Mismo chapter:
+ * photographs from the series' puppetry portraits — first a black-and-white
+ * one, a figure in a white doll dress slumped over a striped box, strings
+ * tied to her arms; then its warm-colour companion, a girl with long dark
+ * hair, head bowed, red ropes tied to her wrists. The artist sent both on
+ * 2026-11-10 and directed them into the book's El Otro section, the same
+ * day they joined the series on chunwang.art. The works are untitled,
+ * like the series plate that already closes the chapter (photography
+ * id 8, which the book prints as "Untitled"), and her records give them
+ * no year or location, so the captions print the medium line only.
  */
 export const EL_OTRO_EXTRA_PLATES: CatalogItem[] = [
   {
@@ -453,6 +454,16 @@ export const EL_OTRO_EXTRA_PLATES: CatalogItem[] = [
     category: "Inner Wilderness",
     image_url: "/book/elotro/marionette-box.jpg",
     fallback_image_url: "/book/elotro/marionette-box.jpg",
+  },
+  {
+    title: "Untitled",
+    titleZh: null,
+    metaLine: "Photography",
+    mediumZh: "摄影作品",
+    year: "",
+    category: "Inner Wilderness",
+    image_url: "/book/elotro/red-ropes.jpg",
+    fallback_image_url: "/book/elotro/red-ropes.jpg",
   },
 ];
 
