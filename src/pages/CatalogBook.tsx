@@ -2932,10 +2932,11 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
     case "bleed": {
       const { item } = spec;
       // The road chapter's bleed spreads carry their work info in
-      // white at the bottom-left corner of the LEFT page, no
-      // background box and no work title (the chapter's no-titles
-      // rule, her directions 2026-11-10). Two treatments share that
-      // placement: the Thailand spread prints its two
+      // white at a bottom corner, no background box and no work
+      // title (the chapter's no-titles rule, her directions
+      // 2026-11-10) — the bottom-left of the LEFT page, except the
+      // car spread (#4), whose info she moved to the bottom-right
+      // (see carSpread below). Two treatments share that placement: the Thailand spread prints its two
       // place-and-medium lines at the house caption size
       // (bk-bleed-caption-bl); the converted plate spreads (Notes
       // from the Road #13, her trial conversion, and #4) step the
@@ -2945,6 +2946,12 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // their right-page caption untouched.
       const thailand = item.image_url === ROAD_THAILAND_SPREAD_PLATE.image_url;
       const roadSpread = spec.chapter.key === "road" && !thailand;
+      // Her direction (2026-11-10, later the same evening): of the
+      // converted road spreads, the car plate's (#4, San Cristóbal)
+      // work info stands at the spread's BOTTOM-RIGHT corner — on
+      // the right page — instead of the bottom-left. The monkey
+      // spread keeps the bottom-left treatment.
+      const carSpread = item.image_url.includes("/watercolors/47/");
       const spreadMeta = [item.metaLine, item.dimensions, item.mediumZh && item.mediumZh !== item.medium && !(item.metaLine ?? "").includes(item.mediumZh) ? item.mediumZh : "", item.dimensionsZh && item.dimensionsZh !== item.dimensions ? item.dimensionsZh : ""].filter(Boolean).join(" \u00b7 ");
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-bleed bk-bleed-${spec.half}${bgImgCls}`}>{bgImgLayer}
@@ -2956,8 +2963,14 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 {item.metaZh && <div className="bk-caption-meta">{item.metaZh}</div>}
               </div>
             )}
-            {roadSpread && spec.half === "left" && (
+            {roadSpread && !carSpread && spec.half === "left" && (
               <div className="bk-bleed-caption bk-bleed-caption-road">
+                {spreadMeta && <div className="bk-caption-meta">{spreadMeta}</div>}
+                {item.description && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: item.description }} />}
+              </div>
+            )}
+            {roadSpread && carSpread && spec.half === "right" && (
+              <div className="bk-bleed-caption bk-bleed-caption-road bk-bleed-caption-road-br">
                 {spreadMeta && <div className="bk-caption-meta">{spreadMeta}</div>}
                 {item.description && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: item.description }} />}
               </div>
