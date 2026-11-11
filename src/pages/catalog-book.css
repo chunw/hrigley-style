@@ -883,6 +883,23 @@
   color: #20211d;
 }
 
+/* Road chapter bleed spread (Notes from the Road #13, the monkeys):
+   the work info stands in white at the spread's bottom-left corner,
+   on the left page — the treatment she directed for the Thailand
+   spread (2026-11-10). Inset mirrors the road opener's bottom-left
+   credit. A soft shadow keeps the white type legible over the bright
+   painting; no background box. */
+.bk-bleed-caption-road {
+  left: calc(var(--bleed) + 0.55in);
+  bottom: 0.42in;
+  color: #fff;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.55);
+}
+
+.bk-bleed-caption-road .bk-caption-meta {
+  color: #fff;
+}
+
 
 .bk-opener-label {
   display: inline-flex;
