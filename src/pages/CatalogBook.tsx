@@ -12,7 +12,7 @@ import { PAGE_BACKGROUNDS, hexToRgb, isHexPageBg, rgbToHex, type PageBgKind, typ
 import { IMAGE_EDITS } from "@/lib/imageEdits";
 import { PAGE_BACKGROUND_IMAGES, type PageBgImage } from "@/lib/pageBackgroundImages";
 import { BOOK_SERIES } from "@/lib/bookSeries";
-import { SERIES_PLATES, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE, ROAD_THAILAND_SPREAD_PLATE } from "@/lib/seriesPlates";
+import { SERIES_PLATES, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, RESIDUALS_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE, ROAD_THAILAND_SPREAD_PLATE } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS, PART_WEBSITES } from "@/lib/exhibitions";
@@ -3401,6 +3401,13 @@ function useBookModel(args: {
         if (i >= 0) lead.push(kept[i]);
       }
       residualsChapter.items = [...lead, ...kept.filter(({ item }) => item.title !== "Residuals #26" && item.title !== "Residuals #1")];
+      // Her direction (2026-11-10): the untitled black-and-white
+      // watercolor still life she sent joins the chapter as a book-only
+      // plate (see RESIDUALS_EXTRA_PLATES in seriesPlates.ts). Appended
+      // after the catalog run, the chapter's plate rotation places it
+      // as the last plate of the main run, just before the review and
+      // the #1/#26 closing spread.
+      residualsChapter.items = [...residualsChapter.items, ...RESIDUALS_EXTRA_PLATES.map((item) => ({ item, plate: 0 }))];
     }
     // Her direction (2026-11-08): the road chapter's plates are grouped
     // by country — Mexico first (the chapter's original run), then
