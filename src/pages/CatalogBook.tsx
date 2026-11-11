@@ -1149,7 +1149,19 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         const plateSeq = chapter.key === "residuals" ? [...chapter.items.slice(2), ...chapter.items.slice(0, 2)] : chapter.items;
         for (let ii = 0; ii < plateSeq.length; ii++) {
           const { item, plate } = plateSeq[ii];
-          if (isJournalPlate(chapter, item)) {
+          if (chapter.key === "road" && item.image_url.includes("/watercolors/58/")) {
+            // Her direction (2026-11-10, trial — "试试"): Notes from
+            // the Road #13 (the capuchin monkeys, Manuel Antonio,
+            // Costa Rica) converts from a single plate page into a
+            // full-bleed spread in its current position in the run,
+            // reusing the Pre-iPhone Era bleed mechanism. Its work
+            // info stands on the spread in white at the bottom-left,
+            // with no title (the chapter's no-titles rule) — see the
+            // bleed render case.
+            if (!nextIsVerso()) specs.push({ kind: "blank" });
+            specs.push({ kind: "bleed", half: "left", chapter, item });
+            specs.push({ kind: "bleed", half: "right", chapter, item });
+          } else if (isJournalPlate(chapter, item)) {
             const run: { item: CatalogItem; plate: number }[] = [];
             while (ii < plateSeq.length && isJournalPlate(chapter, plateSeq[ii].item)) {
               run.push(plateSeq[ii]);
@@ -2872,11 +2884,27 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
 
     case "bleed": {
       const { item } = spec;
+      // The road chapter's bleed spread (Notes from the Road #13, the
+      // monkeys — her trial conversion, 2026-11-10) carries its work
+      // info the way she directed for the Thailand spread: white type
+      // at the spread's bottom-left corner, standing on the left page.
+      // No title (the chapter's no-titles rule): the meta line exactly
+      // as the plate caption composes it, then the place lines from
+      // the work's description. Other bleed spreads (Pre-iPhone Era)
+      // keep their right-page caption untouched.
+      const roadSpread = spec.chapter.key === "road";
+      const spreadMeta = [item.metaLine, item.dimensions, item.mediumZh && item.mediumZh !== item.medium && !(item.metaLine ?? "").includes(item.mediumZh) ? item.mediumZh : "", item.dimensionsZh && item.dimensionsZh !== item.dimensions ? item.dimensionsZh : ""].filter(Boolean).join(" · ");
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-bleed bk-bleed-${spec.half}${bgImgCls}`}>{bgImgLayer}
           <div className="bk-spread-canvas">
             <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} className="bk-bleed-img" />
-            {spec.half === "right" && (
+            {roadSpread && spec.half === "left" && (
+              <div className="bk-bleed-caption bk-bleed-caption-road">
+                {spreadMeta && <div className="bk-caption-meta">{spreadMeta}</div>}
+                {item.description && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: item.description }} />}
+              </div>
+            )}
+            {!roadSpread && spec.half === "right" && (
               <div className="bk-bleed-caption">
                 <div className="bk-caption-title product-title">{item.title}</div>
                 <div className="bk-caption-meta">{item.metaLine}</div>
