@@ -458,15 +458,16 @@ export const SAHARA_EXTRA_PLATES: CatalogItem[] = [
 ];
 
 /**
- * Extra plate appended at the end of the El Otro, El Mismo chapter: a
- * black-and-white photograph from the series' puppetry portraits — a
- * figure in a white doll dress slumped over a striped box, strings tied
- * to her arms. The artist sent it on 2026-11-10 and directed it into the
- * book's El Otro section, the same day it joined the series on
- * chunwang.art. The work is untitled, like the series plate that already
- * closes the chapter (photography id 8, which the book prints as
- * "Untitled"), and her records give it no year or location, so the
- * caption prints the medium line only.
+ * Extra plates appended at the end of the El Otro, El Mismo chapter:
+ * photographs from the series' puppetry portraits — first a black-and-white
+ * one, a figure in a white doll dress slumped over a striped box, strings
+ * tied to her arms; then its warm-colour companion, a girl with long dark
+ * hair, head bowed, red ropes tied to her wrists. The artist sent both on
+ * 2026-11-10 and directed them into the book's El Otro section, the same
+ * day they joined the series on chunwang.art. The works are untitled,
+ * like the series plate that already closes the chapter (photography
+ * id 8, which the book prints as "Untitled"), and her records give them
+ * no year or location, so the captions print the medium line only.
  */
 export const EL_OTRO_EXTRA_PLATES: CatalogItem[] = [
   {
@@ -478,6 +479,16 @@ export const EL_OTRO_EXTRA_PLATES: CatalogItem[] = [
     category: "Inner Wilderness",
     image_url: "/book/elotro/marionette-box.jpg",
     fallback_image_url: "/book/elotro/marionette-box.jpg",
+  },
+  {
+    title: "Untitled",
+    titleZh: null,
+    metaLine: "Photography",
+    mediumZh: "摄影作品",
+    year: "",
+    category: "Inner Wilderness",
+    image_url: "/book/elotro/red-ropes.jpg",
+    fallback_image_url: "/book/elotro/red-ropes.jpg",
   },
 ];
 
@@ -514,3 +525,55 @@ export const PRE_IPHONE_ERA_PLATE: CatalogItem = plate(
   undefined,
   "2018 · 摄影作品 · SFMOMA 专题推荐",
 );
+
+/**
+ * Extra plates appended at the end of the Theater chapter (her
+ * direction, 2026-11-10). The first two are final plates: theatre
+ * balcony photographs from the same world as the chapter's Buenos
+ * Aires / Paris plates — a white-haired man leaning on a gilded
+ * balcony rail (colour), and a balcony with its audience behind a
+ * blurred foreground profile (black and white). Her records give
+ * them no title, year or location, so, like the untitled El Otro
+ * plate, their captions print the medium line only.
+ *
+ * The LAST entry is a PLACEHOLDER: a night-festival photograph (a
+ * dancer balancing a basket headdress with a crescent of flowers
+ * under sparking fireworks) that the artist sent on 2026-11-10
+ * expressly as a placeholder （占位图） — she will supply a
+ * replacement file later. Swap the file at
+ * public/book/theater/placeholder-festival.jpg (or repoint the URL)
+ * when the replacement arrives; it is not a final plate.
+ */
+export const THEATER_EXTRA_PLATES: CatalogItem[] = [
+  {
+    title: "Untitled",
+    titleZh: null,
+    metaLine: "Photography",
+    mediumZh: "摄影作品",
+    year: "",
+    category: "Inner Wilderness",
+    image_url: "/book/theater/balcony-man.jpg",
+    fallback_image_url: "/book/theater/balcony-man.jpg",
+  },
+  {
+    title: "Untitled",
+    titleZh: null,
+    metaLine: "Photography",
+    mediumZh: "摄影作品",
+    year: "",
+    category: "Inner Wilderness",
+    image_url: "/book/theater/balcony-bw.jpg",
+    fallback_image_url: "/book/theater/balcony-bw.jpg",
+  },
+  {
+    // PLACEHOLDER （占位图） — artist will supply a replacement file (2026-11-10).
+    title: "Untitled",
+    titleZh: null,
+    metaLine: "Photography",
+    mediumZh: "摄影作品",
+    year: "",
+    category: "Inner Wilderness",
+    image_url: "/book/theater/placeholder-festival.jpg",
+    fallback_image_url: "/book/theater/placeholder-festival.jpg",
+  },
+];
