@@ -12,7 +12,7 @@ import { PAGE_BACKGROUNDS, hexToRgb, isHexPageBg, rgbToHex, type PageBgKind, typ
 import { IMAGE_EDITS } from "@/lib/imageEdits";
 import { PAGE_BACKGROUND_IMAGES, type PageBgImage } from "@/lib/pageBackgroundImages";
 import { BOOK_SERIES } from "@/lib/bookSeries";
-import { SERIES_PLATES, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
+import { SERIES_PLATES, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE, ROAD_THAILAND_SPREAD_PLATE } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS, PART_WEBSITES } from "@/lib/exhibitions";
@@ -1115,6 +1115,21 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       // inside the plate loop, right before the #1/#26 pair.
       const leadCount = chapter.key === "residuals" ? 0 : holdBack ? Math.max(0, essayCount - holdBack.trailingChunks) : essayCount;
       for (let i = 0; i < leadCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
+      // The Thailand watercolor full-bleed spread stands inside Notes
+      // from the Road AFTER the chapter's essay pages and before its
+      // plate run (her direction, 2026-11-10 — correcting the same-day
+      // placement directly behind the opener spread: the essay comes
+      // first, then the spread). It fills the long-open travel-spread
+      // slot (board todo #70); the chapter's own plates stay one to a
+      // page — the spread is a separate full-bleed piece, on the
+      // Pre-iPhone Era pattern. The essay ends on a recto, so the
+      // spread starts on a verso by construction; the blank guard
+      // keeps that invariant if the chapter's head ever changes.
+      if (chapter.key === "road") {
+        if (!nextIsVerso()) specs.push({ kind: "blank" });
+        specs.push({ kind: "bleed", half: "left", chapter, item: ROAD_THAILAND_SPREAD_PLATE });
+        specs.push({ kind: "bleed", half: "right", chapter, item: ROAD_THAILAND_SPREAD_PLATE });
+      }
       // The Pre-iPhone Era full-bleed spread no longer stands here:
       // it moved to just before this chapter's opener spread, as the
       // last spread of Part 4 (her direction, 2026-11-10; see the
@@ -2907,27 +2922,38 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
 
     case "bleed": {
       const { item } = spec;
-      // The road chapter's bleed spread (Notes from the Road #13, the
-      // monkeys — her trial conversion, 2026-11-10) carries its work
-      // info the way she directed for the Thailand spread: white type
-      // at the spread's bottom-left corner, standing on the left page.
-      // No title (the chapter's no-titles rule): the meta line exactly
-      // as the plate caption composes it, then the place lines from
-      // the work's description. Other bleed spreads (Pre-iPhone Era)
-      // keep their right-page caption untouched.
-      const roadSpread = spec.chapter.key === "road";
-      const spreadMeta = [item.metaLine, item.dimensions, item.mediumZh && item.mediumZh !== item.medium && !(item.metaLine ?? "").includes(item.mediumZh) ? item.mediumZh : "", item.dimensionsZh && item.dimensionsZh !== item.dimensions ? item.dimensionsZh : ""].filter(Boolean).join(" · ");
+      // The road chapter's bleed spreads carry their work info in
+      // white at the bottom-left corner of the LEFT page, no
+      // background box and no work title (the chapter's no-titles
+      // rule, her directions 2026-11-10). Two treatments share that
+      // placement: the Thailand spread prints its two
+      // place-and-medium lines at the house caption size
+      // (bk-bleed-caption-bl); the monkey spread (Notes from the
+      // Road #13, her trial conversion) steps the type up
+      // (bk-bleed-caption-road) and composes its meta line from the
+      // plate's fields, then the place lines from the work's
+      // description. Other bleed spreads (Pre-iPhone Era) keep
+      // their right-page caption untouched.
+      const thailand = item.image_url === ROAD_THAILAND_SPREAD_PLATE.image_url;
+      const roadSpread = spec.chapter.key === "road" && !thailand;
+      const spreadMeta = [item.metaLine, item.dimensions, item.mediumZh && item.mediumZh !== item.medium && !(item.metaLine ?? "").includes(item.mediumZh) ? item.mediumZh : "", item.dimensionsZh && item.dimensionsZh !== item.dimensions ? item.dimensionsZh : ""].filter(Boolean).join(" \u00b7 ");
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-bleed bk-bleed-${spec.half}${bgImgCls}`}>{bgImgLayer}
           <div className="bk-spread-canvas">
             <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} className="bk-bleed-img" />
+            {thailand && spec.half === "left" && (
+              <div className="bk-bleed-caption bk-bleed-caption-bl">
+                <div className="bk-caption-meta">{item.metaLine}</div>
+                {item.metaZh && <div className="bk-caption-meta">{item.metaZh}</div>}
+              </div>
+            )}
             {roadSpread && spec.half === "left" && (
               <div className="bk-bleed-caption bk-bleed-caption-road">
                 {spreadMeta && <div className="bk-caption-meta">{spreadMeta}</div>}
                 {item.description && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: item.description }} />}
               </div>
             )}
-            {!roadSpread && spec.half === "right" && (
+            {!thailand && !roadSpread && spec.half === "right" && (
               <div className="bk-bleed-caption">
                 <div className="bk-caption-title product-title">{item.title}</div>
                 <div className="bk-caption-meta">{item.metaLine}</div>

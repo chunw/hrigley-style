@@ -527,6 +527,26 @@ export const PRE_IPHONE_ERA_PLATE: CatalogItem = plate(
 );
 
 /**
+ * Full-bleed spread plate (her direction, 2026-11-10): an untitled
+ * watercolor close-up of a Thai meal — a red tomato dish, leafy greens
+ * and a pale fruit — printed across two pages with no margins inside
+ * Notes from the Road, after the chapter's essay pages and before its
+ * plate run. It fills the book's long-open travel-spread slot (board
+ * todo #70); the chapter's own plates stay one to a page. She supplied
+ * no title and no year; works in this chapter print no title in their
+ * captions (her rule), so the annotation is the place-and-medium
+ * lines only, set in white at the spread's bottom-left corner.
+ */
+export const ROAD_THAILAND_SPREAD_PLATE: CatalogItem = plate(
+  "Untitled", "Chiang Mai, Thailand · Watercolor on paper", "",
+  "",
+  "",
+  "/book/road/road-thailand-spread.jpg",
+  undefined,
+  "泰国清迈 · 纸本水彩",
+);
+
+/**
  * Extra plates appended at the end of the Theater chapter (her
  * direction, 2026-11-10). The first two are final plates: theatre
  * balcony photographs from the same world as the chapter's Buenos
