@@ -12,7 +12,7 @@ import { PAGE_BACKGROUNDS, hexToRgb, isHexPageBg, rgbToHex, type PageBgKind, typ
 import { IMAGE_EDITS } from "@/lib/imageEdits";
 import { PAGE_BACKGROUND_IMAGES, type PageBgImage } from "@/lib/pageBackgroundImages";
 import { BOOK_SERIES } from "@/lib/bookSeries";
-import { SERIES_PLATES, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
+import { SERIES_PLATES, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS, PART_WEBSITES } from "@/lib/exhibitions";
@@ -1168,6 +1168,12 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     }
     if (chapter.key === "road") {
       for (const p of CANVA_ROAD_PAGES) specs.push({ kind: "canva", page: p });
+      // The chapter's last plate is book-only (ROAD_EXTRA_PLATES in
+      // seriesPlates.ts): the Hawaii watercolor of 2022, appended
+      // after the facsimile pages so it closes the section (her
+      // direction, 2026-11-10). It is not in the watercolor catalog,
+      // so it never surfaces in the shop.
+      for (const item of ROAD_EXTRA_PLATES) specs.push({ kind: "plate", chapter, item, plate: 0 });
     }
     // The Spirit chapter's bridge sentence closes the chapter on its own
     // quiet page (her direction, 2026-11-09): taken out of the essay body
