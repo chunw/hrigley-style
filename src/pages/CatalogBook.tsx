@@ -1174,15 +1174,16 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         const plateSeq = chapter.key === "residuals" ? [...chapter.items.slice(2), ...chapter.items.slice(0, 2)] : chapter.items;
         for (let ii = 0; ii < plateSeq.length; ii++) {
           const { item, plate } = plateSeq[ii];
-          if (chapter.key === "road" && item.image_url.includes("/watercolors/58/")) {
-            // Her direction (2026-11-10, trial — "试试"): Notes from
-            // the Road #13 (the capuchin monkeys, Manuel Antonio,
-            // Costa Rica) converts from a single plate page into a
-            // full-bleed spread in its current position in the run,
-            // reusing the Pre-iPhone Era bleed mechanism. Its work
-            // info stands on the spread in white at the bottom-left,
-            // with no title (the chapter's no-titles rule) — see the
-            // bleed render case.
+          if (chapter.key === "road" && (item.image_url.includes("/watercolors/58/") || item.image_url.includes("/watercolors/47/"))) {
+            // Her directions (2026-11-10): two road plates stand as
+            // full-bleed spreads in their current positions in the
+            // run, reusing the Pre-iPhone Era bleed mechanism —
+            // #13 (the capuchin monkeys, Manuel Antonio, Costa Rica;
+            // trial — "试试") and #4 (the San Cristóbal plate;
+            // "做成跨页，删掉单页" — the spread replaces its single
+            // page). Their work info stands on the spread in white
+            // at the bottom-left, with no title (the chapter's
+            // no-titles rule) — see the bleed render case.
             if (!nextIsVerso()) specs.push({ kind: "blank" });
             specs.push({ kind: "bleed", half: "left", chapter, item });
             specs.push({ kind: "bleed", half: "right", chapter, item });
@@ -2936,9 +2937,9 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // rule, her directions 2026-11-10). Two treatments share that
       // placement: the Thailand spread prints its two
       // place-and-medium lines at the house caption size
-      // (bk-bleed-caption-bl); the monkey spread (Notes from the
-      // Road #13, her trial conversion) steps the type up
-      // (bk-bleed-caption-road) and composes its meta line from the
+      // (bk-bleed-caption-bl); the converted plate spreads (Notes
+      // from the Road #13, her trial conversion, and #4) step the
+      // type up (bk-bleed-caption-road) and compose the meta line from the
       // plate's fields, then the place lines from the work's
       // description. Other bleed spreads (Pre-iPhone Era) keep
       // their right-page caption untouched.
