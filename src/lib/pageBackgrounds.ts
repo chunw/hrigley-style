@@ -100,6 +100,7 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "plate:/watercolors/47/main.jpg": "black",
   "plate:/watercolors/53/main.jpg": "black",
   "plate:/watercolors/60/main.jpg": "cream",
+  "plate:/book/road/road-castle-cake.jpg": "cream",
   "canva:21": "white",
   "plate:/watercolors/49/main.jpg": "black",
   "plate:/watercolors/50/main.jpg": "black",
