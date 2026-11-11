@@ -433,6 +433,31 @@ export const DEATH_VALLEY_PLATES: CatalogItem[] = [1, 2, 3].map((n) => ({
 }));
 
 /**
+ * Extra plate appended at the end of the Sahara chapter: the carved
+ * madrasa doorway in Marrakech from her travel note of November 24,
+ * 2022 — half of it in deep shadow, half cut by sunlight, the passage
+ * her note describes ("神学院门楣纹饰的每处凹凸被阳光切割为阴阳向背
+ * 的美丽局部"). The note itself stands in the chapter's essay (see
+ * SAHARA_NOTE in CatalogBook.tsx); this is its photograph. The
+ * photograph is untitled, so the caption follows the chapter's own
+ * plate: the medium line with the year, and the place line in the
+ * description, as the Sahara plate prints "Sahara, 2021."
+ */
+export const SAHARA_EXTRA_PLATES: CatalogItem[] = [
+  {
+    title: "Untitled",
+    titleZh: null,
+    metaLine: "2022 · Photography",
+    mediumZh: "摄影作品",
+    year: "2022",
+    description: "Marrakech, 2022.",
+    category: "Inner Wilderness",
+    image_url: "/book/sahara/marrakech-madrasa.jpg",
+    fallback_image_url: "/book/sahara/marrakech-madrasa.jpg",
+  },
+];
+
+/**
  * Extra plate appended at the end of the El Otro, El Mismo chapter: a
  * black-and-white photograph from the series' puppetry portraits — a
  * figure in a white doll dress slumped over a striped box, strings tied

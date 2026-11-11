@@ -12,7 +12,7 @@ import { PAGE_BACKGROUNDS, hexToRgb, isHexPageBg, rgbToHex, type PageBgKind, typ
 import { IMAGE_EDITS } from "@/lib/imageEdits";
 import { PAGE_BACKGROUND_IMAGES, type PageBgImage } from "@/lib/pageBackgroundImages";
 import { BOOK_SERIES } from "@/lib/bookSeries";
-import { SERIES_PLATES, DEATH_VALLEY_PLATES, EL_OTRO_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
+import { SERIES_PLATES, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS, PART_WEBSITES } from "@/lib/exhibitions";
@@ -153,6 +153,26 @@ const indentItem = (item: EssayItem, end = false): EssayItem => ({
   ...item,
   html: item.html.replace(/^<p>/, `<p><span class="bk-indent${end ? " bk-indent--end" : ""}">`).replace(/<\/p>$/, "</span></p>"),
 });
+
+/**
+ * Her Marrakech travel note (November 24, 2022), posted with a set of
+ * photographs from the old city — among them the carved madrasa
+ * doorway that now closes the Sahara chapter as a plate (see
+ * SAHARA_EXTRA_PLATES in seriesPlates.ts). She directed the note and
+ * the photograph into the book's Sahara section on 2026-11-10 (the
+ * Sahara part of board todo #90: 补图、补文字). The Chinese is her
+ * text, verbatim, exactly as posted — spacing at the Latin and dash
+ * junctions included; no source-platform label is printed, per the
+ * book's rule for her posts. The record heading follows the dated
+ * entries' house form (the Remains post's line: date, country ·
+ * city). The English is Beignet's translation, pending her review.
+ */
+const SAHARA_NOTE = {
+  labelEn: "November 24, 2022, Morocco · Marrakech",
+  labelZh: "2022 年 11 月 24 日，摩洛哥 · 马拉喀什",
+  textEn: "In the old city of Marrakech, Morocco, one narrative subject is the shops crammed with goods and the peddlers touting for business, the people gathered around televisions in the streets and alleys to watch the World Cup, the motorbikes speeding past each other and jangling your nerves without end. Right here, beside a street full of the smell of engine oil, you feast on the lamb stewed fresh and tender in the pointed clay pot the Amazigh people invented, and the acidity of pomegranate juice cuts the grease of the golden broth. In another branch of the sub-narrative, cool courtyards and mint tea settle you into stillness at once. The loudspeaker calling the prayer from the minaret sounds five times a day, as the rite prescribes, and sunlight cuts every rise and hollow of the carved patterns over the madrasa doorway into beautiful details of light and shade. No word is spoken, and everything is majestic in itself. The winding alleys built of pink mud brick lead toward who knows which branch of the narrative. The entrance to this labyrinth is Jemaa Square, where the magic flute winds on day and night, and the crowd that presses in and sits in a ring rises and falls with the drumbeats of a whole row of musicians, forming a temporary tribe: a living demo of the African music part of a world music composition class.",
+  textZh: "在摩洛哥马拉喀什老城，一种叙事主体是货物盈盈的店铺和兜揽生意的游商，街头巷尾围绕电视观看世界杯的人们，相对驰过的摩托不断搅乱人的神经，就在这充满机油气味的街旁，大快朵颐 Amazigh 民族所发明的那种尖顶陶锅炖羊肉的鲜嫩，石榴汁的酸度中和了金黄肉汤的油腻。另一个亚叙事的分支里，清凉的院落和薄荷茶让人即刻入定，清真寺的宣礼塔呼唤礼拜的喇叭一天五次进行如仪，神学院门楣纹饰的每处凹凸被阳光切割为阴阳向背的美丽局部，一切不言自威。粉红色泥砖砌成的曲折小巷不知通往何种叙事分支，这个迷宫般地方的入口就是吉玛广场，那里魔笛缭绕不舍昼夜，挤进围坐的人群随一整排乐师的鼓点子高低起伏组成临时部落 —— 世界音乐作曲课上非洲音乐部分活的 demo。",
+};
 
 /** Chapter opener spreads are uniformly black with white type
  *  (her direction, 2026-10-18); each chapter's epigraph sits in the
@@ -3384,7 +3404,7 @@ function useBookModel(args: {
       ? [
           { key: "innerwilderness", number: 0, title: "Inner Wilderness 内在荒原", titleEn: "Inner Wilderness", titleZh: "内在荒原", descriptionHtml: "", years: "2017 – 2025", items: [], seriesTextId: "innerwilderness", partHead: true },
           { key: "deathvalley", number: 0, title: "Reflections in the Death Valley 死亡谷", titleEn: "Reflections in the Death Valley", titleZh: "死亡谷", descriptionHtml: "", years: yrOf(dvItems), items: [...dvItems, ...DEATH_VALLEY_PLATES.map((item) => ({ item, plate: 0 }))], seriesTextId: "deathvalley" },
-          { key: "sahara", number: 0, title: "Sahara from 6 to 10: An Archive 撒哈拉晚六时至早十时", titleEn: "Sahara from 6 to 10: An Archive", titleZh: "撒哈拉晚六时至早十时", descriptionHtml: "", years: saharaItem?.year ?? "", items: saharaItem ? [{ item: saharaItem, plate: 0 }] : [], seriesTextId: "sahara" },
+          { key: "sahara", number: 0, title: "Sahara from 6 to 10: An Archive 撒哈拉晚六时至早十时", titleEn: "Sahara from 6 to 10: An Archive", titleZh: "撒哈拉晚六时至早十时", descriptionHtml: "", years: saharaItem?.year ?? "", items: [...(saharaItem ? [{ item: saharaItem, plate: 0 }] : []), ...SAHARA_EXTRA_PLATES.map((item) => ({ item, plate: 0 }))], seriesTextId: "sahara" },
           { key: "highlands", number: 0, title: "Scottish Highlands - Heroism of the Vista 苏格兰高地：视域的英雄主义", titleEn: "Scottish Highlands - Heroism of the Vista", titleZh: "苏格兰高地：视域的英雄主义", descriptionHtml: "", years: yrOf(hgItems), items: hgItems, seriesTextId: "highlands" },
           { key: "theater", number: 0, title: "Theater 登场", titleEn: "Theater", titleZh: "登场", descriptionHtml: "", years: yrOf(thItems), items: thItems, seriesTextId: "theater" },
           { ...photoParent, title: "El Otro, El Mismo 另一个，同一个", titleEn: "El Otro, El Mismo", titleZh: "另一个，同一个", descriptionHtml: "", years: yrOf(elOtroItems), items: elOtroItems },
@@ -3600,13 +3620,27 @@ function useBookModel(args: {
         // entry carries her placeholder "todo" (the Unfinished
         // Archive convention), so the section paginates intro pages
         // like its siblings until she supplies the real text.
+        const enStream: EssayItem[] = enT ? pBlocks(asParas(enT)).map((html) => ({ html, edit: `series:${s?.id}:en` })) : [];
+        const zhStream: EssayItem[] = zhT ? pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s?.id}:zh` })) : [];
+        if (chapter.key === "sahara") {
+          // Her Marrakech travel note (November 24, 2022) follows the
+          // section's own statement in both streams, set as a dated
+          // passage (design E indented column, record heading first,
+          // the Spirit post's form); its photograph closes the
+          // chapter as the last plate (SAHARA_EXTRA_PLATES).
+          enStream.push(
+            indentItem({ html: `<p><span class="bk-credit">${SAHARA_NOTE.labelEn}</span></p>` }),
+            indentItem({ html: `<p>${SAHARA_NOTE.textEn}</p>` }, true),
+          );
+          zhStream.push(
+            indentItem({ html: `<p><span class="bk-credit">${SAHARA_NOTE.labelZh}</span></p>` }),
+            indentItem({ html: `<p>${SAHARA_NOTE.textZh}</p>` }, true),
+          );
+        }
         essayChunks[chapter.key] =
           chapter.key === "stillthings" && !enT && !zhT
             ? []
-            : langChunks(
-                enT ? pBlocks(asParas(enT)).map((html) => ({ html, edit: `series:${s?.id}:en` })) : [],
-                zhT ? pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s?.id}:zh` })) : [],
-              );
+            : langChunks(enStream, zhStream);
       } else if (chapter.key === "spirit") {
         // Essay layout (her direction, 2026-11-06, replacing the
         // 2026-11-05 paragraph-pair interleave): the whole English essay
