@@ -500,3 +500,55 @@ export const PRE_IPHONE_ERA_PLATE: CatalogItem = plate(
   undefined,
   "2018 · 摄影作品 · SFMOMA 专题推荐",
 );
+
+/**
+ * Extra plates appended at the end of the Theater chapter (her
+ * direction, 2026-11-10). The first two are final plates: theatre
+ * balcony photographs from the same world as the chapter's Buenos
+ * Aires / Paris plates — a white-haired man leaning on a gilded
+ * balcony rail (colour), and a balcony with its audience behind a
+ * blurred foreground profile (black and white). Her records give
+ * them no title, year or location, so, like the untitled El Otro
+ * plate, their captions print the medium line only.
+ *
+ * The LAST entry is a PLACEHOLDER: a night-festival photograph (a
+ * dancer balancing a basket headdress with a crescent of flowers
+ * under sparking fireworks) that the artist sent on 2026-11-10
+ * expressly as a placeholder （占位图） — she will supply a
+ * replacement file later. Swap the file at
+ * public/book/theater/placeholder-festival.jpg (or repoint the URL)
+ * when the replacement arrives; it is not a final plate.
+ */
+export const THEATER_EXTRA_PLATES: CatalogItem[] = [
+  {
+    title: "Untitled",
+    titleZh: null,
+    metaLine: "Photography",
+    mediumZh: "摄影作品",
+    year: "",
+    category: "Inner Wilderness",
+    image_url: "/book/theater/balcony-man.jpg",
+    fallback_image_url: "/book/theater/balcony-man.jpg",
+  },
+  {
+    title: "Untitled",
+    titleZh: null,
+    metaLine: "Photography",
+    mediumZh: "摄影作品",
+    year: "",
+    category: "Inner Wilderness",
+    image_url: "/book/theater/balcony-bw.jpg",
+    fallback_image_url: "/book/theater/balcony-bw.jpg",
+  },
+  {
+    // PLACEHOLDER （占位图） — artist will supply a replacement file (2026-11-10).
+    title: "Untitled",
+    titleZh: null,
+    metaLine: "Photography",
+    mediumZh: "摄影作品",
+    year: "",
+    category: "Inner Wilderness",
+    image_url: "/book/theater/placeholder-festival.jpg",
+    fallback_image_url: "/book/theater/placeholder-festival.jpg",
+  },
+];

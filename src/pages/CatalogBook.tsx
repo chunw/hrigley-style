@@ -12,7 +12,7 @@ import { PAGE_BACKGROUNDS, hexToRgb, isHexPageBg, rgbToHex, type PageBgKind, typ
 import { IMAGE_EDITS } from "@/lib/imageEdits";
 import { PAGE_BACKGROUND_IMAGES, type PageBgImage } from "@/lib/pageBackgroundImages";
 import { BOOK_SERIES } from "@/lib/bookSeries";
-import { SERIES_PLATES, DEATH_VALLEY_PLATES, EL_OTRO_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
+import { SERIES_PLATES, DEATH_VALLEY_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS, PART_WEBSITES } from "@/lib/exhibitions";
@@ -3371,7 +3371,10 @@ function useBookModel(args: {
     const dvItems = photoItems.filter((p) => titleHas(p, "Death Valley", "死亡谷"));
     const hgItems = photoItems.filter((p) => titleHas(p, "Highland", "高地"));
     const thKnown = photoItems.filter((p) => titleHas(p, "Theater", "死亡的戏剧"));
-    const thItems = [...thKnown, ...["10", "11"].map(mkPhotoItem).filter((x): x is CatalogItem => !!x).map((item) => ({ item, plate: 0 }))];
+    // Her direction (2026-11-10): two theatre balcony photographs and
+    // one PLACEHOLDER festival photograph close the Theater chapter
+    // (see THEATER_EXTRA_PLATES — the placeholder is its last entry).
+    const thItems = [...thKnown, ...["10", "11"].map(mkPhotoItem).filter((x): x is CatalogItem => !!x).map((item) => ({ item, plate: 0 })), ...THEATER_EXTRA_PLATES.map((item) => ({ item, plate: 0 }))];
     const saharaItem = mkPhotoItem("7");
     const usedPhoto = new Set([...dvItems, ...hgItems, ...thKnown]);
     // Her direction (2026-11-10): the puppetry photograph she sent
