@@ -765,6 +765,13 @@ const SERIES_PLATE_ANCHORS: Record<string, { image: string; afterPair: number }[
   // Art.empath.io: every image is referred to inside the text — the
   // responses and interface figures sit under their own caption lines.
   artempath: [
+    // Her direction (2026-11-11): the four images of her February 15,
+    // 2018 Rothko post stand right after that dated diary passage
+    // (pairs 0–1), ahead of every other plate of the section.
+    { image: "/book/artempath/mushroom-cloud.jpg", afterPair: 1 }, // with the 2018 Rothko diary passage
+    { image: "/book/artempath/red-horizon.jpg", afterPair: 1 },
+    { image: "/book/artempath/dark-red-painting.jpg", afterPair: 1 },
+    { image: "/book/artempath/orange-blue-detail.jpg", afterPair: 1 },
     { image: "/book/artempath/printer.jpg", afterPair: 13 }, // after the system description
     { image: "/book/artempath/sfmoma-bench.jpg", afterPair: 15 }, // with the SFMOMA bench photo paragraph
     { image: "/book/artempath/interface-sf.jpg", afterPair: 15 },
