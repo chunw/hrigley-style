@@ -577,3 +577,31 @@ export const THEATER_EXTRA_PLATES: CatalogItem[] = [
     fallback_image_url: "/book/theater/placeholder-festival.jpg",
   },
 ];
+
+/**
+ * Extra plate for the Residuals chapter: an untitled black-and-white
+ * watercolor still life — a teapot seen from above, cups and a fork on
+ * a breakfast table, in grey washes. The artist sent it on 2026-11-10
+ * and directed it into the book's Residuals section, giving no title
+ * and no year, so the caption prints the title as "Untitled" and the
+ * medium line only — the same line the chapter's watercolor plates
+ * print without a year ("Watercolor on paper · 纸本水彩"). It has no
+ * shop catalog record: the chapter's plates are split from the
+ * watercolor catalog by title, and a record there would also surface
+ * in the store's painting catalog, so it is kept book-only here and
+ * appended to the chapter in CatalogBook.tsx, where the chapter's
+ * plate rotation places it as the last plate of the main run, just
+ * before the review and the Residuals #1 / #26 closing spread.
+ */
+export const RESIDUALS_EXTRA_PLATES: CatalogItem[] = [
+  {
+    title: "Untitled",
+    titleZh: null,
+    metaLine: "Watercolor on paper",
+    mediumZh: "纸本水彩",
+    year: "",
+    category: "Watercolor",
+    image_url: "/book/residuals/residuals-teapot-bw.jpg",
+    fallback_image_url: "/book/residuals/residuals-teapot-bw.jpg",
+  },
+];
