@@ -157,4 +157,10 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "canva:16": "black",
   "canva:3": "#171717",
   "canva:4": "#171717",
+  // Still Things title spread (her direction, 2026-11-11): the ground
+  // takes the collage graphic's own ground colour — #06050A, sampled
+  // from canva p. 11 — so the square graphic standing on the spread
+  // blends into it without a visible edge.
+  "opener:stillthings:left": "#06050A",
+  "opener:stillthings:right": "#06050A",
 };

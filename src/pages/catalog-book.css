@@ -1408,6 +1408,21 @@
   z-index: 5;
 }
 
+/* The Still Things title spread's main visual (her direction,
+   2026-11-11): the facsimile collage (canva p. 11) stands centred in
+   the spread's field, below the epigraph and clear of the bottom
+   title block. The graphic is square; at 6in it reads as the spread's
+   protagonist without touching either text element. */
+.bk-opener-art {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: calc(var(--bleed) + 1.92in);
+  width: 6in;
+  height: 6in;
+  z-index: 1;
+}
+
 /* ── Quiet pages ─────────────────────────────────────────────────────────────
    The small-type page from the old printed book — her photograph of
    its p. 30, approved again 2026-11-09: a short rule, then the text
