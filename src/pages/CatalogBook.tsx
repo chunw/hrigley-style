@@ -3608,6 +3608,19 @@ function useBookModel(args: {
         const [nine] = roadChapter.items.splice(nineIdx, 1);
         roadChapter.items.unshift(nine);
       }
+      // Her direction (2026-11-11): Notes from the Road #3 (the San
+      // Cristóbal churros) stands together with #9 — it moves up to
+      // the second slot of the plate run, immediately after #9, so
+      // the two face each other as the chapter's first plate spread;
+      // the #2 breakfast spread follows them. Both plates are Mexico,
+      // so the country grouping above is untouched. The tighter run
+      // also absorbs the two verso-alignment blanks that stood before
+      // the #2 and #4 spreads, so the book sheds those two blanks.
+      const threeIdx = roadChapter.items.findIndex(({ item }) => item.title === "Notes from the Road #3");
+      if (threeIdx > 1) {
+        const [three] = roadChapter.items.splice(threeIdx, 1);
+        roadChapter.items.splice(1, 0, three);
+      }
       // Her direction (2026-11-11): the castle-and-cake watercolor
       // (a castle keep and grey tiled roofs under a blue sky, a pink
       // strawberry drink and a pink layered cake in the foreground)
