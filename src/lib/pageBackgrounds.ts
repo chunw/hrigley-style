@@ -89,6 +89,14 @@ export function rgbToHex(r: number, g: number, b: number): string {
  * again under the #17 wholesale table; this export is the newest
  * word.) textEdits / imageEdits empty; all three pageBgImages
  * entries already in effect verbatim.
+ *
+ * 2026-11-11 (her direction in chat): watercolors/58 — Notes from
+ * the Road #13, the capuchin monkeys — leaves its trial full-bleed
+ * spread and stands as a single plate page again ("这张不要做跨页，
+ * 要做成一个单页"), on a black ground ("黑色底"): cream -> black.
+ * The cream dated from the export #17 table, set while the plate
+ * last stood as a single page; the spread itself never read this
+ * key (bleed pages key separately).
  */
 export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "contents": "white",
@@ -120,7 +128,7 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "plate:/watercolors/59/main.jpg": "black",
   "plate:/watercolors/55/main.jpg": "cream",
   "plate:/watercolors/56/main.jpg": "cream",
-  "plate:/watercolors/58/main.jpg": "cream",
+  "plate:/watercolors/58/main.jpg": "black",
   "plate:/photography/01/main.jpg": "black",
   "plate:/photography/02/main.jpg": "white",
   "plate:/photography/03/main.jpg": "black",
