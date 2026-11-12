@@ -97,6 +97,16 @@ export function rgbToHex(r: number, g: number, b: number): string {
  * The cream dated from the export #17 table, set while the plate
  * last stood as a single page; the spread itself never read this
  * key (bleed pages key separately).
+ *
+ * Export book-edits-7 (2026-11-11, later): full-table rule again.
+ * By the time it was processed, the two entries that were in flight
+ * at export time had landed: Remains No. 5 white (PR #255 merged)
+ * and the Residuals No. 1 exhibition plate black (PR #257 merged,
+ * file and ground both in main). The table matches the landed state
+ * on the other 42 of 43 keys; the one change is the Still Things
+ * No. 14 plate (watercolors/43), black → white. The export's single
+ * imageEdit is on the same picture (full-bleed, slight offset) and
+ * lands in imageEdits.ts. textEdits empty; pageBgImages unchanged.
  */
 export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "contents": "white",
@@ -111,7 +121,7 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "plate:/book/residuals/residuals-01-exhibition.jpg": "black",
   "plate:/watercolors/05/main.jpg": "black",
   "plate:/watercolors/13/main.jpg": "black",
-  "plate:/watercolors/43/main.jpg": "black",
+  "plate:/watercolors/43/main.jpg": "white",
   "plate:/watercolors/14/main.jpg": "black",
   "plate:/watercolors/45/main.jpg": "black",
   "plate:/watercolors/46/main.jpg": "black",
