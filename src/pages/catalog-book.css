@@ -1014,6 +1014,38 @@
   text-align: right;
 }
 
+/* Remains No. 1 (her direction, 2026-11-11): the one bleed spread
+   that does not cover. The picture prints whole — fit inside the
+   spread canvas, flush with its left edge — because the cover crop
+   slices the title line baked into the picture's lower edge. The
+   slack falls on the right, where the spread's black page ground
+   (pageBackgrounds.ts) swallows it: the picture's ground and the
+   page's ground are the same black. */
+.bk-bleed-flush .bk-bleed-img {
+  object-fit: contain;
+  object-position: left center;
+}
+
+/* Its caption keeps the work's full plate caption — title, meta and
+   the two motto lines — in flat white at the house caption sizes,
+   right-aligned at the right page's bottom-right corner (the car
+   spread's corner and inset). It stands a step higher than the
+   other corner captions (0.95in instead of 0.42in): the picture's
+   own baked-in title line runs along the bottom edge as far as
+   14.77in of the canvas, and the caption block clears it. */
+.bk-bleed-caption-flush {
+  left: auto;
+  right: calc(var(--bleed) + 0.55in);
+  bottom: 0.95in;
+  text-align: right;
+  color: #fff;
+}
+
+.bk-bleed-caption-flush .bk-caption-meta,
+.bk-bleed-caption-flush .bk-caption-desc {
+  color: #fff;
+}
+
 
 .bk-opener-label {
   display: inline-flex;

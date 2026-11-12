@@ -1322,7 +1322,18 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
             // same parity guard the bleed spreads use).
             if (!nextIsVerso()) specs.push({ kind: "blank" });
           }
-          if (chapter.key === "road" && item.image_url.includes("/watercolors/47/")) {
+          if (chapter.key === "remains" && item.image_url === "/remains/01/main.jpg") {
+            // Her direction (2026-11-11): Remains No. 1 becomes a
+            // full-bleed spread, on the same verso guard as the other
+            // designed spreads. It is the one bleed spread that does
+            // not cover: the picture prints whole (fit), flush with
+            // the spread's left edge, because the cover crop slices
+            // the title line baked into the picture — see the bleed
+            // render case and .bk-bleed-flush in catalog-book.css.
+            if (!nextIsVerso()) specs.push({ kind: "blank" });
+            specs.push({ kind: "bleed", half: "left", chapter, item });
+            specs.push({ kind: "bleed", half: "right", chapter, item });
+          } else if (chapter.key === "road" && item.image_url.includes("/watercolors/47/")) {
             // Her directions (2026-11-10): road plates convert
             // from single plate pages into full-bleed spreads in
             // their current positions in the run, reusing the
@@ -3181,9 +3192,15 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // direction returned #13 to a single black page; it no longer
       // reaches this render case.)
       const carSpread = item.image_url.includes("/watercolors/47/");
+      // Her direction (2026-11-11): the Remains No. 1 spread prints
+      // its picture whole — fit, flush with the spread's left edge —
+      // where every other bleed spread covers, and keeps the work's
+      // full caption on the right page. See .bk-bleed-flush and
+      // .bk-bleed-caption-flush in catalog-book.css.
+      const flushSpread = item.image_url === "/remains/01/main.jpg";
       const spreadMeta = [item.metaLine, item.dimensions, item.mediumZh && item.mediumZh !== item.medium && !(item.metaLine ?? "").includes(item.mediumZh) ? item.mediumZh : "", item.dimensionsZh && item.dimensionsZh !== item.dimensions ? item.dimensionsZh : ""].filter(Boolean).join(" \u00b7 ");
       return (
-        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-bleed bk-bleed-${spec.half}${bgImgCls}`}>{bgImgLayer}
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-bleed bk-bleed-${spec.half}${flushSpread ? " bk-bleed-flush" : ""}${bgImgCls}`}>{bgImgLayer}
           <div className="bk-spread-canvas">
             <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} className="bk-bleed-img" />
             {thailand && spec.half === "left" && (
@@ -3204,7 +3221,14 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 {item.description && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: item.description }} />}
               </div>
             )}
-            {!thailand && !roadSpread && spec.half === "right" && (
+            {flushSpread && spec.half === "right" && (
+              <div className="bk-bleed-caption bk-bleed-caption-flush">
+                <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
+                {spreadMeta && <div className="bk-caption-meta">{spreadMeta}</div>}
+                {item.description && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: item.description }} />}
+              </div>
+            )}
+            {!thailand && !roadSpread && !flushSpread && spec.half === "right" && (
               <div className="bk-bleed-caption">
                 <div className="bk-caption-title product-title">{item.title}</div>
                 <div className="bk-caption-meta">{item.metaLine}</div>
