@@ -518,7 +518,7 @@ export const watercolors: Watercolor[] = [
   },
  {
     id: "7",
-    title: "Residuals #4",
+    title: "Three Pieces of Fermented Tofu",
     titleZh: "三块腐乳",
     series: "I",
     printInCatalog: false,
