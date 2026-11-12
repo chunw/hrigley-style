@@ -40,6 +40,20 @@ export const IMAGE_EDITS: Record<string, LandedImgEdit> = {
   // export #17's positioned full-bleed (pos 57.9/50, dy hairline).
   // The crop position returns to centre. Her value, verbatim.
   "/watercolors/46/main.jpg": { full: true },
+  // Exports book-edits__1-2 / __2-3 / __3-3 (2026-11-11, three
+  // successive exports folded into one landing): five picture edits,
+  // her editor values verbatim. From __1-2: the Canva facsimile
+  // plate 16 picture goes full-bleed, crop anchored right-centre
+  // (pos 100/50). From __2-3: hairline nudges on the Canva plate 21
+  // and 22 pictures (scale 1, small offsets), and the
+  // watercolors/55 plate (Notes from the Road, the pigeon) goes
+  // full-bleed. From __3-3: the Beijing castle-cake plate goes
+  // full-bleed, crop anchored near the top (pos 50/4.2).
+  "/book/canva-paintings/p16.jpg": { full: true, pos: { x: 100, y: 50 } },
+  "/book/canva-paintings/p21.jpg": { full: false, scale: 1, dx: 0.8101345770781698, dy: 2.169518520031037 },
+  "/book/canva-paintings/p22.jpg": { full: false, scale: 1, dx: -0.07166107953165234, dy: 0.10316980326585791 },
+  "/watercolors/55/main.jpg": { full: true },
+  "/book/road/road-castle-cake.jpg": { full: true, pos: { x: 50, y: 4.2 } },
   // Export book-edits-7 (2026-11-11): the Still Things No. 14 plate
   // (watercolors/43) goes full-bleed with a slight offset, and its
   // page ground goes white in the same export (pageBackgrounds.ts).
