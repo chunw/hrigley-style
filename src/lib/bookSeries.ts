@@ -154,7 +154,7 @@ export const BOOK_SERIES: BookSeries[] = [
   {
     id: "deathvalley",
     titleEn: "Reflections in the Death Valley",
-    titleZh: "死亡谷",
+    titleZh: "死亡谷倒影",
     years: "2017",
     textEn: "Featured on SFMOMA · LensCulture",
     textZh: "曾获 SFMOMA 专题推荐 · 收录于 LensCulture",
