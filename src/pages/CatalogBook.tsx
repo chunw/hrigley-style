@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { createPortal } from "react-dom";
-import { ArrowLeft, ChevronLeft, ChevronRight, Download, Printer } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Download, Maximize, Minimize, Printer } from "lucide-react";
 import "./catalog-book.css";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { artistBioHTML } from "@/lib/artistBio";
@@ -4546,6 +4546,33 @@ const CatalogBook = () => {
   };
   const stageRef = useRef<HTMLDivElement>(null);
 
+  // Fullscreen viewing (artist, 2026-11-11: 「给这个route做一个全屏模式」).
+  // The toolbar toggle puts the whole book root — toolbar, pending bar and
+  // stage — into the browser's fullscreen, so the book fills the screen
+  // with no browser chrome and the toggle stays reachable to exit; ESC
+  // exits natively. Display only: pagination, print/PDF and the editor are
+  // untouched. The button hides itself where the Fullscreen API is
+  // unavailable (e.g. iPhone Safari).
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const fsSupported =
+    typeof document !== "undefined" &&
+    document.fullscreenEnabled &&
+    typeof HTMLElement.prototype.requestFullscreen === "function";
+  useEffect(() => {
+    const onFsChange = () => setIsFullscreen(document.fullscreenElement === rootRef.current);
+    document.addEventListener("fullscreenchange", onFsChange);
+    return () => document.removeEventListener("fullscreenchange", onFsChange);
+  }, []);
+  const toggleFullscreen = () => {
+    if (document.fullscreenElement) {
+      void document.exitFullscreen().catch(() => {});
+    } else {
+      const el = rootRef.current ?? document.documentElement;
+      void el.requestFullscreen().catch(() => {});
+    }
+  };
+
   usePageMeta({
     title: `${b.title} - ${b.cta}`,
     description: "Remains, a print-ready art book by Chun Wang. Covers and interior pages laid out for PDF export.",
@@ -4806,7 +4833,7 @@ const CatalogBook = () => {
     }`;
 
   return (
-    <div className={`bk-root bk-paper-${paper}${isMobile ? " bk-mobile" : ""}${eyedropPick ? " bk-eyedropping" : ""}`} style={rootStyle}>
+    <div ref={rootRef} className={`bk-root bk-paper-${paper}${isMobile ? " bk-mobile" : ""}${eyedropPick ? " bk-eyedropping" : ""}`} style={rootStyle}>
       {/* One @page size per export: interior/complete pages, or the wide cover wrap. */}
       <style>{`@page { size: ${sheetW}in ${pageH}in; margin: 0; }`}</style>
 
@@ -4861,6 +4888,14 @@ const CatalogBook = () => {
             <button type="button" onClick={() => setEditMode((v) => !v)} className={toggleClass(editMode)}>
               {lang === "zh" ? "编辑模式" : "Edit mode"}
             </button>
+            {fsSupported && (
+              <button type="button" onClick={toggleFullscreen} className={toggleClass(isFullscreen)}>
+                <span className="inline-flex items-center gap-2">
+                  {isFullscreen ? <Minimize className="h-3.5 w-3.5" /> : <Maximize className="h-3.5 w-3.5" />}
+                  {isFullscreen ? (lang === "zh" ? "退出全屏" : "Exit fullscreen") : (lang === "zh" ? "进入全屏" : "Fullscreen")}
+                </span>
+              </button>
+            )}
             {editMode && (
               <>
                 <button type="button" onClick={saveAllEdits} disabled={!editorDirty} className={toggleClass(false)}>

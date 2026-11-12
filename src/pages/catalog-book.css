@@ -30,6 +30,33 @@
   background: #161616;
 }
 
+/* Fullscreen viewing (toolbar toggle): the root itself is the fullscreen
+   element, so its own ground covers the whole screen — no leftover page
+   background or black bars around the book — and the root becomes the
+   scroll container, which keeps the sticky toolbar and pending-edits bar
+   reachable while fullscreen. */
+.bk-root:fullscreen {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background: #d8d4cb;
+}
+
+.theme-dark .bk-root:fullscreen {
+  background: #161616;
+}
+
+.bk-root:-webkit-full-screen {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background: #d8d4cb;
+}
+
+.theme-dark .bk-root:-webkit-full-screen {
+  background: #161616;
+}
+
 /* Paper stock choices (toolbar): white is the default (her direction,
    2026-10-24: every page is white unless that page overrides its ground);
    cream is the warm stock, black inverts the text variables on paper pages
