@@ -645,8 +645,10 @@ export const THEATER_EXTRA_PLATES: CatalogItem[] = [
  * watercolor catalog by title, and a record there would also surface
  * in the store's painting catalog, so it is kept book-only here and
  * appended to the chapter in CatalogBook.tsx, where the chapter's
- * plate rotation places it as the last plate of the main run, just
- * before the review and the Residuals #1 / #26 closing spread.
+ * plate sequence pairs it with Residuals #26 as a facing spread —
+ * the pair first closed the section behind the Residuals #1 pair,
+ * and on 2026-11-11 she moved it to the head of the plate run,
+ * immediately after the section's facsimile front pages.
  */
 export const RESIDUALS_EXTRA_PLATES: CatalogItem[] = [
   {
