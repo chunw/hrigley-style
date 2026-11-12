@@ -2960,13 +2960,14 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // Her direction (2026-11-11): in the road chapter, the New York
       // plate's work info (Notes from the Road #10, the pigeon) leaves
       // its own page and stands on the facing Hawaii page instead,
-      // below Hawaii's own caption, its meta line carrying a "←"
-      // marker so it reads as the left page's info, pointing back at
-      // that painting. The New York page itself then prints no work
-      // info at all. The info text moves verbatim — the same caption
-      // composition, fed from the New York plate's own record (read
-      // off the facing page's spec) — and neither image nor page
-      // ground changes.
+      // below Hawaii's own caption. The New York page itself then
+      // prints no work info at all. The info text moves verbatim — the
+      // same caption composition, fed from the New York plate's own
+      // record (read off the facing page's spec) — and neither image
+      // nor page ground changes. The moved block is headed by a small
+      // bilingual label, "LEFT · 左图", naming it as the left page's
+      // work (her direction, 2026-11-11: no arrow — a professional
+      // label instead of the "←" marker first tried).
       const isRoadNewYork = chapter.key === "road" && item.image_url.includes("/watercolors/55/");
       const partnerItem = partnerPage?.spec.kind === "plate" ? partnerPage.spec.item : null;
       const facingItem =
@@ -2978,6 +2979,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           : null;
       const captionBody = (capItem: CatalogItem, facing: boolean) => (
         <div className={facing ? "bk-caption-body bk-caption-facing" : "bk-caption-body"}>
+          {facing && <div className="bk-caption-facing-label">LEFT · 左图</div>}
           {/* Notes from the Road plates print no work titles (her
               direction, 2026-11-10): the caption opens with the meta
               line. Book-presentation rule only — the works keep
@@ -2989,7 +2991,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             <div className="bk-caption-title product-title">{capItem.title}{capItem.titleZh && capItem.titleZh !== capItem.title ? ` ${capItem.titleZh}` : ""}</div>
           )}
           {(capItem.metaLine || capItem.dimensions || capItem.mediumZh || capItem.dimensionsZh) && (
-            <div className="bk-caption-meta">{facing ? "← " : ""}{[capItem.metaLine, capItem.dimensions, capItem.mediumZh && capItem.mediumZh !== capItem.medium && !(capItem.metaLine ?? "").includes(capItem.mediumZh) ? capItem.mediumZh : "", capItem.dimensionsZh && capItem.dimensionsZh !== capItem.dimensions ? capItem.dimensionsZh : ""].filter(Boolean).join(" · ")}</div>
+            <div className="bk-caption-meta">{[capItem.metaLine, capItem.dimensions, capItem.mediumZh && capItem.mediumZh !== capItem.medium && !(capItem.metaLine ?? "").includes(capItem.mediumZh) ? capItem.mediumZh : "", capItem.dimensionsZh && capItem.dimensionsZh !== capItem.dimensions ? capItem.dimensionsZh : ""].filter(Boolean).join(" · ")}</div>
           )}
           {capItem.description && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: capItem.description }} />}
         </div>

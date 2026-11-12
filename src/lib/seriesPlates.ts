@@ -666,7 +666,7 @@ export const RESIDUALS_EXTRA_PLATES: CatalogItem[] = [
  * direction, 2026-11-10): a sepia watercolor landscape — a road
  * running diagonally past a small truck lettered "Exotic Fruit &
  * Coconuts", trees and hills under a big washed sky. She places it in
- * this chapter and dates it herself: Hawaii, 2022. It stands outside
+ * this chapter and dates it herself to 2022. It stands outside
  * the watercolor catalog on purpose: the chapter's plates are split
  * out of that catalog by title, and a catalog entry would surface the
  * work in the shop; the chapter assembly interleaves this plate into
@@ -682,7 +682,12 @@ export const RESIDUALS_EXTRA_PLATES: CatalogItem[] = [
  * in their captions (her rule for the chapter, 2026-11-10) — the
  * caption carries only the medium line and the place line, as the
  * chapter's own plates print "2022 · Watercolor on paper · 纸本水彩"
- * over "Hawaii, 2022. / 夏威夷，2022。".
+ * over "Hawaii. / 夏威夷。". (The place lines first repeated the
+ * year — "Hawaii, 2022. / 夏威夷，2022。" — the only caption in the
+ * chapter that did; her direction, 2026-11-11, unified the chapter's
+ * annotations: the year stands in the meta line only, as on every
+ * other plate in the chapter. The work's own year, 2022, is
+ * unchanged.)
  */
 export const ROAD_EXTRA_PLATES: CatalogItem[] = [
   {
@@ -691,7 +696,7 @@ export const ROAD_EXTRA_PLATES: CatalogItem[] = [
     metaLine: "2022 · Watercolor on paper",
     mediumZh: "纸本水彩",
     year: "2022",
-    description: "Hawaii, 2022.<br />夏威夷，2022。",
+    description: "Hawaii.<br />夏威夷。",
     category: "Notes from the Road",
     image_url: "/book/road/road-hawaii-2022.jpg",
     fallback_image_url: "/book/road/road-hawaii-2022.jpg",
