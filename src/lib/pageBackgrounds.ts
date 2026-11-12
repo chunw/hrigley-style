@@ -80,6 +80,15 @@ export function rgbToHex(r: number, g: number, b: number): string {
  * 2026-11-10 (her direction in chat): watercolors/55 — Notes from
  * the Road #10, the pigeon — goes from pink to cream, the paper the
  * editor palette itself labels 米色 (#FAF5EA). No other page moves.
+ *
+ * Export book-edits-6 (2026-11-11): full-table rule again. The table
+ * matches the landed state on 41 of 42 keys; the one change is
+ * Remains No. 5, which the table carries as white against the landed
+ * black — so No. 5 goes back to white. (This page has flipped before:
+ * black in an early export, white in her later Remains pass, black
+ * again under the #17 wholesale table; this export is the newest
+ * word.) textEdits / imageEdits empty; all three pageBgImages
+ * entries already in effect verbatim.
  */
 export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "contents": "white",
@@ -87,7 +96,7 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "plate:/remains/02/main.jpg": "black",
   "plate:/remains/03/main.jpg": "black",
   "plate:/remains/04/main.jpg": "black",
-  "plate:/remains/05/main.jpg": "black",
+  "plate:/remains/05/main.jpg": "white",
   "plate:/remains/06/main.jpg": "black",
   "plate:/watercolors/54/main.jpg": "black",
   "plate:/watercolors/01/main.jpg": "black",
