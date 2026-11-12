@@ -30,6 +30,39 @@ const plate = (
 
 export const SERIES_PLATES: Record<string, CatalogItem[]> = {
   artempath: [
+    // Her directions (2026-11-11, alternative to PR #249): the four
+    // images that stood with her February 15, 2018 Rothko post stand
+    // together on ONE grid page, immediately AFTER the diary page (she
+    // had the two pages swapped; see PLATE_GRID_GROUPS and
+    // SERIES_PLATE_ANCHORS in CatalogBook.tsx). On that page the images
+    // print with no work title and no year (her direction: 「这页图不
+    // 需要标作品名和年份」) — the titles stay here in the catalog data,
+    // and the descriptions below still describe what each image shows;
+    // no source is printed, per her book rule.
+    plate(
+      "Mushroom cloud", "2018", "2018",
+      "Mushroom cloud of an atomic bomb test.",
+      "原子弹试验的蘑菇云。",
+      "/book/artempath/mushroom-cloud.jpg",
+    ),
+    plate(
+      "Red horizon", "2018", "2018",
+      "A red field, crossed by a pale line at the horizon.",
+      "一片红色，一条浅色的线横在地平线处。",
+      "/book/artempath/red-horizon.jpg",
+    ),
+    plate(
+      "Painting in dark red", "2018", "2018",
+      "A painting in dark red, on a wall.",
+      "一幅暗红色的画，在墙上。",
+      "/book/artempath/dark-red-painting.jpg",
+    ),
+    plate(
+      "Orange over blue", "2018", "2018",
+      "Orange over blue, a detail.",
+      "上橙下蓝，局部。",
+      "/book/artempath/orange-blue-detail.jpg",
+    ),
     plate(
       "Art.empath.io at SFMOMA", "2018 · SFMOMA, San Francisco", "2018",
       "Installation view, in front of Rothko's No.14, May 6, 2018.",

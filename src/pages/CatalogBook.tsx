@@ -765,6 +765,18 @@ const SERIES_PLATE_ANCHORS: Record<string, { image: string; afterPair: number }[
   // Art.empath.io: every image is referred to inside the text — the
   // responses and interface figures sit under their own caption lines.
   artempath: [
+    // Her directions (2026-11-11, alternative to PR #249): the four
+    // images of her February 15, 2018 Rothko post stand together on ONE
+    // grid page, and the grid page stands immediately AFTER the diary
+    // page — the diary text comes first (she had the two pages swapped:
+    // 「这两页交换顺序」). The diary's main paragraph sits in the first
+    // essay chunk, so anchoring all four after it (afterPair: 1) emits
+    // the grid page right after the diary page, with nothing between.
+    // See PLATE_GRID_GROUPS below.
+    { image: "/book/artempath/mushroom-cloud.jpg", afterPair: 1 }, // Rothko post grid, after the diary
+    { image: "/book/artempath/red-horizon.jpg", afterPair: 1 },
+    { image: "/book/artempath/dark-red-painting.jpg", afterPair: 1 },
+    { image: "/book/artempath/orange-blue-detail.jpg", afterPair: 1 },
     { image: "/book/artempath/printer.jpg", afterPair: 13 }, // after the system description
     { image: "/book/artempath/sfmoma-bench.jpg", afterPair: 15 }, // with the SFMOMA bench photo paragraph
     { image: "/book/artempath/interface-sf.jpg", afterPair: 15 },
@@ -814,6 +826,41 @@ const SERIES_PLATE_ANCHORS: Record<string, { image: string; afterPair: number }[
     { image: "/book/google/instructions.jpg", afterPair: 2 },
   ],
 };
+
+/** Anchored plates that share ONE grid page instead of standing one to a
+ * page (the book's plateGrid page, the same page the objects chapter
+ * groups its smalls on). Keyed by chapter id (series:<id> or plain key);
+ * each group lists its members' image URLs in page order. When the
+ * anchored sequence reaches a group's first member and the following
+ * anchored plates are exactly the rest of the group, in order, the whole
+ * group is emitted as a single plateGrid page (see paginate's breaks
+ * flow). Her directions (2026-11-11, alternative to PR #249): the four
+ * images of her February 15, 2018 Rothko post — one grid page, standing
+ * immediately after her diary page (her swap direction), its cells
+ * printing no captions at all (see PLATE_GRID_NO_CAPTION below). */
+const PLATE_GRID_GROUPS: Record<string, string[][]> = {
+  artempath: [
+    [
+      "/book/artempath/mushroom-cloud.jpg",
+      "/book/artempath/red-horizon.jpg",
+      "/book/artempath/dark-red-painting.jpg",
+      "/book/artempath/orange-blue-detail.jpg",
+    ],
+  ],
+};
+
+/** Grid-page cells that print NO caption at all — no work title, no
+ * year. Hers for the Rothko-post grid page in Art.empath.io (direction,
+ * 2026-11-11: 「这页图不需要标作品名和年份」). Book-presentation rule
+ * only: the works keep their titles and years in the catalog data, and
+ * every other grid page (the objects chapter's smalls) keeps its
+ * captions. */
+const PLATE_GRID_NO_CAPTION = new Set([
+  "/book/artempath/mushroom-cloud.jpg",
+  "/book/artempath/red-horizon.jpg",
+  "/book/artempath/dark-red-painting.jpg",
+  "/book/artempath/orange-blue-detail.jpg",
+]);
 
 /** Which Spirit sub-series have a painting in the book, and where its
  * image lives. Four of the eight background groups have no painting
@@ -1074,13 +1121,30 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
           return (ia === -1 ? Number.MAX_SAFE_INTEGER : ia) - (ib === -1 ? Number.MAX_SAFE_INTEGER : ib);
         });
       const anchoredUrls = new Set(anchored.map(({ item }) => item.image_url));
-      for (const { item, plate } of anchored) {
+      // Grid groups (see PLATE_GRID_GROUPS): a run of anchored plates
+      // that exactly matches a declared group, in order, is emitted as
+      // ONE plateGrid page instead of one page per plate.
+      const gridGroups = PLATE_GRID_GROUPS[chapter.key.startsWith("series:") ? chapter.key.slice("series:".length) : chapter.key] ?? [];
+      for (let ai = 0; ai < anchored.length; ai++) {
+        const { item, plate } = anchored[ai];
         const target = Math.min(breaks[item.image_url] ?? 0, essayCount);
         while (emitted < target) {
           specs.push({ kind: "essay", chapter, chunk: emitted });
           emitted++;
         }
-        specs.push({ kind: "plate", chapter, item, plate });
+        const group = gridGroups.find((g) => g[0] === item.image_url);
+        const members = group ? anchored.slice(ai, ai + group.length) : undefined;
+        if (
+          group &&
+          members &&
+          members.length === group.length &&
+          members.every((m, i) => m.item.image_url === group[i] && Math.min(breaks[m.item.image_url] ?? 0, essayCount) === target)
+        ) {
+          specs.push({ kind: "plateGrid", chapter, entries: members });
+          ai += group.length - 1;
+        } else {
+          specs.push({ kind: "plate", chapter, item, plate });
+        }
       }
       while (emitted < essayCount) {
         specs.push({ kind: "essay", chapter, chunk: emitted });
@@ -2892,12 +2956,14 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 <div className="bk-grid-frame">
                   <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
                 </div>
-                <div className="bk-grid-caption">
-                  <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
-                  {(item.metaLine || item.dimensions) && (
-                    <div className="bk-caption-meta">{[item.metaLine, item.dimensions].filter(Boolean).join(" · ")}</div>
-                  )}
-                </div>
+                {!PLATE_GRID_NO_CAPTION.has(item.image_url) && (
+                  <div className="bk-grid-caption">
+                    <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
+                    {(item.metaLine || item.dimensions) && (
+                      <div className="bk-caption-meta">{[item.metaLine, item.dimensions].filter(Boolean).join(" · ")}</div>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -3744,6 +3810,12 @@ function useBookModel(args: {
             chapter.plateBreaks = {};
             chapter.plateAnchorOrder = anchors.map((a) => a.image);
             for (const a of anchors) {
+              if (a.afterPair < 0) {
+                // Ahead of the text: emitted before the first essay
+                // chunk (break 0).
+                chapter.plateBreaks[a.image] = 0;
+                continue;
+              }
               const anchorItem = enBlocks[a.afterPair];
               const ci = anchorItem ? enItemChunk.get(anchorItem) : undefined;
               if (ci !== undefined) {
