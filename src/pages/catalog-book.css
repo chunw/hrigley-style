@@ -1651,9 +1651,20 @@
 /* A facing plate's work info standing on this page (the road
    chapter's New York info on the Hawaii page, her direction
    2026-11-11): its own block below the page's own caption, set off
-   by a step of air; its meta line carries the "←" marker. */
+   by a step of air and headed by a small bilingual label naming it
+   as the left page's work (her direction, 2026-11-11: no arrow —
+   "LEFT · 左图" instead). The label takes the book's small-label
+   setting, the same as the caption number's. */
 .bk-caption-facing {
   margin-top: 0.16in;
+}
+
+.bk-caption-facing-label {
+  font-size: 6.5pt;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .bk-caption-num {
