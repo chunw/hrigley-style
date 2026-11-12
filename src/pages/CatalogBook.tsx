@@ -3468,19 +3468,20 @@ function useBookModel(args: {
         const [nine] = roadChapter.items.splice(nineIdx, 1);
         roadChapter.items.unshift(nine);
       }
-      // Her direction (2026-11-11): the watercolor she sent that day —
-      // a castle keep and grey tiled roofs under a blue sky, a pink
-      // strawberry drink and a pink layered cake in the foreground —
-      // replaces the Beijing plate (Notes from the Road #15) IN THE
-      // BOOK ONLY. The catalog work, its shop image
-      // (/watercolors/60/main.jpg) and its data stay untouched; the
-      // book renders the book-only file at the Beijing plate's slot,
-      // which stays at the chapter's end for now. The new painting's
-      // year and place are NOT yet confirmed by her, so its caption
-      // prints the medium line only — no year, no place line (and no
-      // title, per this chapter's rule) — until she names them; once
-      // she does, the plate may also need to move to that place's
-      // country group above. The slot keeps its cream page (see
+      // Her direction (2026-11-11): the castle-and-cake watercolor
+      // (a castle keep and grey tiled roofs under a blue sky, a pink
+      // strawberry drink and a pink layered cake in the foreground)
+      // replaces the Beijing plate's image (Notes from the Road #15)
+      // IN THE BOOK ONLY. The catalog work, its shop image
+      // (/watercolors/60/main.jpg) and its data stay untouched; only
+      // the picture at the plate's slot is swapped for the book-only
+      // file, and the plate keeps its ORIGINAL caption — year 2025
+      // and the Beijing place lines from the work's data (no title,
+      // per this chapter's rule). She sent the painting in successive
+      // versions that day and corrected us that they are not the same
+      // painting; the file at /book/road/road-castle-cake.jpg is the
+      // latest version she named («北京 再换成这张»). The slot keeps
+      // its chapter-end position and its cream page (see
       // pageBackgrounds.ts).
       roadChapter.items = roadChapter.items.map((pair) =>
         pair.item.title === "Notes from the Road #15"
@@ -3490,9 +3491,6 @@ function useBookModel(args: {
                 ...pair.item,
                 image_url: "/book/road/road-castle-cake.jpg",
                 fallback_image_url: "/book/road/road-castle-cake.jpg",
-                metaLine: "Watercolor on paper",
-                year: "",
-                description: "",
               },
             }
           : pair,
