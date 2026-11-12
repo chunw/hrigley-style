@@ -2957,29 +2957,54 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
 
     case "plate": {
       const { item, chapter } = spec;
+      // Her direction (2026-11-11): in the road chapter, the New York
+      // plate's work info (Notes from the Road #10, the pigeon) leaves
+      // its own page and stands on the facing Hawaii page instead,
+      // below Hawaii's own caption, its meta line carrying a "←"
+      // marker so it reads as the left page's info, pointing back at
+      // that painting. The New York page itself then prints no work
+      // info at all. The info text moves verbatim — the same caption
+      // composition, fed from the New York plate's own record (read
+      // off the facing page's spec) — and neither image nor page
+      // ground changes.
+      const isRoadNewYork = chapter.key === "road" && item.image_url.includes("/watercolors/55/");
+      const partnerItem = partnerPage?.spec.kind === "plate" ? partnerPage.spec.item : null;
+      const facingItem =
+        chapter.key === "road" &&
+        item.image_url === "/book/road/road-hawaii-2022.jpg" &&
+        partnerItem &&
+        partnerItem.image_url.includes("/watercolors/55/")
+          ? partnerItem
+          : null;
+      const captionBody = (capItem: CatalogItem, facing: boolean) => (
+        <div className={facing ? "bk-caption-body bk-caption-facing" : "bk-caption-body"}>
+          {/* Notes from the Road plates print no work titles (her
+              direction, 2026-11-10): the caption opens with the meta
+              line. Book-presentation rule only — the works keep
+              their titles in the catalog data and the shop. A work
+              with no title prints no title line at all: the book
+              never prints "Untitled" as a work name (her rule,
+              2026-11-10). */}
+          {chapter.key !== "road" && capItem.title && (
+            <div className="bk-caption-title product-title">{capItem.title}{capItem.titleZh && capItem.titleZh !== capItem.title ? ` ${capItem.titleZh}` : ""}</div>
+          )}
+          {(capItem.metaLine || capItem.dimensions || capItem.mediumZh || capItem.dimensionsZh) && (
+            <div className="bk-caption-meta">{facing ? "← " : ""}{[capItem.metaLine, capItem.dimensions, capItem.mediumZh && capItem.mediumZh !== capItem.medium && !(capItem.metaLine ?? "").includes(capItem.mediumZh) ? capItem.mediumZh : "", capItem.dimensionsZh && capItem.dimensionsZh !== capItem.dimensions ? capItem.dimensionsZh : ""].filter(Boolean).join(" · ")}</div>
+          )}
+          {capItem.description && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: capItem.description }} />}
+        </div>
+      );
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-plate-page${bgImgCls}`}>{bgImgLayer}
           <div className="bk-plate-frame">
             <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
           </div>
-          <div className="bk-caption">
-            <div className="bk-caption-body">
-              {/* Notes from the Road plates print no work titles (her
-                  direction, 2026-11-10): the caption opens with the meta
-                  line. Book-presentation rule only — the works keep
-                  their titles in the catalog data and the shop. A work
-                  with no title prints no title line at all: the book
-                  never prints "Untitled" as a work name (her rule,
-                  2026-11-10). */}
-              {chapter.key !== "road" && item.title && (
-                <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
-              )}
-              {(item.metaLine || item.dimensions || item.mediumZh || item.dimensionsZh) && (
-                <div className="bk-caption-meta">{[item.metaLine, item.dimensions, item.mediumZh && item.mediumZh !== item.medium && !(item.metaLine ?? "").includes(item.mediumZh) ? item.mediumZh : "", item.dimensionsZh && item.dimensionsZh !== item.dimensions ? item.dimensionsZh : ""].filter(Boolean).join(" · ")}</div>
-              )}
-              {item.description && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: item.description }} />}
+          {!isRoadNewYork && (
+            <div className="bk-caption">
+              {captionBody(item, false)}
+              {facingItem && captionBody(facingItem, true)}
             </div>
-          </div>
+          )}
           <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
         </Page>
       );

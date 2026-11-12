@@ -1621,6 +1621,14 @@
   grid-column: 1 / -1;
 }
 
+/* A facing plate's work info standing on this page (the road
+   chapter's New York info on the Hawaii page, her direction
+   2026-11-11): its own block below the page's own caption, set off
+   by a step of air; its meta line carries the "←" marker. */
+.bk-caption-facing {
+  margin-top: 0.16in;
+}
+
 .bk-caption-num {
   padding-top: 3px;
   font-size: 6.5pt;
