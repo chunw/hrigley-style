@@ -4683,12 +4683,15 @@ const CatalogBook = () => {
   const stageRef = useRef<HTMLDivElement>(null);
 
   // Fullscreen viewing (artist, 2026-11-11: 「给这个route做一个全屏模式」).
-  // The toolbar toggle puts the whole book root — toolbar, pending bar and
-  // stage — into the browser's fullscreen, so the book fills the screen
-  // with no browser chrome and the toggle stays reachable to exit; ESC
-  // exits natively. Display only: pagination, print/PDF and the editor are
-  // untouched. The button hides itself where the Fullscreen API is
-  // unavailable (e.g. iPhone Safari).
+  // The toolbar toggle puts the whole book root into the browser's
+  // fullscreen, so the book fills the screen with no browser chrome. While
+  // fullscreen, the toolbar and the pending-edits bar are hidden by CSS
+  // (artist, 2026-11-11: fullscreen should not contain the toolbar row) —
+  // the only control left is the small floating × (.bk-fs-close) rendered
+  // below; ESC also exits natively. Exiting restores the toolbar exactly.
+  // Display only: pagination, print/PDF and the editor are untouched. The
+  // toolbar button hides itself where the Fullscreen API is unavailable
+  // (e.g. iPhone Safari).
   const rootRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const fsSupported =
@@ -4985,6 +4988,23 @@ const CatalogBook = () => {
             ? `有 pending 编辑，记得导出（${sentStats.total - sentStats.sent}）`
             : `You have pending edits — remember to export (${sentStats.total - sentStats.sent})`}
         </div>
+      )}
+
+      {/* Fullscreen close (artist, 2026-11-11): the only control visible
+          while fullscreen — a small quiet × in the top-right corner that
+          exits the mode. Rendered only while fullscreen is active; the
+          toolbar and pending bar are hidden by CSS in that state. */}
+      {isFullscreen && (
+        <button
+          type="button"
+          data-noprint
+          className="bk-fs-close"
+          onClick={toggleFullscreen}
+          aria-label={lang === "zh" ? "退出全屏" : "Exit fullscreen"}
+          title={lang === "zh" ? "退出全屏" : "Exit fullscreen"}
+        >
+          ×
+        </button>
       )}
 
       <div data-noprint className="bk-toolbar border-b border-border bg-background">

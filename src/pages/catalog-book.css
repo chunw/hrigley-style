@@ -33,8 +33,10 @@
 /* Fullscreen viewing (toolbar toggle): the root itself is the fullscreen
    element, so its own ground covers the whole screen — no leftover page
    background or black bars around the book — and the root becomes the
-   scroll container, which keeps the sticky toolbar and pending-edits bar
-   reachable while fullscreen. */
+   scroll container. While fullscreen, the toolbar row and the
+   pending-edits bar are hidden entirely (artist, 2026-11-11: fullscreen
+   should not contain the toolbar) — the only control left is the small
+   floating × (.bk-fs-close). */
 .bk-root:fullscreen {
   width: 100%;
   height: 100%;
@@ -55,6 +57,48 @@
 
 .theme-dark .bk-root:-webkit-full-screen {
   background: #161616;
+}
+
+/* No chrome while fullscreen: hide the whole toolbar row (back link,
+   toggles, PDF buttons, hints, spec line) and the pending-edits bar. */
+.bk-root:fullscreen .bk-toolbar,
+.bk-root:fullscreen .bk-pending-bar,
+.bk-root:-webkit-full-screen .bk-toolbar,
+.bk-root:-webkit-full-screen .bk-pending-bar {
+  display: none;
+}
+
+/* The one fullscreen control: a small quiet × floating in the top-right
+   corner of the screen — translucent at rest, solid on hover/focus.
+   Rendered by CatalogBook.tsx only while fullscreen is active. Above
+   every layer inside the root (toolbar 40, panels 80, pending bar 90). */
+.bk-fs-close {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 100;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 9999px;
+  background: rgba(17, 17, 17, 0.42);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.bk-fs-close:hover,
+.bk-fs-close:focus-visible {
+  opacity: 1;
+  background: rgba(17, 17, 17, 0.68);
 }
 
 /* Paper stock choices (toolbar): white is the default (her direction,
