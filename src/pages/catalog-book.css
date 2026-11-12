@@ -1392,6 +1392,22 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
+/* The old printed edition's Residuals chapter graphic (facsimile
+   p. 3), centred on the section's title spread as its main visual
+   (her direction, 2026-11-11): sized to stand clear of the epigraph
+   above and the Chinese title line below; the image's own internal
+   split — painting left, black title field right — falls on the
+   gutter. */
+.bk-opener-graphic-img {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: calc(var(--bleed) + 1.9in);
+  width: 6.3in;
+  height: 6.3in;
+  z-index: 5;
+}
+
 /* The Still Things title spread's main visual (her direction,
    2026-11-11): the facsimile collage (canva p. 11) stands centred in
    the spread's field, below the epigraph and clear of the bottom

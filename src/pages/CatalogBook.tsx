@@ -1041,17 +1041,20 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // Residuals #1 painting reproduced full-page in the front run —
     // is deleted from the book, removed from CANVA_KEPT_PAGES below.
     // The painting itself still stands later in the chapter as the
-    // Residuals #1 plate, facing its exhibition view. Facsimile
-    // p. 11 is likewise removed below (her direction, the same day):
-    // its graphic stands on the Still Things title spread — see
-    // CANVA_STILLTHINGS_HEAD_PAGES below.
-    const CANVA_KEPT_PAGES = [3, 6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 18, 21, 22];
+    // Residuals #1 plate, facing its exhibition view.
+    // Later change (her direction, 2026-11-11): p. 3 — the printed
+    // book's "I. Residuals" chapter page — leaves the front-matter run.
+    // The graphic moves onto the Residuals title spread as its main
+    // visual (the Still Things treatment, applied to Residuals the same
+    // night), the "I." is removed from the image itself, and the
+    // standalone page is deleted; the front pages are now pp. 6–9.
+    const CANVA_KEPT_PAGES = [6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 18, 21, 22];
     const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
     // Her direction (2026-11-11, later the same evening): the teapot /
     // Residuals #26 pair moves four pages earlier still (「再提前4页」),
     // so it now stands between facsimile pp. 6 and 7 — the front pages
-    // split around the pair: pp. 3 and 6 ahead of it (emitted behind
-    // the opener, below), pp. 7–10 behind it (emitted inside the plate
+    // split around the pair: p. 6 ahead of it (emitted behind
+    // the opener, below), pp. 7–9 behind it (emitted inside the plate
     // loop, immediately after #26).
     const CANVA_FRONT_HEAD_PAGES = CANVA_FRONT_PAGES.filter((p) => p <= 6);
     const CANVA_FRONT_TAIL_PAGES = CANVA_FRONT_PAGES.filter((p) => p > 6);
@@ -1164,10 +1167,11 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     }
     // The facsimile front matter follows the Residuals opener (her
     // direction, 2026-11-09): the opener spread stands directly after
-    // the last Remains plate, and pp. 3–4 and 6–10 (p. 2 cut
-    // 2026-11-11) open the section's run behind it. Since the
-    // 2026-11-11 evening revision only the head pages (pp. 3 and 6)
-    // are emitted here; pp. 7–10 stand behind the teapot/#26 pair and
+    // the last Remains plate, and pp. 6–9 (p. 2 cut 2026-11-11;
+    // p. 3 moved onto the opener spread itself and p. 10 deleted,
+    // both 2026-11-11) open the section's run behind it. Since the
+    // 2026-11-11 evening revision only the head page (p. 6) is
+    // emitted here; pp. 7–9 stand behind the teapot/#26 pair and
     // are emitted inside the plate loop, below.
     if (chapter.key === "residuals") {
       for (const p of CANVA_FRONT_HEAD_PAGES) specs.push({ kind: "canva", page: p });
@@ -1286,6 +1290,11 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       // last spread of Part 4 (her direction, 2026-11-10; see the
       // bleed push ahead of the opener in this loop).
       let heldBackEmitted = false;
+      // Set by the road chapter's New York / Hawaii pair guard in the
+      // plate loop below: true when a blank had to step in ahead of
+      // the New York plate to keep the pair facing, in which case a
+      // compensating blank steps in behind Hawaii.
+      let roadPairGuard = false;
       const emitHeldBack = () => {
         if (holdBack && !heldBackEmitted) {
           for (let i = leadCount; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
@@ -1373,6 +1382,24 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
             // same parity guard the bleed spreads use).
             if (!nextIsVerso()) specs.push({ kind: "blank" });
           }
+          if (chapter.key === "road" && item.title === "Notes from the Road #10") {
+            // Her standing rule (2026-11-11): a pair she has named
+            // as facing pages stays facing — if the parity does not
+            // fall that way on its own, blank pages step in rather
+            // than leaving the pair back to back. The New York
+            // plate (the pigeon) and the book-only Hawaii plate
+            // behind it are such a pair: New York on the verso,
+            // Hawaii on the recto, with New York's work info
+            // standing on the Hawaii page under the "LEFT · 左图"
+            // label (see the plate render case). If the run would
+            // land New York on a recto, a blank page steps in first
+            // (the same parity guard the bleed spreads use); a
+            // matching blank then steps in behind Hawaii (in the
+            // interleave below), so every page after the pair keeps
+            // the side it had.
+            roadPairGuard = !nextIsVerso();
+            if (roadPairGuard) specs.push({ kind: "blank" });
+          }
           if (chapter.key === "remains" && item.image_url === "/remains/01/main.jpg") {
             // Her direction (2026-11-11): Remains No. 1 becomes a
             // full-bleed spread, on the same verso guard as the other
@@ -1438,6 +1465,12 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
             // this direction it was appended at the chapter's end,
             // behind Norway and China, splitting the USA plates.
             for (const extra of ROAD_EXTRA_PLATES) specs.push({ kind: "plate", chapter, item: extra, plate: 0 });
+            // The compensating blank for the pair guard above:
+            // when a blank stepped in ahead of New York, one steps
+            // in behind Hawaii too, so the plates after the pair
+            // (Lofoten, Beijing, and everything behind them) keep
+            // the sides they had.
+            if (roadPairGuard) specs.push({ kind: "blank" });
           }
           if (holdBack && item.image_url === holdBack.imageUrl) emitHeldBack();
         }
@@ -2956,9 +2989,22 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 ))}
               </div>
             )}
+            {/* The Residuals opener carries the old printed edition's
+                chapter graphic (facsimile p. 3, its "I." removed from
+                the image) centred on the spread as its main visual
+                (her direction, 2026-11-11 — the Still Things treatment
+                applied to Residuals): the graphic's own "Residuals" is
+                the spread's only English title, so the typeset title
+                below keeps just the Chinese line; the epigraph stands
+                as before, and the image's internal split falls on the
+                gutter. The standalone p. 3 page is deleted (see
+                CANVA_KEPT_PAGES above). */}
+            {chapter.key === "residuals" && (
+              <img className="bk-opener-graphic-img" src="/book/canva-paintings/p03.jpg" alt="" />
+            )}
             {(chapter.key !== "road" || titleSpread) && (
             <Collage
-              title={chapter.key === "stillthings" ? (chapter.titleZh ?? chapter.title) : stackedTitle(chapter)}
+              title={chapter.key === "residuals" ? <span className="bk-title-zh-line">{chapter.titleZh}</span> : chapter.key === "stillthings" ? (chapter.titleZh ?? chapter.title) : stackedTitle(chapter)}
               titleSize={titleSize}
               above={
                 <>
