@@ -988,7 +988,11 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // The facsimile pages pp. 11–16 stand as one cluster in page
     // order at the head of Still Things (her direction, 2026-11-09:
     // pp. 13–16 move behind pp. 11–12), emitted with the Still Things
-    // chapter pages below.
+    // chapter pages below. Placement update (her direction,
+    // 2026-11-11): the section's title spread moves ahead of the
+    // cluster — the spread opens the section and p. 11 stands
+    // immediately behind it; the cluster is emitted right after the
+    // opener push below.
     // Placement update (her direction, 2026-11-09, later): the
     // Residuals opener spread stands directly after the last Remains
     // plate, so the facsimile front matter (pp. 2–4 and 6–10) no
@@ -1001,30 +1005,29 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     const CANVA_STILLTHINGS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 17 && p <= 20);
     // Facsimile placement updates (her direction, 2026-11-08, later the
     // same day): p. 11 — the printed book's "II. Still Things" chapter
-    // page — opens the Still Things section as its only chapter page
-    // (the section's own text page no longer prints a title head), and
-    // pp. 21–22 (the three small still lifes and the brown box) belong
+    // page — stood as the Still Things section's only chapter page
+    // (the section's own text page no longer prints a title head) until
+    // 2026-11-11, when the section's title spread moved immediately
+    // ahead of it; the cluster is emitted after the opener push below
+    // for that reason. And pp. 21–22 (the three small still lifes and
+    // the brown box) belong
     // to Notes from the Road instead of Still Things, the section she
     // assigns them to. They closed that chapter until 2026-11-10, when
     // she moved them up behind its opener spread — see the emission
     // right after the opener push below.
     const CANVA_ROAD_PAGES = [21, 22];
-    if (chapter.key === "stillthings") {
-      specs.push({ kind: "canva", page: 11 });
-      // Her review (2026-11-08): facsimile p. 12 — the red-dog still
-      // life — moves out of the Residuals run and opens the Still
-      // Things section as its first page, right after the section's
-      // own chapter page above; facsimile pp. 19–20 (the green chair
-      // and the blue bag) are deleted from the book (removed from
-      // CANVA_KEPT_PAGES above).
-      specs.push({ kind: "canva", page: 12 });
-      // Her direction (2026-11-09): the facsimile Residuals chapter
-      // (pp. 13–16), which used to close the Residuals section, moves
-      // behind pp. 11–12, so the six facsimile pages pp. 11–16 stand
-      // as one cluster in page order at the head of Still Things,
-      // right after the Residuals plates.
-      for (const p of CANVA_RESIDUALS_PAGES) specs.push({ kind: "canva", page: p });
-    }
+    // The Still Things facsimile cluster is NOT emitted here: her
+    // direction (2026-11-11) puts the section's title spread at the
+    // head of the section, immediately before p. 11, so the cluster is
+    // emitted right after the opener push below. Within the cluster
+    // the order is the settled one: p. 11 first; then p. 12 (her
+    // review, 2026-11-08: the red-dog still life moves out of the
+    // Residuals run to stand behind p. 11; facsimile pp. 19–20, the
+    // green chair and the blue bag, are deleted from the book —
+    // removed from CANVA_KEPT_PAGES above); then pp. 13–16 (her
+    // direction, 2026-11-09: the facsimile Residuals chapter moves
+    // behind pp. 11–12, so the six pages stand as one cluster).
+    const CANVA_STILLTHINGS_HEAD_PAGES = [11, 12, ...CANVA_RESIDUALS_PAGES];
     const aphorismId = APHORISM_BEFORE_CHAPTER[chapter.key];
     if (aphorismId) pushAphorism(APHORISMS[aphorismId]);
     // One opening per chapter (her direction, 2026-10-18): the big-type
@@ -1074,6 +1077,14 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // closed the chapter (the old emission stood at the chapter end).
     if (chapter.key === "road") {
       for (const p of CANVA_ROAD_PAGES) specs.push({ kind: "canva", page: p });
+    }
+    // The Still Things facsimile cluster (pp. 11–16) stands immediately
+    // behind the section's title spread (her direction, 2026-11-11:
+    // the spread opens the section, and p. 11 — the "II. Still Things"
+    // collage page — follows it directly). Until today the cluster was
+    // emitted ahead of the spread, at the head of the section.
+    if (chapter.key === "stillthings") {
+      for (const p of CANVA_STILLTHINGS_HEAD_PAGES) specs.push({ kind: "canva", page: p });
     }
     // The cover-story text stands as ONE quiet page inside Negotiated
     // Intelligence, immediately after the chapter's opener spread and
