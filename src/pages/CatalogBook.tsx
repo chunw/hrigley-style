@@ -972,6 +972,11 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // Her review cuts the same day: the Canva cover (p.1), the egg page
     // (p.5) and the whole tail from the Remains divider to the back
     // cover (pp. 23–44) are removed; pp. 2–4 and 6–22 stand.
+    // Later cut (her direction, 2026-11-11, executing the deletion she
+    // first ordered on 2026-11-10 — see the held-orders note at the
+    // Spirit motto push below): p. 2, the old book's motto page
+    // carrying BOTH the machines sentence and the slowness sentence,
+    // is removed too; pp. 3–4 and 6–22 stand.
     // Placement (her direction, 2026-11-08, replacing the same day's
     // earlier single-block placement after Still Things): the
     // facsimile no longer stands as its own block — its pages merge
@@ -990,7 +995,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // longer precedes it — the front pages are emitted right after
     // the opener spread, below, and open the section's run from
     // there.
-    const CANVA_KEPT_PAGES = [2, 3, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22];
+    const CANVA_KEPT_PAGES = [3, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22];
     const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
     const CANVA_RESIDUALS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 13 && p < 17);
     const CANVA_STILLTHINGS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 17 && p <= 20);
@@ -1083,8 +1088,8 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     }
     // The facsimile front matter follows the Residuals opener (her
     // direction, 2026-11-09): the opener spread stands directly after
-    // the last Remains plate, and pp. 2–4 and 6–10 open the section's
-    // run behind it.
+    // the last Remains plate, and pp. 3–4 and 6–10 (p. 2 cut
+    // 2026-11-11) open the section's run behind it.
     if (chapter.key === "residuals") {
       for (const p of CANVA_FRONT_PAGES) specs.push({ kind: "canva", page: p });
     }
