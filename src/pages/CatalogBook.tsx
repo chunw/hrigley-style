@@ -3648,6 +3648,14 @@ function useBookModel(args: {
             }
           : pair,
       );
+      // Her direction (2026-11-11): the Notes from the Road #12 plate
+      // (the Chiang Mai leaves watercolor, 2025 — green leaves and a
+      // red dish, captioned "Chiang Mai, Thailand. / 泰国，清迈。") is
+      // deleted from the book. The piece itself stays in the
+      // watercolor catalog. The full-bleed Thailand spread earlier in
+      // this chapter is a separate piece that happens to be built
+      // from the same image file; it is not this plate page and stays.
+      roadChapter.items = roadChapter.items.filter(({ item }) => !item.image_url.includes("/watercolors/57/"));
     }
     // Her direction (2026-11-08): the Still Things plate on
     // /watercolors/48/ — the section's last plate page — is deleted
