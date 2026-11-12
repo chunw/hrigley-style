@@ -1230,9 +1230,10 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       // the Residuals #1 exhibition-view page, beside the exhibition
       // line (see the plate render case). So for this chapter the
       // essay lead count is zero and no essay specs are emitted in
-      // the plate loop either; the plates run, then the #1 pair
-      // (painting, then its exhibition view), and the teapot plate
-      // and Residuals #26 close the section, adjacent.
+      // the plate loop either; the teapot plate and Residuals #26
+      // open the plate run as a facing pair, the catalog plates
+      // follow, and the #1 pair (painting, then its exhibition
+      // view) closes the section.
       const leadCount = chapter.key === "residuals" ? 0 : holdBack ? Math.max(0, essayCount - holdBack.trailingChunks) : essayCount;
       for (let i = 0; i < leadCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
       // The Thailand watercolor full-bleed spread stands inside Notes
@@ -1288,17 +1289,22 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         flushGroup();
       } else {
         // Residuals plate order (her directions, 2026-11-10, revised
-        // 2026-11-11): the catalog plates run first in their order;
-        // then the Residuals #1 pair — the painting, then its
-        // exhibition view, facing each other as one spread (the
-        // exhibition page carries the review; no essay pages stand in
-        // this chapter any more); and the book-only teapot plate and
-        // Residuals #26 close the section, adjacent, in that order —
-        // she asked for those two plates to stand next to each other.
-        // (Earlier revisions: #1 and #26 together closed the section
-        // behind the review and the teapot stood in the main run;
-        // then #1 stood immediately before the review pages.) Every
-        // other chapter keeps its item order untouched.
+        // 2026-11-11, latest revision last): the book-only teapot
+        // plate and Residuals #26 — a facing pair, teapot on the
+        // verso, #26 on the recto, standing next to each other as
+        // she asked — open the plate run, immediately after the
+        // section's facsimile front pages; then the catalog plates
+        // run in their order; and the Residuals #1 pair — the
+        // painting, then its exhibition view, facing each other as
+        // one spread (the exhibition page carries the review; no
+        // essay pages stand in this chapter any more) — closes the
+        // section. (Earlier revisions: #1 and #26 together closed
+        // the section behind the review and the teapot stood in the
+        // main run; then #1 stood immediately before the review
+        // pages; then the teapot/#26 pair closed the section behind
+        // the #1 pair, until she moved the pair to the front of the
+        // section — 「提到这章节前面位置」, 2026-11-11.) Every other
+        // chapter keeps its item order untouched.
         const plateSeq = chapter.key === "residuals"
           ? (() => {
               const byTitle = (t: string) => chapter.items.find(({ item }) => item.title === t);
@@ -1306,14 +1312,23 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
               const exhibition = chapter.items.find(({ item }) => item.image_url.includes("residuals-01-exhibition"));
               const last = byTitle("Residuals #26");
               const mid = chapter.items.filter(({ item }) => item.title !== "Residuals #1" && item.title !== "Residuals #26" && !item.image_url.includes("residuals-01-exhibition"));
-              // mid ends with the appended book-only teapot plate; the
-              // #1 pair slots in just ahead of it, and #26 closes the
-              // section.
-              return [...mid.slice(0, -1), ...(first ? [first] : []), ...(exhibition ? [exhibition] : []), ...mid.slice(-1), ...(last ? [last] : [])];
+              // mid ends with the appended book-only teapot plate;
+              // the teapot and #26 lead the run as a pair, then the
+              // catalog plates, and the #1 pair closes the section.
+              return [...mid.slice(-1), ...(last ? [last] : []), ...mid.slice(0, -1), ...(first ? [first] : []), ...(exhibition ? [exhibition] : [])];
             })()
           : chapter.items;
         for (let ii = 0; ii < plateSeq.length; ii++) {
           const { item, plate } = plateSeq[ii];
+          if (chapter.key === "residuals" && item.image_url.includes("residuals-teapot-bw")) {
+            // Her direction (2026-11-11): the teapot plate and
+            // Residuals #26 stand as one facing spread at the head
+            // of the plate run, the teapot on the verso and #26 on
+            // the recto. If the run would land the teapot on a
+            // recto, a blank page steps in first (the same parity
+            // guard the #1 pair uses below).
+            if (!nextIsVerso()) specs.push({ kind: "blank" });
+          }
           if (chapter.key === "residuals" && item.title === "Residuals #1" && !item.image_url.includes("residuals-01-exhibition")) {
             // Her direction (2026-11-11): the painting and its
             // exhibition view face each other as one spread, the
@@ -3664,10 +3679,12 @@ function useBookModel(args: {
       residualsChapter.items = [...lead, ...kept.filter(({ item }) => item.title !== "Residuals #26" && item.title !== "Residuals #1")];
       // Her direction (2026-11-10): the untitled black-and-white
       // watercolor still life she sent joins the chapter as a book-only
-      // plate (see RESIDUALS_EXTRA_PLATES in seriesPlates.ts). Appended
-      // after the catalog run, the chapter's plate rotation places it
-      // as the last plate of the main run, just before the review and
-      // the #1/#26 closing spread.
+      // plate (see RESIDUALS_EXTRA_PLATES in seriesPlates.ts). It is
+      // appended to the item list here; the chapter's plate sequence
+      // (see the pagination notes) pairs it with Residuals #26 at the
+      // head of the plate run — the pair first closed the section
+      // behind the #1 pair, and on 2026-11-11 she moved it to the
+      // front of the section.
       residualsChapter.items = [...residualsChapter.items, ...RESIDUALS_EXTRA_PLATES.map((item) => ({ item, plate: 0 }))];
       // Her directions (2026-11-11): the Residuals #1 plate first
       // carried the installation photo she sent that evening INSTEAD
