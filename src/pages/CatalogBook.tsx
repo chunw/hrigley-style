@@ -174,6 +174,44 @@ const SAHARA_NOTE = {
   textZh: "在摩洛哥马拉喀什老城，一种叙事主体是货物盈盈的店铺和兜揽生意的游商，街头巷尾围绕电视观看世界杯的人们，相对驰过的摩托不断搅乱人的神经，就在这充满机油气味的街旁，大快朵颐 Amazigh 民族所发明的那种尖顶陶锅炖羊肉的鲜嫩，石榴汁的酸度中和了金黄肉汤的油腻。另一个亚叙事的分支里，清凉的院落和薄荷茶让人即刻入定，清真寺的宣礼塔呼唤礼拜的喇叭一天五次进行如仪，神学院门楣纹饰的每处凹凸被阳光切割为阴阳向背的美丽局部，一切不言自威。粉红色泥砖砌成的曲折小巷不知通往何种叙事分支，这个迷宫般地方的入口就是吉玛广场，那里魔笛缭绕不舍昼夜，挤进围坐的人群随一整排乐师的鼓点子高低起伏组成临时部落 —— 世界音乐作曲课上非洲音乐部分活的 demo。",
 };
 
+/**
+ * Her Colombia diary (March 21, 2026), a travel note on Medellín
+ * posted with the location tag Colombia · Medellín — the trip the
+ * road chapter's two Colombia watercolors come from (Notes from the
+ * Road #5, Comuna 13, and #8, Medellín). She directed the full text
+ * into the book on 2026-11-11, to stand beside the Colombia pictures
+ * in Notes from the Road: the passage is held back from the chapter's
+ * leading essay and paginated inside the plate run, right after the
+ * second Colombia plate, so the two same-country paintings stand
+ * together first (see Chapter.essayAfterPlate, set where the road
+ * essay chunks are built). The Chinese is her text, verbatim,
+ * exactly as posted — the halfwidth parentheses at "(Perpetuo
+ * Socorro)" included; no source-platform label is printed, per the
+ * book's rule for her posts. The record heading follows the dated
+ * entries' house form. The English is Beignet's translation,
+ * pending her review.
+ */
+const COLOMBIA_DIARY = {
+  labelEn: "March 21, 2026, Colombia · Medellín",
+  labelZh: "2026 年 3 月 21 日，哥伦比亚 · 麦德林",
+  parasEn: [
+    "[Travel Notes] Travel is turning yourself into a transparent jellyfish clinging to the land under your feet. What falls on your body is not only the colors around you; there is pain, too.",
+    "This is the newest paradise for digital nomads. Medellín. Cafés of every kind and spacious co-working spaces, finely decorated; the plants, thick and lush, grow with tropical brute force, vying to show off their dark emerald green. In the mountains the rain rests, and the wild fields look on wistfully. The citizens get about by a singular cable-car system; vast slopes extend upward to the peaks, innumerable roof tiles in rows like scales, homes spreading on and on. In the sunlight, reggaeton and street-dance rhythms pierce the ear, and life proceeds as ritual.",
+    "Yet the order of a visit decides the undertone of perception. On the first day we went to Comuna 13. As we squeezed into the uncommonly lively crowd of commerce at its entrance, the guide told us that no one could enter here before, because illegal guerrillas kept watch from the brick houses up high, and anyone who came in would be shot dead on the spot. In 2002, in “Operation Orion”, government troops entered the Comuna 13 slums in force to fight the guerrillas. Most houses here were built privately and haphazardly on steep mountain slopes, stacked in layers, so government helicopters fired directly at the roofs. The roofs are extremely thin; bullets pass through easily, and a great many civilians were killed or wounded in their sleep.",
+    "This is the coldest, and the most dramatic, side of Medellín's transformation; the records are full of suffocating details. Just thirty years ago, in Medellín's alley warfare, drug lords hired great numbers of teenagers from the slums: two to a motorcycle, the gunman in the back seat spraying the target with a submachine gun, then vanishing swiftly into the mountain city's intricate alleys. Such assassinations happened anytime and anywhere, at traffic lights, at restaurant doors, even at school gates; the social panic bred by their unpredictability far exceeded that of regular warfare. The innovation district so admired today (Perpetuo Socorro) was, several decades ago, an auto-repair district: uninhabited at night, with ready tools and sealed soundproof spaces, it sometimes became a hell where gangs disposed of their troubles.",
+    "What can thirty years make happen, and what can it not? To rebuild civilization from ruins is by no means impossible. And so in Medellín, merely walking through a quiet neighborhood is enough to shake the heart. The government set escalators, cable cars, libraries and other resources down with force at the street corners where gunfire was once densest, and completed an urban surgery with immense willpower. The murals filling the streets are weapons of memory; long ago they turned history into narrative art, against the culture of silence of the past.",
+    "It makes me think of the Uber driver who picked us up from the airport a few days ago. Two years ago he tried to enter the United States through the scorching desert, one of a team of twenty; by the end only five had survived, and he was one of the five. In the faint twilight I gazed at the mountain city's lovely silhouette beyond the car window and could not speak. The greatness of a city comes down, in the end, to how it shelters these innocents, tough as silk and fragile as paper, and gives them back their peace after the calamity.",
+  ],
+  parasZh: [
+    "【旅行杂记】旅行就是把自己变成透明的海蜇吸附于足下的土地，投射在身上的不止周围的色彩，也有疼痛。",
+    "这里是新晋数字游民的乐土。麦德林。各式各样的咖啡馆、共创区空间舒阔，精致装潢，植物稠密葱茏，以热带的蛮力生长，争相展示苍绿碧翠。山中雨歇野田怅望，市民以独特的缆车系统交通，广大坡面延伸向上及于峰峦，万瓦鳞次，民居连绵，阳光下雷鬼顿与街舞节奏贯耳，生活进行如仪。",
+    "然而，游览顺序决定了感知的底色。第一天我们就去了13区。当我们跻身13区入口处热闹非凡的商业人潮，导游却说，这里以前无人能进，因为非法游击队就在高处的砖房里盯着，一旦有人进来就将其开枪击毙。2002年“猎户座行动”，政府军大规模进入13区贫民窟对战游击队。这里的房屋大多是私搭乱建在陡峭的山坡上的，层叠错落，于是政府军的直升机直接向屋顶开火，屋顶极薄，子弹轻易穿透，造成大量平民在睡梦中伤亡。",
+    "这是麦德林转型史中最冷酷、也最具戏剧张力的一个侧面，资料里全是令人窒息的细节。仅仅三十年前，麦德林的巷战中，毒枭雇佣大批来自贫民窟的青少年，两人一组骑摩托车，后座的枪手使用冲锋枪对目标进行扫射，然后迅速消失在错综复杂的山城小巷中。这种暗杀随时随地发生，红绿灯前、餐馆门口、甚至学校门口，不可预见性造成的社会恐慌远超常规战争。如今令人赞叹的创新特区(Perpetuo Socorro)，几十年前的汽修厂区，由于夜晚无人居住，且拥有现成的工具和密闭的隔音空间，有时会沦为黑帮处理麻烦的地狱。",
+    "三十年的时间能发生什么，不能发生什么。从废墟中重塑文明，绝非不可能。正因如此，在麦德林，仅仅只是在宁静的社区里走路，心灵也是极受震撼的。政府将扶梯、缆车、图书馆等资源强力落脚在当年枪声最密的街角，以极大的意志力完成了城市手术。满街壁画作为记忆的武器，早已将历史转化为叙事艺术，对抗曾经的沉默文化。",
+    "不由想起几天前从机场接我们的Uber司机，两年前，他尝试经由酷热的沙漠进入美国，二十人的队伍，走到最后竟只幸存五人，他是五人之一。冥冥薄暮，我望着车窗外山城可爱的剪影说不出话，城市的伟大，最终归于其如何庇佑这些坚韧如丝、亦脆弱如纸的赤子，还他们劫后的平静。",
+  ],
+};
+
 /** Chapter opener spreads are uniformly black with white type
  *  (her direction, 2026-10-18); each chapter's epigraph sits in the
  *  spread's upper field (CHAPTER_EPIGRAPH below). */
@@ -4038,10 +4076,29 @@ function useBookModel(args: {
             indentItem({ html: `<p>${SAHARA_NOTE.textZh}</p>` }, true),
           );
         }
-        essayChunks[chapter.key] =
-          chapter.key === "stillthings" && !enT && !zhT
-            ? []
-            : langChunks(enStream, zhStream);
+        if (chapter.key === "road") {
+          // Her Colombia diary (March 21, 2026) stands beside the
+          // chapter's Colombia plates (see COLOMBIA_DIARY above): its
+          // chunks are appended after the chapter essay's chunks and
+          // held back by paginate(), which emits them inside the
+          // plate run right after the Medellín plate (Notes from the
+          // Road #8, /watercolors/52/) that closes the Colombia pair.
+          const diaryItems = (label: string, paras: string[]): EssayItem[] => [
+            indentItem({ html: `<p><span class="bk-credit">${label}</span></p>` }),
+            ...paras.map((t, i) => indentItem({ html: `<p>${t}</p>` }, i === paras.length - 1)),
+          ];
+          const diaryChunks = langChunks(
+            diaryItems(COLOMBIA_DIARY.labelEn, COLOMBIA_DIARY.parasEn),
+            diaryItems(COLOMBIA_DIARY.labelZh, COLOMBIA_DIARY.parasZh),
+          );
+          essayChunks[chapter.key] = [...langChunks(enStream, zhStream), ...diaryChunks];
+          chapter.essayAfterPlate = { imageUrl: "/watercolors/52/main.jpg", trailingChunks: diaryChunks.length };
+        } else {
+          essayChunks[chapter.key] =
+            chapter.key === "stillthings" && !enT && !zhT
+              ? []
+              : langChunks(enStream, zhStream);
+        }
       } else if (chapter.key === "spirit") {
         // Essay layout (her direction, 2026-11-06, replacing the
         // 2026-11-05 paragraph-pair interleave): the whole English essay
