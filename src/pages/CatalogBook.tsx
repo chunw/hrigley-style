@@ -1272,22 +1272,27 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
           : chapter.items;
         for (let ii = 0; ii < plateSeq.length; ii++) {
           const { item, plate } = plateSeq[ii];
-          if (chapter.key === "road" && (item.image_url.includes("/watercolors/58/") || item.image_url.includes("/watercolors/47/"))) {
-            // Her directions (2026-11-10): two road plates convert
+          if (chapter.key === "road" && item.image_url.includes("/watercolors/47/")) {
+            // Her directions (2026-11-10): road plates convert
             // from single plate pages into full-bleed spreads in
             // their current positions in the run, reusing the
-            // Pre-iPhone Era bleed mechanism — #13 (the capuchin
-            // monkeys, Manuel Antonio, Costa Rica; trial — "试试")
-            // and #4 (the San Cristóbal car painting; "做成跨页，
-            // 删掉单页"). #13's work info stands on its spread in
-            // white at the bottom-left and #4's at the bottom-right,
-            // with no title (the chapter's no-titles rule) — see the
-            // bleed render case. (A third conversion stood here —
-            // #2, the San Cristóbal breakfast, the spread printed
-            // with no work info at all — until 2026-11-11, when she
-            // deleted that spread from the book; the painting stays
-            // at the what-remains spread. See the road chapter
-            // assembly note.)
+            // Pre-iPhone Era bleed mechanism. Only #4 (the San
+            // Cristóbal car painting; "做成跨页，删掉单页") is
+            // left standing as a spread: its work info stands on
+            // its spread in white at the bottom-right, with no
+            // title (the chapter's no-titles rule) — see the
+            // bleed render case. (Two other conversions stood
+            // here. #2, the San Cristóbal breakfast, the spread
+            // printed with no work info at all, until 2026-11-11,
+            // when she deleted that spread from the book; the
+            // painting stays at the what-remains spread. See the
+            // road chapter assembly note. And #13, the capuchin
+            // monkeys, Manuel Antonio, Costa Rica, was a trial
+            // conversion the same day ("试试"); her direction
+            // 2026-11-11 reversed it — "这张不要做跨页，要做成
+            // 一个单页" + "黑色底" — so #13 stands as an ordinary
+            // single plate page again, on the black ground
+            // recorded in pageBackgrounds.ts.)
             if (!nextIsVerso()) specs.push({ kind: "blank" });
             specs.push({ kind: "bleed", half: "left", chapter, item });
             specs.push({ kind: "bleed", half: "right", chapter, item });
@@ -3057,8 +3062,10 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // Her direction (2026-11-10, later the same evening): of the
       // converted road spreads, the car plate's (#4, San Cristóbal)
       // work info stands at the spread's BOTTOM-RIGHT corner — on
-      // the right page — instead of the bottom-left. The monkey
-      // spread keeps the bottom-left treatment.
+      // the right page — instead of the bottom-left. (The monkey
+      // spread used the bottom-left treatment until her 2026-11-11
+      // direction returned #13 to a single black page; it no longer
+      // reaches this render case.)
       const carSpread = item.image_url.includes("/watercolors/47/");
       const spreadMeta = [item.metaLine, item.dimensions, item.mediumZh && item.mediumZh !== item.medium && !(item.metaLine ?? "").includes(item.mediumZh) ? item.mediumZh : "", item.dimensionsZh && item.dimensionsZh !== item.dimensions ? item.dimensionsZh : ""].filter(Boolean).join(" \u00b7 ");
       return (
