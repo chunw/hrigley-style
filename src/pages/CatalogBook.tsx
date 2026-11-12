@@ -1272,6 +1272,11 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       // last spread of Part 4 (her direction, 2026-11-10; see the
       // bleed push ahead of the opener in this loop).
       let heldBackEmitted = false;
+      // Set by the road chapter's New York / Hawaii pair guard in the
+      // plate loop below: true when a blank had to step in ahead of
+      // the New York plate to keep the pair facing, in which case a
+      // compensating blank steps in behind Hawaii.
+      let roadPairGuard = false;
       const emitHeldBack = () => {
         if (holdBack && !heldBackEmitted) {
           for (let i = leadCount; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
@@ -1359,6 +1364,24 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
             // same parity guard the bleed spreads use).
             if (!nextIsVerso()) specs.push({ kind: "blank" });
           }
+          if (chapter.key === "road" && item.title === "Notes from the Road #10") {
+            // Her standing rule (2026-11-11): a pair she has named
+            // as facing pages stays facing — if the parity does not
+            // fall that way on its own, blank pages step in rather
+            // than leaving the pair back to back. The New York
+            // plate (the pigeon) and the book-only Hawaii plate
+            // behind it are such a pair: New York on the verso,
+            // Hawaii on the recto, with New York's work info
+            // standing on the Hawaii page under the "LEFT · 左图"
+            // label (see the plate render case). If the run would
+            // land New York on a recto, a blank page steps in first
+            // (the same parity guard the bleed spreads use); a
+            // matching blank then steps in behind Hawaii (in the
+            // interleave below), so every page after the pair keeps
+            // the side it had.
+            roadPairGuard = !nextIsVerso();
+            if (roadPairGuard) specs.push({ kind: "blank" });
+          }
           if (chapter.key === "remains" && item.image_url === "/remains/01/main.jpg") {
             // Her direction (2026-11-11): Remains No. 1 becomes a
             // full-bleed spread, on the same verso guard as the other
@@ -1424,6 +1447,12 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
             // this direction it was appended at the chapter's end,
             // behind Norway and China, splitting the USA plates.
             for (const extra of ROAD_EXTRA_PLATES) specs.push({ kind: "plate", chapter, item: extra, plate: 0 });
+            // The compensating blank for the pair guard above:
+            // when a blank stepped in ahead of New York, one steps
+            // in behind Hawaii too, so the plates after the pair
+            // (Lofoten, Beijing, and everything behind them) keep
+            // the sides they had.
+            if (roadPairGuard) specs.push({ kind: "blank" });
           }
           if (holdBack && item.image_url === holdBack.imageUrl) emitHeldBack();
         }
