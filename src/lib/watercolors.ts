@@ -451,7 +451,7 @@ export const watercolors: Watercolor[] = [
   {
     id: "8",
      title: "Residuals #5",
-    titleZh: "残留 其五",
+    titleZh: "兰州拉面",
    series: "I",
     printInCatalog: false,
     showInStorefront: false,

@@ -3254,6 +3254,9 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
 
     case "canva": {
       const src = `/book/canva-paintings/p${String(spec.page).padStart(2, "0")}.jpg`;
+      // Facsimile p. 7 is the blue-and-white bowl painting, watercolors/08
+      // in the catalog data; its caption below reads from that record.
+      const lamianWork = spec.page === 7 ? watercolors.find((w) => w.id === "8") : undefined;
       if (CANVA_FULL_BLEED_PAGES.has(spec.page)) {
         // Full bleed like the bleed spreads: the image covers the whole
         // sheet and, as there, no folio is printed over it.
@@ -3279,6 +3282,19 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 <div className="bk-caption-title product-title">Japanese Pottery 日本陶器</div>
                 <div className="bk-caption-meta">2025 · Watercolor on paper · 纸本水彩</div>
                 <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: "Japan Folk Crafts Museum, Tokyo.<br />东京，日本民艺馆。" }} />
+              </div>
+            </div>
+          )}
+          {spec.page === 7 && lamianWork && (
+            <div className="bk-caption">
+              <div className="bk-caption-body">
+                {/* Second caption exception among the facsimile pages:
+                    the artist named this painting (2026-11-11) — the
+                    blue-and-white bowl is 兰州拉面 — so its title prints
+                    here, read from the watercolor catalog record
+                    (watercolors/08), as on the section's plates. */}
+                <div className="bk-caption-title product-title">{lamianWork.title} {lamianWork.titleZh}</div>
+                <div className="bk-caption-meta">{lamianWork.year} · {lamianWork.medium} · {lamianWork.mediumZh}</div>
               </div>
             </div>
           )}
