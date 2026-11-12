@@ -1037,7 +1037,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // longer precedes it — the front pages are emitted right after
     // the opener spread, below, and open the section's run from
     // there.
-    const CANVA_KEPT_PAGES = [3, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22];
+    const CANVA_KEPT_PAGES = [3, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 21, 22];
     const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
     const CANVA_RESIDUALS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 13 && p < 17);
     const CANVA_STILLTHINGS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 17 && p <= 20);
@@ -1065,7 +1065,14 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // removed from CANVA_KEPT_PAGES above); then pp. 13–16 (her
     // direction, 2026-11-09: the facsimile Residuals chapter moves
     // behind pp. 11–12, so the six pages stand as one cluster).
-    const CANVA_STILLTHINGS_HEAD_PAGES = [11, 12, ...CANVA_RESIDUALS_PAGES];
+    // Update (her direction, 2026-11-11, later): p. 11 — the "II. Still
+    // Things" collage page — leaves the cluster and the book as a page:
+    // its graphic moves onto the section's title spread as the spread's
+    // main visual (see the opener render; the "II." numeral is painted
+    // out of the image file itself, at her direction), the standalone
+    // page is deleted, and the cluster behind the spread is pp. 12–16.
+    // The image file stays in the repo — the spread uses it.
+    const CANVA_STILLTHINGS_HEAD_PAGES = [12, ...CANVA_RESIDUALS_PAGES];
     const aphorismId = APHORISM_BEFORE_CHAPTER[chapter.key];
     if (aphorismId) pushAphorism(APHORISMS[aphorismId]);
     // One opening per chapter (her direction, 2026-10-18): the big-type
@@ -1121,6 +1128,10 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // the spread opens the section, and p. 11 — the "II. Still Things"
     // collage page — follows it directly). Until today the cluster was
     // emitted ahead of the spread, at the head of the section.
+    // Update (her direction, 2026-11-11, later): p. 11 no longer stands
+    // here as a page — its graphic stands on the title spread itself
+    // (see CANVA_STILLTHINGS_HEAD_PAGES above), so the cluster emitted
+    // behind the spread is pp. 12–16.
     if (chapter.key === "stillthings") {
       for (const p of CANVA_STILLTHINGS_HEAD_PAGES) specs.push({ kind: "canva", page: p });
     }
@@ -2859,6 +2870,20 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-opener bk-opener-${half}${partOpener ? " bk-opener-part" : ""}${bgImgCls}`}>{bgImgLayer}
           <div className="bk-spread-canvas">
+            {/* Her direction (2026-11-11): the facsimile's Still Things
+                collage (canva p. 11) stands on this title spread as its
+                main visual, and the standalone facsimile page is
+                deleted. The graphic's own baked-in "Still Things" is
+                the spread's only English title — the printed title
+                below keeps the Chinese line alone, so the section title
+                never appears twice on the spread. The "II." numeral is
+                painted out of the image file itself, at her direction
+                the same day. The pages' ground takes the graphic's own
+                ground colour (see pageBackgrounds.ts) so the square
+                blends into the black spread without a visible edge. */}
+            {chapter.key === "stillthings" && (
+              <img className="bk-opener-art" src="/book/canva-paintings/p11.jpg" alt="" />
+            )}
             {epigraph && epigraph.en && (
               <p className="bk-opener-epigraph">
                 {epigraph.en}
@@ -2874,7 +2899,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             )}
             {(chapter.key !== "road" || titleSpread) && (
             <Collage
-              title={stackedTitle(chapter)}
+              title={chapter.key === "stillthings" ? (chapter.titleZh ?? chapter.title) : stackedTitle(chapter)}
               titleSize={titleSize}
               above={
                 <>
