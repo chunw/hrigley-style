@@ -765,15 +765,18 @@ const SERIES_PLATE_ANCHORS: Record<string, { image: string; afterPair: number }[
   // Art.empath.io: every image is referred to inside the text — the
   // responses and interface figures sit under their own caption lines.
   artempath: [
-    // Her direction (2026-11-11, alternative to PR #249): the four images
-    // of her February 15, 2018 Rothko post stand together on ONE grid
-    // page BEFORE the text begins (afterPair: -1 — ahead of the first
-    // paragraph), and her dated diary passage follows the grid page
-    // immediately. See PLATE_GRID_GROUPS below.
-    { image: "/book/artempath/mushroom-cloud.jpg", afterPair: -1 }, // Rothko post grid, before the diary
-    { image: "/book/artempath/red-horizon.jpg", afterPair: -1 },
-    { image: "/book/artempath/dark-red-painting.jpg", afterPair: -1 },
-    { image: "/book/artempath/orange-blue-detail.jpg", afterPair: -1 },
+    // Her directions (2026-11-11, alternative to PR #249): the four
+    // images of her February 15, 2018 Rothko post stand together on ONE
+    // grid page, and the grid page stands immediately AFTER the diary
+    // page — the diary text comes first (she had the two pages swapped:
+    // 「这两页交换顺序」). The diary's main paragraph sits in the first
+    // essay chunk, so anchoring all four after it (afterPair: 1) emits
+    // the grid page right after the diary page, with nothing between.
+    // See PLATE_GRID_GROUPS below.
+    { image: "/book/artempath/mushroom-cloud.jpg", afterPair: 1 }, // Rothko post grid, after the diary
+    { image: "/book/artempath/red-horizon.jpg", afterPair: 1 },
+    { image: "/book/artempath/dark-red-painting.jpg", afterPair: 1 },
+    { image: "/book/artempath/orange-blue-detail.jpg", afterPair: 1 },
     { image: "/book/artempath/printer.jpg", afterPair: 13 }, // after the system description
     { image: "/book/artempath/sfmoma-bench.jpg", afterPair: 15 }, // with the SFMOMA bench photo paragraph
     { image: "/book/artempath/interface-sf.jpg", afterPair: 15 },
@@ -831,9 +834,10 @@ const SERIES_PLATE_ANCHORS: Record<string, { image: string; afterPair: number }[
  * anchored sequence reaches a group's first member and the following
  * anchored plates are exactly the rest of the group, in order, the whole
  * group is emitted as a single plateGrid page (see paginate's breaks
- * flow). Her direction (2026-11-11, alternative to PR #249): the four
- * images of her February 15, 2018 Rothko post — one grid page, and her
- * diary follows it immediately. */
+ * flow). Her directions (2026-11-11, alternative to PR #249): the four
+ * images of her February 15, 2018 Rothko post — one grid page, standing
+ * immediately after her diary page (her swap direction), its cells
+ * printing no captions at all (see PLATE_GRID_NO_CAPTION below). */
 const PLATE_GRID_GROUPS: Record<string, string[][]> = {
   artempath: [
     [
@@ -844,6 +848,19 @@ const PLATE_GRID_GROUPS: Record<string, string[][]> = {
     ],
   ],
 };
+
+/** Grid-page cells that print NO caption at all — no work title, no
+ * year. Hers for the Rothko-post grid page in Art.empath.io (direction,
+ * 2026-11-11: 「这页图不需要标作品名和年份」). Book-presentation rule
+ * only: the works keep their titles and years in the catalog data, and
+ * every other grid page (the objects chapter's smalls) keeps its
+ * captions. */
+const PLATE_GRID_NO_CAPTION = new Set([
+  "/book/artempath/mushroom-cloud.jpg",
+  "/book/artempath/red-horizon.jpg",
+  "/book/artempath/dark-red-painting.jpg",
+  "/book/artempath/orange-blue-detail.jpg",
+]);
 
 /** Which Spirit sub-series have a painting in the book, and where its
  * image lives. Four of the eight background groups have no painting
@@ -2939,12 +2956,14 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 <div className="bk-grid-frame">
                   <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
                 </div>
-                <div className="bk-grid-caption">
-                  <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
-                  {(item.metaLine || item.dimensions) && (
-                    <div className="bk-caption-meta">{[item.metaLine, item.dimensions].filter(Boolean).join(" · ")}</div>
-                  )}
-                </div>
+                {!PLATE_GRID_NO_CAPTION.has(item.image_url) && (
+                  <div className="bk-grid-caption">
+                    <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
+                    {(item.metaLine || item.dimensions) && (
+                      <div className="bk-caption-meta">{[item.metaLine, item.dimensions].filter(Boolean).join(" · ")}</div>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -3788,9 +3807,7 @@ function useBookModel(args: {
             for (const a of anchors) {
               if (a.afterPair < 0) {
                 // Ahead of the text: emitted before the first essay
-                // chunk (break 0). Used by the Rothko-post grid page,
-                // which stands before the diary it belongs to (her
-                // direction, 2026-11-11).
+                // chunk (break 0).
                 chapter.plateBreaks[a.image] = 0;
                 continue;
               }

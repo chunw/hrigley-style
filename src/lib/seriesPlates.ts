@@ -30,12 +30,15 @@ const plate = (
 
 export const SERIES_PLATES: Record<string, CatalogItem[]> = {
   artempath: [
-    // Her direction (2026-11-11, alternative to PR #249): the four images
-    // that stood with her February 15, 2018 Rothko post stand together on
-    // ONE grid page, ahead of the dated diary passage they belong to —
-    // the diary follows the grid page immediately (see PLATE_GRID_GROUPS
-    // and SERIES_PLATE_ANCHORS in CatalogBook.tsx). Captions describe
-    // only what each image shows; no source is printed, per her book rule.
+    // Her directions (2026-11-11, alternative to PR #249): the four
+    // images that stood with her February 15, 2018 Rothko post stand
+    // together on ONE grid page, immediately AFTER the diary page (she
+    // had the two pages swapped; see PLATE_GRID_GROUPS and
+    // SERIES_PLATE_ANCHORS in CatalogBook.tsx). On that page the images
+    // print with no work title and no year (her direction: 「这页图不
+    // 需要标作品名和年份」) — the titles stay here in the catalog data,
+    // and the descriptions below still describe what each image shows;
+    // no source is printed, per her book rule.
     plate(
       "Mushroom cloud", "2018", "2018",
       "Mushroom cloud of an atomic bomb test.",
