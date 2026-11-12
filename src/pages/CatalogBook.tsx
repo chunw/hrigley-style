@@ -1272,25 +1272,27 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
           : chapter.items;
         for (let ii = 0; ii < plateSeq.length; ii++) {
           const { item, plate } = plateSeq[ii];
-          if (chapter.key === "road" && (item.image_url.includes("/watercolors/45/") || item.image_url.includes("/watercolors/47/"))) {
+          if (chapter.key === "road" && item.image_url.includes("/watercolors/47/")) {
             // Her directions (2026-11-10): road plates convert
             // from single plate pages into full-bleed spreads in
             // their current positions in the run, reusing the
-            // Pre-iPhone Era bleed mechanism — #2 (the San Cristóbal
-            // breakfast — "做成跨页，删掉单页", then "两个都要做成
-            // 跨页": both this painting and the #4 car painting
-            // become spreads) and #4 (the San Cristóbal car painting;
-            // "做成跨页，删掉单页"). #4's work info stands on its
-            // spread in white at the bottom-right, with no title
-            // (the chapter's no-titles rule); the breakfast spread
-            // carries NO work info at all (her direction —
-            // "早餐图跨页那张不需要信息表明") — see the bleed
-            // render case. #13 (the capuchin monkeys, Manuel
-            // Antonio, Costa Rica) was a trial conversion the same
-            // day ("试试"); her direction 2026-11-11 reversed it —
-            // "这张不要做跨页，要做成一个单页" + "黑色底" — so #13
-            // stands as an ordinary single plate page again, on the
-            // black ground recorded in pageBackgrounds.ts.
+            // Pre-iPhone Era bleed mechanism. Only #4 (the San
+            // Cristóbal car painting; "做成跨页，删掉单页") is
+            // left standing as a spread: its work info stands on
+            // its spread in white at the bottom-right, with no
+            // title (the chapter's no-titles rule) — see the
+            // bleed render case. (Two other conversions stood
+            // here. #2, the San Cristóbal breakfast, the spread
+            // printed with no work info at all, until 2026-11-11,
+            // when she deleted that spread from the book; the
+            // painting stays at the what-remains spread. See the
+            // road chapter assembly note. And #13, the capuchin
+            // monkeys, Manuel Antonio, Costa Rica, was a trial
+            // conversion the same day ("试试"); her direction
+            // 2026-11-11 reversed it — "这张不要做跨页，要做成
+            // 一个单页" + "黑色底" — so #13 stands as an ordinary
+            // single plate page again, on the black ground
+            // recorded in pageBackgrounds.ts.)
             if (!nextIsVerso()) specs.push({ kind: "blank" });
             specs.push({ kind: "bleed", half: "left", chapter, item });
             specs.push({ kind: "bleed", half: "right", chapter, item });
@@ -3043,10 +3045,9 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // The road chapter's bleed spreads carry their work info in
       // white at a bottom corner, no background box and no work
       // title (the chapter's no-titles rule, her directions
-      // 2026-11-10) — the bottom-left of the LEFT page, except the
-      // breakfast spread (#2), which carries no work info at all
-      // (see `breakfast` below), and the car spread (#4), whose
-      // info she moved to the bottom-right (see carSpread below).
+      // 2026-11-10) — the bottom-left of the LEFT page; the car
+      // spread (#4) instead stands at the bottom-right (see
+      // carSpread below).
       // Two treatments share that placement: the Thailand spread
       // prints its two
       // place-and-medium lines at the house caption size
@@ -3057,14 +3058,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // description. Other bleed spreads (Pre-iPhone Era) keep
       // their right-page caption untouched.
       const thailand = item.image_url === ROAD_THAILAND_SPREAD_PLATE.image_url;
-      // The breakfast spread (#2, watercolors/45) prints no caption
-      // anywhere on the spread — no meta line, no place lines,
-      // nothing (her direction, 2026-11-10: "早餐图跨页那张不需要
-      // 信息表明"). It is singled out here so neither the road
-      // caption treatment nor the default right-page caption fires
-      // for it.
-      const breakfast = item.image_url.includes("/watercolors/45/");
-      const roadSpread = spec.chapter.key === "road" && !thailand && !breakfast;
+      const roadSpread = spec.chapter.key === "road" && !thailand;
       // Her direction (2026-11-10, later the same evening): of the
       // converted road spreads, the car plate's (#4, San Cristóbal)
       // work info stands at the spread's BOTTOM-RIGHT corner — on
@@ -3096,7 +3090,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 {item.description && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: item.description }} />}
               </div>
             )}
-            {!thailand && !roadSpread && !breakfast && spec.half === "right" && (
+            {!thailand && !roadSpread && spec.half === "right" && (
               <div className="bk-bleed-caption">
                 <div className="bk-caption-title product-title">{item.title}</div>
                 <div className="bk-caption-meta">{item.metaLine}</div>
@@ -3590,8 +3584,16 @@ function useBookModel(args: {
     // within a country the plates keep their numeric order.
     const roadChapter = splitChapters.find((ch) => ch.key === "road");
     if (roadChapter) {
+      // Her direction (2026-11-11): the San Cristóbal breakfast
+      // painting (Notes from the Road #2) leaves the chapter. She
+      // deleted its full-bleed spread — the version of the painting
+      // printed with no work information at all ("不带作品信息
+      // 那个"). The painting stays in the book at the what-remains
+      // spread, whose right page carries its work credit, and the
+      // work stays in the watercolor catalog.
+      roadChapter.items = roadChapter.items.filter(({ item }) => item.title !== "Notes from the Road #2");
       const ROAD_COUNTRY_ORDER = [
-        "Notes from the Road #2", "Notes from the Road #3", "Notes from the Road #4", "Notes from the Road #9", "Notes from the Road #14",
+        "Notes from the Road #3", "Notes from the Road #4", "Notes from the Road #9", "Notes from the Road #14",
         "Notes from the Road #5", "Notes from the Road #8",
         "Notes from the Road #6", "Notes from the Road #7", "Notes from the Road #12",
         "Notes from the Road #13",
@@ -3612,6 +3614,19 @@ function useBookModel(args: {
       if (nineIdx > 0) {
         const [nine] = roadChapter.items.splice(nineIdx, 1);
         roadChapter.items.unshift(nine);
+      }
+      // Her direction (2026-11-11): Notes from the Road #3 (the San
+      // Cristóbal churros) stands together with #9 — it moves up to
+      // the second slot of the plate run, immediately after #9, so
+      // the two face each other as the chapter's first plate spread;
+      // the #2 breakfast spread follows them. Both plates are Mexico,
+      // so the country grouping above is untouched. The tighter run
+      // also absorbs the two verso-alignment blanks that stood before
+      // the #2 and #4 spreads, so the book sheds those two blanks.
+      const threeIdx = roadChapter.items.findIndex(({ item }) => item.title === "Notes from the Road #3");
+      if (threeIdx > 1) {
+        const [three] = roadChapter.items.splice(threeIdx, 1);
+        roadChapter.items.splice(1, 0, three);
       }
       // Her direction (2026-11-11): the castle-and-cake watercolor
       // (a castle keep and grey tiled roofs under a blue sky, a pink
@@ -3640,6 +3655,14 @@ function useBookModel(args: {
             }
           : pair,
       );
+      // Her direction (2026-11-11): the Notes from the Road #12 plate
+      // (the Chiang Mai leaves watercolor, 2025 — green leaves and a
+      // red dish, captioned "Chiang Mai, Thailand. / 泰国，清迈。") is
+      // deleted from the book. The piece itself stays in the
+      // watercolor catalog. The full-bleed Thailand spread earlier in
+      // this chapter is a separate piece that happens to be built
+      // from the same image file; it is not this plate page and stays.
+      roadChapter.items = roadChapter.items.filter(({ item }) => !item.image_url.includes("/watercolors/57/"));
     }
     // Her direction (2026-11-08): the Still Things plate on
     // /watercolors/48/ — the section's last plate page — is deleted
@@ -3650,6 +3673,13 @@ function useBookModel(args: {
     const stillThingsChapter = splitChapters.find((ch) => ch.key === "stillthings");
     if (stillThingsChapter) {
       stillThingsChapter.items = stillThingsChapter.items.filter(({ item }) => !item.image_url.includes("/watercolors/48/"));
+    }
+    // Her direction (2026-11-11): the Still Things #8 plate on
+    // /watercolors/14/ — the pale-blue draped-cloth watercolor,
+    // folio 47 — is deleted from the book. The piece itself stays
+    // in the watercolor catalog and in the shop.
+    if (stillThingsChapter) {
+      stillThingsChapter.items = stillThingsChapter.items.filter(({ item }) => !item.image_url.includes("/watercolors/14/"));
     }
     // The three websites stand as one big chapter (her direction,
     // 2026-11-05): a part opening, "Rooms, Scores, Decisions", then the
