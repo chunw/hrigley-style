@@ -1042,13 +1042,19 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // is deleted from the book, removed from CANVA_KEPT_PAGES below.
     // The painting itself still stands later in the chapter as the
     // Residuals #1 plate, facing its exhibition view.
-    const CANVA_KEPT_PAGES = [3, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22];
+    // Later change (her direction, 2026-11-11): p. 3 — the printed
+    // book's "I. Residuals" chapter page — leaves the front-matter run.
+    // The graphic moves onto the Residuals title spread as its main
+    // visual (the Still Things treatment, applied to Residuals the same
+    // night), the "I." is removed from the image itself, and the
+    // standalone page is deleted; the front pages are now pp. 6–9.
+    const CANVA_KEPT_PAGES = [6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22];
     const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
     // Her direction (2026-11-11, later the same evening): the teapot /
     // Residuals #26 pair moves four pages earlier still (「再提前4页」),
     // so it now stands between facsimile pp. 6 and 7 — the front pages
-    // split around the pair: pp. 3 and 6 ahead of it (emitted behind
-    // the opener, below), pp. 7–10 behind it (emitted inside the plate
+    // split around the pair: p. 6 ahead of it (emitted behind
+    // the opener, below), pp. 7–9 behind it (emitted inside the plate
     // loop, immediately after #26).
     const CANVA_FRONT_HEAD_PAGES = CANVA_FRONT_PAGES.filter((p) => p <= 6);
     const CANVA_FRONT_TAIL_PAGES = CANVA_FRONT_PAGES.filter((p) => p > 6);
@@ -1150,10 +1156,11 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     }
     // The facsimile front matter follows the Residuals opener (her
     // direction, 2026-11-09): the opener spread stands directly after
-    // the last Remains plate, and pp. 3–4 and 6–10 (p. 2 cut
-    // 2026-11-11) open the section's run behind it. Since the
-    // 2026-11-11 evening revision only the head pages (pp. 3 and 6)
-    // are emitted here; pp. 7–10 stand behind the teapot/#26 pair and
+    // the last Remains plate, and pp. 6–9 (p. 2 cut 2026-11-11;
+    // p. 3 moved onto the opener spread itself and p. 10 deleted,
+    // both 2026-11-11) open the section's run behind it. Since the
+    // 2026-11-11 evening revision only the head page (p. 6) is
+    // emitted here; pp. 7–9 stand behind the teapot/#26 pair and
     // are emitted inside the plate loop, below.
     if (chapter.key === "residuals") {
       for (const p of CANVA_FRONT_HEAD_PAGES) specs.push({ kind: "canva", page: p });
@@ -2957,9 +2964,22 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 ))}
               </div>
             )}
+            {/* The Residuals opener carries the old printed edition's
+                chapter graphic (facsimile p. 3, its "I." removed from
+                the image) centred on the spread as its main visual
+                (her direction, 2026-11-11 — the Still Things treatment
+                applied to Residuals): the graphic's own "Residuals" is
+                the spread's only English title, so the typeset title
+                below keeps just the Chinese line; the epigraph stands
+                as before, and the image's internal split falls on the
+                gutter. The standalone p. 3 page is deleted (see
+                CANVA_KEPT_PAGES above). */}
+            {chapter.key === "residuals" && (
+              <img className="bk-opener-graphic-img" src="/book/canva-paintings/p03.jpg" alt="" />
+            )}
             {(chapter.key !== "road" || titleSpread) && (
             <Collage
-              title={stackedTitle(chapter)}
+              title={chapter.key === "residuals" ? <span className="bk-title-zh-line">{chapter.titleZh}</span> : stackedTitle(chapter)}
               titleSize={titleSize}
               above={
                 <>
