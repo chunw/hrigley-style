@@ -2045,6 +2045,28 @@
   color: #fff3c2;
 }
 
+/* Section (小节) opener titles: the heavy grotesque of her Still Things
+   graphic, for ALL section title pages (her direction, 2026-11-11) —
+   deliberately distinct from the part openers above, which keep the
+   handwritten Gloria Hallelujah. The graphic's letterforms (single-story
+   open-tail g, flat-top t, tight tracking, ExtraBold weight) identify
+   the face as Plus Jakarta Sans ExtraBold; it is loaded with the other
+   Google fonts in index.html / index.css. One shared rule reaches every
+   section opener through the Collage title. The face has no CJK, so the
+   Chinese title line falls through to 朱雀仿宋 exactly as it did under
+   Gloria Hallelujah; the zh line also keeps its inherited weight and
+   spacing, so only the Latin title changes. */
+.bk-opener:not(.bk-opener-part) .bk-collage-title {
+  font-family: 'Plus Jakarta Sans', 'Zhuque Fangsong (technical preview)', 'Zhuque Fangsong', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.bk-opener:not(.bk-opener-part) .bk-collage-title .bk-title-zh-line {
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
 .bk-part-intro {
   background: #8a3c00;
   color: #fff3c2;
