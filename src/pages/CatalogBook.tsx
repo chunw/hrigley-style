@@ -1039,6 +1039,14 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // there.
     const CANVA_KEPT_PAGES = [3, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22];
     const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
+    // Her direction (2026-11-11, later the same evening): the teapot /
+    // Residuals #26 pair moves four pages earlier still (「再提前4页」),
+    // so it now stands between facsimile pp. 6 and 7 — the front pages
+    // split around the pair: pp. 3 and 6 ahead of it (emitted behind
+    // the opener, below), pp. 7–10 behind it (emitted inside the plate
+    // loop, immediately after #26).
+    const CANVA_FRONT_HEAD_PAGES = CANVA_FRONT_PAGES.filter((p) => p <= 6);
+    const CANVA_FRONT_TAIL_PAGES = CANVA_FRONT_PAGES.filter((p) => p > 6);
     const CANVA_RESIDUALS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 13 && p < 17);
     const CANVA_STILLTHINGS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 17 && p <= 20);
     // Facsimile placement updates (her direction, 2026-11-08, later the
@@ -1138,9 +1146,12 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // The facsimile front matter follows the Residuals opener (her
     // direction, 2026-11-09): the opener spread stands directly after
     // the last Remains plate, and pp. 3–4 and 6–10 (p. 2 cut
-    // 2026-11-11) open the section's run behind it.
+    // 2026-11-11) open the section's run behind it. Since the
+    // 2026-11-11 evening revision only the head pages (pp. 3 and 6)
+    // are emitted here; pp. 7–10 stand behind the teapot/#26 pair and
+    // are emitted inside the plate loop, below.
     if (chapter.key === "residuals") {
-      for (const p of CANVA_FRONT_PAGES) specs.push({ kind: "canva", page: p });
+      for (const p of CANVA_FRONT_HEAD_PAGES) specs.push({ kind: "canva", page: p });
     }
     // The Spirit chapter's sentence stands on its own quiet page,
     // right after the opener spread, before the chapter's text and
@@ -1292,19 +1303,23 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         // 2026-11-11, latest revision last): the book-only teapot
         // plate and Residuals #26 — a facing pair, teapot on the
         // verso, #26 on the recto, standing next to each other as
-        // she asked — open the plate run, immediately after the
-        // section's facsimile front pages; then the catalog plates
-        // run in their order; and the Residuals #1 pair — the
-        // painting, then its exhibition view, facing each other as
-        // one spread (the exhibition page carries the review; no
-        // essay pages stand in this chapter any more) — closes the
-        // section. (Earlier revisions: #1 and #26 together closed
-        // the section behind the review and the teapot stood in the
-        // main run; then #1 stood immediately before the review
-        // pages; then the teapot/#26 pair closed the section behind
-        // the #1 pair, until she moved the pair to the front of the
-        // section — 「提到这章节前面位置」, 2026-11-11.) Every other
-        // chapter keeps its item order untouched.
+        // she asked — stand between facsimile pp. 6 and 7 (the front
+        // pages split around the pair: pp. 3 and 6 ahead of it, pp.
+        // 7–10 emitted immediately behind #26, inside this loop);
+        // then the catalog plates run in their order; and the
+        // Residuals #1 pair — the painting, then its exhibition
+        // view, facing each other as one spread (the exhibition page
+        // carries the review; no essay pages stand in this chapter
+        // any more) — closes the section. (Earlier revisions: #1 and
+        // #26 together closed the section behind the review and the
+        // teapot stood in the main run; then #1 stood immediately
+        // before the review pages; then the teapot/#26 pair closed
+        // the section behind the #1 pair; then she moved the pair to
+        // the front of the section, behind all six front pages —
+        // 「提到这章节前面位置」, 2026-11-11 — until the same evening
+        // she moved it four pages earlier still, into the front
+        // pages — 「再提前4页」.) Every other chapter keeps its item
+        // order untouched.
         const plateSeq = chapter.key === "residuals"
           ? (() => {
               const byTitle = (t: string) => chapter.items.find(({ item }) => item.title === t);
@@ -1313,8 +1328,10 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
               const last = byTitle("Residuals #26");
               const mid = chapter.items.filter(({ item }) => item.title !== "Residuals #1" && item.title !== "Residuals #26" && !item.image_url.includes("residuals-01-exhibition"));
               // mid ends with the appended book-only teapot plate;
-              // the teapot and #26 lead the run as a pair, then the
-              // catalog plates, and the #1 pair closes the section.
+              // the teapot and #26 lead the run as a pair (standing
+              // between the facsimile front pages, split around them),
+              // then the catalog plates, and the #1 pair closes the
+              // section.
               return [...mid.slice(-1), ...(last ? [last] : []), ...mid.slice(0, -1), ...(first ? [first] : []), ...(exhibition ? [exhibition] : [])];
             })()
           : chapter.items;
@@ -1371,6 +1388,14 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
             pushJournalRun(chapter, run);
           } else {
             specs.push({ kind: "plate", chapter, item, plate });
+          }
+          if (chapter.key === "residuals" && item.title === "Residuals #26") {
+            // Her direction (2026-11-11, later the same evening —
+            // 「再提前4页」): facsimile pp. 7–10 stand immediately
+            // behind the teapot/#26 pair, so the pair sits inside the
+            // front matter, between pp. 6 and 7 (the head pages stand
+            // behind the opener — see the emission above).
+            for (const p of CANVA_FRONT_TAIL_PAGES) specs.push({ kind: "canva", page: p });
           }
           if (chapter.key === "road" && item.title === "Notes from the Road #10") {
             // Her principle for this chapter (2026-11-10): plates from
