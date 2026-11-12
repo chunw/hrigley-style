@@ -3667,6 +3667,13 @@ function useBookModel(args: {
     if (stillThingsChapter) {
       stillThingsChapter.items = stillThingsChapter.items.filter(({ item }) => !item.image_url.includes("/watercolors/48/"));
     }
+    // Her direction (2026-11-11): the Still Things #8 plate on
+    // /watercolors/14/ — the pale-blue draped-cloth watercolor,
+    // folio 47 — is deleted from the book. The piece itself stays
+    // in the watercolor catalog and in the shop.
+    if (stillThingsChapter) {
+      stillThingsChapter.items = stillThingsChapter.items.filter(({ item }) => !item.image_url.includes("/watercolors/14/"));
+    }
     // The three websites stand as one big chapter (her direction,
     // 2026-11-05): a part opening, "Rooms, Scores, Decisions", then the
     // triptych in the order the IMMEMORY text itself names — first panel
