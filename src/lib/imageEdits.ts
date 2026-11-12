@@ -40,4 +40,9 @@ export const IMAGE_EDITS: Record<string, LandedImgEdit> = {
   // export #17's positioned full-bleed (pos 57.9/50, dy hairline).
   // The crop position returns to centre. Her value, verbatim.
   "/watercolors/46/main.jpg": { full: true },
+  // Export book-edits-7 (2026-11-11): the Still Things No. 14 plate
+  // (watercolors/43) goes full-bleed with a slight offset, and its
+  // page ground goes white in the same export (pageBackgrounds.ts).
+  // Her editor values, verbatim.
+  "/watercolors/43/main.jpg": { full: true, scale: 1, dx: 0.1408929699266385, dy: -0.11888689624599512 },
 };
