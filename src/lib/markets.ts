@@ -41,4 +41,13 @@ export const MARKET_EVENTS: MarketEvent[] = [
     timeEn: "2:30\u20136pm",
     timeZh: "14:30\u201318:00",
   },
+  {
+    date: "2026-12-05",
+    nameEn: "NYC Resistor Holiday Market",
+    nameZh: "NYC Resistor 假日市集",
+    venueEn: "",
+    venueZh: "",
+    timeEn: "11am - 7pm",
+    timeZh: "11:00\u201319:00",
+  },
 ];
