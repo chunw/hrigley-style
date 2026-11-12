@@ -1272,22 +1272,22 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
           : chapter.items;
         for (let ii = 0; ii < plateSeq.length; ii++) {
           const { item, plate } = plateSeq[ii];
-          if (chapter.key === "road" && (item.image_url.includes("/watercolors/58/") || item.image_url.includes("/watercolors/45/") || item.image_url.includes("/watercolors/47/"))) {
-            // Her directions (2026-11-10): three road plates convert
+          if (chapter.key === "road" && (item.image_url.includes("/watercolors/58/") || item.image_url.includes("/watercolors/47/"))) {
+            // Her directions (2026-11-10): two road plates convert
             // from single plate pages into full-bleed spreads in
             // their current positions in the run, reusing the
             // Pre-iPhone Era bleed mechanism — #13 (the capuchin
-            // monkeys, Manuel Antonio, Costa Rica; trial — "试试"),
-            // #2 (the San Cristóbal breakfast — "做成跨页，删掉
-            // 单页", then "两个都要做成跨页": both this painting and
-            // the #4 car painting become spreads) and #4 (the San
-            // Cristóbal car painting; "做成跨页，删掉单页").
-            // #13's work info stands on its spread in white at the
-            // bottom-left and #4's at the bottom-right, with no
-            // title (the chapter's no-titles rule); the breakfast
-            // spread carries NO work info at all (her direction —
-            // "早餐图跨页那张不需要信息表明") — see the bleed
-            // render case.
+            // monkeys, Manuel Antonio, Costa Rica; trial — "试试")
+            // and #4 (the San Cristóbal car painting; "做成跨页，
+            // 删掉单页"). #13's work info stands on its spread in
+            // white at the bottom-left and #4's at the bottom-right,
+            // with no title (the chapter's no-titles rule) — see the
+            // bleed render case. (A third conversion stood here —
+            // #2, the San Cristóbal breakfast, the spread printed
+            // with no work info at all — until 2026-11-11, when she
+            // deleted that spread from the book; the painting stays
+            // at the what-remains spread. See the road chapter
+            // assembly note.)
             if (!nextIsVerso()) specs.push({ kind: "blank" });
             specs.push({ kind: "bleed", half: "left", chapter, item });
             specs.push({ kind: "bleed", half: "right", chapter, item });
@@ -3040,10 +3040,9 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // The road chapter's bleed spreads carry their work info in
       // white at a bottom corner, no background box and no work
       // title (the chapter's no-titles rule, her directions
-      // 2026-11-10) — the bottom-left of the LEFT page, except the
-      // breakfast spread (#2), which carries no work info at all
-      // (see `breakfast` below), and the car spread (#4), whose
-      // info she moved to the bottom-right (see carSpread below).
+      // 2026-11-10) — the bottom-left of the LEFT page; the car
+      // spread (#4) instead stands at the bottom-right (see
+      // carSpread below).
       // Two treatments share that placement: the Thailand spread
       // prints its two
       // place-and-medium lines at the house caption size
@@ -3054,14 +3053,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // description. Other bleed spreads (Pre-iPhone Era) keep
       // their right-page caption untouched.
       const thailand = item.image_url === ROAD_THAILAND_SPREAD_PLATE.image_url;
-      // The breakfast spread (#2, watercolors/45) prints no caption
-      // anywhere on the spread — no meta line, no place lines,
-      // nothing (her direction, 2026-11-10: "早餐图跨页那张不需要
-      // 信息表明"). It is singled out here so neither the road
-      // caption treatment nor the default right-page caption fires
-      // for it.
-      const breakfast = item.image_url.includes("/watercolors/45/");
-      const roadSpread = spec.chapter.key === "road" && !thailand && !breakfast;
+      const roadSpread = spec.chapter.key === "road" && !thailand;
       // Her direction (2026-11-10, later the same evening): of the
       // converted road spreads, the car plate's (#4, San Cristóbal)
       // work info stands at the spread's BOTTOM-RIGHT corner — on
@@ -3091,7 +3083,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 {item.description && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: item.description }} />}
               </div>
             )}
-            {!thailand && !roadSpread && !breakfast && spec.half === "right" && (
+            {!thailand && !roadSpread && spec.half === "right" && (
               <div className="bk-bleed-caption">
                 <div className="bk-caption-title product-title">{item.title}</div>
                 <div className="bk-caption-meta">{item.metaLine}</div>
@@ -3585,8 +3577,16 @@ function useBookModel(args: {
     // within a country the plates keep their numeric order.
     const roadChapter = splitChapters.find((ch) => ch.key === "road");
     if (roadChapter) {
+      // Her direction (2026-11-11): the San Cristóbal breakfast
+      // painting (Notes from the Road #2) leaves the chapter. She
+      // deleted its full-bleed spread — the version of the painting
+      // printed with no work information at all ("不带作品信息
+      // 那个"). The painting stays in the book at the what-remains
+      // spread, whose right page carries its work credit, and the
+      // work stays in the watercolor catalog.
+      roadChapter.items = roadChapter.items.filter(({ item }) => item.title !== "Notes from the Road #2");
       const ROAD_COUNTRY_ORDER = [
-        "Notes from the Road #2", "Notes from the Road #3", "Notes from the Road #4", "Notes from the Road #9", "Notes from the Road #14",
+        "Notes from the Road #3", "Notes from the Road #4", "Notes from the Road #9", "Notes from the Road #14",
         "Notes from the Road #5", "Notes from the Road #8",
         "Notes from the Road #6", "Notes from the Road #7", "Notes from the Road #12",
         "Notes from the Road #13",
