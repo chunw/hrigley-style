@@ -111,6 +111,11 @@ export function rgbToHex(r: number, g: number, b: number): string {
 export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "contents": "white",
   "plate:/remains/01/main.jpg": "black",
+  // Remains No. 1 as a full-bleed spread (her direction, 2026-11-11):
+  // both halves stand on black, so the fit picture's slack on the
+  // right reads as the picture's own black ground.
+  "bleed:remains:left": "black",
+  "bleed:remains:right": "black",
   "plate:/remains/02/main.jpg": "black",
   "plate:/remains/03/main.jpg": "black",
   "plate:/remains/04/main.jpg": "black",
