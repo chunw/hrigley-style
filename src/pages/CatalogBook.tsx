@@ -1037,7 +1037,12 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // longer precedes it — the front pages are emitted right after
     // the opener spread, below, and open the section's run from
     // there.
-    const CANVA_KEPT_PAGES = [3, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22];
+    // Deletion (her direction, 2026-11-11): facsimile p. 10 — the
+    // Residuals #1 painting reproduced full-page in the front run —
+    // is deleted from the book, removed from CANVA_KEPT_PAGES below.
+    // The painting itself still stands later in the chapter as the
+    // Residuals #1 plate, facing its exhibition view.
+    const CANVA_KEPT_PAGES = [3, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22];
     const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
     const CANVA_RESIDUALS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 13 && p < 17);
     const CANVA_STILLTHINGS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 17 && p <= 20);
