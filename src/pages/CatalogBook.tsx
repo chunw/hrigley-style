@@ -765,6 +765,15 @@ const SERIES_PLATE_ANCHORS: Record<string, { image: string; afterPair: number }[
   // Art.empath.io: every image is referred to inside the text — the
   // responses and interface figures sit under their own caption lines.
   artempath: [
+    // Her direction (2026-11-11, alternative to PR #249): the four images
+    // of her February 15, 2018 Rothko post stand together on ONE grid
+    // page BEFORE the text begins (afterPair: -1 — ahead of the first
+    // paragraph), and her dated diary passage follows the grid page
+    // immediately. See PLATE_GRID_GROUPS below.
+    { image: "/book/artempath/mushroom-cloud.jpg", afterPair: -1 }, // Rothko post grid, before the diary
+    { image: "/book/artempath/red-horizon.jpg", afterPair: -1 },
+    { image: "/book/artempath/dark-red-painting.jpg", afterPair: -1 },
+    { image: "/book/artempath/orange-blue-detail.jpg", afterPair: -1 },
     { image: "/book/artempath/printer.jpg", afterPair: 13 }, // after the system description
     { image: "/book/artempath/sfmoma-bench.jpg", afterPair: 15 }, // with the SFMOMA bench photo paragraph
     { image: "/book/artempath/interface-sf.jpg", afterPair: 15 },
@@ -812,6 +821,27 @@ const SERIES_PLATE_ANCHORS: Record<string, { image: string; afterPair: number }[
     { image: "/book/google/film-still.jpg", afterPair: 1 },
     { image: "/book/google/interface.jpg", afterPair: 1 },
     { image: "/book/google/instructions.jpg", afterPair: 2 },
+  ],
+};
+
+/** Anchored plates that share ONE grid page instead of standing one to a
+ * page (the book's plateGrid page, the same page the objects chapter
+ * groups its smalls on). Keyed by chapter id (series:<id> or plain key);
+ * each group lists its members' image URLs in page order. When the
+ * anchored sequence reaches a group's first member and the following
+ * anchored plates are exactly the rest of the group, in order, the whole
+ * group is emitted as a single plateGrid page (see paginate's breaks
+ * flow). Her direction (2026-11-11, alternative to PR #249): the four
+ * images of her February 15, 2018 Rothko post — one grid page, and her
+ * diary follows it immediately. */
+const PLATE_GRID_GROUPS: Record<string, string[][]> = {
+  artempath: [
+    [
+      "/book/artempath/mushroom-cloud.jpg",
+      "/book/artempath/red-horizon.jpg",
+      "/book/artempath/dark-red-painting.jpg",
+      "/book/artempath/orange-blue-detail.jpg",
+    ],
   ],
 };
 
@@ -1074,13 +1104,30 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
           return (ia === -1 ? Number.MAX_SAFE_INTEGER : ia) - (ib === -1 ? Number.MAX_SAFE_INTEGER : ib);
         });
       const anchoredUrls = new Set(anchored.map(({ item }) => item.image_url));
-      for (const { item, plate } of anchored) {
+      // Grid groups (see PLATE_GRID_GROUPS): a run of anchored plates
+      // that exactly matches a declared group, in order, is emitted as
+      // ONE plateGrid page instead of one page per plate.
+      const gridGroups = PLATE_GRID_GROUPS[chapter.key.startsWith("series:") ? chapter.key.slice("series:".length) : chapter.key] ?? [];
+      for (let ai = 0; ai < anchored.length; ai++) {
+        const { item, plate } = anchored[ai];
         const target = Math.min(breaks[item.image_url] ?? 0, essayCount);
         while (emitted < target) {
           specs.push({ kind: "essay", chapter, chunk: emitted });
           emitted++;
         }
-        specs.push({ kind: "plate", chapter, item, plate });
+        const group = gridGroups.find((g) => g[0] === item.image_url);
+        const members = group ? anchored.slice(ai, ai + group.length) : undefined;
+        if (
+          group &&
+          members &&
+          members.length === group.length &&
+          members.every((m, i) => m.item.image_url === group[i] && Math.min(breaks[m.item.image_url] ?? 0, essayCount) === target)
+        ) {
+          specs.push({ kind: "plateGrid", chapter, entries: members });
+          ai += group.length - 1;
+        } else {
+          specs.push({ kind: "plate", chapter, item, plate });
+        }
       }
       while (emitted < essayCount) {
         specs.push({ kind: "essay", chapter, chunk: emitted });
@@ -3739,6 +3786,14 @@ function useBookModel(args: {
             chapter.plateBreaks = {};
             chapter.plateAnchorOrder = anchors.map((a) => a.image);
             for (const a of anchors) {
+              if (a.afterPair < 0) {
+                // Ahead of the text: emitted before the first essay
+                // chunk (break 0). Used by the Rothko-post grid page,
+                // which stands before the diary it belongs to (her
+                // direction, 2026-11-11).
+                chapter.plateBreaks[a.image] = 0;
+                continue;
+              }
               const anchorItem = enBlocks[a.afterPair];
               const ci = anchorItem ? enItemChunk.get(anchorItem) : undefined;
               if (ci !== undefined) {
