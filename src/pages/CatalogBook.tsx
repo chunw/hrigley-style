@@ -1225,13 +1225,14 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       // close the plate sequence instead, so no text is ever dropped.
       const holdBack = chapter.essayAfterPlate;
       // Residuals (her direction, 2026-11-10; placement revised
-      // 2026-11-11): the section's review (the chapter essay) no
-      // longer interrupts the plates. The other plates run first,
-      // then Residuals #1, then the review (EN page, then ZH page),
-      // and the teapot plate and Residuals #26 close the section,
-      // adjacent. So for this chapter the essay lead count is zero
-      // and the essay chunks are emitted inside the plate loop, right
-      // after Residuals #1.
+      // 2026-11-11, twice): the section's review (the chapter essay)
+      // no longer stands as pages of its own at all — it is set on
+      // the Residuals #1 exhibition-view page, beside the exhibition
+      // line (see the plate render case). So for this chapter the
+      // essay lead count is zero and no essay specs are emitted in
+      // the plate loop either; the plates run, then the #1 pair
+      // (painting, then its exhibition view), and the teapot plate
+      // and Residuals #26 close the section, adjacent.
       const leadCount = chapter.key === "residuals" ? 0 : holdBack ? Math.max(0, essayCount - holdBack.trailingChunks) : essayCount;
       for (let i = 0; i < leadCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
       // The Thailand watercolor full-bleed spread stands inside Notes
@@ -1288,28 +1289,39 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       } else {
         // Residuals plate order (her directions, 2026-11-10, revised
         // 2026-11-11): the catalog plates run first in their order;
-        // Residuals #1 then stands immediately before the review (the
-        // essay chunks are emitted inside this loop, right after it —
-        // she moved the painting ahead of the review page); and the
-        // book-only teapot plate and Residuals #26 close the section,
-        // adjacent, in that order — she asked for those two plates to
-        // stand next to each other. (Until this revision #1 and #26
-        // together closed the section behind the review and the teapot
-        // stood in the main run.) Every other chapter keeps its item
-        // order untouched.
+        // then the Residuals #1 pair — the painting, then its
+        // exhibition view, facing each other as one spread (the
+        // exhibition page carries the review; no essay pages stand in
+        // this chapter any more); and the book-only teapot plate and
+        // Residuals #26 close the section, adjacent, in that order —
+        // she asked for those two plates to stand next to each other.
+        // (Earlier revisions: #1 and #26 together closed the section
+        // behind the review and the teapot stood in the main run;
+        // then #1 stood immediately before the review pages.) Every
+        // other chapter keeps its item order untouched.
         const plateSeq = chapter.key === "residuals"
           ? (() => {
               const byTitle = (t: string) => chapter.items.find(({ item }) => item.title === t);
               const first = byTitle("Residuals #1");
+              const exhibition = chapter.items.find(({ item }) => item.image_url.includes("residuals-01-exhibition"));
               const last = byTitle("Residuals #26");
-              const mid = chapter.items.filter(({ item }) => item.title !== "Residuals #1" && item.title !== "Residuals #26");
-              // mid ends with the appended book-only teapot plate; #1
-              // slots in just ahead of it, and #26 closes the section.
-              return [...mid.slice(0, -1), ...(first ? [first] : []), ...mid.slice(-1), ...(last ? [last] : [])];
+              const mid = chapter.items.filter(({ item }) => item.title !== "Residuals #1" && item.title !== "Residuals #26" && !item.image_url.includes("residuals-01-exhibition"));
+              // mid ends with the appended book-only teapot plate; the
+              // #1 pair slots in just ahead of it, and #26 closes the
+              // section.
+              return [...mid.slice(0, -1), ...(first ? [first] : []), ...(exhibition ? [exhibition] : []), ...mid.slice(-1), ...(last ? [last] : [])];
             })()
           : chapter.items;
         for (let ii = 0; ii < plateSeq.length; ii++) {
           const { item, plate } = plateSeq[ii];
+          if (chapter.key === "residuals" && item.title === "Residuals #1" && !item.image_url.includes("residuals-01-exhibition")) {
+            // Her direction (2026-11-11): the painting and its
+            // exhibition view face each other as one spread, the
+            // painting on the verso. If the run would land the
+            // painting on a recto, a blank page steps in first (the
+            // same parity guard the bleed spreads use).
+            if (!nextIsVerso()) specs.push({ kind: "blank" });
+          }
           if (chapter.key === "road" && item.image_url.includes("/watercolors/47/")) {
             // Her directions (2026-11-10): road plates convert
             // from single plate pages into full-bleed spreads in
@@ -1356,9 +1368,6 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
             // this direction it was appended at the chapter's end,
             // behind Norway and China, splitting the USA plates.
             for (const extra of ROAD_EXTRA_PLATES) specs.push({ kind: "plate", chapter, item: extra, plate: 0 });
-          }
-          if (chapter.key === "residuals" && ii === plateSeq.length - 3) {
-            for (let ci = 0; ci < essayCount; ci++) specs.push({ kind: "essay", chapter, chunk: ci });
           }
           if (holdBack && item.image_url === holdBack.imageUrl) emitHeldBack();
         }
@@ -2995,6 +3004,43 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
 
     case "plate": {
       const { item, chapter } = spec;
+      // Her direction (2026-11-11): the Residuals #1 exhibition view
+      // (the installation photo) is a composite page: the photo sits
+      // smaller, and under it stand the exhibition line and the
+      // chapter's review excerpt in full (EN block, then ZH block) —
+      // the review's own pages are gone. The work's title and meta
+      // lines do NOT repeat here; they stand on the facing painting
+      // page, which in turn no longer prints the exhibition line
+      // under the painting (the line lives here, emphasised).
+      const isResidualsExhibition = chapter.key === "residuals" && item.image_url.includes("residuals-01-exhibition");
+      if (isResidualsExhibition) {
+        const series = BOOK_SERIES.find((s) => s.id === "residuals");
+        const paras = (txt?: string) => (txt ?? "").split("\n\n").map((p) => p.trim()).filter(Boolean);
+        const reviewBlock = (txt: string | undefined, lang: "en" | "zh") => {
+          const ps = paras(txt);
+          if (!ps.length) return null;
+          return (
+            <div className={`bk-exhibition-review-lang bk-exhibition-review-${lang}`}>
+              {ps.map((p, i) => (
+                <p key={i} className={i === ps.length - 1 ? "bk-review-source" : undefined} dangerouslySetInnerHTML={{ __html: p }} />
+              ))}
+            </div>
+          );
+        };
+        return (
+          <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-plate-page bk-plate-exhibition${bgImgCls}`}>{bgImgLayer}
+            <div className="bk-plate-frame bk-exhibition-frame">
+              <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
+            </div>
+            {item.description && <div className="bk-exhibition-info">{item.description}</div>}
+            <div className="bk-exhibition-review">
+              {reviewBlock(series?.textEn, "en")}
+              {reviewBlock(series?.textZh, "zh")}
+            </div>
+            <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+          </Page>
+        );
+      }
       // Her direction (2026-11-11): in the road chapter, the New York
       // plate's work info (Notes from the Road #10, the pigeon) leaves
       // its own page and stands on the facing Hawaii page instead,
@@ -3029,7 +3075,10 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           {(capItem.metaLine || capItem.dimensions || capItem.mediumZh || capItem.dimensionsZh) && (
             <div className="bk-caption-meta">{facing ? "← " : ""}{[capItem.metaLine, capItem.dimensions, capItem.mediumZh && capItem.mediumZh !== capItem.medium && !(capItem.metaLine ?? "").includes(capItem.mediumZh) ? capItem.mediumZh : "", capItem.dimensionsZh && capItem.dimensionsZh !== capItem.dimensions ? capItem.dimensionsZh : ""].filter(Boolean).join(" · ")}</div>
           )}
-          {capItem.description && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: capItem.description }} />}
+          {/* The Residuals #1 painting page prints no exhibition line:
+              the line stands, emphasised, on its facing exhibition
+              page instead (her direction, 2026-11-11). */}
+          {capItem.description && !(chapter.key === "residuals" && capItem.image_url.includes("/watercolors/01/")) && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: capItem.description }} />}
         </div>
       );
       return (
@@ -3618,28 +3667,31 @@ function useBookModel(args: {
       // as the last plate of the main run, just before the review and
       // the #1/#26 closing spread.
       residualsChapter.items = [...residualsChapter.items, ...RESIDUALS_EXTRA_PLATES.map((item) => ({ item, plate: 0 }))];
-      // Her direction (2026-11-11): the exhibition photograph on the
-      // Residuals #1 plate — the framed painting hanging straight-on
-      // on a white wall, which is the catalog's /watercolors/01/main.jpg
-      // — is replaced IN THE BOOK ONLY by the installation photo she
-      // sent that evening (the same framed painting at an angle, its
-      // wall label "Breakfast Residuals, 2026" beside it), kept as the
-      // book-only file /book/residuals/residuals-01-exhibition.jpg. The
-      // catalog work, its shop image and its data stay untouched; the
-      // plate keeps its caption exactly as it stands. The plate's black
-      // page travels with the new path (see pageBackgrounds.ts).
-      residualsChapter.items = residualsChapter.items.map((pair) =>
-        pair.item.title === "Residuals #1"
-          ? {
-              ...pair,
-              item: {
-                ...pair.item,
-                image_url: "/book/residuals/residuals-01-exhibition.jpg",
-                fallback_image_url: "/book/residuals/residuals-01-exhibition.jpg",
-              },
-            }
-          : pair,
-      );
+      // Her directions (2026-11-11): the Residuals #1 plate first
+      // carried the installation photo she sent that evening INSTEAD
+      // of the painting (the same framed painting at an angle, its
+      // wall label "Breakfast Residuals, 2026" beside it, kept as the
+      // book-only file /book/residuals/residuals-01-exhibition.jpg).
+      // Later that evening she split it into TWO facing pages: the
+      // painting itself stands on the verso with its work annotation,
+      // and the installation photo stands on the recto as the
+      // exhibition view — no repeated work annotation there; that
+      // page carries the exhibition line and the chapter's review
+      // excerpt instead (see the plate render case and the residuals
+      // pagination notes). The split is book-only: the catalog work,
+      // its shop image and its data stay untouched.
+      residualsChapter.items = residualsChapter.items.flatMap((pair) => {
+        if (pair.item.title !== "Residuals #1") return [pair];
+        const exhibitionPair = {
+          ...pair,
+          item: {
+            ...pair.item,
+            image_url: "/book/residuals/residuals-01-exhibition.jpg",
+            fallback_image_url: "/book/residuals/residuals-01-exhibition.jpg",
+          },
+        };
+        return [pair, exhibitionPair];
+      });
     }
     // Her direction (2026-11-08): the road chapter's plates are grouped
     // by country — Mexico first (the chapter's original run), then
