@@ -1186,13 +1186,14 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       // emitted right after their marked plate; if that plate is absent they
       // close the plate sequence instead, so no text is ever dropped.
       const holdBack = chapter.essayAfterPlate;
-      // Residuals (her direction, 2026-11-10): the section's review
-      // (the chapter essay) no longer interrupts the plates. The other
-      // plates run first, then the review (EN page, then ZH page),
-      // then Residuals #1 and #26 close the section as its final
-      // spread, in that left/right order. So for this chapter the
-      // essay lead count is zero and the essay chunks are emitted
-      // inside the plate loop, right before the #1/#26 pair.
+      // Residuals (her direction, 2026-11-10; placement revised
+      // 2026-11-11): the section's review (the chapter essay) no
+      // longer interrupts the plates. The other plates run first,
+      // then Residuals #1, then the review (EN page, then ZH page),
+      // and the teapot plate and Residuals #26 close the section,
+      // adjacent. So for this chapter the essay lead count is zero
+      // and the essay chunks are emitted inside the plate loop, right
+      // after Residuals #1.
       const leadCount = chapter.key === "residuals" ? 0 : holdBack ? Math.max(0, essayCount - holdBack.trailingChunks) : essayCount;
       for (let i = 0; i < leadCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
       // The Thailand watercolor full-bleed spread stands inside Notes
@@ -1247,11 +1248,28 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         }
         flushGroup();
       } else {
-        // Residuals plate order (her direction, 2026-11-10): rotate
-        // the two lead plates (#1, #26) to the end of the run so the
-        // review can stand before them (see the leadCount note above);
-        // every other chapter keeps its item order untouched.
-        const plateSeq = chapter.key === "residuals" ? [...chapter.items.slice(2), ...chapter.items.slice(0, 2)] : chapter.items;
+        // Residuals plate order (her directions, 2026-11-10, revised
+        // 2026-11-11): the catalog plates run first in their order;
+        // Residuals #1 then stands immediately before the review (the
+        // essay chunks are emitted inside this loop, right after it —
+        // she moved the painting ahead of the review page); and the
+        // book-only teapot plate and Residuals #26 close the section,
+        // adjacent, in that order — she asked for those two plates to
+        // stand next to each other. (Until this revision #1 and #26
+        // together closed the section behind the review and the teapot
+        // stood in the main run.) Every other chapter keeps its item
+        // order untouched.
+        const plateSeq = chapter.key === "residuals"
+          ? (() => {
+              const byTitle = (t: string) => chapter.items.find(({ item }) => item.title === t);
+              const first = byTitle("Residuals #1");
+              const last = byTitle("Residuals #26");
+              const mid = chapter.items.filter(({ item }) => item.title !== "Residuals #1" && item.title !== "Residuals #26");
+              // mid ends with the appended book-only teapot plate; #1
+              // slots in just ahead of it, and #26 closes the section.
+              return [...mid.slice(0, -1), ...(first ? [first] : []), ...mid.slice(-1), ...(last ? [last] : [])];
+            })()
+          : chapter.items;
         for (let ii = 0; ii < plateSeq.length; ii++) {
           const { item, plate } = plateSeq[ii];
           if (chapter.key === "road" && (item.image_url.includes("/watercolors/58/") || item.image_url.includes("/watercolors/45/") || item.image_url.includes("/watercolors/47/"))) {
@@ -3502,7 +3520,9 @@ function useBookModel(args: {
     // superseding her 2026-11-04 direction: the chapter's essay IS the
     // Forms Before Dissolving exhibition review of the Breakfast
     // Residuals works, so Residuals #1 leads the plates and stands
-    // immediately after its review, with no other work between.)
+    // immediately after its review, with no other work between.
+    // Placement revised again 2026-11-11: #1 now stands immediately
+    // BEFORE its review — see the pagination notes.)
     const residualsChapter = splitChapters.find((ch) => ch.key === "residuals");
     if (residualsChapter) {
       const kept = residualsChapter.items.filter(({ item }) => item.title !== "Residuals #2" && item.title !== "Residuals #3");
@@ -3520,6 +3540,28 @@ function useBookModel(args: {
       // as the last plate of the main run, just before the review and
       // the #1/#26 closing spread.
       residualsChapter.items = [...residualsChapter.items, ...RESIDUALS_EXTRA_PLATES.map((item) => ({ item, plate: 0 }))];
+      // Her direction (2026-11-11): the exhibition photograph on the
+      // Residuals #1 plate — the framed painting hanging straight-on
+      // on a white wall, which is the catalog's /watercolors/01/main.jpg
+      // — is replaced IN THE BOOK ONLY by the installation photo she
+      // sent that evening (the same framed painting at an angle, its
+      // wall label "Breakfast Residuals, 2026" beside it), kept as the
+      // book-only file /book/residuals/residuals-01-exhibition.jpg. The
+      // catalog work, its shop image and its data stay untouched; the
+      // plate keeps its caption exactly as it stands. The plate's black
+      // page travels with the new path (see pageBackgrounds.ts).
+      residualsChapter.items = residualsChapter.items.map((pair) =>
+        pair.item.title === "Residuals #1"
+          ? {
+              ...pair,
+              item: {
+                ...pair.item,
+                image_url: "/book/residuals/residuals-01-exhibition.jpg",
+                fallback_image_url: "/book/residuals/residuals-01-exhibition.jpg",
+              },
+            }
+          : pair,
+      );
     }
     // Her direction (2026-11-08): the road chapter's plates are grouped
     // by country — Mexico first (the chapter's original run), then

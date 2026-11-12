@@ -91,6 +91,7 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "plate:/remains/06/main.jpg": "black",
   "plate:/watercolors/54/main.jpg": "black",
   "plate:/watercolors/01/main.jpg": "black",
+  "plate:/book/residuals/residuals-01-exhibition.jpg": "black",
   "plate:/watercolors/05/main.jpg": "black",
   "plate:/watercolors/13/main.jpg": "black",
   "plate:/watercolors/43/main.jpg": "black",
