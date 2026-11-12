@@ -2103,11 +2103,19 @@
    section opener through the Collage title. The face has no CJK, so the
    Chinese title line falls through to 朱雀仿宋 exactly as it did under
    Gloria Hallelujah; the zh line also keeps its inherited weight and
-   spacing, so only the Latin title changes. */
+   spacing, so only the Latin title changes.
+   Case (her ruling, 2026-11-11): these title pages must not render in
+   all caps. The caps came from .shop-title's text-transform in
+   index.css — the stored title strings are natural case, and the
+   contents map already shows them so. Scoped to section openers only:
+   part openers keep the caps (and their handwritten face), and
+   stylised names keep their own form because the data is untouched
+   (IMMEMORY stays IMMEMORY, Art.empath.io stays Art.empath.io). */
 .bk-opener:not(.bk-opener-part) .bk-collage-title {
   font-family: 'Plus Jakarta Sans', 'Zhuque Fangsong (technical preview)', 'Zhuque Fangsong', sans-serif;
   font-weight: 800;
   letter-spacing: -0.015em;
+  text-transform: none;
 }
 
 .bk-opener:not(.bk-opener-part) .bk-collage-title .bk-title-zh-line {
