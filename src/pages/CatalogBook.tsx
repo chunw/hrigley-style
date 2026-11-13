@@ -471,6 +471,11 @@ type ExhibitionGroupChunk = { key: string; entries: ExhibitionChunkEntry[]; cont
 const EXHIBITIONS_FIRST_PAGE_IN = 7.55;
 const EXHIBITIONS_CONT_PAGE_IN = 8.55;
 const EXHIBITIONS_GROUP_HEAD_IN = 0.92;
+/** Credit groups that must not split across pages when they fit a page
+ * whole (her direction, 2026-11-13, for Negotiated Intelligence: its two
+ * credits — the Wrong Biennale line and the w3 Silver Award — stand on
+ * one page under one head, not split under a repeated head). */
+const KEEP_TOGETHER_CREDIT_GROUPS = new Set(["series:negotiated"]);
 const exhibitionEntryIn = (e: ExhibitionChunkEntry): number =>
   e.url
     ? 0.52
@@ -499,6 +504,12 @@ function partExhibitionChunks(part: number): ExhibitionGroupChunk[][] {
     budget = EXHIBITIONS_CONT_PAGE_IN;
   };
   for (const g of groups) {
+    // A keep-together group that fits a fresh page whole but not what is
+    // left of the current one moves over whole (her direction, 2026-11-13).
+    if (KEEP_TOGETHER_CREDIT_GROUPS.has(g.key) && cur.length) {
+      const groupIn = EXHIBITIONS_GROUP_HEAD_IN + g.entries.reduce((sum, e) => sum + exhibitionEntryIn(e), 0);
+      if (groupIn > budget && groupIn <= EXHIBITIONS_CONT_PAGE_IN) flush();
+    }
     let rest = [...g.entries];
     let headPending = true;
     while (rest.length) {
@@ -3629,14 +3640,31 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // whole on one line (a non-breaking tail), so its closing
       // characters never sit alone on the last line. Typesetting
       // only — the text itself is untouched.
+      const enText = spec.text.en;
       const zhText = spec.text.zh;
       const tailCut = chapter.key === "series:negotiated" ? zhText.indexOf("利润的榨取") : -1;
-      const zhNode = tailCut > 0 ? (<>{zhText.slice(0, tailCut)}<span className="bk-nowrap-tail">{zhText.slice(tailCut)}</span></>) : zhText;
+      // Her direction, 2026-11-13 (later the same day): on this page
+      // the mission sentence stands on a row by itself in both
+      // languages — a break before it and a break after the colon
+      // that ends it, so the list it introduces starts on the next
+      // row. Typesetting only — the texts themselves are untouched.
+      const enRowStart = chapter.key === "series:negotiated" ? enText.indexOf("The shinier") : -1;
+      const enRowEndMark = "underneath it:";
+      const enRowEnd = enRowStart > 0 ? enText.indexOf(enRowEndMark) : -1;
+      const enNode = enRowEnd > enRowStart ? (
+        <>{enText.slice(0, enRowStart)}<br />{enText.slice(enRowStart, enRowEnd + enRowEndMark.length)}<br />{enText.slice(enRowEnd + enRowEndMark.length)}</>
+      ) : enText;
+      const zhRowStart = chapter.key === "series:negotiated" ? zhText.indexOf("使命看上去") : -1;
+      const zhRowEndMark = "什么：";
+      const zhRowEnd = zhRowStart > 0 ? zhText.indexOf(zhRowEndMark) : -1;
+      const zhNode = zhRowEnd > zhRowStart && tailCut > zhRowEnd ? (
+        <>{zhText.slice(0, zhRowStart)}<br />{zhText.slice(zhRowStart, zhRowEnd + zhRowEndMark.length)}<br />{zhText.slice(zhRowEnd + zhRowEndMark.length, tailCut)}<span className="bk-nowrap-tail">{zhText.slice(tailCut)}</span></>
+      ) : tailCut > 0 ? (<>{zhText.slice(0, tailCut)}<span className="bk-nowrap-tail">{zhText.slice(tailCut)}</span></>) : zhText;
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-motto-page${bgImgCls}`}>{bgImgLayer}
           <div className="bk-quiet">
             <div className="bk-quiet-rule" />
-            <p className="bk-quiet-p">{spec.text.en}</p>
+            <p className="bk-quiet-p">{enNode}</p>
             <p className="bk-quiet-p">{zhNode}</p>
           </div>
           <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
