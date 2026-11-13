@@ -1457,6 +1457,13 @@
   margin-top: 0.38in;
 }
 
+/* A closing sentence kept whole on one line inside a quiet page, so
+   its last characters never strand alone on the final line (her
+   direction, 2026-11-13, for the cover-story page). */
+.bk-quiet .bk-nowrap-tail {
+  white-space: nowrap;
+}
+
 .bk-contents {
   margin-top: 0.85in;
 }

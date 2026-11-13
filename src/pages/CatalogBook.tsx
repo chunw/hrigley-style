@@ -461,7 +461,7 @@ const CREDITS_TITLE = { en: "Exhibitions and Awards", zh: "展览与奖项" };
 
 /** A credits entry; website lines carry `url` + `nameKey` instead of the
  * en/zh pair (their printed name follows the named section's title). */
-type ExhibitionChunkEntry = { en: string; zh: string; url?: string; nameKey?: string };
+type ExhibitionChunkEntry = { en: string; zh: string; url?: string; nameKey?: string; nameEn?: string; nameZh?: string };
 type ExhibitionGroupChunk = { key: string; entries: ExhibitionChunkEntry[]; continued: boolean };
 /** Page budgets in inches for the credits lists, from the .bk-exhibitions
  * metrics (page content height 9.15in; first page also pays the list's top
@@ -487,7 +487,7 @@ function partExhibitionChunks(part: number): ExhibitionGroupChunk[][] {
   if (sites.length) {
     groups.push({
       key: "__websites__",
-      entries: sites.map((s) => ({ en: "", zh: "", url: s.url, nameKey: s.key })),
+      entries: sites.map((s) => ({ en: "", zh: "", url: s.url, nameKey: s.key, nameEn: s.nameEn, nameZh: s.nameZh })),
     });
   }
   const pages: ExhibitionGroupChunk[][] = [];
@@ -640,7 +640,7 @@ const APHORISMS: Record<string, Aphorism> = {
     id: "cover-story",
     long: true,
     en: "Ah, the glamorous cover being the story they sell: AI for humanity, curing disease, abundance for all. The shinier the mission looks, the less anyone asks what's underneath it: the capex machine, the credit, the concentration of compute and power in a handful of hands. Profit extraction works best when it looks like salvation.",
-    zh: "啊，光鲜的封面正是他们兜售的故事：AI 为了人类，治愈疾病，人人富足。使命看上去越闪亮，越没有人追问它底下盖着什么：资本开支的机器、信贷、集中在一小撮人手里的算力和权力。利润的榨取，在看起来像救赎的时候，最为奏效。",
+    zh: "啊，光鲜的封面正是他们兜售的故事：AI 为了人类，治愈疾病，人人富足。使命看上去越闪亮，越没有人追问它底下掩藏着什么：资本开支的机器、信贷、集中在一小撮人手里的算力和权力。利润的榨取，在看起来像救赎的时候，最为奏效。",
   },
 };
 
@@ -3478,7 +3478,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                       return (
                         <li key={i}>
                           <span className="bk-exhibitions-en">
-                            {sectionName(e.nameKey ?? "")} — {e.url}
+                            {e.nameEn ? (<>{e.nameEn}{e.nameZh ? ` · ${e.nameZh}` : ""}</>) : sectionName(e.nameKey ?? "")} — {e.url}
                           </span>
                         </li>
                       );
@@ -3624,12 +3624,20 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // former epigraph after the opener (SPIRIT_QUIET_TEXT) and its
       // bridge sentence closing the chapter (SPIRIT_BRIDGE_TEXT).
       const { chapter } = spec;
+      // Her direction, 2026-11-13: on the Negotiated Intelligence
+      // cover-story page, the Chinese text's final sentence is kept
+      // whole on one line (a non-breaking tail), so its closing
+      // characters never sit alone on the last line. Typesetting
+      // only — the text itself is untouched.
+      const zhText = spec.text.zh;
+      const tailCut = chapter.key === "series:negotiated" ? zhText.indexOf("利润的榨取") : -1;
+      const zhNode = tailCut > 0 ? (<>{zhText.slice(0, tailCut)}<span className="bk-nowrap-tail">{zhText.slice(tailCut)}</span></>) : zhText;
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-motto-page${bgImgCls}`}>{bgImgLayer}
           <div className="bk-quiet">
             <div className="bk-quiet-rule" />
             <p className="bk-quiet-p">{spec.text.en}</p>
-            <p className="bk-quiet-p">{spec.text.zh}</p>
+            <p className="bk-quiet-p">{zhNode}</p>
           </div>
           <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
         </Page>
@@ -4134,6 +4142,11 @@ function useBookModel(args: {
           const enBlocks = pBlocks(asParas(enT)).map((html) => ({ html, edit: `series:${s.id}:en` }));
           let zhBlocks = pBlocks(asParas(zhT)).map((html) => ({ html, edit: `series:${s.id}:zh` }));
           let zhExtras: Map<number, EssayItem[]> | undefined;
+          // Chapters whose dated passages are chunked apart at a
+          // reduced budget (see the negotiated / google hooks below)
+          // hand their finished chunks to the dual-stream branch here.
+          let enChunkedOverride: EssayItem[][] | undefined;
+          let zhChunkedOverride: EssayItem[][] | undefined;
           if (s.id === "artempath" && zhBlocks.length === enBlocks.length + 2) {
             // The Chinese side carries two extra blocks after paragraph 9:
             // her Rothko post, kept whole at her direction, plus its date
@@ -4158,6 +4171,73 @@ function useBookModel(args: {
             const extra = zhExtras?.get(9);
             if (extra) zhExtras?.set(9, extra.map((it, i) => indentItem(it, i === extra.length - 1)));
           }
+          if (s.id === "negotiated") {
+            // Her directions, 2026-11-13: her diary quote of June 23,
+            // 2025 ("To curate is to negotiate…" / “策展即协商……”) stands
+            // as its own block at the head of the diary passage — its
+            // date back on it as a small bk-credit label (the "Diary
+            // page · … · Chun Wang" source-label paragraph and the
+            // "- Chun" / "- 王淳" sign-offs were removed from the series
+            // text the same day) — and the diary passage itself takes
+            // the book's dated-text treatment (design E: indented
+            // column, closing block with the longer pause), like her
+            // other dated passages. The passage runs from the quote to
+            // the block before the "II." heading; paragraph positions
+            // after it are unchanged, so the plate anchors (which key
+            // off positions from paragraph 6 on) still land as before.
+            const diaryBlock = (blocks: EssayItem[], quoteMark: string, headMark: string, label: string) => {
+              const qi = blocks.findIndex((b) => b.html.includes(quoteMark));
+              const hi = blocks.findIndex((b) => b.html.includes(headMark));
+              if (qi === -1 || hi === -1 || hi <= qi + 1) return null;
+              const labelItem: EssayItem = { html: `<p><span class="bk-credit">${label}</span></p>`, edit: blocks[qi].edit };
+              blocks.splice(qi, 0, labelItem);
+              blocks[qi] = indentItem(blocks[qi]);
+              blocks[qi + 1] = indentItem(blocks[qi + 1], true);
+              for (let i = qi + 2; i <= hi; i++) blocks[i] = indentItem(blocks[i], i === hi);
+              // Spliced coordinates: the diary runs qi (its label)
+              // through hi (its last body block); the "II." heading
+              // sits at hi + 1.
+              return { start: qi, end: hi };
+            };
+            const enSeg = diaryBlock(enBlocks, "To curate is to negotiate", "II. Agency, Power, and the Archaeology of Decisions", "June 23, 2025");
+            const zhSeg = diaryBlock(zhBlocks, "策展即协商", "II. 能动性、权力与决策的考古学", "2025 年 6 月 23 日");
+            // The indented column is narrower than the essay measure,
+            // so a chunk carrying the passage packed to the normal
+            // budget would overflow its page (the failure chunkItems'
+            // cost model exists to prevent). The whole run from the
+            // chapter head through the diary is therefore chunked at a
+            // budget reduced by the indent's measure factor — the
+            // overview paragraphs underfill their page slightly, the
+            // quote keeps its place at the head of the passage, and no
+            // indented text ever shares a full-budget page.
+            if (enSeg) {
+              enChunkedOverride = [
+                ...chunkItems(enBlocks.slice(0, enSeg.end + 1), 1900, { overhead: 14, brCost: 48, headSeed: 330 }),
+                ...chunkItems(enBlocks.slice(enSeg.end + 1), 2800, { overhead: 14, brCost: 48 }),
+              ];
+            }
+            if (zhSeg) {
+              zhChunkedOverride = [
+                ...chunkItems(zhBlocks.slice(0, zhSeg.end + 1), 1050, { overhead: 15, brCost: 24, headSeed: 230 }),
+                ...chunkItems(zhBlocks.slice(zhSeg.end + 1), 1400, { overhead: 15, brCost: 24 }),
+              ];
+            }
+          }
+          if (s.id === "google") {
+            // Her direction, 2026-11-13 (dated-text consistency): the
+            // whole Google Searches text is her timestamped note of
+            // November 14, 2019 — it opens with its bk-credit time
+            // line — so it takes the dated-text treatment (design E)
+            // like her other dated passages, both languages.
+            for (let i = 0; i < enBlocks.length; i++) enBlocks[i] = indentItem(enBlocks[i], i === enBlocks.length - 1);
+            for (let i = 0; i < zhBlocks.length; i++) zhBlocks[i] = indentItem(zhBlocks[i], i === zhBlocks.length - 1);
+            // The whole text is indented, so it is chunked at a
+            // budget reduced by the indent's measure factor (see the
+            // negotiated hook above); at the normal budget its first
+            // page overflows into the folio band.
+            enChunkedOverride = chunkItems(enBlocks, 2200, { overhead: 14, brCost: 48, headSeed: 330 });
+            zhChunkedOverride = chunkItems(zhBlocks, 1100, { overhead: 15, brCost: 24, headSeed: 230 });
+          }
           if (zhBlocks.length === enBlocks.length) {
             // Dual-stream: chunk each language on its own (same budgets
             // as langChunks), English chunks first, then Chinese. Plates
@@ -4165,7 +4245,7 @@ function useBookModel(args: {
             // their anchor paragraph. Chinese-only extras keep their
             // aligned place inside the Chinese flow, right after the
             // block they belong to.
-            const enChunked = chunkItems(enBlocks, 2800, { overhead: 14, brCost: 48, headSeed: 330 });
+            const enChunked = enChunkedOverride ?? chunkItems(enBlocks, 2800, { overhead: 14, brCost: 48, headSeed: 330 });
             const enItemChunk = new Map<EssayItem, number>();
             enChunked.forEach((items, ci) => items.forEach((it) => enItemChunk.set(it, ci)));
             const zhStream: EssayItem[] = [];
@@ -4176,7 +4256,7 @@ function useBookModel(args: {
             });
             essayChunks[chapter.key] = [
               ...enChunked.map((items) => ({ lang: "en" as const, items })),
-              ...chunkItems(zhStream, 1400, { overhead: 15, brCost: 24, headSeed: 230 }).map((items) => ({ lang: "zh" as const, items })),
+              ...(zhChunkedOverride && !zhExtras ? zhChunkedOverride : chunkItems(zhStream, 1400, { overhead: 15, brCost: 24, headSeed: 230 })).map((items) => ({ lang: "zh" as const, items })),
             ];
             chapter.plateBreaks = {};
             chapter.plateAnchorOrder = anchors.map((a) => a.image);

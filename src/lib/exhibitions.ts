@@ -47,8 +47,12 @@ export const EXHIBITIONS: Record<string, { en: string; zh: string }[]> = {
     { en: "IMMEMORY: On COVID-19, online, 2021 – permanent", zh: "《IMMEMORY：新冠记忆》，线上，2021 – 长期" },
   ],
   "series:negotiated": [
-    { en: "Net art died but is doing well Pavilion (We Are Sorry To Inform You That), The Wrong Biennale 2023-2024 Edition, November 1, 2023 – March 1, 2024", zh: "《Net art died but is doing well》展馆（《我们很抱歉地通知您》），The Wrong Biennale 2023-2024，2023年11月1日 – 2024年3月1日" },
-    { en: "Negotiated Intelligence Pavilion, The Wrong Biennale 2025-2026 Edition, November 1, 2025 – March 1, 2026", zh: "协商智能馆，The Wrong Biennale 2025-2026，2025年11月1日 – 2026年3月1日" },
+    // Her correction, 2026-11-13: this list previously carried the
+    // 2023-2024 (6th) edition's "Net art died but is doing well" pavilion
+    // and a 2025-2026 line ending March 1. Negotiated Intelligence is a
+    // pavilion of the 7th edition (2025-2026, November 1, 2025 –
+    // March 31, 2026); the two lines are merged into its own credit.
+    { en: "Negotiated Intelligence: The Archive of Decisions, The Wrong Biennale 2025-2026 Edition, November 1, 2025 – March 31, 2026", zh: "《协商智能：决定的档案》，The Wrong Biennale 2025-2026，2025年11月1日 – 2026年3月31日" },
     { en: "Silver Award, Arts and Culture Websites category, 21st w3 Awards", zh: "第 21 届 w3 Awards 艺术与文化类网站银奖" },
   ],
   "series:google": [
@@ -88,7 +92,7 @@ export const EXHIBITIONS: Record<string, { en: string; zh: string }[]> = {
  * no site, and Negotiated Intelligence prints the pavilion's own live
  * site — its page on thewrong.org is gone (404) since the biennale
  * closed. */
-export const PART_WEBSITES: Record<number, { key: string; url: string }[]> = {
+export const PART_WEBSITES: Record<number, { key: string; url: string; nameEn?: string; nameZh?: string }[]> = {
   3: [
     { key: "series:google", url: "github.com/chunw/GoogleSearches" },
     { key: "series:feedscanner", url: "github.com/chunw/FeedScanner" },
@@ -96,7 +100,10 @@ export const PART_WEBSITES: Record<number, { key: string; url: string }[]> = {
   4: [
     { key: "series:immemory", url: "covid-immemory.com" },
     { key: "series:cavedance", url: "cavedance.art" },
-    { key: "series:negotiated", url: "negotiated-intelligence.org" },
+    // Her correction, 2026-11-13: the archives line prints the
+    // project's own full name (the name the project itself and
+    // artistBioProjects carry), not this book's chapter title.
+    { key: "series:negotiated", url: "negotiated-intelligence.org", nameEn: "Negotiated Intelligence: Unearthing Power Dynamics in Human-AI Co-Creation", nameZh: "协商智能：揭开人机共创中的权力动态" },
   ],
 };
 
