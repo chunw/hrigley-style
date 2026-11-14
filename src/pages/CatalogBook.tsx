@@ -5129,40 +5129,59 @@ const CatalogBook = () => {
     };
     window.addEventListener("wheel", stop, { passive: true });
     window.addEventListener("touchstart", stop, { passive: true });
+    window.addEventListener("pointerdown", stop);
     window.addEventListener("keydown", stop);
     const jump = () => {
       if (cancelled) return;
       target()?.scrollIntoView({ behavior: "auto", block: "start" });
       landedY = window.scrollY;
     };
-    // Jump once the stage has been painted at its final layout: fonts
-    // resolved and two frames in, the inch-sized rows no longer move.
-    // Then correct once after full load, when image decoding has settled
-    // any residual drift — but only if the reader is still where the jump
-    // left them, so a reader who scrolled away is never yanked back.
-    let raf1 = 0;
-    let raf2 = 0;
-    document.fonts?.ready.then(() => {
+    // Land by retrying, not by waiting (2026-11-13). The previous code
+    // jumped exactly once, gated on document.fonts.ready: the book's
+    // first layout pulls dozens of font files from two CDNs, so on a
+    // phone the cover sat for as long as the fonts took — and if one
+    // subset request stalled, the promise never resolved and the link
+    // silently opened on the front cover (her report from the mobile
+    // in-app browser: the book loaded, the jump never came). Page
+    // geometry here is inch-fixed, so the target's offset never depends
+    // on fonts. Jump promptly, then keep checking every half second:
+    // landed means the target sits at the top of the viewport with the
+    // scroll position settled; while it is off, jump again to absorb
+    // any late drift (scrollbar, zoom recompute, image decode). Two
+    // guards keep the reader sovereign: any real interaction stops the
+    // loop at once, and if the scroll position moves without us after
+    // a jump, the reader has taken over and is never yanked back. The
+    // attempt gives up after a minute regardless.
+    const startedAt = Date.now();
+    let prevY: number | null = null;
+    let settledChecks = 0;
+    let timer = 0;
+    const tick = () => {
       if (cancelled) return;
-      raf1 = requestAnimationFrame(() => {
-        raf2 = requestAnimationFrame(jump);
-      });
-    });
-    const correct = () => {
       const el = target();
-      if (cancelled || landedY === null || !el) return;
-      if (Math.abs(window.scrollY - landedY) > 4) return;
-      if (Math.abs(el.getBoundingClientRect().top) > 4) jump();
+      if (!el) return;
+      const top = el.getBoundingClientRect().top;
+      const y = window.scrollY;
+      const atTarget = top <= 8 && top >= -window.innerHeight && prevY !== null && y === prevY;
+      prevY = y;
+      if (atTarget) {
+        if (++settledChecks >= 2) return; // landed and settled: stand down
+      } else {
+        settledChecks = 0;
+        if (landedY !== null && Math.abs(y - landedY) > 8) return; // the reader moved: stand down
+        jump();
+        prevY = window.scrollY;
+      }
+      if (Date.now() - startedAt > 60_000) return;
+      timer = window.setTimeout(tick, 500);
     };
-    if (document.readyState === "complete") correct();
-    else window.addEventListener("load", correct, { once: true });
+    timer = window.setTimeout(tick, 250);
     return () => {
       cancelled = true;
-      cancelAnimationFrame(raf1);
-      cancelAnimationFrame(raf2);
-      window.removeEventListener("load", correct);
+      window.clearTimeout(timer);
       window.removeEventListener("wheel", stop);
       window.removeEventListener("touchstart", stop);
+      window.removeEventListener("pointerdown", stop);
       window.removeEventListener("keydown", stop);
     };
   }, [deepLinkPage]);
