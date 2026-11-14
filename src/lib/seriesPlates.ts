@@ -439,8 +439,8 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
     ),
     plate(
       "Leaky Boundaries: After Hours Altar 渗漏的边界：下班后的祭坛", "2026 · Stoneware · 炻器", "2026",
-      "A tiny worker asleep beside his computer, beneath a leaning pink candle. Hand-built stoneware with glaze, candle, dried grass and miniature figures, approx. 5 × 8 × 18 in. Exhibited in Leaky Boundaries, the ceramics group exhibition of the 13th LIC Open Art Festival, New York. Photograph from the artist's Instagram post, September 24, 2026.",
-      "一个小职员在电脑旁睡去，头顶斜倚着一支粉色蜡烛。手建炻器，施釉，配蜡烛、干草与微型人偶，约 5 × 8 × 18 英寸。曾展于纽约第 13 届 LIC Open Art Festival 的陶瓷群展《Leaky Boundaries》。照片取自艺术家的 Instagram 帖子，2026 年 9 月 24 日。",
+      "A tiny worker asleep beside his computer, beneath a leaning pink candle. Hand-built stoneware with glaze, candle, dried grass and miniature figures, approx. 12.7 × 20.3 × 45.7 cm. Exhibited in Leaky Boundaries, the ceramics group exhibition of the 13th LIC Open Art Festival, New York. Photograph from the artist's Instagram post, September 24, 2026.",
+      "一个小职员在电脑旁睡去，头顶斜倚着一支粉色蜡烛。手建炻器，施釉，配蜡烛、干草与微型人偶，约 12.7 × 20.3 × 45.7 厘米。曾展于纽约第 13 届 LIC Open Art Festival 的陶瓷群展《Leaky Boundaries》。照片取自艺术家的 Instagram 帖子，2026 年 9 月 24 日。",
       "/book/suo/candle.jpg",
     ),
   ],
