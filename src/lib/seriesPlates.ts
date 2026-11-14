@@ -698,6 +698,8 @@ export const ROAD_EXTRA_PLATES: CatalogItem[] = [
     metaLine: "2022 · Watercolor on paper",
     mediumZh: "纸本水彩",
     year: "2022",
+    dimensions: "6 × 7 in (15.2 × 17.8 cm)",
+    dimensionsZh: "6 × 7 英寸",
     description: "Hawaii.<br />夏威夷。",
     category: "Notes from the Road",
     image_url: "/book/road/road-hawaii-2022.jpg",
