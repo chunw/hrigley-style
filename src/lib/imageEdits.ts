@@ -53,7 +53,6 @@ export const IMAGE_EDITS: Record<string, LandedImgEdit> = {
   "/book/canva-paintings/p21.jpg": { full: false, scale: 1, dx: 0.8101345770781698, dy: 2.169518520031037 },
   "/book/canva-paintings/p22.jpg": { full: false, scale: 1, dx: -0.07166107953165234, dy: 0.10316980326585791 },
   "/watercolors/55/main.jpg": { full: true },
-  "/book/road/road-castle-cake.jpg": { full: true, pos: { x: 50, y: 4.2 } },
   // Export book-edits-7 (2026-11-11): the Still Things No. 14 plate
   // (watercolors/43) goes full-bleed with a slight offset, and its
   // page ground goes white in the same export (pageBackgrounds.ts).
