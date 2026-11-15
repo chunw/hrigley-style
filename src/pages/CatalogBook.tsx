@@ -4175,7 +4175,7 @@ function useBookModel(args: {
     };
     const splitChapters: Chapter[] = [
       wcSplit("residuals", "Residuals", "残留", "Residuals"),
-      wcSplit("stillthings", "Still Things", "怪奇世界", "Still Things"),
+      wcSplit("stillthings", "Still Things", "静物", "Still Things"),
       wcSplit("road", "Notes from the Road", "出发", "Notes from the Road"),
     ];
     // Her review (2026-11-08): the Forms Before Dissolving exhibition
@@ -4328,16 +4328,7 @@ function useBookModel(args: {
     // this chapter.
     const stillThingsChapter = splitChapters.find((ch) => ch.key === "stillthings");
     if (stillThingsChapter) {
-      stillThingsChapter.items = stillThingsChapter.items
-        .filter(({ item }) => !item.image_url.includes("/watercolors/48/"))
-        // Her direction (2026-11-15): the series' Chinese name is
-        // 怪奇世界 in the book — the works' Chinese titles follow
-        // it here, at the book's own assembly, so the shared
-        // watercolor catalog (and with it the shop) keeps 静物.
-        .map(({ item, plate }) => ({
-          item: { ...item, titleZh: item.titleZh ? item.titleZh.replace(/^静物/, "怪奇世界") : item.titleZh },
-          plate,
-        }));
+      stillThingsChapter.items = stillThingsChapter.items.filter(({ item }) => !item.image_url.includes("/watercolors/48/"));
     }
     // Her direction (2026-11-14, reversing her 2026-11-11 call):
     // the Still Things #8 plate on /watercolors/14/ — the pale-blue
