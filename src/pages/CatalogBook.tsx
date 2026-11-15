@@ -98,8 +98,10 @@ export interface InteriorPage {
 /** Facsimile pages printed full bleed, edge to edge, instead of framed
  * inside the page (her direction, 2026-11-08: the light-blue cloth page,
  * p. 18, fills the sheet; aligned right when cover-fit so the crop eats
- * the scan's blank margin, not the painting). */
-const CANVA_FULL_BLEED_PAGES = new Set([18]);
+ * the scan's blank margin, not the painting). The set stands empty
+ * since 2026-11-15: p. 18 — its only member — is deleted from the book
+ * (see the deletion note at CANVA_KEPT_PAGES below). */
+const CANVA_FULL_BLEED_PAGES = new Set<number>([]);
 
 const CHAPTER_TITLE: Record<CatalogSectionKey, (t: Translations) => string> = {
   spirit: (t) => t.spirit21Catalog.subtitle,
@@ -1059,7 +1061,13 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // visual (the Still Things treatment, applied to Residuals the same
     // night), the "I." is removed from the image itself, and the
     // standalone page is deleted; the front pages are now pp. 6–9.
-    const CANVA_KEPT_PAGES = [6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 18, 21, 22];
+    // Deletion (her direction, 2026-11-15): facsimile p. 18 — the
+    // light-blue draped figure reproduced from the printed edition
+    // with its white border — is deleted from the book. The painting
+    // itself now stands in the chapter as the restored Still Things
+    // #8 plate, full bleed; the facsimile duplicate goes. The Still
+    // Things facsimile run is now p. 17 alone.
+    const CANVA_KEPT_PAGES = [6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 21, 22];
     const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
     // Her direction (2026-11-11, later the same evening): the teapot /
     // Residuals #26 pair moves four pages earlier still (「再提前4页」),
@@ -3252,6 +3260,17 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // work (her direction, 2026-11-11: no arrow — a professional
       // label instead of the "←" marker first tried).
       const isRoadNewYork = chapter.key === "road" && item.image_url.includes("/watercolors/55/");
+      // Her direction (2026-11-15): a plate whose landed picture
+      // edit is full-bleed (imageEdits.ts) prints its picture over
+      // the whole sheet — the caption under the frame is covered
+      // with it, and the work would stand with no information at
+      // all. Such plates carry their caption ON the picture, at
+      // the sheet's bottom-left (see .bk-plate-overlay-caption in
+      // catalog-book.css). The road chapter's New York plate is
+      // the one exception: its picture is full-bleed too, but its
+      // work info stands on the facing Hawaii page by design
+      // (below), so it takes no overlay.
+      const fullBleedPlate = !!ctx.imgEditFor(item.image_url)?.full;
       const partnerItem = partnerPage?.spec.kind === "plate" ? partnerPage.spec.item : null;
       const facingItem =
         chapter.key === "road" &&
@@ -3287,10 +3306,15 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           <div className="bk-plate-frame">
             <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
           </div>
-          {!isRoadNewYork && (
+          {!isRoadNewYork && !fullBleedPlate && (
             <div className="bk-caption">
               {captionBody(item, false)}
               {facingItem && captionBody(facingItem, true)}
+            </div>
+          )}
+          {!isRoadNewYork && fullBleedPlate && (
+            <div className="bk-plate-overlay-caption">
+              {captionBody(item, false)}
             </div>
           )}
           <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
@@ -4030,13 +4054,10 @@ function useBookModel(args: {
     if (stillThingsChapter) {
       stillThingsChapter.items = stillThingsChapter.items.filter(({ item }) => !item.image_url.includes("/watercolors/48/"));
     }
-    // Her direction (2026-11-11): the Still Things #8 plate on
-    // /watercolors/14/ — the pale-blue draped-cloth watercolor,
-    // folio 47 — is deleted from the book. The piece itself stays
-    // in the watercolor catalog and in the shop.
-    if (stillThingsChapter) {
-      stillThingsChapter.items = stillThingsChapter.items.filter(({ item }) => !item.image_url.includes("/watercolors/14/"));
-    }
+    // Her direction (2026-11-14, reversing her 2026-11-11 call):
+    // the Still Things #8 plate on /watercolors/14/ — the pale-blue
+    // draped-cloth watercolor — is restored to the book, so no
+    // filter applies to it here.
     // The three websites stand as one big chapter (her direction,
     // 2026-11-05): a part opening, "Rooms, Scores, Decisions", then the
     // triptych in the order the IMMEMORY text itself names — first panel

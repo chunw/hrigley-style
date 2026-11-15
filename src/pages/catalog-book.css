@@ -1046,6 +1046,14 @@
   color: #fff;
 }
 
+/* The flush caption's title takes the same white as its meta
+   lines (the uniform-caption rule would otherwise hand it the
+   page's muted tone; on this black spread the caption's own
+   register is white throughout). */
+.bk-root .bk-bleed-caption-flush .bk-caption-title {
+  color: #fff;
+}
+
 
 .bk-opener-label {
   display: inline-flex;
@@ -1736,9 +1744,11 @@
   margin-top: 0.06in;
 }
 
-.bk-journal-caption .bk-caption-title {
-  font-size: 7pt;
-  line-height: 1.25;
+.bk-root .bk-journal-caption .bk-caption-title {
+  /* The journal captions' compact register: the title matches the
+     journal meta size exactly (her uniform-caption direction,
+     2026-11-15). */
+  font-size: 6.5pt;
 }
 
 .bk-journal-caption .bk-caption-meta {
@@ -1789,15 +1799,21 @@
   text-transform: uppercase;
 }
 
-/* Work titles in captions get no special face (her direction,
-   2026-11-07): same font and size as the caption text around them,
-   just a step bolder. This overrides the shop .product-title serif
-   the title elements also carry. */
+/* Work titles in captions carry no emphasis of their own (her
+   direction, 2026-11-15, superseding the 2026-11-07 "a step
+   bolder" setting): within every caption — plate, grid, journal,
+   bleed, overlay — the title line takes exactly the caption meta
+   text's style (7pt, regular weight, the muted colour, the meta
+   letter-spacing), so all work information in a caption reads in
+   one uniform register. This overrides the shop .product-title
+   serif the title elements also carry. */
 .bk-root .bk-caption-title {
   font-family: inherit;
-  font-size: 8pt;
-  font-weight: 650;
+  font-size: 7pt;
+  font-weight: 400;
+  letter-spacing: 0.06em;
   line-height: 1.4;
+  color: var(--muted);
 }
 
 .bk-caption-meta {
@@ -1817,6 +1833,25 @@
   font-size: 7.5pt;
   line-height: 1.55;
   color: var(--muted);
+}
+
+/* Full-bleed plates (her direction, 2026-11-15): when a landed
+   full-bleed picture edit covers the whole sheet, the caption
+   under the frame is covered with it and the work would stand
+   with no information at all — so the caption stands ON the
+   picture instead, at the sheet's bottom-left, in the same
+   caption composition and the same unified caption text as
+   every other caption. The z-index clears the full-bleed
+   portal picture, which is appended to the page element.
+   Position update (her direction, 2026-11-15, later): the
+   caption hugs the sheet's edge more closely — insets roughly
+   halved from 0.55in / 0.42in. */
+.bk-plate-overlay-caption {
+  position: absolute;
+  left: 0.3in;
+  bottom: 0.2in;
+  z-index: 4;
+  max-width: 5.4in;
 }
 
 /* Residuals #1 exhibition view (her direction, 2026-11-11): the

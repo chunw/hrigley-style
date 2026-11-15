@@ -127,7 +127,14 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "plate:/watercolors/05/main.jpg": "black",
   "plate:/watercolors/13/main.jpg": "black",
   "plate:/watercolors/43/main.jpg": "white",
-  "plate:/watercolors/14/main.jpg": "black",
+  // Still Things No. 8 (watercolors/14), restored by PR #304: the page
+  // ground takes the painting's own paper colour — #D3CEC3, the median
+  // of the picture's paper region — instead of black (her direction,
+  // 2026-11-14: "其八的底色 不要黑色 要复制画里本身的背景色"). The
+  // picture file itself is unchanged; only the page ground moves, and
+  // the light ground flips the caption to the dark-text preset via
+  // hexBgStyle, as on white/cream pages.
+  "plate:/watercolors/14/main.jpg": "#D3CEC3",
   "plate:/watercolors/45/main.jpg": "black",
   "plate:/watercolors/46/main.jpg": "black",
   "plate:/watercolors/47/main.jpg": "black",
