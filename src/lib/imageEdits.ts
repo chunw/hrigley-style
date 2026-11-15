@@ -33,13 +33,27 @@ export const IMAGE_EDITS: Record<string, LandedImgEdit> = {
   "/book/canva-paintings/p04.jpg": { full: true },
   "/book/canva-paintings/p10.jpg": { full: true },
   "/book/canva-paintings/p02.jpg": { full: false, scale: 1, dx: 0.042613218914391515, dy: -0.0634831823366115 },
-  // The watercolor plate 14 scale-up from export #17 (scale 1.343)
-  // is withdrawn (2026-11-14): the plate was restored to the book
-  // that day, and at that scale the painting painted over the
-  // plate's own caption (verified in the render — the caption sat
-  // in the DOM but no pixel of it showed). The picture returns to
-  // its natural frame so the caption prints. Her black page ground
-  // for this plate (pageBackgrounds.ts) is untouched.
+  // The watercolor plate 14 (Still Things No. 8), full-bleed
+  // (her direction, 2026-11-15). History: export #17's scale-up
+  // (scale 1.343, dx -7.2721581120530026, dy 2.9039708327036458)
+  // was withdrawn by PR #304 because at that scale the painting
+  // painted over the plate's caption; the plate then stood in a
+  // natural frame on a page ground sampled from the painting's
+  // own paper (#D3CEC3) — but the flat ground read as a visible
+  // band against the photograph's uneven paper ("不太融合啊 要
+  // 看不出来有底色"), so she directed the full-bleed version
+  // instead, with the caption standing on the picture. The #17
+  // scale-up alone was re-checked first: it still leaves the
+  // flat ground showing at the sheet's right and bottom (pixel-
+  // sampled #D3CEC3 in the render), so the plate stands as a
+  // true edge-to-edge bleed. The crop position (50/44) is set
+  // from the painting itself: it keeps the hood's top inside
+  // the sheet and lands the overlay caption on the empty paper
+  // below the figure (figure pixels end at 85% of the picture's
+  // height in the caption's span; the grey shadow at the lower
+  // right stays clear of it). The caption overlay itself is
+  // rendered by the plate case in CatalogBook.tsx.
+  "/watercolors/14/main.jpg": { full: true, pos: { x: 50, y: 44 } },
   // Export book-edits-5 (2026-11-10): the watercolor plate 46
   // full-bleed is restated plain — her newest export carries
   // { full: true } and nothing else for this picture, superseding

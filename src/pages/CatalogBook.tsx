@@ -3252,6 +3252,17 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // work (her direction, 2026-11-11: no arrow — a professional
       // label instead of the "←" marker first tried).
       const isRoadNewYork = chapter.key === "road" && item.image_url.includes("/watercolors/55/");
+      // Her direction (2026-11-15): a plate whose landed picture
+      // edit is full-bleed (imageEdits.ts) prints its picture over
+      // the whole sheet — the caption under the frame is covered
+      // with it, and the work would stand with no information at
+      // all. Such plates carry their caption ON the picture, at
+      // the sheet's bottom-left (see .bk-plate-overlay-caption in
+      // catalog-book.css). The road chapter's New York plate is
+      // the one exception: its picture is full-bleed too, but its
+      // work info stands on the facing Hawaii page by design
+      // (below), so it takes no overlay.
+      const fullBleedPlate = !!ctx.imgEditFor(item.image_url)?.full;
       const partnerItem = partnerPage?.spec.kind === "plate" ? partnerPage.spec.item : null;
       const facingItem =
         chapter.key === "road" &&
@@ -3287,10 +3298,15 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           <div className="bk-plate-frame">
             <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
           </div>
-          {!isRoadNewYork && (
+          {!isRoadNewYork && !fullBleedPlate && (
             <div className="bk-caption">
               {captionBody(item, false)}
               {facingItem && captionBody(facingItem, true)}
+            </div>
+          )}
+          {!isRoadNewYork && fullBleedPlate && (
+            <div className="bk-plate-overlay-caption">
+              {captionBody(item, false)}
             </div>
           )}
           <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
