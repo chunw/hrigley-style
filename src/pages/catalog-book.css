@@ -1842,11 +1842,14 @@
    picture instead, at the sheet's bottom-left, in the same
    caption composition and the same unified caption text as
    every other caption. The z-index clears the full-bleed
-   portal picture, which is appended to the page element. */
+   portal picture, which is appended to the page element.
+   Position update (her direction, 2026-11-15, later): the
+   caption hugs the sheet's edge more closely — insets roughly
+   halved from 0.55in / 0.42in. */
 .bk-plate-overlay-caption {
   position: absolute;
-  left: 0.55in;
-  bottom: 0.42in;
+  left: 0.3in;
+  bottom: 0.2in;
   z-index: 4;
   max-width: 5.4in;
 }

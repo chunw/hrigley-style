@@ -98,8 +98,10 @@ export interface InteriorPage {
 /** Facsimile pages printed full bleed, edge to edge, instead of framed
  * inside the page (her direction, 2026-11-08: the light-blue cloth page,
  * p. 18, fills the sheet; aligned right when cover-fit so the crop eats
- * the scan's blank margin, not the painting). */
-const CANVA_FULL_BLEED_PAGES = new Set([18]);
+ * the scan's blank margin, not the painting). The set stands empty
+ * since 2026-11-15: p. 18 — its only member — is deleted from the book
+ * (see the deletion note at CANVA_KEPT_PAGES below). */
+const CANVA_FULL_BLEED_PAGES = new Set<number>([]);
 
 const CHAPTER_TITLE: Record<CatalogSectionKey, (t: Translations) => string> = {
   spirit: (t) => t.spirit21Catalog.subtitle,
@@ -1059,7 +1061,13 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // visual (the Still Things treatment, applied to Residuals the same
     // night), the "I." is removed from the image itself, and the
     // standalone page is deleted; the front pages are now pp. 6–9.
-    const CANVA_KEPT_PAGES = [6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 18, 21, 22];
+    // Deletion (her direction, 2026-11-15): facsimile p. 18 — the
+    // light-blue draped figure reproduced from the printed edition
+    // with its white border — is deleted from the book. The painting
+    // itself now stands in the chapter as the restored Still Things
+    // #8 plate, full bleed; the facsimile duplicate goes. The Still
+    // Things facsimile run is now p. 17 alone.
+    const CANVA_KEPT_PAGES = [6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 21, 22];
     const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
     // Her direction (2026-11-11, later the same evening): the teapot /
     // Residuals #26 pair moves four pages earlier still (「再提前4页」),
