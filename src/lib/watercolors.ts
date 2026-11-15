@@ -523,7 +523,7 @@ export const watercolors: Watercolor[] = [
     series: "I",
     printInCatalog: false,
     showInStorefront: true,
-    year: "2026",
+    year: "2025",
     medium: "Watercolor on paper",
     mediumZh: "纸本水彩",
     dimensions: "",
