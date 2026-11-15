@@ -1306,6 +1306,11 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       // the New York plate to keep the pair facing, in which case a
       // compensating blank steps in behind Hawaii.
       let roadPairGuard = false;
+      // That compensating blank itself, when one steps in (the
+      // interleave in the plate loop keeps the reference). The
+      // Lofoten / Beijing pair guard below may cancel the two pair
+      // guards' blanks against each other — see the guard itself.
+      let roadPairComp: PageSpec | null = null;
       // The road chapter's Lofoten / Beijing pair guard (in the
       // plate loop below) deliberately has no flag here: unlike the
       // New York pair, it is NOT paired with a compensating blank
@@ -1436,7 +1441,27 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
             // the two blanks would face each other as a fully blank
             // spread in front of the Spirit chapter, which she
             // flagged and had removed the same day (2026-11-14).
-            if (!nextIsVerso()) specs.push({ kind: "blank" });
+            if (!nextIsVerso()) {
+              // When both pair guards have fired, the New York
+              // pair's compensating blank (standing immediately in
+              // front, behind Hawaii) and this guard's blank would
+              // face each other as a fully blank spread between
+              // Hawaii and Lofoten — she flagged that spread too
+              // and had it deleted (2026-11-14). The two blanks
+              // cancel instead: with the compensating blank lifted
+              // back out, Lofoten falls on the verso by itself
+              // (Hawaii stands on a recto), so no guard blank is
+              // needed either — and every page behind the pair
+              // keeps the side it had, since the two blanks together
+              // only ever moved folios, never sides. If the page in
+              // front is anything else, the guard blank steps in
+              // as usual and both pairs stay protected.
+              if (roadPairComp && specs[specs.length - 1] === roadPairComp) {
+                specs.pop();
+                roadPairComp = null;
+              }
+              if (!nextIsVerso()) specs.push({ kind: "blank" });
+            }
           }
           if (chapter.key === "remains" && item.image_url === "/remains/01/main.jpg") {
             // Her direction (2026-11-11): Remains No. 1 becomes a
@@ -1507,8 +1532,14 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
             // when a blank stepped in ahead of New York, one steps
             // in behind Hawaii too, so the plates after the pair
             // (Lofoten, Beijing, and everything behind them) keep
-            // the sides they had.
-            if (roadPairGuard) specs.push({ kind: "blank" });
+            // the sides they had. The pushed page is remembered in
+            // roadPairComp: the Lofoten pair guard above may yet
+            // cancel it against its own blank (see there).
+            if (roadPairGuard) {
+              const comp: PageSpec = { kind: "blank" };
+              specs.push(comp);
+              roadPairComp = comp;
+            }
           }
           if (holdBack && item.image_url === holdBack.imageUrl) emitHeldBack();
         }
