@@ -3832,6 +3832,9 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // Facsimile p. 7 is the blue-and-white bowl painting, watercolors/08
       // in the catalog data; its caption below reads from that record.
       const lamianWork = spec.page === 7 ? watercolors.find((w) => w.id === "8") : undefined;
+      // Facsimile p. 6 is the three red-brown blocks, watercolors/07 in
+      // the catalog data; its caption below reads from that record.
+      const fuyuWork = spec.page === 6 ? watercolors.find((w) => w.id === "7") : undefined;
       if (CANVA_FULL_BLEED_PAGES.has(spec.page)) {
         // Full bleed like the bleed spreads: the image covers the whole
         // sheet and, as there, no folio is printed over it.
@@ -3862,6 +3865,34 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                   capLang={ctx.capLang}
                 />
                 <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: capDesc("Japan Folk Crafts Museum, Tokyo.<br />东京，日本民艺馆。", ctx.capLang) }} />
+              </div>
+            </div>
+          )}
+          {spec.page === 6 && fuyuWork && (
+            <div className="bk-caption">
+              <div className="bk-caption-body">
+                {/* Third caption exception among the facsimile pages:
+                    the artist named this painting 《三块腐乳》 and
+                    confirmed it as a 2025 work (her word, 2026-11-15) —
+                    facsimile pages otherwise print no caption, so the
+                    title would never show. The caption reads from the
+                    watercolor catalog record (watercolors/07) in the
+                    three-line work-caption form of the section's
+                    plates; the record carries no dimensions, so no
+                    dimensions line prints. */}
+                {[
+                  { lang: "en" as const, title: fuyuWork.title, meta: `${fuyuWork.medium}, ${fuyuWork.year}` },
+                  { lang: "zh" as const, title: fuyuWork.titleZh, meta: `${fuyuWork.mediumZh} ${fuyuWork.year}年` },
+                ]
+                  .filter((blk) => ctx.capLang === "both" || blk.lang === ctx.capLang)
+                  .map((blk) => (
+                    <div className="bk-caption-work" key={blk.lang}>
+                      <div className="bk-caption-title product-title">
+                        {blk.lang === "en" ? <em>{blk.title}</em> : `《${blk.title}》`}
+                      </div>
+                      <div className="bk-caption-meta">{blk.meta}</div>
+                    </div>
+                  ))}
               </div>
             </div>
           )}
