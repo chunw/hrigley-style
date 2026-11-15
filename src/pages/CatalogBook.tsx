@@ -147,6 +147,121 @@ function stackedTitle(chapter: Chapter): ReactNode {
 }
 const plainText = (html: string) => html.replace(/<br\s*\/?>/gi, " ").replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
 const hasCjk = (s: string) => /[\u4e00-\u9fff]/.test(s);
+// Caption language (her direction, 2026-11-15): the reading toolbar
+// carries a three-way switch for work captions only — bilingual (the
+// book's standing composition, the default), English only, Chinese
+// only. Body pages keep their bilingual side-by-side layout; only the
+// captions' English and Chinese fragments are filtered, through the
+// helpers below.
+export type CapLang = "both" | "en" | "zh";
+type CapPart = { lang: "en" | "zh" | "both"; text?: string | null; inBoth?: boolean };
+/** The caption fragments visible in the selected caption language, in
+    their standing order (English first, Chinese right after). A part
+    marked inBoth:false is a compact caption's Chinese fragment: the
+    bilingual composition does not print it, the Chinese-only view
+    completes the caption from it. */
+const capParts = (parts: CapPart[], capLang: CapLang): string[] =>
+  parts
+    .filter((p) => p.text && (capLang === "both" ? p.inBoth !== false : p.lang === "both" || p.lang === capLang))
+    .map((p) => p.text as string);
+/** A caption's title line in the selected language: the English title,
+    the Chinese title right after it. */
+const capTitleParts = (item: CatalogItem): CapPart[] => [
+  { lang: "en", text: item.title },
+  { lang: "zh", text: item.titleZh && item.titleZh !== item.title ? item.titleZh : null },
+];
+/** A caption's meta fragments in their standing order: the English
+    meta line, the dimensions, then the Chinese medium and dimensions
+    from the artist's own records. zhInBoth is the plate composition,
+    whose bilingual line already carries the Chinese fragments;
+    compact captions (grids, journal cells) print only the English
+    side bilingually, so their Chinese fragments (and, for journal
+    cells, the dimensions) surface only in the single-language views. */
+const capMetaParts = (item: CatalogItem, opts: { zhInBoth: boolean; dimInBoth: boolean }): CapPart[] => {
+  const dimZh = item.dimensionsZh && item.dimensionsZh !== item.dimensions ? item.dimensionsZh : null;
+  return [
+    { lang: "en", text: item.metaLine },
+    { lang: dimZh ? "en" : "both", text: item.dimensions, inBoth: opts.dimInBoth },
+    {
+      lang: "zh",
+      text: item.mediumZh && item.mediumZh !== item.medium && !(item.metaLine ?? "").includes(item.mediumZh) ? item.mediumZh : null,
+      inBoth: opts.zhInBoth,
+    },
+    { lang: "zh", text: dimZh, inBoth: opts.zhInBoth },
+  ];
+};
+/** The three-line work caption (her direction, 2026-11-15, second
+    pass, against her sample page): a plate caption that carries all
+    four facts — title, dimensions, medium, year — prints them on
+    three lines per language, never run together: the title alone
+    (English italic, no brackets; Chinese inside 《》), the
+    dimensions alone in the compact joined form ("8×14cm" — no
+    spaces, no 厘米； the Chinese view prints the same form), and
+    the medium with the year (English "Watercolor on paper, 2026";
+    Chinese "纸本水彩 2026年" — the year leaves the title line and
+    closes the third). In the bilingual view the English block
+    stands first, the Chinese block right under it, each keeping its
+    own three lines. A caption missing any of the four facts keeps
+    the standing meta-line composition below; compact captions
+    (grids, journal cells), credit lines and the road chapter's
+    title-less captions are untouched. The dimension figures keep
+    the order in the artist's own records — only the spacing and
+    unit form change. */
+const CM_DIM_RE = /^\s*(\d+(?:\.\d+)?)\s*×\s*(\d+(?:\.\d+)?)\s*cm\s*$/i;
+type WorkCapBlock = { lang: "en" | "zh"; title?: string; dim: string; meta?: string };
+const workCapBlocks = (item: CatalogItem): WorkCapBlock[] | null => {
+  const m = item.dimensions ? CM_DIM_RE.exec(item.dimensions) : null;
+  if (!m || !(item.title || item.titleZh)) return null;
+  let year = item.year ?? undefined;
+  let mediumEn = item.medium ?? undefined;
+  if ((!year || !mediumEn) && item.metaLine) {
+    const segs = item.metaLine.split(" · ");
+    if (!year && /^\d{4}$/.test(segs[0])) year = segs[0];
+    if (!mediumEn && segs.length > 1) mediumEn = segs.slice(1).join(" · ");
+  }
+  if (!year || !mediumEn) return null;
+  const dim = `${m[1]}×${m[2]}cm`;
+  return [
+    { lang: "en", title: item.title || undefined, dim, meta: `${mediumEn}, ${year}` },
+    {
+      lang: "zh",
+      title: item.titleZh && item.titleZh !== item.title ? item.titleZh : undefined,
+      dim,
+      meta: item.mediumZh ? `${item.mediumZh} ${year}年` : undefined,
+    },
+  ];
+};
+/** The work-caption blocks visible in the selected caption
+    language. Bilingual shows both blocks; a Chinese block carrying
+    neither title nor medium line (a work with no Chinese record)
+    would only repeat the dimensions line, so it steps aside in
+    the bilingual view only. */
+const workCapVisible = (blocks: WorkCapBlock[], capLang: CapLang): WorkCapBlock[] =>
+  capLang === "both" ? blocks.filter((b) => b.lang === "en" || b.title || b.meta) : blocks.filter((b) => b.lang === capLang);
+/** Filters a caption description's HTML to the selected caption
+    language: segments are split at <br> and " · " boundaries and
+    classified by script (the book's descriptions run English first,
+    Chinese after); a segment mixing both scripts stays visible in
+    every view, as do bare numbers. */
+const capDesc = (html: string, capLang: CapLang): string => {
+  if (capLang === "both" || !html) return html;
+  const keep = (seg: string): boolean => {
+    const text = seg.replace(/<[^>]*>/g, "").trim();
+    if (!text) return false;
+    const zh = hasCjk(text);
+    const en = /[A-Za-z]/.test(text);
+    if (zh && !en) return capLang === "zh";
+    if (en && !zh) return capLang === "en";
+    return true;
+  };
+  return html
+    .split(/(<br\s*\/?>)/gi)
+    .map((part) => (/^<br/i.test(part) ? part : part.split(/\s+·\s+/).filter(keep).join(" · ")))
+    .join("")
+    .replace(/^\s*(<br\s*\/?>\s*)+/i, "")
+    .replace(/(\s*<br\s*\/?>)+\s*$/i, "")
+    .replace(/(<br\s*\/?>\s*){2,}/gi, "<br />");
+};
 // Dated passages — her own writings that carry a date — are indented
 // into a narrower column, date line included (design E, her pick,
 // 2026-11-06; it replaces the white-space setting of PR #145). The
@@ -2540,6 +2655,7 @@ function Collage({ front, back, title, titleSize, above, below }: { front?: Cata
 export interface BookContext {
   t: Translations;
   lang: "en" | "zh";
+  capLang: CapLang;
   chapters: Chapter[];
   years: string;
   coverFront?: CatalogItem;
@@ -3102,12 +3218,12 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           </div>
           {roadWork && (
             <div className="bk-opener-credit bk-opener-credit-left">
-              <div className="bk-caption-meta">{[roadWork.year, roadWork.medium, roadWork.mediumZh].filter(Boolean).join(" · ")}</div>
+              <div className="bk-caption-meta">{capParts([{ lang: "both", text: roadWork.year }, { lang: "en", text: roadWork.medium }, { lang: "zh", text: roadWork.mediumZh }] as CapPart[], ctx.capLang).join(" · ")}</div>
               {/* Production note for this spread, her wording (2026-11-09):
                   painted at a residence in Sugamo, Tokyo, during a Japan
                   trip. (It was first mis-filed to the Japanese Pottery
                   caption; she ruled it belongs here, on the Road opener.) */}
-              <div className="bk-caption-meta">Painted during a trip to Japan, at a residence in Sugamo, Tokyo · 绘于日本旅行中位于东京巢鸭的住所</div>
+              <div className="bk-caption-meta">{capParts([{ lang: "en", text: "Painted during a trip to Japan, at a residence in Sugamo, Tokyo" }, { lang: "zh", text: "绘于日本旅行中位于东京巢鸭的住所" }] as CapPart[], ctx.capLang).join(" · ")}</div>
             </div>
           )}
         </Page>
@@ -3164,9 +3280,9 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               )}
               {a.id === "what-remains" && (
                 <div className="bk-aphorism-workinfo">
-                  <div className="bk-caption-title product-title">Notes from the Road #2 行旅拾记 其二</div>
-                  <div className="bk-caption-meta">2026 · Watercolor on paper 纸本水彩</div>
-                  <div className="bk-caption-meta">San Cristóbal de las Casas, Chiapas, Mexico · 墨西哥，恰帕斯州，圣克里斯托瓦尔-德拉斯卡萨斯</div>
+                  <div className="bk-caption-title product-title">{capParts([{ lang: "en", text: "Notes from the Road #2" }, { lang: "zh", text: "行旅拾记 其二" }] as CapPart[], ctx.capLang).join(" ")}</div>
+                  <div className="bk-caption-meta">{capParts([{ lang: "en", text: "2026 · Watercolor on paper" }, { lang: "zh", text: "纸本水彩" }] as CapPart[], ctx.capLang).join(" ")}</div>
+                  <div className="bk-caption-meta">{capParts([{ lang: "en", text: "San Cristóbal de las Casas, Chiapas, Mexico" }, { lang: "zh", text: "墨西哥，恰帕斯州，圣克里斯托瓦尔-德拉斯卡萨斯" }] as CapPart[], ctx.capLang).join(" · ")}</div>
                 </div>
               )}
             </>
@@ -3279,7 +3395,22 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         partnerItem.image_url.includes("/watercolors/55/")
           ? partnerItem
           : null;
-      const captionBody = (capItem: CatalogItem, facing: boolean) => (
+      const captionBody = (capItem: CatalogItem, facing: boolean) => {
+        // Caption language (her direction, 2026-11-15): the title,
+        // meta and description render in the toolbar's selected
+        // caption language; "both" is the standing composition.
+        const capTitle = capParts(capTitleParts(capItem), ctx.capLang).join(" ");
+        const capMeta = capParts(capMetaParts(capItem, { zhInBoth: true, dimInBoth: true }), ctx.capLang).join(" · ");
+        const capDescHtml = capItem.description ? capDesc(capItem.description, ctx.capLang) : "";
+        // The three-line work caption (her direction, 2026-11-15,
+        // second pass): a plate carrying title, dimensions, medium
+        // and year prints them as three lines per language (see
+        // workCapBlocks). The road chapter keeps its title-less
+        // composition — its plates print no work titles (her rule
+        // below), so the three-line form, which opens with the
+        // title, never applies there.
+        const workBlocks = chapter.key !== "road" ? workCapBlocks(capItem) : null;
+        return (
         <div className={facing ? "bk-caption-body bk-caption-facing" : "bk-caption-body"}>
           {facing && <div className="bk-caption-facing-label">LEFT · 左图</div>}
           {/* Notes from the Road plates print no work titles (her
@@ -3289,18 +3420,35 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               with no title prints no title line at all: the book
               never prints "Untitled" as a work name (her rule,
               2026-11-10). */}
-          {chapter.key !== "road" && capItem.title && (
-            <div className="bk-caption-title product-title">{capItem.title}{capItem.titleZh && capItem.titleZh !== capItem.title ? ` ${capItem.titleZh}` : ""}</div>
-          )}
-          {(capItem.metaLine || capItem.dimensions || capItem.mediumZh || capItem.dimensionsZh) && (
-            <div className="bk-caption-meta">{[capItem.metaLine, capItem.dimensions, capItem.mediumZh && capItem.mediumZh !== capItem.medium && !(capItem.metaLine ?? "").includes(capItem.mediumZh) ? capItem.mediumZh : "", capItem.dimensionsZh && capItem.dimensionsZh !== capItem.dimensions ? capItem.dimensionsZh : ""].filter(Boolean).join(" · ")}</div>
+          {workBlocks ? (
+            workCapVisible(workBlocks, ctx.capLang).map((blk) => (
+              <div className="bk-caption-work" key={blk.lang}>
+                {blk.title && (
+                  <div className="bk-caption-title product-title">
+                    {blk.lang === "en" ? <em>{blk.title}</em> : `《${blk.title}》`}
+                  </div>
+                )}
+                <div className="bk-caption-meta">{blk.dim}</div>
+                {blk.meta && <div className="bk-caption-meta">{blk.meta}</div>}
+              </div>
+            ))
+          ) : (
+            <>
+              {chapter.key !== "road" && capTitle && (
+                <div className="bk-caption-title product-title">{capTitle}</div>
+              )}
+              {capMeta && (
+                <div className="bk-caption-meta">{capMeta}</div>
+              )}
+            </>
           )}
           {/* The Residuals #1 painting page prints no exhibition line:
               the line stands, emphasised, on its facing exhibition
               page instead (her direction, 2026-11-11). */}
-          {capItem.description && !(chapter.key === "residuals" && capItem.image_url.includes("/watercolors/01/")) && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: capItem.description }} />}
+          {capDescHtml && !(chapter.key === "residuals" && capItem.image_url.includes("/watercolors/01/")) && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: capDescHtml }} />}
         </div>
-      );
+        );
+      };
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-plate-page${bgImgCls}`}>{bgImgLayer}
           <div className="bk-plate-frame">
@@ -3334,9 +3482,9 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 </div>
                 {!PLATE_GRID_NO_CAPTION.has(item.image_url) && (
                   <div className="bk-grid-caption">
-                    <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
-                    {(item.metaLine || item.dimensions) && (
-                      <div className="bk-caption-meta">{[item.metaLine, item.dimensions].filter(Boolean).join(" · ")}</div>
+                    <div className="bk-caption-title product-title">{capParts(capTitleParts(item), ctx.capLang).join(" ")}</div>
+                    {capParts(capMetaParts(item, { zhInBoth: false, dimInBoth: true }), ctx.capLang).length > 0 && (
+                      <div className="bk-caption-meta">{capParts(capMetaParts(item, { zhInBoth: false, dimInBoth: true }), ctx.capLang).join(" · ")}</div>
                     )}
                   </div>
                 )}
@@ -3365,8 +3513,24 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                     <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
                   </div>
                   <div className="bk-journal-caption">
-                    <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
-                    {item.metaLine && <div className="bk-caption-meta">{item.metaLine}</div>}
+                    <div className="bk-caption-title product-title">{capParts(capTitleParts(item), ctx.capLang).join(" ")}</div>
+                    {capParts(
+                      [
+                        { lang: "en", text: item.metaLine },
+                        { lang: "zh", text: item.metaZh ?? item.mediumZh ?? null, inBoth: false },
+                      ] as CapPart[],
+                      ctx.capLang,
+                    ).length > 0 && (
+                      <div className="bk-caption-meta">
+                        {capParts(
+                          [
+                            { lang: "en", text: item.metaLine },
+                            { lang: "zh", text: item.metaZh ?? item.mediumZh ?? null, inBoth: false },
+                          ] as CapPart[],
+                          ctx.capLang,
+                        ).join(" · ")}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
@@ -3410,41 +3574,42 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // full caption on the right page. See .bk-bleed-flush and
       // .bk-bleed-caption-flush in catalog-book.css.
       const flushSpread = item.image_url === "/remains/01/main.jpg";
-      const spreadMeta = [item.metaLine, item.dimensions, item.mediumZh && item.mediumZh !== item.medium && !(item.metaLine ?? "").includes(item.mediumZh) ? item.mediumZh : "", item.dimensionsZh && item.dimensionsZh !== item.dimensions ? item.dimensionsZh : ""].filter(Boolean).join(" \u00b7 ");
+      const spreadMeta = capParts(capMetaParts(item, { zhInBoth: true, dimInBoth: true }), ctx.capLang).join(" · ");
+      const spreadDesc = item.description ? capDesc(item.description, ctx.capLang) : "";
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-bleed bk-bleed-${spec.half}${flushSpread ? " bk-bleed-flush" : ""}${bgImgCls}`}>{bgImgLayer}
           <div className="bk-spread-canvas">
             <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} className="bk-bleed-img" />
             {thailand && spec.half === "left" && (
               <div className="bk-bleed-caption bk-bleed-caption-bl">
-                <div className="bk-caption-meta">{item.metaLine}</div>
-                {item.metaZh && <div className="bk-caption-meta">{item.metaZh}</div>}
+                {ctx.capLang !== "zh" && <div className="bk-caption-meta">{item.metaLine}</div>}
+                {ctx.capLang !== "en" && item.metaZh && <div className="bk-caption-meta">{item.metaZh}</div>}
               </div>
             )}
             {roadSpread && !carSpread && spec.half === "left" && (
               <div className="bk-bleed-caption bk-bleed-caption-road">
                 {spreadMeta && <div className="bk-caption-meta">{spreadMeta}</div>}
-                {item.description && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: item.description }} />}
+                {spreadDesc && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: spreadDesc }} />}
               </div>
             )}
             {roadSpread && carSpread && spec.half === "right" && (
               <div className="bk-bleed-caption bk-bleed-caption-road bk-bleed-caption-road-br">
                 {spreadMeta && <div className="bk-caption-meta">{spreadMeta}</div>}
-                {item.description && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: item.description }} />}
+                {spreadDesc && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: spreadDesc }} />}
               </div>
             )}
             {flushSpread && spec.half === "right" && (
               <div className="bk-bleed-caption bk-bleed-caption-flush">
-                <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
+                <div className="bk-caption-title product-title">{capParts(capTitleParts(item), ctx.capLang).join(" ")}</div>
                 {spreadMeta && <div className="bk-caption-meta">{spreadMeta}</div>}
-                {item.description && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: item.description }} />}
+                {spreadDesc && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: spreadDesc }} />}
               </div>
             )}
             {!thailand && !roadSpread && !flushSpread && spec.half === "right" && (
               <div className="bk-bleed-caption">
-                <div className="bk-caption-title product-title">{item.title}</div>
-                <div className="bk-caption-meta">{item.metaLine}</div>
-                {item.metaZh && <div className="bk-caption-meta">{item.metaZh}</div>}
+                <div className="bk-caption-title product-title">{capParts([{ lang: "en", text: item.title }, { lang: "zh", text: item.titleZh && item.titleZh !== item.title ? item.titleZh : null, inBoth: false }] as CapPart[], ctx.capLang).join(" ")}</div>
+                {ctx.capLang !== "zh" && <div className="bk-caption-meta">{item.metaLine}</div>}
+                {ctx.capLang !== "en" && item.metaZh && <div className="bk-caption-meta">{item.metaZh}</div>}
               </div>
             )}
           </div>
@@ -3628,9 +3793,9 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 {/* Exception to the chapter's no-titles rule: this page
                     closes the Notes from the Road chapter, but the artist
                     decided Japanese Pottery KEEPS its title (2026-11-10). */}
-                <div className="bk-caption-title product-title">Japanese Pottery 日本陶器</div>
-                <div className="bk-caption-meta">2025 · Watercolor on paper · 纸本水彩</div>
-                <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: "Japan Folk Crafts Museum, Tokyo.<br />东京，日本民艺馆。" }} />
+                <div className="bk-caption-title product-title">{capParts([{ lang: "en", text: "Japanese Pottery" }, { lang: "zh", text: "日本陶器" }] as CapPart[], ctx.capLang).join(" ")}</div>
+                <div className="bk-caption-meta">{capParts([{ lang: "both", text: "2025" }, { lang: "en", text: "Watercolor on paper" }, { lang: "zh", text: "纸本水彩" }] as CapPart[], ctx.capLang).join(" · ")}</div>
+                <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: capDesc("Japan Folk Crafts Museum, Tokyo.<br />东京，日本民艺馆。", ctx.capLang) }} />
               </div>
             </div>
           )}
@@ -3642,8 +3807,8 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                     blue-and-white bowl is 兰州拉面 — so its title prints
                     here, read from the watercolor catalog record
                     (watercolors/08), as on the section's plates. */}
-                <div className="bk-caption-title product-title">{lamianWork.title} {lamianWork.titleZh}</div>
-                <div className="bk-caption-meta">{lamianWork.year} · {lamianWork.medium} · {lamianWork.mediumZh}</div>
+                <div className="bk-caption-title product-title">{capParts([{ lang: "en", text: lamianWork.title }, { lang: "zh", text: lamianWork.titleZh }] as CapPart[], ctx.capLang).join(" ")}</div>
+                <div className="bk-caption-meta">{capParts([{ lang: "both", text: lamianWork.year }, { lang: "en", text: lamianWork.medium }, { lang: "zh", text: lamianWork.mediumZh }] as CapPart[], ctx.capLang).join(" · ")}</div>
               </div>
             </div>
           )}
@@ -3801,6 +3966,7 @@ async function waitForAssets(root: HTMLElement) {
 
 function useBookModel(args: {
   editMode: boolean;
+  capLang: CapLang;
   textEdits: Record<string, string>;
   pageBgEdits: Record<string, PageBgValue | "global">;
   pageBgFor: BookContext["pageBgFor"];
@@ -3817,7 +3983,7 @@ function useBookModel(args: {
   imgSel: string | null;
   selectImg: BookContext["selectImg"];
 }): { ctx: BookContext; pages: InteriorPage[] } {
-  const { editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, startEyedrop, openEditor, imgEdits, imgEditFor, setImgEdit, imgSel, selectImg } = args;
+  const { editMode, capLang, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, startEyedrop, openEditor, imgEdits, imgEditFor, setImgEdit, imgSel, selectImg } = args;
   const t = translations.en;
   const ctx = useMemo<BookContext>(() => {
     let plate = 0;
@@ -4638,6 +4804,7 @@ function useBookModel(args: {
     const paintingParas = txParas("paintingIntroBody");
     return {
       t,
+      capLang,
       chapters,
       prefaceChunks: [
         ...chunkParas(prefaceParas.filter((p) => !hasCjk(p.text)), 1500, 20),
@@ -4668,7 +4835,7 @@ function useBookModel(args: {
       coverFront: byKey("residuals")[0] ?? chapters[0]?.items[0]?.item,
       coverBack: byKey("photography")[0] ?? chapters[0]?.items[1]?.item,
     };
-  }, [textEdits, editMode, pageBgEdits, bgImgEdits, imgEdits, imgSel]);
+  }, [textEdits, editMode, capLang, pageBgEdits, bgImgEdits, imgEdits, imgSel]);
   const pages = useMemo(() => paginate(ctx.chapters, ctx.prefaceChunks.length, ctx.paintingChunks.length, Object.fromEntries(Object.entries(ctx.essayChunks).map(([k, v]) => [k, v.length]))), [ctx]);
   return { ctx, pages };
 }
@@ -4722,6 +4889,14 @@ const CatalogBook = () => {
   const [bgImgEdits, setBgImgEdits] = useState<Record<string, PageBgImage | null>>(() => loadJSON("remains-book-bgimg", {}));
   // Picture edits (size / replacement), keyed by picture src.
   const [imgEdits, setImgEdits] = useState<Record<string, ImgEdit>>(() => loadJSON("remains-book-img-edits", {}));
+  // Caption language (her direction, 2026-11-15): the toolbar's
+  // three-way switch filters work captions only — bilingual by
+  // default, English only, or Chinese only. Local only, like the
+  // other reading settings; never part of book-edits.json.
+  const [capLang, setCapLang] = useState<CapLang>(() => loadJSON<CapLang>("remains-book-cap-lang", "both"));
+  useEffect(() => {
+    localStorage.setItem("remains-book-cap-lang", JSON.stringify(capLang));
+  }, [capLang]);
   // "Sent" marks (her request, 2026-11-08): Make PR used to snapshot
   // the editor stores and show a 已发送 chip on items still equal
   // to the snapshot. Superseded 2026-11-09 by clear-after-PR (see
@@ -5064,7 +5239,7 @@ const CatalogBook = () => {
     noindex: true,
   });
 
-  const { ctx, pages } = useBookModel({ editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, startEyedrop, openEditor, imgEdits, imgEditFor, setImgEdit, imgSel, selectImg });
+  const { ctx, pages } = useBookModel({ editMode, capLang, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, startEyedrop, openEditor, imgEdits, imgEditFor, setImgEdit, imgSel, selectImg });
   // Every picture already in the book, for the background-image picker.
   const bookImages = useMemo(() => {
     const seen = new Map<string, string>();
@@ -5336,7 +5511,7 @@ const CatalogBook = () => {
     }`;
 
   return (
-    <div ref={rootRef} className={`bk-root bk-paper-${paper}${isMobile ? " bk-mobile" : ""}${eyedropPick ? " bk-eyedropping" : ""}`} style={rootStyle}>
+    <div ref={rootRef} data-caplang={capLang} className={`bk-root bk-paper-${paper}${isMobile ? " bk-mobile" : ""}${eyedropPick ? " bk-eyedropping" : ""}`} style={rootStyle}>
       {/* One @page size per export: interior/complete pages, or the wide cover wrap. */}
       <style>{`@page { size: ${sheetW}in ${pageH}in; margin: 0; }`}</style>
 
@@ -5392,6 +5567,23 @@ const CatalogBook = () => {
             <button type="button" onClick={() => setBleed((v) => !v)} className={toggleClass(bleed)}>
               {b.bleed} {BLEED}in
             </button>
+            {/* Caption language (her direction, 2026-11-15): one
+                switch, three views — bilingual captions (the book's
+                standing composition), English only, Chinese only.
+                Captions only; body pages are untouched. */}
+            <div className="flex" role="group" aria-label="Caption language 图注语言">
+              {(
+                [
+                  ["both", "双语"],
+                  ["en", "EN"],
+                  ["zh", "中文"],
+                ] as const
+              ).map(([k, label]) => (
+                <button key={k} type="button" onClick={() => setCapLang(k)} className={`${toggleClass(capLang === k)} -ml-px first:ml-0`}>
+                  {label}
+                </button>
+              ))}
+            </div>
             {/* Paper-colour switcher removed (artist, 2026-11-15): no
                 visible White / Cream / Black control. The paper state
                 stays at its "white" default, which the root class and
