@@ -12,7 +12,7 @@ import { PAGE_BACKGROUNDS, hexToRgb, isHexPageBg, rgbToHex, type PageBgKind, typ
 import { IMAGE_EDITS } from "@/lib/imageEdits";
 import { PAGE_BACKGROUND_IMAGES, type PageBgImage } from "@/lib/pageBackgroundImages";
 import { BOOK_SERIES } from "@/lib/bookSeries";
-import { SERIES_PLATES, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, RESIDUALS_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE, ROAD_THAILAND_SPREAD_PLATE } from "@/lib/seriesPlates";
+import { SERIES_PLATES, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, RESIDUALS_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE, ROAD_THAILAND_SPREAD_PLATE, SPIRIT_EXHIBITION_PLATES } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS, PART_WEBSITES } from "@/lib/exhibitions";
@@ -4105,6 +4105,19 @@ function useBookModel(args: {
       suoChapter.items = [
         ...(SERIES_PLATES.shop ?? []).map((item) => ({ item, plate: 0 })),
         ...suoChapter.items,
+      ];
+    }
+    // Her direction (2026-11-14): the two exhibition photographs she
+    // sent that day close the In the Spirit of the 21st Century
+    // chapter's plate run — they are unanchored, so they follow the
+    // chapter's essay and its four anchored paintings, standing last
+    // before the bridge sentence that closes the chapter (see
+    // SPIRIT_EXHIBITION_PLATES in seriesPlates.ts).
+    const spiritChapter = chapters.find((ch) => ch.key === "spirit");
+    if (spiritChapter) {
+      spiritChapter.items = [
+        ...spiritChapter.items,
+        ...SPIRIT_EXHIBITION_PLATES.map((item) => ({ item, plate: 0 })),
       ];
     }
     // Plates are numbered in book order across the whole volume.
