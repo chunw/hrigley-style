@@ -18,6 +18,10 @@
   --paper: #ffffff;
   --text: #111111;
   --muted: #767066;
+  /* Caption ink (her direction, 2026-11-15, from her sample page):
+     every work caption — title, meta, description — reads in one
+     flat light grey, a step lighter than the book's muted tone. */
+  --cap: #8f8f8f;
   --rule: #ddd8ce;
   --accent: hsl(328 85% 72%);
   --red: #C8402A;
@@ -122,6 +126,7 @@
 .bk-paper-black .bk-page.bk-tone-paper {
   --text: #f0e9da;
   --muted: #a79c86;
+  --cap: #a6a6a6;
   --rule: #3a352a;
 }
 
@@ -220,6 +225,7 @@
 .bk-tone-ink {
   --text: #ffffff;
   --muted: rgba(255, 255, 255, 0.55);
+  --cap: #a6a6a6;
   --rule: rgba(255, 255, 255, 0.18);
   background: #000;
 }
@@ -232,6 +238,7 @@
 .bk-divider-page {
   --text: #26221c;
   --muted: rgba(38, 34, 28, 0.62);
+  --cap: rgba(38, 34, 28, 0.58);
   background: var(--chapter-color, #DFA79B);
   align-items: center;
   justify-content: center;
@@ -273,6 +280,7 @@
   --paper: #000000;
   --text: #f0e9da;
   --muted: #a79c86;
+  --cap: #a6a6a6;
   --rule: #3a352a;
   background: #000000;
 }
@@ -281,6 +289,7 @@
   --paper: var(--accent);
   --text: #26221c;
   --muted: rgba(38, 34, 28, 0.62);
+  --cap: rgba(38, 34, 28, 0.58);
   --rule: rgba(38, 34, 28, 0.25);
   background: var(--accent);
 }
@@ -991,13 +1000,13 @@
 .bk-bleed-caption-road .bk-caption-meta {
   color: #fff;
   font-size: 9.5pt;
-  line-height: 1.45;
+  line-height: 1.95;
 }
 
 .bk-bleed-caption-road .bk-caption-meta:nth-child(2) {
-  margin-top: 6px;
+  margin-top: 0;
   font-size: 9pt;
-  line-height: 1.55;
+  line-height: 1.95;
 }
 
 /* Bottom-right variant (her direction, 2026-11-10, later the same
@@ -1139,7 +1148,9 @@
   margin-top: 0.2in;
   font-size: 7pt;
   letter-spacing: 0.08em;
-  color: var(--muted);
+  line-height: 1.95;
+  text-align: center;
+  color: var(--cap);
 }
 
 .bk-title-body {
@@ -1690,10 +1701,11 @@
 
 .bk-grid-caption {
   margin-top: 0.12in;
+  text-align: center;
 }
 
 .bk-grid-caption .bk-caption-meta {
-  margin-top: 2px;
+  margin-top: 0;
 }
 
 /* IMMEMORY journal handnotes: one dense grid field filling a whole
@@ -1742,6 +1754,7 @@
 
 .bk-journal-caption {
   margin-top: 0.06in;
+  text-align: center;
 }
 
 .bk-root .bk-journal-caption .bk-caption-title {
@@ -1753,15 +1766,18 @@
 
 .bk-journal-caption .bk-caption-meta {
   font-size: 6.5pt;
-  margin-top: 1px;
+  margin-top: 0;
 }
 
 .bk-caption {
   display: grid;
   grid-template-columns: 0.75in 1fr;
   gap: 0 0.15in;
-  margin-top: 0.3in;
-  padding-top: 0.13in;
+  /* Image-to-caption air (her sample page, 2026-11-15): the gap
+     between the picture and the first caption line measures about
+     one caption line — margin and padding together land there. */
+  margin-top: 0.12in;
+  padding-top: 0.1in;
 }
 
 /* No plate number is rendered in the caption, so the number gutter would
@@ -1770,6 +1786,9 @@
    The body spans the full caption width instead. */
 .bk-caption-body {
   grid-column: 1 / -1;
+  /* Captions centre under their picture (her sample page,
+     2026-11-15), the whole book over. */
+  text-align: center;
 }
 
 /* A facing plate's work info standing on this page (the road
@@ -1803,24 +1822,37 @@
    direction, 2026-11-15, superseding the 2026-11-07 "a step
    bolder" setting): within every caption — plate, grid, journal,
    bleed, overlay — the title line takes exactly the caption meta
-   text's style (7pt, regular weight, the muted colour, the meta
-   letter-spacing), so all work information in a caption reads in
-   one uniform register. This overrides the shop .product-title
-   serif the title elements also carry. */
+   text's style (7pt, regular weight, the meta letter-spacing), so
+   all work information in a caption reads in one uniform register.
+   This overrides the shop .product-title serif the title elements
+   also carry.
+   The register itself (her sample page, 2026-11-15, later): one
+   clean sans stack for every caption line — Latin in Aileron /
+   Helvetica, Chinese in the system gothic, never the book's
+   Fangsong — one flat light grey (--cap), and one loose leading
+   (1.95) shared by title, meta and description alike, the lines
+   spaced by the leading alone. */
 .bk-root .bk-caption-title {
-  font-family: inherit;
+  font-family: 'Aileron', 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', Arial, sans-serif;
   font-size: 7pt;
   font-weight: 400;
   letter-spacing: 0.06em;
-  line-height: 1.4;
-  color: var(--muted);
+  line-height: 1.95;
+  color: var(--cap);
+}
+
+.bk-caption-meta,
+.bk-caption-desc,
+.bk-frontis-caption {
+  font-family: 'Aileron', 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', Arial, sans-serif;
 }
 
 .bk-caption-meta {
-  margin-top: 4px;
+  margin-top: 0;
   font-size: 7pt;
   letter-spacing: 0.06em;
-  color: var(--muted);
+  line-height: 1.95;
+  color: var(--cap);
 }
 
 .bk-caption-desc {
@@ -1829,10 +1861,12 @@
   -webkit-line-clamp: 5;
   overflow: hidden;
   max-width: 4.5in;
-  margin-top: 8px;
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: auto;
   font-size: 7.5pt;
-  line-height: 1.55;
-  color: var(--muted);
+  line-height: 1.95;
+  color: var(--cap);
 }
 
 /* Full-bleed plates (her direction, 2026-11-15): when a landed
@@ -1852,6 +1886,7 @@
   bottom: 0.2in;
   z-index: 4;
   max-width: 5.4in;
+  text-align: center;
 }
 
 /* Residuals #1 exhibition view (her direction, 2026-11-11): the
