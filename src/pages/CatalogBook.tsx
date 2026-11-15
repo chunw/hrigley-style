@@ -1306,10 +1306,10 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       // the New York plate to keep the pair facing, in which case a
       // compensating blank steps in behind Hawaii.
       let roadPairGuard = false;
-      // Same, for the road chapter's Lofoten / Beijing pair guard:
-      // true when a blank had to step in ahead of the Lofoten plate,
-      // in which case a compensating blank steps in behind Beijing.
-      let roadLofotenGuard = false;
+      // The road chapter's Lofoten / Beijing pair guard (in the
+      // plate loop below) deliberately has no flag here: unlike the
+      // New York pair, it is NOT paired with a compensating blank
+      // behind Beijing — see the guard itself for why.
       const emitHeldBack = () => {
         if (holdBack && !heldBackEmitted) {
           for (let i = leadCount; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
@@ -1422,12 +1422,21 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
             // the recto, facing each other as one spread at the end
             // of the chapter. If the run would land Lofoten on a
             // recto, a blank page steps in first (the same parity
-            // guard as the New York / Hawaii pair above); a matching
-            // blank then steps in behind Beijing (in the interleave
-            // below), so every page after the pair keeps the side it
-            // had.
-            roadLofotenGuard = !nextIsVerso();
-            if (roadLofotenGuard) specs.push({ kind: "blank" });
+            // guard as the New York / Hawaii pair above).
+            //
+            // Unlike the New York pair, NO compensating blank steps
+            // in behind Beijing. Beijing is the chapter's last plate
+            // and the Spirit chapter opener follows it; the opener
+            // aligns itself to a verso, so with the guard blank alone
+            // the opener lands on exactly the verso it stood on
+            // before this guard existed, and every page after the
+            // pair keeps its side with no compensation needed. A
+            // compensating blank here would sit on that verso and
+            // push the opener's own alignment blank in behind it —
+            // the two blanks would face each other as a fully blank
+            // spread in front of the Spirit chapter, which she
+            // flagged and had removed the same day (2026-11-14).
+            if (!nextIsVerso()) specs.push({ kind: "blank" });
           }
           if (chapter.key === "remains" && item.image_url === "/remains/01/main.jpg") {
             // Her direction (2026-11-11): Remains No. 1 becomes a
@@ -1500,16 +1509,6 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
             // (Lofoten, Beijing, and everything behind them) keep
             // the sides they had.
             if (roadPairGuard) specs.push({ kind: "blank" });
-          }
-          if (chapter.key === "road" && item.title === "Notes from the Road #15") {
-            // The compensating blank for the Lofoten / Beijing pair
-            // guard above: when a blank stepped in ahead of Lofoten,
-            // one steps in behind Beijing too. Beijing is the
-            // chapter's last plate, so the blank stands between the
-            // road chapter and the Spirit chapter that follows, and
-            // every page after the pair (the rest of Part 1 and the
-            // whole book behind it) keeps the side it had.
-            if (roadLofotenGuard) specs.push({ kind: "blank" });
           }
           if (holdBack && item.image_url === holdBack.imageUrl) emitHeldBack();
         }
