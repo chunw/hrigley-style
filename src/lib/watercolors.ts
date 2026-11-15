@@ -193,7 +193,7 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "9 × 20 cm",
     dimensionsZh: "9 × 20 厘米",
-    description: "Thailand.<br />泰国。",
+    description: "Chiang Mai, Thailand.<br />泰国清迈。",
     descriptionZh: "泰国。",
     printInfo: `4×6" print on matte fine art paper`,
     printInfoZh: "4×6英寸哑光艺术微喷",
