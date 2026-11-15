@@ -190,6 +190,54 @@ const capMetaParts = (item: CatalogItem, opts: { zhInBoth: boolean; dimInBoth: b
     { lang: "zh", text: dimZh, inBoth: opts.zhInBoth },
   ];
 };
+/** The three-line work caption (her direction, 2026-11-15, second
+    pass, against her sample page): a plate caption that carries all
+    four facts — title, dimensions, medium, year — prints them on
+    three lines per language, never run together: the title alone
+    (English italic, no brackets; Chinese inside 《》), the
+    dimensions alone in the compact joined form ("8×14cm" — no
+    spaces, no 厘米； the Chinese view prints the same form), and
+    the medium with the year (English "Watercolor on paper, 2026";
+    Chinese "纸本水彩 2026年" — the year leaves the title line and
+    closes the third). In the bilingual view the English block
+    stands first, the Chinese block right under it, each keeping its
+    own three lines. A caption missing any of the four facts keeps
+    the standing meta-line composition below; compact captions
+    (grids, journal cells), credit lines and the road chapter's
+    title-less captions are untouched. The dimension figures keep
+    the order in the artist's own records — only the spacing and
+    unit form change. */
+const CM_DIM_RE = /^\s*(\d+(?:\.\d+)?)\s*×\s*(\d+(?:\.\d+)?)\s*cm\s*$/i;
+type WorkCapBlock = { lang: "en" | "zh"; title?: string; dim: string; meta?: string };
+const workCapBlocks = (item: CatalogItem): WorkCapBlock[] | null => {
+  const m = item.dimensions ? CM_DIM_RE.exec(item.dimensions) : null;
+  if (!m || !(item.title || item.titleZh)) return null;
+  let year = item.year ?? undefined;
+  let mediumEn = item.medium ?? undefined;
+  if ((!year || !mediumEn) && item.metaLine) {
+    const segs = item.metaLine.split(" · ");
+    if (!year && /^\d{4}$/.test(segs[0])) year = segs[0];
+    if (!mediumEn && segs.length > 1) mediumEn = segs.slice(1).join(" · ");
+  }
+  if (!year || !mediumEn) return null;
+  const dim = `${m[1]}×${m[2]}cm`;
+  return [
+    { lang: "en", title: item.title || undefined, dim, meta: `${mediumEn}, ${year}` },
+    {
+      lang: "zh",
+      title: item.titleZh && item.titleZh !== item.title ? item.titleZh : undefined,
+      dim,
+      meta: item.mediumZh ? `${item.mediumZh} ${year}年` : undefined,
+    },
+  ];
+};
+/** The work-caption blocks visible in the selected caption
+    language. Bilingual shows both blocks; a Chinese block carrying
+    neither title nor medium line (a work with no Chinese record)
+    would only repeat the dimensions line, so it steps aside in
+    the bilingual view only. */
+const workCapVisible = (blocks: WorkCapBlock[], capLang: CapLang): WorkCapBlock[] =>
+  capLang === "both" ? blocks.filter((b) => b.lang === "en" || b.title || b.meta) : blocks.filter((b) => b.lang === capLang);
 /** Filters a caption description's HTML to the selected caption
     language: segments are split at <br> and " · " boundaries and
     classified by script (the book's descriptions run English first,
@@ -3354,6 +3402,14 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         const capTitle = capParts(capTitleParts(capItem), ctx.capLang).join(" ");
         const capMeta = capParts(capMetaParts(capItem, { zhInBoth: true, dimInBoth: true }), ctx.capLang).join(" · ");
         const capDescHtml = capItem.description ? capDesc(capItem.description, ctx.capLang) : "";
+        // The three-line work caption (her direction, 2026-11-15,
+        // second pass): a plate carrying title, dimensions, medium
+        // and year prints them as three lines per language (see
+        // workCapBlocks). The road chapter keeps its title-less
+        // composition — its plates print no work titles (her rule
+        // below), so the three-line form, which opens with the
+        // title, never applies there.
+        const workBlocks = chapter.key !== "road" ? workCapBlocks(capItem) : null;
         return (
         <div className={facing ? "bk-caption-body bk-caption-facing" : "bk-caption-body"}>
           {facing && <div className="bk-caption-facing-label">LEFT · 左图</div>}
@@ -3364,11 +3420,27 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               with no title prints no title line at all: the book
               never prints "Untitled" as a work name (her rule,
               2026-11-10). */}
-          {chapter.key !== "road" && capTitle && (
-            <div className="bk-caption-title product-title">{capTitle}</div>
-          )}
-          {capMeta && (
-            <div className="bk-caption-meta">{capMeta}</div>
+          {workBlocks ? (
+            workCapVisible(workBlocks, ctx.capLang).map((blk) => (
+              <div className="bk-caption-work" key={blk.lang}>
+                {blk.title && (
+                  <div className="bk-caption-title product-title">
+                    {blk.lang === "en" ? <em>{blk.title}</em> : `《${blk.title}》`}
+                  </div>
+                )}
+                <div className="bk-caption-meta">{blk.dim}</div>
+                {blk.meta && <div className="bk-caption-meta">{blk.meta}</div>}
+              </div>
+            ))
+          ) : (
+            <>
+              {chapter.key !== "road" && capTitle && (
+                <div className="bk-caption-title product-title">{capTitle}</div>
+              )}
+              {capMeta && (
+                <div className="bk-caption-meta">{capMeta}</div>
+              )}
+            </>
           )}
           {/* The Residuals #1 painting page prints no exhibition line:
               the line stands, emphasised, on its facing exhibition

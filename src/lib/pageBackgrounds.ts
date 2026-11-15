@@ -121,7 +121,14 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "plate:/remains/04/main.jpg": "black",
   "plate:/remains/05/main.jpg": "white",
   "plate:/remains/06/main.jpg": "black",
-  "plate:/watercolors/54/main.jpg": "black",
+  // Residuals #26 (watercolors/54): black → white (her direction,
+  // 2026-11-15 — the page takes the white ground of her sample
+  // page). Only the ground changes: the plate keeps its folio and
+  // its facing partner (the untitled teapot plate, itself on
+  // white), so the spread and the book's pagination are untouched;
+  // the light ground flips the caption to the white-paper grey via
+  // the --cap rules, as on every white page.
+  "plate:/watercolors/54/main.jpg": "white",
   "plate:/watercolors/01/main.jpg": "black",
   "plate:/book/residuals/residuals-01-exhibition.jpg": "black",
   "plate:/watercolors/05/main.jpg": "black",
