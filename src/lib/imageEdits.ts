@@ -33,7 +33,13 @@ export const IMAGE_EDITS: Record<string, LandedImgEdit> = {
   "/book/canva-paintings/p04.jpg": { full: true },
   "/book/canva-paintings/p10.jpg": { full: true },
   "/book/canva-paintings/p02.jpg": { full: false, scale: 1, dx: 0.042613218914391515, dy: -0.0634831823366115 },
-  "/watercolors/14/main.jpg": { full: false, scale: 1.343, dx: -7.2721581120530026, dy: 2.9039708327036458 },
+  // The watercolor plate 14 scale-up from export #17 (scale 1.343)
+  // is withdrawn (2026-11-14): the plate was restored to the book
+  // that day, and at that scale the painting painted over the
+  // plate's own caption (verified in the render — the caption sat
+  // in the DOM but no pixel of it showed). The picture returns to
+  // its natural frame so the caption prints. Her black page ground
+  // for this plate (pageBackgrounds.ts) is untouched.
   // Export book-edits-5 (2026-11-10): the watercolor plate 46
   // full-bleed is restated plain — her newest export carries
   // { full: true } and nothing else for this picture, superseding
