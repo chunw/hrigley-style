@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { createPortal } from "react-dom";
-import { ArrowLeft, ChevronLeft, ChevronRight, Download, Maximize, Minimize, Printer } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Download, Maximize, Minimize } from "lucide-react";
 import "./catalog-book.css";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { artistBioHTML } from "@/lib/artistBio";
@@ -5392,19 +5392,10 @@ const CatalogBook = () => {
             <button type="button" onClick={() => setBleed((v) => !v)} className={toggleClass(bleed)}>
               {b.bleed} {BLEED}in
             </button>
-            <div className="flex">
-              {(
-                [
-                  ["white", "White", "白色"],
-                  ["cream", "Cream", "米色"],
-                  ["black", "Black", "黑色"],
-                ] as const
-              ).map(([k, en, zh]) => (
-                <button key={k} type="button" onClick={() => setPaper(k)} className={`${toggleClass(paper === k)} -ml-px first:ml-0`}>
-                  {lang === "zh" ? zh : en}
-                </button>
-              ))}
-            </div>
+            {/* Paper-colour switcher removed (artist, 2026-11-15): no
+                visible White / Cream / Black control. The paper state
+                stays at its "white" default, which the root class and
+                page grounds keep using exactly as before. */}
             <button type="button" onClick={() => setEditMode((v) => !v)} className={toggleClass(editMode)}>
               {lang === "zh" ? "编辑模式" : "Edit mode"}
             </button>
@@ -5432,28 +5423,24 @@ const CatalogBook = () => {
                 )}
               </>
             )}
-            <button
-              type="button"
-              onClick={handleSave}
-              disabled={preparing}
-              className="sans-label inline-flex items-center gap-2 text-xs uppercase tracking-widest px-4 py-2 bg-primary text-primary-foreground disabled:opacity-60"
-            >
-              <Printer className="h-4 w-4" />
-              {preparing ? b.preparing : b.savePdf}
-            </button>
-            <div className="ml-auto flex flex-col items-end gap-1">
+            {/* The old "Save as PDF" button was removed (artist,
+                2026-11-15): it duplicated Download PDF — both ended at
+                window.print(). handleSave itself stays: handleDownloadPdf
+                calls it after forcing the standard layout. */}
+            <div className="ml-auto">
+              {/* The how-to text that used to sit under this button is
+                  now its hover tooltip (artist, 2026-11-15) — nothing
+                  instructional is printed on the page anymore. */}
               <button
                 type="button"
                 onClick={handleDownloadPdf}
                 disabled={preparing}
+                title="In the dialog, choose “Save as PDF” — size, margins and backgrounds are already set. 在弹窗里选「另存为 PDF」即可，尺寸、边距和背景都已设好。"
                 className="sans-label inline-flex items-center gap-2 text-xs tracking-widest px-4 py-2 bg-primary text-primary-foreground disabled:opacity-60"
               >
                 <Download className="h-4 w-4" />
                 {preparing ? b.preparing : b.downloadPdf}
               </button>
-              <span className="max-w-[340px] text-[11px] normal-case tracking-normal leading-snug text-right text-foreground/60">
-                In the dialog, choose “Save as PDF” — size, margins and backgrounds are already set. 在弹窗里选「另存为 PDF」即可，尺寸、边距和背景都已设好。
-              </span>
             </div>
           </div>
         </div>
@@ -5462,7 +5449,10 @@ const CatalogBook = () => {
             {part === "cover" ? `${wrapW.toFixed(3)} × ${pageH.toFixed(3)} in` : `${pageW} × ${pageH} in`} · {pages.length} {b.pagesShort} · {b.spine}{" "}
             {spine.toFixed(3)} in
           </span>
-          <span className="normal-case tracking-normal">{b.printHint}</span>
+          {/* The old printHint line ("set Margins to None…") was removed
+              (artist, 2026-11-15): it duplicated — and contradicted —
+              the Download PDF guidance, which now lives in that
+              button's tooltip. */}
         </div>
       </div>
 
