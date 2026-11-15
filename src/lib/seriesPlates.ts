@@ -706,3 +706,45 @@ export const ROAD_EXTRA_PLATES: CatalogItem[] = [
     fallback_image_url: "/book/road/road-hawaii-2022.jpg",
   },
 ];
+
+/**
+ * Extra plates appended at the end of the In the Spirit of the 21st
+ * Century chapter (her direction, 2026-11-14: the two photographs she
+ * sent that day go into the book, in the Spirit chapter's exhibition
+ * part). They are exhibition views, not works: the first is a gallery
+ * wall of the exhibition, with the series' framed piece at its centre;
+ * the second is that framed piece up close, showing From COVID-19 to
+ * the End of Neoliberalism — the title the piece itself prints at its
+ * foot — with its wall label beside it. The same framed piece shows a
+ * different image in each photograph. Her records give these views no
+ * venue and no date, so, like the untitled El Otro and Theater plates,
+ * their captions print no venue and no year. The close view arrived
+ * with pure-black letterbox bars above and below; only those bars are
+ * trimmed, the photograph itself is untouched.
+ */
+export const SPIRIT_EXHIBITION_PLATES: CatalogItem[] = [
+  {
+    title: "In the Spirit of the 21st Century, installed",
+    titleZh: "21世纪精神，展览现场",
+    metaLine: "Exhibition view",
+    mediumZh: "展览现场",
+    year: "",
+    description:
+      "<p>Installation view: a gallery wall of the exhibition, with the series' framed piece at its centre.<br />展览现场：展览的一面画廊墙，这一系列的带框作品在中央。</p>",
+    category: "In the Spirit of the 21st Century",
+    image_url: "/book/spirit/exhibition-wide.jpg",
+    fallback_image_url: "/book/spirit/exhibition-wide.jpg",
+  },
+  {
+    title: "From COVID-19 to the End of Neoliberalism, installed",
+    titleZh: null,
+    metaLine: "Exhibition view",
+    mediumZh: "展览现场",
+    year: "",
+    description:
+      "<p>The framed piece up close, showing From COVID-19 to the End of Neoliberalism, with its wall label beside it.<br />带框作品的近景，画面是 From COVID-19 to the End of Neoliberalism，旁边是它的墙面标签。</p>",
+    category: "In the Spirit of the 21st Century",
+    image_url: "/book/spirit/exhibition-close.jpg",
+    fallback_image_url: "/book/spirit/exhibition-close.jpg",
+  },
+];
