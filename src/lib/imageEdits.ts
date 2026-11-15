@@ -53,9 +53,13 @@ export const IMAGE_EDITS: Record<string, LandedImgEdit> = {
   "/book/canva-paintings/p21.jpg": { full: false, scale: 1, dx: 0.8101345770781698, dy: 2.169518520031037 },
   "/book/canva-paintings/p22.jpg": { full: false, scale: 1, dx: -0.07166107953165234, dy: 0.10316980326585791 },
   "/watercolors/55/main.jpg": { full: true },
-  // Export book-edits-7 (2026-11-11): the Still Things No. 14 plate
-  // (watercolors/43) goes full-bleed with a slight offset, and its
-  // page ground goes white in the same export (pageBackgrounds.ts).
-  // Her editor values, verbatim.
-  "/watercolors/43/main.jpg": { full: true, scale: 1, dx: 0.1408929699266385, dy: -0.11888689624599512 },
+  // Export book-edits-7 (2026-11-11) set the Still Things No. 14
+  // plate (watercolors/43) full-bleed with a slight offset, its page
+  // ground going white in the same export (pageBackgrounds.ts — the
+  // white ground stands). Withdrawn 2026-11-14, her call: the
+  // full-bleed portal painted over the plate's caption and folio
+  // (pixel test: forcing the caption bright red changed 0 pixels —
+  // the same failure as the watercolors/14 scale-up withdrawn in
+  // PR #304). The record stands empty: the plate sits in its
+  // natural frame and its caption prints.
 };
