@@ -124,7 +124,7 @@ export const BOOK_SERIES: BookSeries[] = [
   {
     id: "stillthings",
     titleEn: "Still Things",
-    titleZh: "静物",
+    titleZh: "怪奇世界",
     years: "",
     // No body text: her line for the section （捡起怪奇世界的零零散散）
     // stands on the chapter's opener spread as its epigraph instead
