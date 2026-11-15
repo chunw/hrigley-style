@@ -5302,12 +5302,26 @@ const CatalogBook = () => {
   // (e.g. iPhone Safari).
   const rootRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  // The folio currently being read, tracked continuously by the live-page
+  // tracker below. Entering or leaving fullscreen swaps the scroll
+  // container (window outside, .bk-root itself inside — see the
+  // :fullscreen CSS), and the new container starts at scrollTop 0, which
+  // is why fullscreen used to land back on page 1 (artist, 2026-11-15:
+  // 「每次点fullscreen 不许跳回第一页」). The tracker keeps this ref
+  // current, the fullscreen-restore effect jumps the new container back
+  // to it, and fsSuppressUntilRef stops the tracker from reading the
+  // transient page-1 position while the switch settles.
+  const readingFolioRef = useRef<number | null>(null);
+  const fsSuppressUntilRef = useRef(0);
   const fsSupported =
     typeof document !== "undefined" &&
     document.fullscreenEnabled &&
     typeof HTMLElement.prototype.requestFullscreen === "function";
   useEffect(() => {
-    const onFsChange = () => setIsFullscreen(document.fullscreenElement === rootRef.current);
+    const onFsChange = () => {
+      fsSuppressUntilRef.current = Date.now() + 900;
+      setIsFullscreen(document.fullscreenElement === rootRef.current);
+    };
     document.addEventListener("fullscreenchange", onFsChange);
     return () => document.removeEventListener("fullscreenchange", onFsChange);
   }, []);
@@ -5540,6 +5554,127 @@ const CatalogBook = () => {
       window.removeEventListener("keydown", stop);
     };
   }, [deepLinkPage]);
+
+  // ── Live page tracking: the URL always names the page being read ──────
+  // (artist, 2026-11-15: 「翻阅的时候 随着下滑 页号全部能自动加在url里
+  // deeplink 到页码」). The folio under the viewport's middle line is the
+  // page being read; on a spread row both pages share the line, so the
+  // row's first (left) page is reported — the same folio a ?page= link
+  // to this row lands on. Scrolling is listened to in the capture phase
+  // on the document, so it is heard whichever container is scrolling:
+  // the window in normal view, or .bk-root itself in fullscreen. The
+  // writer below uses history.replaceState only — no history entry per
+  // page, no reload, no scroll jump — and because it never touches state
+  // the deep-link jump above cannot be re-triggered by it (no loop).
+  const [readingFolio, setReadingFolio] = useState<number | null>(null);
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    // Deep-link landing guard: while a ?page=/?section= jump is still on
+    // its way, the viewport still shows the front of the book — those
+    // readings must not overwrite the folio (in the ref or in the URL)
+    // before the jump lands. Tracking unlocks when the target folio is
+    // first observed at the middle line, or when the reader takes over
+    // with a real interaction (the same sovereignty signals the jump
+    // itself stands down on).
+    let landed = deepLinkPage === null;
+    if (!landed) {
+      readingFolioRef.current = deepLinkPage;
+      setReadingFolio((prev) => (prev === deepLinkPage ? prev : deepLinkPage));
+    }
+    const unlock = () => {
+      landed = true;
+    };
+    window.addEventListener("wheel", unlock, { passive: true });
+    window.addEventListener("touchstart", unlock, { passive: true });
+    window.addEventListener("pointerdown", unlock);
+    window.addEventListener("keydown", unlock);
+    let raf = 0;
+    const compute = () => {
+      raf = 0;
+      // While a fullscreen switch settles, the incoming container sits
+      // at scrollTop 0 for a few frames; never let that transient
+      // page-1 reading overwrite the folio the reader is actually on.
+      if (Date.now() < fsSuppressUntilRef.current) return;
+      const midY = window.innerHeight / 2;
+      let folio: number | null = null;
+      stage.querySelectorAll<HTMLElement>('[id^="bk-page-"]').forEach((el) => {
+        const r = el.getBoundingClientRect();
+        if (r.top <= midY && r.bottom > midY) {
+          const n = Number(el.id.slice("bk-page-".length));
+          if (Number.isInteger(n) && (folio === null || n < folio)) folio = n;
+        }
+      });
+      if (folio !== null) {
+        if (!landed) {
+          if (folio !== deepLinkPage) return; // still travelling: stay silent
+          landed = true;
+        }
+        readingFolioRef.current = folio;
+        setReadingFolio((prev) => (prev === folio ? prev : folio));
+      }
+    };
+    const schedule = () => {
+      if (!raf) raf = requestAnimationFrame(compute);
+    };
+    compute();
+    document.addEventListener("scroll", schedule, { capture: true, passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      document.removeEventListener("scroll", schedule, { capture: true });
+      window.removeEventListener("resize", schedule);
+      window.removeEventListener("wheel", unlock);
+      window.removeEventListener("touchstart", unlock);
+      window.removeEventListener("pointerdown", unlock);
+      window.removeEventListener("keydown", unlock);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [sheets, deepLinkPage]);
+  useEffect(() => {
+    if (readingFolio === null) return;
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("page") === String(readingFolio)) return;
+    // Preserve every other parameter (notably ?section=) exactly as-is.
+    url.searchParams.set("page", String(readingFolio));
+    window.history.replaceState(window.history.state, "", url.toString());
+  }, [readingFolio]);
+
+  // ── Fullscreen keeps the page ─────────────────────────────────────────
+  // Toggling fullscreen swaps the scroll container (see the note on
+  // readingFolioRef above), and the new container starts at the top.
+  // After every enter/exit, jump the new container back to the folio
+  // that was being read, retrying briefly while the zoom recompute and
+  // layout settle — with the same reader-sovereignty guard as the
+  // deep-link jump: any real interaction stands the restore down.
+  const prevFullscreenRef = useRef(isFullscreen);
+  useEffect(() => {
+    if (prevFullscreenRef.current === isFullscreen) return;
+    prevFullscreenRef.current = isFullscreen;
+    const folio = readingFolioRef.current;
+    if (folio === null) return;
+    let cancelled = false;
+    const stop = () => {
+      cancelled = true;
+    };
+    window.addEventListener("wheel", stop, { passive: true });
+    window.addEventListener("touchstart", stop, { passive: true });
+    window.addEventListener("pointerdown", stop);
+    window.addEventListener("keydown", stop);
+    const jump = () => {
+      if (cancelled) return;
+      document.getElementById(`bk-page-${folio}`)?.scrollIntoView({ behavior: "auto", block: "start" });
+    };
+    jump();
+    const timers = [120, 350, 700].map((ms) => window.setTimeout(jump, ms));
+    return () => {
+      cancelled = true;
+      timers.forEach((t) => window.clearTimeout(t));
+      window.removeEventListener("wheel", stop);
+      window.removeEventListener("touchstart", stop);
+      window.removeEventListener("pointerdown", stop);
+      window.removeEventListener("keydown", stop);
+    };
+  }, [isFullscreen]);
 
   const handleSave = async () => {
     if (!stageRef.current) return;
