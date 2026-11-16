@@ -918,16 +918,28 @@ const HIDDEN_PRODUCT_IMAGES: Record<string, string[]> = {
   "every-flush-bath-mat": ["Fresh Bath Mat 2.png"],
 }
 
+// Explicit gallery order for products whose thumbnail row should not follow
+// the default cover-first / alphabetical sort below. Keyed by product id,
+// holding filenames inside the product's imageFolder in display order.
+// Hidden files (above) are filtered out before ordering applies, so listing
+// one here only reserves its slot in case it is ever unhidden; files not
+// listed keep their default relative order after the listed ones.
+const PRODUCT_IMAGE_ORDER: Record<string, string[]> = {
+  "every-flush-bath-mat": ["Fresh Bath Mat photo.jpg", "2.png", "1.png", "Fresh Bath Mat 2.png"],
+}
+
 // Auto-generated from each product's imageFolder — no manual entries needed.
 // To add images, drop files into src/assets/products/<imageFolder>/.
 // The cover image (image_url) is always sorted first, and the rest of the
-// thumbnail row is sorted alphabetically ascending by filename.
+// thumbnail row is sorted alphabetically ascending by filename — unless the
+// product has an explicit order in PRODUCT_IMAGE_ORDER above, which wins.
 export const productImages = products.flatMap((product) => {
   const folder = (product as { imageFolder?: string }).imageFolder
   const coverFilename = product.image_url
     ? decodeURIComponent(product.image_url.split('/').pop() || '')
     : ''
   const hiddenFilenames = HIDDEN_PRODUCT_IMAGES[product.id] ?? []
+  const orderFilenames = PRODUCT_IMAGE_ORDER[product.id] ?? []
   const folderEntries = folder
     ? Object.entries(_allProductImages).filter(
         ([path]) =>
@@ -940,6 +952,15 @@ export const productImages = products.flatMap((product) => {
     .sort(([a], [b]) => {
       const aFile = a.split('/').pop() || ''
       const bFile = b.split('/').pop() || ''
+      if (orderFilenames.length > 0) {
+        const aOrder = orderFilenames.indexOf(aFile)
+        const bOrder = orderFilenames.indexOf(bFile)
+        if (aOrder !== -1 || bOrder !== -1) {
+          if (aOrder === -1) return 1
+          if (bOrder === -1) return -1
+          if (aOrder !== bOrder) return aOrder - bOrder
+        }
+      }
       if (aFile === coverFilename) return -1
       if (bFile === coverFilename) return 1
       return a.localeCompare(b)
