@@ -540,6 +540,51 @@ All colors MUST be HSL.
   letter-spacing: 0.02em;
 }
 
+/* Cart page heading: the same font stack as the About page title (.gloria-title).
+   Gloria Hallelujah has no CJK glyphs, so Chinese falls through to Zhuque Fangsong,
+   exactly as on the About title. Weight stays bold, as both headings already are. */
+.cart-title {
+  font-family: 'Gloria Hallelujah', 'Zhuque Fangsong (technical preview)', 'Comic Sans MS', cursive;
+}
+
+/* "Continue shopping" buttons: slapped-on sticker treatment (artist's request,
+   2026-11-16). Tilted at rest with a hard offset shadow; on hover/tap it
+   straightens and pops with a springy snap. Pink, label and action unchanged.
+   The shadow uses the foreground colour so it reads on both dark and light pages. */
+.fun-sticker-btn {
+  transform: rotate(-2deg);
+  box-shadow: 4px 4px 0 hsl(var(--foreground));
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.15s ease, color 0.15s ease;
+}
+
+.fun-sticker-btn:hover,
+.fun-sticker-btn:focus-visible,
+.fun-sticker-btn:active {
+  transform: rotate(0deg) scale(1.05);
+  box-shadow: 6px 6px 0 hsl(var(--foreground));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fun-sticker-btn {
+    transition: none;
+  }
+
+  .fun-sticker-btn:hover,
+  .fun-sticker-btn:focus-visible,
+  .fun-sticker-btn:active {
+    transform: rotate(-2deg);
+    box-shadow: 4px 4px 0 hsl(var(--foreground));
+  }
+}
+
+/* Previous/Next product navigation: the plain default body font, no serif,
+   no handwritten (artist's request, 2026-11-16). */
+.prev-next-btn {
+  font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
 .cargo-hero-subtitle {
   max-width: 640px;
   margin: 0 auto 2rem;

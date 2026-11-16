@@ -111,7 +111,7 @@ const RemainsDetail = () => {
               <button
                 type="button"
                 onClick={() => navigate(prevItem.path)}
-                className="inline-flex items-center gap-2 px-3 py-2 text-xs font-helvetica text-muted-foreground hover:text-foreground transition-colors"
+                className="prev-next-btn inline-flex items-center gap-2 px-3 py-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ArrowLeft className="h-4 w-4" />
                 {lang === "zh" ? "上一件" : "Previous"}
@@ -121,7 +121,7 @@ const RemainsDetail = () => {
               <button
                 type="button"
                 onClick={() => navigate(nextItem.path)}
-                className="inline-flex items-center gap-2 px-3 py-2 text-xs font-helvetica text-muted-foreground hover:text-foreground transition-colors"
+                className="prev-next-btn inline-flex items-center gap-2 px-3 py-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
               >
                 {lang === "zh" ? "下一件" : "Next"}
                 <ArrowRight className="h-4 w-4" />

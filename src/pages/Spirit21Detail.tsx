@@ -132,7 +132,7 @@ const Spirit21Detail = () => {
             type="button"
             onClick={() => prevItem && navigate(prevItem.path)}
             disabled={!prevItem}
-            className="inline-flex items-center gap-2 px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:text-foreground transition-colors"
+            className="prev-next-btn inline-flex items-center gap-2 px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:text-foreground transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
             {lang === "zh" ? "上一件" : "Previous"}
@@ -141,7 +141,7 @@ const Spirit21Detail = () => {
             type="button"
             onClick={() => nextItem && navigate(nextItem.path)}
             disabled={!nextItem}
-            className="inline-flex items-center gap-2 px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:text-foreground transition-colors"
+            className="prev-next-btn inline-flex items-center gap-2 px-3 py-2 text-xs text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 hover:text-foreground transition-colors"
           >
             {lang === "zh" ? "下一件" : "Next"}
             <ArrowRight className="h-4 w-4" />
