@@ -116,11 +116,30 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   // right reads as the picture's own black ground.
   "bleed:remains:left": "black",
   "bleed:remains:right": "black",
-  "plate:/remains/02/main.jpg": "black",
-  "plate:/remains/03/main.jpg": "black",
-  "plate:/remains/04/main.jpg": "black",
+  // White-ground rule (her direction, 2026-11-15): a framed plate
+  // page whose picture does not fill the sheet stands on WHITE,
+  // not black — the Ratchadamnoen plate (watercolors/50) first,
+  // then every plate page of the same class, flipped in the same
+  // pass: remains/02, /03, /04, /06, watercolors/05, /49, /50, /51,
+  // /53, /59, photography/01, /03, /04, /07, /08 and the Negotiated
+  // Intelligence chimera-haiku plate. Only the ground changes:
+  // picture, caption and folio are untouched, and the light ground
+  // flips each caption to the white-paper grey via the --cap rules,
+  // as on every white page. Held back, unchanged, at her standing
+  // page-specific directions: the Residuals No. 1 pair
+  // (watercolors/01 + its exhibition page — a designed black
+  // spread), the monkeys plate (watercolors/58 — directed to a
+  // single black page, 2026-11-11), the plateGrid ground (the
+  // Rothko 2×2 grid and the objects grid stand on it by design)
+  // and the black Canva facsimile pages (canva:15, canva:16 —
+  // p. 16's black was confirmed by her, 2026-11-11). Full-bleed
+  // plates (watercolors/46) and the bleed spreads keep their
+  // grounds: there the black is the picture itself.
+  "plate:/remains/02/main.jpg": "white",
+  "plate:/remains/03/main.jpg": "white",
+  "plate:/remains/04/main.jpg": "white",
   "plate:/remains/05/main.jpg": "white",
-  "plate:/remains/06/main.jpg": "black",
+  "plate:/remains/06/main.jpg": "white",
   // Residuals #26 (watercolors/54): black → white (her direction,
   // 2026-11-15 — the page takes the white ground of her sample
   // page). Only the ground changes: the plate keeps its folio and
@@ -131,7 +150,7 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "plate:/watercolors/54/main.jpg": "white",
   "plate:/watercolors/01/main.jpg": "black",
   "plate:/book/residuals/residuals-01-exhibition.jpg": "black",
-  "plate:/watercolors/05/main.jpg": "black",
+  "plate:/watercolors/05/main.jpg": "white",
   "plate:/watercolors/13/main.jpg": "black",
   "plate:/watercolors/43/main.jpg": "white",
   // Still Things No. 8 (watercolors/14), restored by PR #304: the page
@@ -145,13 +164,13 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "plate:/watercolors/45/main.jpg": "black",
   "plate:/watercolors/46/main.jpg": "black",
   "plate:/watercolors/47/main.jpg": "black",
-  "plate:/watercolors/53/main.jpg": "black",
+  "plate:/watercolors/53/main.jpg": "white",
   "plate:/watercolors/60/main.jpg": "cream",
   "plate:/book/road/road-castle-cake.jpg": "cream",
   "canva:21": "white",
-  "plate:/watercolors/49/main.jpg": "black",
-  "plate:/watercolors/50/main.jpg": "black",
-  "plate:/watercolors/51/main.jpg": "black",
+  "plate:/watercolors/49/main.jpg": "white",
+  "plate:/watercolors/50/main.jpg": "white",
+  "plate:/watercolors/51/main.jpg": "white",
   // Medellín rooftops plate (watercolors/52): black → white (her
   // direction, 2026-11-15: "background for this image should be
   // white"). Only the ground changes: image, caption and folio are
@@ -163,17 +182,17 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   // black — her chat direction is the newer word.
   "plate:/watercolors/52/main.jpg": "white",
   "plate:/watercolors/57/main.jpg": "black",
-  "plate:/watercolors/59/main.jpg": "black",
+  "plate:/watercolors/59/main.jpg": "white",
   "plate:/watercolors/55/main.jpg": "cream",
   "plate:/watercolors/56/main.jpg": "cream",
   "plate:/watercolors/58/main.jpg": "black",
-  "plate:/photography/01/main.jpg": "black",
+  "plate:/photography/01/main.jpg": "white",
   "plate:/photography/02/main.jpg": "white",
-  "plate:/photography/03/main.jpg": "black",
-  "plate:/photography/04/main.jpg": "black",
-  "plate:/photography/08/main.jpg": "black",
-  "plate:/photography/07/main.jpg": "black",
-  "plate:/book/negotiated/work-chimera-haiku.jpg": "black",
+  "plate:/photography/03/main.jpg": "white",
+  "plate:/photography/04/main.jpg": "white",
+  "plate:/photography/08/main.jpg": "white",
+  "plate:/photography/07/main.jpg": "white",
+  "plate:/book/negotiated/work-chimera-haiku.jpg": "white",
   "plateGrid": "black",
   "canva:11": "black",
   "canva:15": "black",
