@@ -1080,6 +1080,19 @@
   color: #fff;
 }
 
+/* The road spreads' title lines also take their own caption's
+   size (her dead rule, 2026-11-15: a work's title is set in
+   exactly the font and size of the other lines of ITS caption,
+   no exceptions). The road caption's register is the stepped-up
+   11.875pt of its meta line; the shared title rule would
+   otherwise import the house caption size (8.75pt) and print
+   the title a step smaller than the lines it stands with. The
+   Thailand spread's caption sits at the house register already,
+   so its title and meta lines match without a rule here. */
+.bk-root .bk-bleed-caption-road .bk-caption-title {
+  font-size: 11.875pt;
+}
+
 
 .bk-opener-label {
   display: inline-flex;
