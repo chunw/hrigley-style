@@ -226,8 +226,11 @@ const capZhMetaOf = (item: CatalogItem): string | undefined => {
     "Watercolor on paper, 2026"; Chinese "纸本水彩 2026年"). The
     year prints whenever the record carries one, even when another
     field is missing; a missing field omits only its own line. In
-    the bilingual view the English block stands first, the Chinese
-    block right under it, each keeping its own lines. An item with
+    the bilingual view the two languages pair line by line —
+    title with title, dimensions with dimensions, medium-and-year
+    with medium-and-year, each pair on one shared line (fourth
+    pass, 2026-11-15 later; see JoinedCapLines below); the
+    single-language views keep the per-language blocks. An item with
     no medium field of its own (the hand-set series plates, the
     shop's products) keeps its composed meta line verbatim as the
     English meta. Credit lines, place lines and description text
@@ -299,22 +302,151 @@ const capPlaceOf = (item: CatalogItem): { en?: string; zh?: string; restHtml?: s
     .trim();
   return { en, zh, restHtml: rest || undefined };
 };
+/** Captions whose paired bilingual lines cannot fit their box on
+    one physical line at the standing size (the fit check of her
+    2026-11-15 fourth-pass direction): they keep the stacked
+    bilingual composition; every other caption pairs. Keyed by the
+    work's image path; the facsimile-page captions and the
+    what-remains credit, which have no work record of their own,
+    use literal keys. Filled from the rendered-book measurement —
+    the figures stand in PR #317's body. */
+const CAP_JOIN_EXCLUDE = new Set<string>([
+  // Folio 59, the Notes from the Road #3 full-bleed plate: its
+  // paired place line measures 556px against the overlay box's
+  // 518px (5.4in) — the one caption in the book whose paired line
+  // cannot fit. It keeps the stacked composition.
+  "/watercolors/46/main.jpg",
+]);
+/** Description texts under captions whose paired English/Chinese
+    segments cannot fit one physical line in the description box:
+    they keep their stacked segments. Same keying as above. */
+const CAP_DESC_JOIN_EXCLUDE = new Set<string>([
+  // Measured in the rendered book (PR #317): the paired segment
+  // runs past the 4.5in description box and wraps — mostly the
+  // prose descriptions, plus the Remains No. 4 motto pair (folio
+  // 22) and four short installation lines (folios 189, 192, 197,
+  // 198) that fit with no headroom to spare.
+  "/remains/04/main.jpg",
+  "/book/spirit/exhibition-wide.jpg",
+  "/book/spirit/exhibition-close.jpg",
+  "/book/sfmoma/death-valley-1.jpg",
+  "/book/sfmoma/death-valley-2.jpg",
+  "/book/sfmoma/death-valley-3.jpg",
+  "/book/google/film-still.jpg",
+  "/book/google/interface.jpg",
+  "/book/google/instructions.jpg",
+  "/book/google/poster.jpg",
+  "/book/google/exhibition-1.jpg",
+  "/book/google/exhibition-2.jpg",
+  "/book/feedscanner/interface-1.jpg",
+  "/book/feedscanner/interface-2.jpg",
+  "/book/feedscanner/interface-3.jpg",
+  "/book/feedscanner/poster.jpg",
+  "/book/feedscanner/installation.jpg",
+  "/book/artempath/printer.jpg",
+  "/book/artempath/sfmoma-bench.jpg",
+  "/book/artempath/interface-sf.jpg",
+  "/book/artempath/responses-rothko.jpg",
+  "/book/artempath/anderson-wide.jpg",
+  "/book/artempath/interface-and.jpg",
+  "/book/artempath/responses-mitchell.jpg",
+  "/book/artempath/visualization.jpg",
+  "/book/artempath/sfmoma-grid.jpg",
+  "/book/artempath/anderson-grid.jpg",
+  "/book/immemory/webby-nominees.jpg",
+  "/book/immemory/open-call.jpg",
+  "/book/immemory/site-room1.jpg",
+  "/book/immemory/site-work-alcaro.jpg",
+  "/book/immemory/site-work-juanita-rea.jpg",
+  "/book/immemory/site-work-sami.jpg",
+  "/book/immemory/site-room2.jpg",
+  "/book/immemory/site-work-bortsova.jpg",
+  "/book/immemory/site-work-face-masks.jpg",
+  "/book/immemory/site-work-sonnet-corona.jpg",
+  "/book/negotiated/diary-page.jpg",
+  "/book/negotiated/work-elsewhere.jpg",
+  "/book/negotiated/work-ave-maria.jpg",
+  "/book/negotiated/work-fractured-star.jpg",
+  "/book/negotiated/work-silence.jpg",
+  "/book/negotiated/work-chimera-haiku.jpg",
+  "/book/negotiated/work-dierenleven.jpg",
+  "/book/negotiated/pavilion-entrance.jpg",
+  "/book/negotiated/work-mythology.jpg",
+  "/book/suo/candle.jpg",
+]);
+/** The bilingual work caption with its lines paired (her
+    direction, 2026-11-15, fourth pass): the English and Chinese
+    fragments of one content line share the line — title with
+    title, dimensions with dimensions, medium-and-year with
+    medium-and-year — joined by a single space, each fragment in
+    its own span so the caption-language switch keeps addressing
+    the two languages separately. The dimensions line is one
+    shared line (the compact form is the same in both languages),
+    so it prints once; a Chinese-only title prints once, in its
+    《》 form, as in the stacked composition. Text, size and
+    colour are the stacked composition's own — only the line
+    joining changes. */
+const JoinedCapLines = ({ blocks }: { blocks: WorkCapBlock[] }) => {
+  const en = blocks.find((b) => b.lang === "en");
+  const zh = blocks.find((b) => b.lang === "zh");
+  const enBody = !!(en && (en.title || en.dim || en.meta));
+  const zhBody = !!(zh && (zh.title || zh.meta));
+  const enTitle = enBody ? en?.title : undefined;
+  const zhTitle = zhBody ? zh?.title : undefined;
+  const dedupTitle = !!enTitle && !!zhTitle && enTitle === zhTitle;
+  const dim = (enBody ? en?.dim : undefined) ?? (zhBody ? zh?.dim : undefined);
+  const enMeta = enBody ? en?.meta : undefined;
+  const zhMeta = zhBody ? zh?.meta : undefined;
+  if (!enTitle && !zhTitle && !dim && !enMeta && !zhMeta) return null;
+  return (
+    <div className="bk-caption-work bk-caption-work-join">
+      {(enTitle || zhTitle) && (
+        <div className="bk-caption-title product-title bk-cap-line">
+          {dedupTitle ? (
+            <span className="bk-cap-zh">{`《${zhTitle}》`}</span>
+          ) : (
+            <>
+              {enTitle && <span className="bk-cap-en"><em>{enTitle}</em></span>}
+              {enTitle && zhTitle && " "}
+              {zhTitle && <span className="bk-cap-zh">{`《${zhTitle}》`}</span>}
+            </>
+          )}
+        </div>
+      )}
+      {dim && <div className="bk-caption-meta bk-cap-line">{dim}</div>}
+      {(enMeta || zhMeta) && (
+        <div className="bk-caption-meta bk-cap-line">
+          {enMeta && <span className="bk-cap-en">{enMeta}</span>}
+          {enMeta && zhMeta && " "}
+          {zhMeta && <span className="bk-cap-zh">{zhMeta}</span>}
+        </div>
+      )}
+    </div>
+  );
+};
 /** The one shared renderer for every work caption body: the
     title line (English italic, Chinese inside 《》), the
-    dimensions line, the meta line, per visible language block. */
-const WorkCapLines = ({ blocks, capLang }: { blocks: WorkCapBlock[]; capLang: CapLang }) => (
-  <>
-    {workCapVisible(blocks, capLang).map((blk) => (
-      <div className="bk-caption-work" key={blk.lang}>
-        {blk.title && (
-          <div className="bk-caption-title product-title">{blk.lang === "en" ? <em>{blk.title}</em> : `《${blk.title}》`}</div>
-        )}
-        {blk.dim && <div className="bk-caption-meta">{blk.dim}</div>}
-        {blk.meta && <div className="bk-caption-meta">{blk.meta}</div>}
-      </div>
-    ))}
-  </>
-);
+    dimensions line, the meta line — paired line by line in the
+    bilingual view (JoinedCapLines), per visible language block
+    in the single-language views and in the fit-check exceptions. */
+const WorkCapLines = ({ blocks, capLang, joinKey }: { blocks: WorkCapBlock[]; capLang: CapLang; joinKey?: string }) => {
+  if (capLang === "both" && !(joinKey && CAP_JOIN_EXCLUDE.has(joinKey))) {
+    return <JoinedCapLines blocks={blocks} />;
+  }
+  return (
+    <>
+      {workCapVisible(blocks, capLang).map((blk) => (
+        <div className="bk-caption-work" key={blk.lang}>
+          {blk.title && (
+            <div className="bk-caption-title product-title">{blk.lang === "en" ? <em>{blk.title}</em> : `《${blk.title}》`}</div>
+          )}
+          {blk.dim && <div className="bk-caption-meta">{blk.dim}</div>}
+          {blk.meta && <div className="bk-caption-meta">{blk.meta}</div>}
+        </div>
+      ))}
+    </>
+  );
+};
 /** Filters a caption description's HTML to the selected caption
     language: segments are split at <br> and " · " boundaries and
     classified by script (the book's descriptions run English first,
@@ -338,6 +470,22 @@ const capDesc = (html: string, capLang: CapLang): string => {
     .replace(/^\s*(<br\s*\/?>\s*)+/i, "")
     .replace(/(\s*<br\s*\/?>)+\s*$/i, "")
     .replace(/(<br\s*\/?>\s*){2,}/gi, "<br />");
+};
+/** A caption description's two language segments paired on one
+    line (her direction, 2026-11-15, fourth pass): where the
+    description is exactly an English segment over a Chinese one,
+    the bilingual view joins them with a single space. Longer or
+    differently shaped descriptions keep their stacked segments,
+    as do the ones in CAP_DESC_JOIN_EXCLUDE, whose paired line
+    cannot fit the description box on one physical line. The
+    segments' own markup and text are untouched. */
+const pairDescHtml = (html: string): string => {
+  const segs = html.split(/<br\s*\/?>/i);
+  if (segs.length !== 2) return html;
+  const [a, b] = segs.map((s) => s.trim());
+  if (!a || !b) return html;
+  if (hasCjk(plainText(a)) || !hasCjk(plainText(b))) return html;
+  return `${a} ${b}`;
 };
 // Dated passages — her own writings that carry a date — are indented
 // into a narrower column, date line included (design E, her pick,
@@ -3366,6 +3514,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                       { lang: "zh", title: "行旅拾记 其二", meta: "纸本水彩 2026年" },
                     ]}
                     capLang={ctx.capLang}
+                    joinKey="aphorism:what-remains"
                   />
                   <div className="bk-caption-meta">{capParts([{ lang: "en", text: "San Cristóbal de las Casas, Chiapas, Mexico" }, { lang: "zh", text: "墨西哥，恰帕斯州，圣克里斯托瓦尔-德拉斯卡萨斯" }] as CapPart[], ctx.capLang).join(" · ")}</div>
                 </div>
@@ -3497,17 +3646,19 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         // medium-with-year lines follow as on every other plate.
         const place = isRoad ? capPlaceOf(capItem) : null;
         const blocks = workCapBlocks(capItem, place ? { en: place.en, zh: place.zh } : undefined);
-        const capDescHtml = isRoad
+        const capDescRaw = isRoad
           ? place?.restHtml
             ? capDesc(place.restHtml, ctx.capLang)
             : ""
           : capItem.description
             ? capDesc(capItem.description, ctx.capLang)
             : "";
+        const capDescHtml =
+          ctx.capLang === "both" && !CAP_DESC_JOIN_EXCLUDE.has(capItem.image_url) ? pairDescHtml(capDescRaw) : capDescRaw;
         return (
         <div className={facing ? "bk-caption-body bk-caption-facing" : "bk-caption-body"}>
           {facing && <div className="bk-caption-facing-label">LEFT · 左图</div>}
-          <WorkCapLines blocks={blocks} capLang={ctx.capLang} />
+          <WorkCapLines blocks={blocks} capLang={ctx.capLang} joinKey={capItem.image_url} />
           {/* The Residuals #1 painting page prints no exhibition line:
               the line stands, emphasised, on its facing exhibition
               page instead (her direction, 2026-11-11). */}
@@ -3548,7 +3699,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 </div>
                 {!PLATE_GRID_NO_CAPTION.has(item.image_url) && (
                   <div className="bk-grid-caption">
-                    <WorkCapLines blocks={workCapBlocks(item)} capLang={ctx.capLang} />
+                    <WorkCapLines blocks={workCapBlocks(item)} capLang={ctx.capLang} joinKey={item.image_url} />
                   </div>
                 )}
               </div>
@@ -3576,7 +3727,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                     <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
                   </div>
                   <div className="bk-journal-caption">
-                    <WorkCapLines blocks={workCapBlocks(item)} capLang={ctx.capLang} />
+                    <WorkCapLines blocks={workCapBlocks(item)} capLang={ctx.capLang} joinKey={item.image_url} />
                   </div>
                 </div>
               ))}
@@ -3622,6 +3773,8 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const flushSpread = item.image_url === "/remains/01/main.jpg";
       const spreadMeta = capParts(capMetaParts(item, { zhInBoth: true, dimInBoth: true }), ctx.capLang).join(" · ");
       const spreadDesc = item.description ? capDesc(item.description, ctx.capLang) : "";
+      const spreadDescPaired =
+        ctx.capLang === "both" && !CAP_DESC_JOIN_EXCLUDE.has(item.image_url) ? pairDescHtml(spreadDesc) : spreadDesc;
       // Road spreads (her direction, 2026-11-15, third pass): the
       // place is the title, so it leads the corner caption under
       // the title rules and the meta line follows. In the Chinese
@@ -3634,43 +3787,86 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // title line, the medium half stays as the meta line.
       const thaiSegEn = (item.metaLine ?? "").split(" · ");
       const thaiSegZh = (item.metaZh ?? "").split(" · ");
+      // Bilingual pairing (her direction, 2026-11-15, fourth
+      // pass): the corner captions' English and Chinese title
+      // lines pair on one line, as in JoinedCapLines; the road
+      // spreads' meta line is already one composed line in every
+      // view, so only its title lines pair. The paired road meta
+      // carries bk-cap-joined so the stepped-size rule in
+      // catalog-book.css keeps the bilingual size it has today.
+      const roadJoined = ctx.capLang === "both" && !CAP_JOIN_EXCLUDE.has(item.image_url);
+      const roadCapInner = roadJoined ? (
+        <>
+          {(roadPlace?.en || roadPlace?.zh) && (
+            <div className="bk-caption-title product-title bk-cap-line">
+              {roadPlace?.en && <span className="bk-cap-en"><em>{roadPlace.en}</em></span>}
+              {roadPlace?.en && roadPlace?.zh && " "}
+              {roadPlace?.zh && <span className="bk-cap-zh">{`《${roadPlace.zh}》`}</span>}
+            </div>
+          )}
+          {roadMeta && <div className="bk-caption-meta bk-cap-joined">{roadMeta}</div>}
+          {roadPlace?.restHtml && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: capDesc(roadPlace.restHtml, ctx.capLang) }} />}
+        </>
+      ) : (
+        <>
+          {roadPlace?.en && ctx.capLang !== "zh" && <div className="bk-caption-title product-title"><em>{roadPlace.en}</em></div>}
+          {roadPlace?.zh && ctx.capLang !== "en" && <div className="bk-caption-title product-title">{`《${roadPlace.zh}》`}</div>}
+          {roadMeta && <div className="bk-caption-meta">{roadMeta}</div>}
+          {roadPlace?.restHtml && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: capDesc(roadPlace.restHtml, ctx.capLang) }} />}
+        </>
+      );
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-bleed bk-bleed-${spec.half}${flushSpread ? " bk-bleed-flush" : ""}${bgImgCls}`}>{bgImgLayer}
           <div className="bk-spread-canvas">
             <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} className="bk-bleed-img" />
             {thailand && spec.half === "left" && (
               <div className="bk-bleed-caption bk-bleed-caption-bl">
-                {ctx.capLang !== "zh" && thaiSegEn[0] && <div className="bk-caption-title product-title"><em>{thaiSegEn[0]}</em></div>}
-                {ctx.capLang !== "en" && thaiSegZh[0] && <div className="bk-caption-title product-title">{`《${thaiSegZh[0]}》`}</div>}
-                {ctx.capLang !== "zh" && thaiSegEn.length > 1 && <div className="bk-caption-meta">{thaiSegEn.slice(1).join(" · ")}</div>}
-                {ctx.capLang !== "en" && thaiSegZh.length > 1 && <div className="bk-caption-meta">{thaiSegZh.slice(1).join(" · ")}</div>}
+                {ctx.capLang === "both" && !CAP_JOIN_EXCLUDE.has(item.image_url) ? (
+                  <>
+                    {(thaiSegEn[0] || thaiSegZh[0]) && (
+                      <div className="bk-caption-title product-title bk-cap-line">
+                        {thaiSegEn[0] && <span className="bk-cap-en"><em>{thaiSegEn[0]}</em></span>}
+                        {thaiSegEn[0] && thaiSegZh[0] && " "}
+                        {thaiSegZh[0] && <span className="bk-cap-zh">{`《${thaiSegZh[0]}》`}</span>}
+                      </div>
+                    )}
+                    {(thaiSegEn.length > 1 || thaiSegZh.length > 1) && (
+                      <div className="bk-caption-meta bk-cap-line">
+                        {thaiSegEn.length > 1 && <span className="bk-cap-en">{thaiSegEn.slice(1).join(" · ")}</span>}
+                        {thaiSegEn.length > 1 && thaiSegZh.length > 1 && " "}
+                        {thaiSegZh.length > 1 && <span className="bk-cap-zh">{thaiSegZh.slice(1).join(" · ")}</span>}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {ctx.capLang !== "zh" && thaiSegEn[0] && <div className="bk-caption-title product-title"><em>{thaiSegEn[0]}</em></div>}
+                    {ctx.capLang !== "en" && thaiSegZh[0] && <div className="bk-caption-title product-title">{`《${thaiSegZh[0]}》`}</div>}
+                    {ctx.capLang !== "zh" && thaiSegEn.length > 1 && <div className="bk-caption-meta">{thaiSegEn.slice(1).join(" · ")}</div>}
+                    {ctx.capLang !== "en" && thaiSegZh.length > 1 && <div className="bk-caption-meta">{thaiSegZh.slice(1).join(" · ")}</div>}
+                  </>
+                )}
               </div>
             )}
             {roadSpread && !carSpread && spec.half === "left" && (
               <div className="bk-bleed-caption bk-bleed-caption-road">
-                {roadPlace?.en && ctx.capLang !== "zh" && <div className="bk-caption-title product-title"><em>{roadPlace.en}</em></div>}
-                {roadPlace?.zh && ctx.capLang !== "en" && <div className="bk-caption-title product-title">{`《${roadPlace.zh}》`}</div>}
-                {roadMeta && <div className="bk-caption-meta">{roadMeta}</div>}
-                {roadPlace?.restHtml && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: capDesc(roadPlace.restHtml, ctx.capLang) }} />}
+                {roadCapInner}
               </div>
             )}
             {roadSpread && carSpread && spec.half === "right" && (
               <div className="bk-bleed-caption bk-bleed-caption-road bk-bleed-caption-road-br">
-                {roadPlace?.en && ctx.capLang !== "zh" && <div className="bk-caption-title product-title"><em>{roadPlace.en}</em></div>}
-                {roadPlace?.zh && ctx.capLang !== "en" && <div className="bk-caption-title product-title">{`《${roadPlace.zh}》`}</div>}
-                {roadMeta && <div className="bk-caption-meta">{roadMeta}</div>}
-                {roadPlace?.restHtml && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: capDesc(roadPlace.restHtml, ctx.capLang) }} />}
+                {roadCapInner}
               </div>
             )}
             {flushSpread && spec.half === "right" && (
               <div className="bk-bleed-caption bk-bleed-caption-flush">
-                <WorkCapLines blocks={workCapBlocks(item)} capLang={ctx.capLang} />
-                {spreadDesc && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: spreadDesc }} />}
+                <WorkCapLines blocks={workCapBlocks(item)} capLang={ctx.capLang} joinKey={item.image_url} />
+                {spreadDescPaired && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: spreadDescPaired }} />}
               </div>
             )}
             {!thailand && !roadSpread && !flushSpread && spec.half === "right" && (
               <div className="bk-bleed-caption">
-                <WorkCapLines blocks={workCapBlocks(item)} capLang={ctx.capLang} />
+                <WorkCapLines blocks={workCapBlocks(item)} capLang={ctx.capLang} joinKey={item.image_url} />
               </div>
             )}
           </div>
@@ -3863,8 +4059,17 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                     { lang: "zh", title: "日本陶器", meta: "纸本水彩 2025年" },
                   ]}
                   capLang={ctx.capLang}
+                  joinKey="canva:21"
                 />
-                <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: capDesc("Japan Folk Crafts Museum, Tokyo.<br />东京，日本民艺馆。", ctx.capLang) }} />
+                <div
+                  className="bk-caption-desc description-html"
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      ctx.capLang === "both" && !CAP_DESC_JOIN_EXCLUDE.has("canva:21")
+                        ? pairDescHtml(capDesc("Japan Folk Crafts Museum, Tokyo.<br />东京，日本民艺馆。", ctx.capLang))
+                        : capDesc("Japan Folk Crafts Museum, Tokyo.<br />东京，日本民艺馆。", ctx.capLang),
+                  }}
+                />
               </div>
             </div>
           )}
@@ -3880,19 +4085,14 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                     three-line work-caption form of the section's
                     plates; the record carries no dimensions, so no
                     dimensions line prints. */}
-                {[
-                  { lang: "en" as const, title: fuyuWork.title, meta: `${fuyuWork.medium}, ${fuyuWork.year}` },
-                  { lang: "zh" as const, title: fuyuWork.titleZh, meta: `${fuyuWork.mediumZh} ${fuyuWork.year}年` },
-                ]
-                  .filter((blk) => ctx.capLang === "both" || blk.lang === ctx.capLang)
-                  .map((blk) => (
-                    <div className="bk-caption-work" key={blk.lang}>
-                      <div className="bk-caption-title product-title">
-                        {blk.lang === "en" ? <em>{blk.title}</em> : `《${blk.title}》`}
-                      </div>
-                      <div className="bk-caption-meta">{blk.meta}</div>
-                    </div>
-                  ))}
+                <WorkCapLines
+                  blocks={[
+                    { lang: "en", title: fuyuWork.title, meta: `${fuyuWork.medium}, ${fuyuWork.year}` },
+                    { lang: "zh", title: fuyuWork.titleZh, meta: `${fuyuWork.mediumZh} ${fuyuWork.year}年` },
+                  ]}
+                  capLang={ctx.capLang}
+                  joinKey="canva:6"
+                />
               </div>
             </div>
           )}
@@ -3918,6 +4118,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                     image_url: "",
                   })}
                   capLang={ctx.capLang}
+                  joinKey="canva:7"
                 />
               </div>
             </div>
