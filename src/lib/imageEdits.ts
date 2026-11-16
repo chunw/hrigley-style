@@ -82,4 +82,12 @@ export const IMAGE_EDITS: Record<string, LandedImgEdit> = {
   // the same failure as the watercolors/14 scale-up withdrawn in
   // PR #304). The record stands empty: the plate sits in its
   // natural frame and its caption prints.
+  // Export book-edits-8 (2026-11-15): she re-asserts the full-bleed
+  // on this same picture — { full: true } plain, no offset — so the
+  // 2026-11-14 withdrawal above is superseded by her newest export.
+  // The export's pageBg table (47 keys) and all three pageBgImages
+  // entries were verified identical to the landed state, so this
+  // picture edit is its only change; the white page ground from
+  // book-edits-7 stands. Her value, verbatim.
+  "/watercolors/43/main.jpg": { full: true },
 };
