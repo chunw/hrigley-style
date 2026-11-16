@@ -530,6 +530,13 @@ All colors MUST be HSL.
   letter-spacing: 0.02em;
 }
 
+/* Hero "Chun Wang" line: same font as the header logo (.gloria-title, Gloria
+   Hallelujah) in both languages, and upright like the logo instead of the hero
+   title's italic. The lines below it keep the italic Fangsong look. */
+.hero-title-name {
+  font-style: normal;
+}
+
 .about-hero-title {
   font-size: clamp(40px, 8vw, 80px);
   line-height: 0.9;

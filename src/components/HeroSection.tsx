@@ -65,7 +65,7 @@ const HeroSection = ({
               <span className="hero-title-brand block">{titleOverride}</span>
             ) : (
               <>
-                <span className="hero-title-brand block">{t.shopTitle.line1}</span>
+                <span className="hero-title-brand gloria-title hero-title-name block">{t.shopTitle.line1}</span>
                 <span className="hero-title-brand hero-title-sub block">{t.shopTitle.line2}</span>
                 <span className={`block hero-title-shop ${titleBlack ? "" : "text-primary"}`}>{t.shopTitle.line3}</span>
               </>
