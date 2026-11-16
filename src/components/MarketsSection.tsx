@@ -54,7 +54,7 @@ const MarketsSection = () => {
 
   return (
     <div className="about-markets-column">
-      <h2 className="shop-title about-markets-heading">{t.markets.title}</h2>
+      <h2 className="about-bio-heading about-markets-heading">{t.markets.title}</h2>
       <div className="about-markets-cards">
         {ordered.map((e, i) => {
           const s = CARD_STYLES[i % CARD_STYLES.length];
