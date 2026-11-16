@@ -1006,7 +1006,14 @@
   line-height: 1.95;
 }
 
-.bk-bleed-caption-road .bk-caption-meta:nth-child(2) {
+/* The :not(.bk-cap-joined) guard (2026-11-15, fourth pass): in
+   the bilingual view the road caption's two place lines pair into
+   one, so its meta line moves up to second child — without the
+   guard this rule would shrink it from the bilingual 11.875pt it
+   has today to 11.25pt. The paired meta carries bk-cap-joined
+   and keeps 11.875pt; the single-language views, whose meta line
+   is second child behind one place line, keep 11.25pt as before. */
+.bk-bleed-caption-road .bk-caption-meta:nth-child(2):not(.bk-cap-joined) {
   margin-top: 0;
   font-size: 11.25pt;
   line-height: 1.95;
@@ -1887,6 +1894,17 @@
    the caption register. */
 .bk-root .bk-caption-title em {
   font-style: italic;
+}
+
+/* Paired bilingual caption lines (her direction, 2026-11-15,
+   fourth pass): in the bilingual view one content line carries
+   its English and Chinese fragments side by side (EN span, a
+   space, ZH span — see JoinedCapLines in CatalogBook.tsx). A
+   paired line never wraps: a caption whose paired line cannot
+   fit its box on one physical line keeps the stacked bilingual
+   composition instead (CAP_JOIN_EXCLUDE in CatalogBook.tsx). */
+.bk-cap-line {
+  white-space: nowrap;
 }
 
 .bk-caption-meta,
