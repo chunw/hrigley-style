@@ -197,6 +197,12 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "canva:11": "black",
   "canva:15": "black",
   "canva:16": "black",
+  // Export book-edits-9 (2026-11-16): the full table carries
+  // canva:14 as white; the book had no entry for the page (it
+  // followed the white toolbar default, so the sheet already
+  // rendered white). The entry lands to align the table; no
+  // visible change.
+  "canva:14": "white",
   "canva:3": "#171717",
   "canva:4": "#171717",
   // Still Things title spread (her direction, 2026-11-11): the ground
