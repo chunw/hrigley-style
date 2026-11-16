@@ -90,4 +90,13 @@ export const IMAGE_EDITS: Record<string, LandedImgEdit> = {
   // picture edit is its only change; the white page ground from
   // book-edits-7 stands. Her value, verbatim.
   "/watercolors/43/main.jpg": { full: true },
+  // Her direction (2026-11-16): the shop cover of watercolor 1
+  // (Breakfast Residuals) becomes a framed photograph (the new
+  // main.jpg), but the book's plate of the same work must show the
+  // painting itself — a clean scan she sent for the book. The swap
+  // is book-only: EdBookImage renders the book file for this plate,
+  // while the shop keeps reading main.jpg. The plate's page ground
+  // (black, pageBackgrounds.ts) and caption are keyed to the
+  // unchanged image_url and stand as they were.
+  "/watercolors/01/main.jpg": { src: "/book/residuals/residuals-01-scan.jpg" },
 };
