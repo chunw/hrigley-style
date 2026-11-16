@@ -675,14 +675,12 @@ All colors MUST be HSL.
   padding-top: 0.75rem;
   text-align: left;
 }
+/* The markets subtitle shares the bio subtitle's font treatment wholesale
+   (see .about-bio-heading) so the About columns' subtitles are consistent;
+   only the spacing above the cards stays specific to this column. */
 .about-columns .about-markets-heading {
-  color: #fff;
   text-align: left;
-  font-size: 2rem;
-  line-height: 1.1;
-  transform: rotate(-1deg);
   margin-bottom: 1.6rem;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 .about-markets-cards {
   display: flex;
