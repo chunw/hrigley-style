@@ -1066,6 +1066,20 @@
   color: #fff;
 }
 
+/* The road spreads' and the Thailand spread's title lines take
+   the same white as their meta lines (her direction,
+   2026-11-15): these corner captions print flat white
+   throughout — the uniform title rule (.bk-root
+   .bk-caption-title) would otherwise hand the title the
+   caption grey while the meta lines print white, two colours
+   in one caption block. Same remedy as the flush caption
+   above; colour only — sizes, alignment and placement keep
+   their standing settings. */
+.bk-root .bk-bleed-caption-road .bk-caption-title,
+.bk-root .bk-bleed-caption-bl .bk-caption-title {
+  color: #fff;
+}
+
 
 .bk-opener-label {
   display: inline-flex;
