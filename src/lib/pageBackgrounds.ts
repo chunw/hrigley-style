@@ -152,7 +152,16 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "plate:/watercolors/49/main.jpg": "black",
   "plate:/watercolors/50/main.jpg": "black",
   "plate:/watercolors/51/main.jpg": "black",
-  "plate:/watercolors/52/main.jpg": "black",
+  // Medellín rooftops plate (watercolors/52): black → white (her
+  // direction, 2026-11-15: "background for this image should be
+  // white"). Only the ground changes: image, caption and folio are
+  // untouched, and the facing page (folio 65, the Colombia diary) is
+  // already on white, so the spread stands white/white; the light
+  // ground flips the caption to the white-paper grey via the --cap
+  // rules, as on every white page. This also supersedes the
+  // book-edits-8 export table, which still carried this plate as
+  // black — her chat direction is the newer word.
+  "plate:/watercolors/52/main.jpg": "white",
   "plate:/watercolors/57/main.jpg": "black",
   "plate:/watercolors/59/main.jpg": "black",
   "plate:/watercolors/55/main.jpg": "cream",
