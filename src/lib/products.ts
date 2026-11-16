@@ -908,6 +908,15 @@ export const products = rawProducts.map((product) => {
   return mainUrl ? { ...product, image_url: mainUrl } : product
 })
 
+// Photos that stay in the repo but are hidden from the store: the files
+// remain in their imageFolder untouched — they are only left out of the
+// store's image list below (product page gallery, grid hover image, and
+// every other surface fed by productImages). Keyed by product id, holding
+// the hidden files' names inside that product's imageFolder.
+const HIDDEN_PRODUCT_IMAGES: Record<string, string[]> = {
+  "egg-bacon-breakfast-magnet": ["01.jpg", "03.jpg", "3.webp"],
+}
+
 // Auto-generated from each product's imageFolder — no manual entries needed.
 // To add images, drop files into src/assets/products/<imageFolder>/.
 // The cover image (image_url) is always sorted first, and the rest of the
@@ -917,8 +926,13 @@ export const productImages = products.flatMap((product) => {
   const coverFilename = product.image_url
     ? decodeURIComponent(product.image_url.split('/').pop() || '')
     : ''
+  const hiddenFilenames = HIDDEN_PRODUCT_IMAGES[product.id] ?? []
   const folderEntries = folder
-    ? Object.entries(_allProductImages).filter(([path]) => path.startsWith(`../assets/products/${folder}/`))
+    ? Object.entries(_allProductImages).filter(
+        ([path]) =>
+          path.startsWith(`../assets/products/${folder}/`) &&
+          !hiddenFilenames.includes(path.split('/').pop() || '')
+      )
     : []
   const coverInFolder = folderEntries.some(([path]) => (path.split('/').pop() || '') === coverFilename)
   const folderImages = folderEntries
