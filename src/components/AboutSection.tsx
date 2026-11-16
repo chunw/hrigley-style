@@ -1,11 +1,12 @@
 import deliveryGif from "@/assets/delivery.gif";
 import { useLanguage } from "@/contexts/LanguageContext";
+import MarketsSection from "@/components/MarketsSection";
 
 const AboutSection = () => {
   const { t, lang } = useLanguage();
 
   return (
-    <section className="cargo-hero relative">
+    <section className="cargo-hero about-hero relative">
       <div className="cargo-hero-bg" aria-hidden="true">
         <img
           src={deliveryGif}
@@ -22,6 +23,8 @@ const AboutSection = () => {
         )}
 
         <div className="about-columns">
+          <MarketsSection />
+
           <div className="handwritten-note">
             <p
               className="handwritten-note-text whitespace-pre-line"
