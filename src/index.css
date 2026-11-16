@@ -648,12 +648,47 @@ All colors MUST be HSL.
 }
 .about-columns .handwritten-note {
   margin: 0;
-  flex: 0 1 600px;
+  flex: 0 1 360px;
+  max-width: 360px;
 }
 .about-bio-column {
   flex: 0 1 470px;
   max-width: 470px;
   padding-top: 0.75rem;
+}
+/* About hero carries three columns (markets / note / bio), so it runs wider
+   than the standard hero inner. */
+.about-hero .cargo-hero-inner {
+  max-width: 1340px;
+}
+/* Markets & pop-ups column: leftmost on desktop, first on mobile. */
+.about-markets-column {
+  flex: 0 1 300px;
+  min-width: 0;
+  padding-top: 0.75rem;
+  text-align: left;
+}
+.about-columns .about-markets-heading {
+  color: #fff;
+  text-align: left;
+  font-size: 2rem;
+  line-height: 1.1;
+  transform: rotate(-1deg);
+  margin-bottom: 1.6rem;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+.about-markets-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.market-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.market-link:hover {
+  opacity: 0.7;
 }
 .about-bio-heading {
   font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -686,6 +721,17 @@ All colors MUST be HSL.
   }
   .about-bio-column {
     max-width: 600px;
+  }
+  .about-markets-column {
+    flex: none;
+    width: 100%;
+    max-width: 600px;
+    padding-top: 0;
+  }
+  .about-columns .handwritten-note {
+    flex: none;
+    width: 100%;
+    max-width: 360px;
   }
 }
 
