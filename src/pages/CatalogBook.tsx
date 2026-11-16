@@ -2104,13 +2104,40 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
             measured.rel = rel;
             setPageRel(rel);
           }
+          // Caption hug (her direction, 2026-11-15): on a standard
+          // plate page the picture is centred in a page-height
+          // frame and the caption stands after the frame, so a
+          // picture shorter than its frame left the caption pinned
+          // to the page bottom across a wide empty gap. Publish
+          // the empty strip under the picture — the part of the
+          // frame below the picture's own rect, edits included —
+          // as --cap-lift on the page element; .bk-caption spends
+          // it as a translateY and stands the standard margin
+          // under the picture. Full-bleed pictures (their caption
+          // rides on the picture) and non-plate frames publish
+          // nothing; a picture that fills its frame publishes ~0
+          // and its page stands exactly as before.
+          let liftPx = 0;
+          if (frame.classList.contains("bk-plate-frame") && !full && aspect > 0) {
+            const fyM = aspect > fa ? fa / aspect : 1;
+            const rectYM = (1 - fyM) * 50 + dy + ((fyM * (1 - scale)) / 2) * 100;
+            const rectHM = fyM * scale * 100;
+            const gapFrac = 1 - (rectYM + rectHM) / 100;
+            if (gapFrac > 0.001) liftPx = gapFrac * frame.offsetHeight;
+          }
+          const pageEl2 = page as HTMLElement;
+          if (liftPx > 0) pageEl2.style.setProperty("--cap-lift", `${liftPx.toFixed(1)}px`);
+          else pageEl2.style.removeProperty("--cap-lift");
         }
       }
     };
     measure();
     const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(measure) : null;
     ro?.observe(frame);
-    return () => ro?.disconnect();
+    return () => {
+      ro?.disconnect();
+      if (measured.el) (measured.el as HTMLElement).style.removeProperty("--cap-lift");
+    };
   });
 
   // Default contain-fitted rect as fractions of the frame.
