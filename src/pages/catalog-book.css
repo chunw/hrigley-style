@@ -1907,7 +1907,17 @@
   bottom: 0.2in;
   z-index: 4;
   max-width: 5.4in;
-  text-align: center;
+  text-align: left;
+}
+
+/* Corner rule (her direction, 2026-11-15): a caption aligns toward
+   the corner it sits in — bottom-left captions left-align,
+   bottom-right captions right-align. The overlay caption stands at
+   the sheet's bottom-left, so its lines left-align; the shared
+   caption body's centred setting (the in-flow plate captions'
+   register) is overridden inside the overlay only. */
+.bk-plate-overlay-caption .bk-caption-body {
+  text-align: left;
 }
 
 /* Residuals #1 exhibition view (her direction, 2026-11-11): the
