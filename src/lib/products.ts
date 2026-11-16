@@ -211,7 +211,7 @@ One size.</p>
     edition_info: null,
     edition_size: null,
     alt_text: "Every flush is a new beginning Bath mat",
-    image_url: new URL("../assets/products/everyflushnathmat/Fresh Bath Mat 2.png", import.meta.url).href,
+    image_url: new URL("../assets/products/everyflushnathmat/Fresh Bath Mat photo.jpg", import.meta.url).href,
     is_active: true,
     printInCatalog: true,
     showInStorefront: true,
@@ -915,6 +915,7 @@ export const products = rawProducts.map((product) => {
 // the hidden files' names inside that product's imageFolder.
 const HIDDEN_PRODUCT_IMAGES: Record<string, string[]> = {
   "egg-bacon-breakfast-magnet": ["01.jpg", "03.jpg", "3.webp"],
+  "every-flush-bath-mat": ["Fresh Bath Mat 2.png"],
 }
 
 // Auto-generated from each product's imageFolder — no manual entries needed.
