@@ -1982,6 +1982,28 @@
   text-align: left;
 }
 
+/* Bottom-right overlay caption (her direction, 2026-11-16): the
+   Still Things #8 overlay caption moves from the sheet's
+   bottom-left to its bottom-right corner, and under the corner
+   rule its lines right-align. */
+.bk-overlay-caption-right {
+  left: auto;
+  right: 0.3in;
+  text-align: right;
+}
+
+.bk-overlay-caption-right .bk-caption-body {
+  text-align: right;
+}
+
+/* Bottom-right framed caption (her direction, 2026-11-16): the
+   Breakfast Inventory #2 plate keeps its caption under the frame,
+   but the caption block right-aligns, so it stands at the page's
+   bottom-right under the corner rule. */
+.bk-caption-right .bk-caption-body {
+  text-align: right;
+}
+
 /* Residuals #1 exhibition view (her direction, 2026-11-11): the
    installation photo shares its black page with the exhibition line
    and the chapter's review excerpt, so the photo sits smaller and
