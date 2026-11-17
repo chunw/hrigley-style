@@ -426,8 +426,8 @@ export const watercolors: Watercolor[] = [
     descriptionZh: "",
   }, {
     id: "1",
-    title: "Residuals #1",
-    titleZh: "残留 其一",
+    title: "Breakfast Residuals",
+    titleZh: "早餐残留",
     series: "I",
     printInCatalog: true,
     showInStorefront: true,

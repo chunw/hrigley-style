@@ -105,4 +105,13 @@ export const IMAGE_EDITS: Record<string, LandedImgEdit> = {
   // (watercolors/05) is reframed — scaled down to 0.563 and shifted
   // up-left in its frame. Her editor value, verbatim.
   "/watercolors/05/main.jpg": { full: false, scale: 0.563, dx: -1.7063532991926138, dy: -8.404055233704803 },
+  // Her direction (2026-11-16): the shop cover of watercolor 1
+  // (Breakfast Residuals) becomes a framed photograph (the new
+  // main.jpg), but the book's plate of the same work must show the
+  // painting itself — a clean scan she sent for the book. The swap
+  // is book-only: EdBookImage renders the book file for this plate,
+  // while the shop keeps reading main.jpg. The plate's page ground
+  // (black, pageBackgrounds.ts) and caption are keyed to the
+  // unchanged image_url and stand as they were.
+  "/watercolors/01/main.jpg": { src: "/book/residuals/residuals-01-scan.jpg" },
 };
