@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, Link, Navigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getWatercolor, seriesList, studioCardPayLink, PRINT_9X12_PAYLINK } from "@/lib/watercolors";
@@ -67,6 +67,12 @@ const WatercolorDetail = () => {
       )
     ).then((results) => setImages(results.filter(Boolean) as string[]));
   }, [paddedId]);
+
+  // Shop-only dedupe: #62 is this same painting's book-catalog record
+  // (Residuals #29 / 火锅余韵); the shop sells the work only as #2.
+  if (id === "62") {
+    return <Navigate to="/watercolors/2" replace />;
+  }
 
   if (!work) {
     return (
@@ -136,7 +142,7 @@ const WatercolorDetail = () => {
   const detailChips: { en: string; zh: string }[] = [
     work.series === "III" ? { en: "Cards", zh: "卡片" } : { en: "Fine Art Prints", zh: "版画 · 限量版号" },
     ...(work.framed ? [{ en: FRAMED_ART_CATEGORY, zh: FRAMED_ART_CATEGORY_ZH }] : []),
-    ...(isMultiOption ? [{ en: ORIGINAL_ART_CATEGORY, zh: ORIGINAL_ART_CATEGORY_ZH }] : []),
+    ...((isMultiOption || work.originalArt) ? [{ en: ORIGINAL_ART_CATEGORY, zh: ORIGINAL_ART_CATEGORY_ZH }] : []),
   ];
 
   return (

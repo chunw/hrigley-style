@@ -72,6 +72,10 @@ export interface Watercolor {
   priceLabel?: string;
   paylink?: string;
   framed?: boolean;
+  // Adds the Original Art category label (shop grid filter + detail-page
+  // chips) for a work that is sold as a single option, not print +
+  // framed original.
+  originalArt?: boolean;
   soldOut?: boolean;
   // When set, the detail page shows one "Various options available" button
   // linking here instead of a single price, e.g. print vs. framed original.
@@ -383,6 +387,7 @@ export const watercolors: Watercolor[] = [
     printInfoZh: "13 × 18 厘米装裱印刷品，白色画框，10 × 15 厘米裱装",
     price: 25,
     paylink: PRINT_FRAMED_PAYLINK,
+    originalArt: true,
     framed: true,
   },
   {
@@ -514,6 +519,12 @@ export const watercolors: Watercolor[] = [
       "",
     descriptionZh:
       "",
+    price: 10,
+    priceLabel: "$10 / $100",
+    paylink: PRINT_9X12_PAYLINK,
+    printInfo: `Also available as framed print 20 × 25 cm, $10`,
+    printInfoZh: `亦提供20 × 25 厘米装裱印刷品，$10`,
+    printPrice: 100,
     framed: true,
   },
  {
@@ -879,7 +890,7 @@ export const watercolors: Watercolor[] = [
     titleZh: "火锅余韵",
     series: "I",
     printInCatalog: false,
-    showInStorefront: true,
+    showInStorefront: false,
     year: "2026",
     medium: "Watercolor on paper",
     mediumZh: "纸本水彩",

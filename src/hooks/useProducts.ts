@@ -120,13 +120,13 @@ function buildCatalogProducts(showAll: boolean) {
         categories: (() => {
           const cats = [baseCategory];
           if (w.framed) cats.push(FRAMED_ART_CATEGORY);
-          if ((w.priceLabel?.match(/\$/g) ?? []).length >= 2) cats.push(ORIGINAL_ART_CATEGORY);
+          if (w.originalArt || (w.priceLabel?.match(/\$/g) ?? []).length >= 2) cats.push(ORIGINAL_ART_CATEGORY);
           return cats.length > 1 ? cats : undefined;
         })(),
         categories_zh: (() => {
           const cats = [baseCategoryZh];
           if (w.framed) cats.push(FRAMED_ART_CATEGORY_ZH);
-          if ((w.priceLabel?.match(/\$/g) ?? []).length >= 2) cats.push(ORIGINAL_ART_CATEGORY_ZH);
+          if (w.originalArt || (w.priceLabel?.match(/\$/g) ?? []).length >= 2) cats.push(ORIGINAL_ART_CATEGORY_ZH);
           return cats.length > 1 ? cats : undefined;
         })(),
         paylink: w.series === "III" ? studioCardPayLink(w.title) : (w.paylink ?? w.multiOptionsPaylink ?? PRINT_9X12_PAYLINK),
