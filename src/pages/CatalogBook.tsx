@@ -1771,7 +1771,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         const plateSeq = chapter.key === "residuals"
           ? (() => {
               const byTitle = (t: string) => chapter.items.find(({ item }) => item.title === t);
-              const first = byTitle("Residuals #1");
+              const first = byTitle("Breakfast Residuals");
               const exhibition = chapter.items.find(({ item }) => item.image_url.includes("residuals-01-exhibition"));
               const last = byTitle("Residuals #26");
               // The Breakfast Inventory plate (watercolors/61) is
@@ -1779,7 +1779,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
               // facing spread immediately in front of the Still
               // Things title spread (see the stillthings head in
               // paginate below; her direction, 2026-11-17).
-              const mid = chapter.items.filter(({ item }) => item.title !== "Residuals #1" && item.title !== "Residuals #26" && !item.image_url.includes("residuals-01-exhibition") && !item.image_url.includes("/watercolors/61/main.jpg"));
+              const mid = chapter.items.filter(({ item }) => item.title !== "Breakfast Residuals" && item.title !== "Residuals #26" && !item.image_url.includes("residuals-01-exhibition") && !item.image_url.includes("/watercolors/61/main.jpg"));
               // mid ends with the appended book-only teapot plate;
               // the teapot and #26 lead the run as a pair (standing
               // between the facsimile front pages, split around them),
@@ -1846,7 +1846,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
             if (!nextIsVerso()) specs.push({ kind: "blank" });
             specs.push({ kind: "canva", page: 14 });
           }
-          if (chapter.key === "residuals" && item.title === "Residuals #1" && !item.image_url.includes("residuals-01-exhibition")) {
+          if (chapter.key === "residuals" && item.title === "Breakfast Residuals" && !item.image_url.includes("residuals-01-exhibition")) {
             // Her direction (2026-11-11): the painting and its
             // exhibition view face each other as one spread, the
             // painting on the verso. If the run would land the
@@ -4586,14 +4586,24 @@ function useBookModel(args: {
     // BEFORE its review — see the pagination notes.)
     const residualsChapter = splitChapters.find((ch) => ch.key === "residuals");
     if (residualsChapter) {
+      // Her rename (2026-11-16): the lead plate's title is now
+      // "Breakfast Residuals" — it no longer carries the "Residuals"
+      // prefix the split above keys on, so admit it explicitly, in
+      // its catalog position ahead of the chapter's other plates.
+      // The plate's place in the chapter (lead, closing pair with
+      // its exhibition view) is unchanged.
+      const breakfastItem = (wcChapter?.items ?? []).find(({ item }) => item.title === "Breakfast Residuals");
+      if (breakfastItem && !residualsChapter.items.includes(breakfastItem)) {
+        residualsChapter.items = [breakfastItem, ...residualsChapter.items];
+      }
       const kept = residualsChapter.items.filter(({ item }) => item.title !== "Residuals #2" && item.title !== "Residuals #3");
       const byTitle = (t: string) => kept.findIndex(({ item }) => item.title === t);
       const lead: typeof kept = [];
-      for (const t of ["Residuals #1", "Residuals #26"]) {
+      for (const t of ["Breakfast Residuals", "Residuals #26"]) {
         const i = byTitle(t);
         if (i >= 0) lead.push(kept[i]);
       }
-      residualsChapter.items = [...lead, ...kept.filter(({ item }) => item.title !== "Residuals #26" && item.title !== "Residuals #1")];
+      residualsChapter.items = [...lead, ...kept.filter(({ item }) => item.title !== "Residuals #26" && item.title !== "Breakfast Residuals")];
       // Her direction (2026-11-16): Three Pieces of Fermented Tofu
       // （三块腐乳） joins the chapter as a catalog plate, in the
       // consecutive group behind Residuals #5 (see the plate
@@ -4630,7 +4640,7 @@ function useBookModel(args: {
       // pagination notes). The split is book-only: the catalog work,
       // its shop image and its data stay untouched.
       residualsChapter.items = residualsChapter.items.flatMap((pair) => {
-        if (pair.item.title !== "Residuals #1") return [pair];
+        if (pair.item.title !== "Breakfast Residuals") return [pair];
         const exhibitionPair = {
           ...pair,
           item: {
