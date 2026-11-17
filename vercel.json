@@ -1,6 +1,19 @@
 {
+  "redirects": [
+    {
+      "source": "/watercolors/62",
+      "destination": "/watercolors/2",
+      "permanent": false
+    }
+  ],
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
