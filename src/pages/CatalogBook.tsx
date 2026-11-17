@@ -1498,6 +1498,38 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       specs.push({ kind: "bleed", half: "left", chapter, item: PRE_IPHONE_ERA_PLATE });
       specs.push({ kind: "bleed", half: "right", chapter, item: PRE_IPHONE_ERA_PLATE });
     }
+    // Her direction (2026-11-17): a facing spread stands immediately
+    // in front of the Still Things title spread, closing the Residuals
+    // run behind the Lanzhou Lamian plate — Still Things #8 (the
+    // full-bleed plate; its caption stands on the picture at the
+    // bottom right) on the verso, and the Breakfast Inventory plate
+    // (watercolors/61; its caption stands under the frame at the
+    // bottom right) on the recto. Both plates are lifted out of
+    // their home runs (see the plate-sequence filters in the plate
+    // loop), so each work prints exactly once, here. The pair
+    // carries the Residuals chapter, so the contents still names
+    // the title spread as the Still Things chapter's first page. A
+    // blank steps in first if the run would land #8 on a recto, so
+    // the two stay facing. The recto plate's caption names the work
+    // 《早餐存量分析》 at her word for this page; the catalog record
+    // keeps its full title (Residuals #27 / 《早餐存量分析 其二》)
+    // and the shop is untouched — the override lives only on this
+    // page's item.
+    if (chapter.key === "stillthings") {
+      const residualsChapter = chapters.find((c) => c.key === "residuals");
+      const still8 = chapter.items.find(({ item }) => item.image_url.includes("/watercolors/14/main.jpg"));
+      const inventory = residualsChapter?.items.find(({ item }) => item.image_url.includes("/watercolors/61/main.jpg"));
+      if (residualsChapter && still8 && inventory) {
+        if (!nextIsVerso()) specs.push({ kind: "blank" });
+        specs.push({ kind: "plate", chapter: residualsChapter, item: still8.item, plate: still8.plate });
+        specs.push({
+          kind: "plate",
+          chapter: residualsChapter,
+          item: { ...inventory.item, title: "Breakfast Inventory Analysis", titleZh: "早餐存量分析" },
+          plate: inventory.plate,
+        });
+      }
+    }
     if (CHAPTER_EPIGRAPH[chapter.key] || chapter.partHead || chapter.partIntro) {
       if (!nextIsVerso()) specs.push({ kind: "blank" });
       // Her direction (2026-11-10): the road chapter gains a title
@@ -1742,7 +1774,12 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
               const first = byTitle("Residuals #1");
               const exhibition = chapter.items.find(({ item }) => item.image_url.includes("residuals-01-exhibition"));
               const last = byTitle("Residuals #26");
-              const mid = chapter.items.filter(({ item }) => item.title !== "Residuals #1" && item.title !== "Residuals #26" && !item.image_url.includes("residuals-01-exhibition"));
+              // The Breakfast Inventory plate (watercolors/61) is
+              // likewise lifted out of this run: it stands in the
+              // facing spread immediately in front of the Still
+              // Things title spread (see the stillthings head in
+              // paginate below; her direction, 2026-11-17).
+              const mid = chapter.items.filter(({ item }) => item.title !== "Residuals #1" && item.title !== "Residuals #26" && !item.image_url.includes("residuals-01-exhibition") && !item.image_url.includes("/watercolors/61/main.jpg"));
               // mid ends with the appended book-only teapot plate;
               // the teapot and #26 lead the run as a pair (standing
               // between the facsimile front pages, split around them),
@@ -1761,6 +1798,11 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
               // live on the facsimile pages). Only the Lanzhou
               // Lamian remains, holding the group's slot behind
               // Residuals #5, directly ahead of the #1 pair.
+              // (Same day, later: the breakfast inventory plate —
+              // the first of the four — returns to the book, not
+              // here but in the facing spread in front of the Still
+              // Things title spread; see the stillthings head in
+              // paginate and the mid filter below.)
               const groupUrls = [
                 "/watercolors/08/main.jpg",
               ];
@@ -1770,7 +1812,14 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
               const restMid = mid.filter((p) => !group.includes(p));
               return [...restMid.slice(-1), ...(last ? [last] : []), ...restMid.slice(0, -1), ...group, ...(first ? [first] : []), ...(exhibition ? [exhibition] : [])];
             })()
-          : chapter.items;
+          : chapter.key === "stillthings"
+            // Still Things #8 is lifted out of this chapter's own
+            // plate run: it stands in the facing spread immediately
+            // in front of the chapter's title spread (see the
+            // stillthings head in paginate below; her direction,
+            // 2026-11-17), so the work prints exactly once.
+            ? chapter.items.filter(({ item }) => !item.image_url.includes("/watercolors/14/main.jpg"))
+            : chapter.items;
         for (let ii = 0; ii < plateSeq.length; ii++) {
           const { item, plate } = plateSeq[ii];
           if (chapter.key === "residuals" && item.image_url.includes("residuals-teapot-bw")) {
