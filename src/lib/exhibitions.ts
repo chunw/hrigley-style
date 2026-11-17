@@ -109,7 +109,7 @@ export const PART_WEBSITES: Record<number, { key: string; url: string; nameEn?: 
     // Negotiated Intelligence section, is her Instagram post of the
     // work; its line stands in this archives group under the work's
     // name, in the same form as the lines above.
-    { key: "series:negotiated", url: "instagram.com/p/DE-iZHuuM9C", nameEn: "In the Spirit of the 21st Century", nameZh: "21世纪精神" },
+    { key: "series:negotiated", url: "instagram.com/p/DE-iZHuuM9C", nameEn: "In the Spirit of the 21st Century (Video)", nameZh: "21世纪精神（视频）" },
   ],
 };
 

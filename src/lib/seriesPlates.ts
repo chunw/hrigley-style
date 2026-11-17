@@ -22,7 +22,7 @@ const plate = (
   metaLine,
   ...(metaZh ? { metaZh } : {}),
   year,
-  description: `<p>${en}<br />${zh}</p>`,
+  description: en === "" && zh === "" ? "" : `<p>${en}<br />${zh}</p>`,
   category: "Series plates",
   image_url: img,
   fallback_image_url: img,
@@ -339,19 +339,21 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
     // the picture touched); the second is the second image of her
     // Instagram post of the work (instagram.com/p/DE-iZHuuM9C). The
     // Chinese meta line is our rendering of "Video stills, 2024",
-    // pending her veto.
+    // pending her veto. Both plates' description sentences were
+    // removed at her direction (2026-11-17); the plates carry
+    // caption only.
     plate(
       "In the Spirit of the 21st Century", "Video stills, 2024", "2024",
-      "Two frames from the video: beside a white pole, a small motor drives a horizontal rod; the doll that hung from the rod is falling.",
-      "视频中的两帧：白杆旁的小电机带动一根横杆，挂在杆上的娃娃正在坠落。",
+      "",
+      "",
       "/book/negotiated/spirit-21st-century-stills.jpg",
       undefined,
       "视频静帧 2024年",
     ),
     plate(
       "In the Spirit of the 21st Century", "Video stills, 2024", "2024",
-      "A closer view: the motor and its red and black wires, and the doll hanging by its hands from the end of the rod.",
-      "近景：电机和它的红黑电线，娃娃双手挂在横杆末端。",
+      "",
+      "",
       "/book/negotiated/spirit-21st-century-still.jpg",
       undefined,
       "视频静帧 2024年",
