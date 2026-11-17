@@ -592,9 +592,14 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
     en: "These ostensibly insignificant leftovers are transformed by the artist into physical evidence of the passage of time.",
     zh: "这些看似微不足道的残余，被艺术家转化成了时间流逝的实物证据。",
   },
+  // Her direction, 2026-11-17: the road epigraph is deleted, not
+  // replaced. The empty entry holds the chapter's opener spreads
+  // open with no sentence printed on them (the Spirit/IMMEMORY
+  // precedent). The closing line of the chapter's own essay text
+  // is a different sentence and stands untouched.
   road: {
-    en: "The journeys end. The moments remain.",
-    zh: "旅程会结束，瞬间留下来。",
+    en: "",
+    zh: "",
   },
   "series:unfinishedpart": {
     en: "When machines learn to create, what remains human?",
@@ -1734,10 +1739,10 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         const plateSeq = chapter.key === "residuals"
           ? (() => {
               const byTitle = (t: string) => chapter.items.find(({ item }) => item.title === t);
-              const first = byTitle("Breakfast Residuals");
+              const first = byTitle("Residuals #1");
               const exhibition = chapter.items.find(({ item }) => item.image_url.includes("residuals-01-exhibition"));
               const last = byTitle("Residuals #26");
-              const mid = chapter.items.filter(({ item }) => item.title !== "Breakfast Residuals" && item.title !== "Residuals #26" && !item.image_url.includes("residuals-01-exhibition"));
+              const mid = chapter.items.filter(({ item }) => item.title !== "Residuals #1" && item.title !== "Residuals #26" && !item.image_url.includes("residuals-01-exhibition"));
               // mid ends with the appended book-only teapot plate;
               // the teapot and #26 lead the run as a pair (standing
               // between the facsimile front pages, split around them),
@@ -1789,7 +1794,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
             if (!nextIsVerso()) specs.push({ kind: "blank" });
             specs.push({ kind: "canva", page: 14 });
           }
-          if (chapter.key === "residuals" && item.title === "Breakfast Residuals" && !item.image_url.includes("residuals-01-exhibition")) {
+          if (chapter.key === "residuals" && item.title === "Residuals #1" && !item.image_url.includes("residuals-01-exhibition")) {
             // Her direction (2026-11-11): the painting and its
             // exhibition view face each other as one spread, the
             // painting on the verso. If the run would land the
@@ -3521,8 +3526,11 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               {/* Production note for this spread, her wording (2026-11-09):
                   painted at a residence in Sugamo, Tokyo, during a Japan
                   trip. (It was first mis-filed to the Japanese Pottery
-                  caption; she ruled it belongs here, on the Road opener.) */}
-              <div className="bk-caption-meta">{capParts([{ lang: "en", text: "Painted during a trip to Japan, at a residence in Sugamo, Tokyo" }, { lang: "zh", text: "绘于日本旅行中位于东京巢鸭的住所" }] as CapPart[], ctx.capLang).join(" · ")}</div>
+                  caption; she ruled it belongs here, on the Road opener.)
+                  Wording updated at her direction, 2026-11-17: the
+                  residence is a temporary one — ZH 「临时住所」, and the
+                  EN follows the ZH ("a temporary residence"). */}
+              <div className="bk-caption-meta">{capParts([{ lang: "en", text: "Painted during a trip to Japan, at a temporary residence in Sugamo, Tokyo" }, { lang: "zh", text: "绘于位于东京巢鸭的临时住所" }] as CapPart[], ctx.capLang).join(" · ")}</div>
             </div>
           )}
         </Page>
@@ -3706,14 +3714,6 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const frameCaptionCls = item.image_url.includes("/watercolors/61/main.jpg")
         ? "bk-caption bk-caption-right"
         : "bk-caption";
-      // Her direction (2026-11-16): the Medellín plate's picture
-      // stands on its beige page with a slight soft shadow, like
-      // her reference mock — this page's picture only (see
-      // .bk-plate-frame-shadow in catalog-book.css). No other
-      // plate's frame takes the class.
-      const frameCls = item.image_url.includes("/watercolors/52/")
-        ? "bk-plate-frame bk-plate-frame-shadow"
-        : "bk-plate-frame";
       const partnerItem = partnerPage?.spec.kind === "plate" ? partnerPage.spec.item : null;
       const facingItem =
         chapter.key === "road" &&
@@ -3761,7 +3761,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       };
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-plate-page${bgImgCls}`}>{bgImgLayer}
-          <div className={frameCls}>
+          <div className="bk-plate-frame">
             <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
           </div>
           {!isRoadNewYork && !fullBleedPlate && (
@@ -4485,24 +4485,14 @@ function useBookModel(args: {
     // BEFORE its review — see the pagination notes.)
     const residualsChapter = splitChapters.find((ch) => ch.key === "residuals");
     if (residualsChapter) {
-      // Her rename (2026-11-16): the lead plate's title is now
-      // "Breakfast Residuals" — it no longer carries the "Residuals"
-      // prefix the split above keys on, so admit it explicitly, in
-      // its catalog position ahead of the chapter's other plates.
-      // The plate's place in the chapter (lead, closing pair with
-      // its exhibition view) is unchanged.
-      const breakfastItem = (wcChapter?.items ?? []).find(({ item }) => item.title === "Breakfast Residuals");
-      if (breakfastItem && !residualsChapter.items.includes(breakfastItem)) {
-        residualsChapter.items = [breakfastItem, ...residualsChapter.items];
-      }
       const kept = residualsChapter.items.filter(({ item }) => item.title !== "Residuals #2" && item.title !== "Residuals #3");
       const byTitle = (t: string) => kept.findIndex(({ item }) => item.title === t);
       const lead: typeof kept = [];
-      for (const t of ["Breakfast Residuals", "Residuals #26"]) {
+      for (const t of ["Residuals #1", "Residuals #26"]) {
         const i = byTitle(t);
         if (i >= 0) lead.push(kept[i]);
       }
-      residualsChapter.items = [...lead, ...kept.filter(({ item }) => item.title !== "Residuals #26" && item.title !== "Breakfast Residuals")];
+      residualsChapter.items = [...lead, ...kept.filter(({ item }) => item.title !== "Residuals #26" && item.title !== "Residuals #1")];
       // Her direction (2026-11-16): Three Pieces of Fermented Tofu
       // （三块腐乳） joins the chapter as a catalog plate, in the
       // consecutive group behind Residuals #5 (see the plate
@@ -4539,7 +4529,7 @@ function useBookModel(args: {
       // pagination notes). The split is book-only: the catalog work,
       // its shop image and its data stay untouched.
       residualsChapter.items = residualsChapter.items.flatMap((pair) => {
-        if (pair.item.title !== "Breakfast Residuals") return [pair];
+        if (pair.item.title !== "Residuals #1") return [pair];
         const exhibitionPair = {
           ...pair,
           item: {
