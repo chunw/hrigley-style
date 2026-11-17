@@ -121,7 +121,12 @@ const WatercolorDetail = () => {
         : [work.price ?? 10, work.printPrice ?? 35];
     purchaseOptions = [
       { key: "print-9x12", labelEn: '23 × 30 cm fine art print', labelZh: "23 × 30 厘米艺术微喷印刷品", price: firstPrice },
-      { key: "framed-original", labelEn: "Framed original", labelZh: "原作（已装裱）", price: secondPrice },
+      {
+        key: "framed-original",
+        labelEn: work.framedDimensions ? `Framed original ${work.framedDimensions}` : "Framed original",
+        labelZh: work.framedDimensionsZh ? `原作（已装裱）${work.framedDimensionsZh}` : "原作（已装裱）",
+        price: secondPrice,
+      },
     ];
   } else {
     const price = work.price ?? work.printPrice ?? 10;

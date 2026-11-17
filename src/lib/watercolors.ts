@@ -76,6 +76,11 @@ export interface Watercolor {
   // chips) for a work that is sold as a single option, not print +
   // framed original.
   originalArt?: boolean;
+  // Framed size of the original, shown on the framed-original purchase
+  // button (e.g. "20 × 25 cm"). Leave unset when the size is not on
+  // record; the button then shows no dimensions.
+  framedDimensions?: string;
+  framedDimensionsZh?: string;
   soldOut?: boolean;
   // When set, the detail page shows one "Various options available" button
   // linking here instead of a single price, e.g. print vs. framed original.
@@ -525,6 +530,8 @@ export const watercolors: Watercolor[] = [
     printInfo: `Also available as framed print 20 × 25 cm, $10`,
     printInfoZh: `亦提供20 × 25 厘米装裱印刷品，$10`,
     printPrice: 100,
+    framedDimensions: "20 × 25 cm",
+    framedDimensionsZh: "20 × 25 厘米",
     framed: true,
   },
  {
