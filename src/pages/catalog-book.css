@@ -18,6 +18,10 @@
   --paper: #ffffff;
   --text: #111111;
   --muted: #767066;
+  /* Caption ink (her direction, 2026-11-15, from her sample page):
+     every work caption — title, meta, description — reads in one
+     flat light grey, a step lighter than the book's muted tone. */
+  --cap: #8f8f8f;
   --rule: #ddd8ce;
   --accent: hsl(328 85% 72%);
   --red: #C8402A;
@@ -122,6 +126,7 @@
 .bk-paper-black .bk-page.bk-tone-paper {
   --text: #f0e9da;
   --muted: #a79c86;
+  --cap: #a6a6a6;
   --rule: #3a352a;
 }
 
@@ -220,6 +225,7 @@
 .bk-tone-ink {
   --text: #ffffff;
   --muted: rgba(255, 255, 255, 0.55);
+  --cap: #a6a6a6;
   --rule: rgba(255, 255, 255, 0.18);
   background: #000;
 }
@@ -232,6 +238,7 @@
 .bk-divider-page {
   --text: #26221c;
   --muted: rgba(38, 34, 28, 0.62);
+  --cap: rgba(38, 34, 28, 0.58);
   background: var(--chapter-color, #DFA79B);
   align-items: center;
   justify-content: center;
@@ -273,6 +280,7 @@
   --paper: #000000;
   --text: #f0e9da;
   --muted: #a79c86;
+  --cap: #a6a6a6;
   --rule: #3a352a;
   background: #000000;
 }
@@ -281,6 +289,7 @@
   --paper: var(--accent);
   --text: #26221c;
   --muted: rgba(38, 34, 28, 0.62);
+  --cap: rgba(38, 34, 28, 0.58);
   --rule: rgba(38, 34, 28, 0.25);
   background: var(--accent);
 }
@@ -576,7 +585,8 @@
   .bk-pagebgimg-ctl,
   .bk-editor-panel,
   .bk-editor-msg,
-  .bk-eyedrop-chip {
+  .bk-eyedrop-chip,
+  .bk-imgedit-overlay {
     display: none !important;
   }
 }
@@ -979,7 +989,10 @@
    direction, 2026-11-10). Type stepped up from the 7pt bleed-caption
    size she found too small: meta line 9.5pt, place lines 9pt —
    above the ordinary plate captions (meta 7pt, desc 7.5pt) and at
-   the book's body-text scale. Scoped to these spreads' captions
+   the book's body-text scale. (2026-11-15, third pass: both this
+   pair and the house register stepped up a quarter together —
+   11.875pt / 11.25pt against house 8.75pt / 9.375pt — keeping the
+   step.) Scoped to these spreads' captions
    only; the Thailand and Pre-iPhone bleed captions keep their
    own sizes. */
 .bk-bleed-caption-road {
@@ -990,14 +1003,21 @@
 
 .bk-bleed-caption-road .bk-caption-meta {
   color: #fff;
-  font-size: 9.5pt;
-  line-height: 1.45;
+  font-size: 11.875pt;
+  line-height: 1.2;
 }
 
-.bk-bleed-caption-road .bk-caption-meta:nth-child(2) {
-  margin-top: 6px;
-  font-size: 9pt;
-  line-height: 1.55;
+/* The :not(.bk-cap-joined) guard (2026-11-15, fourth pass): in
+   the bilingual view the road caption's two place lines pair into
+   one, so its meta line moves up to second child — without the
+   guard this rule would shrink it from the bilingual 11.875pt it
+   has today to 11.25pt. The paired meta carries bk-cap-joined
+   and keeps 11.875pt; the single-language views, whose meta line
+   is second child behind one place line, keep 11.25pt as before. */
+.bk-bleed-caption-road .bk-caption-meta:nth-child(2):not(.bk-cap-joined) {
+  margin-top: 0;
+  font-size: 11.25pt;
+  line-height: 1.2;
 }
 
 /* Bottom-right variant (her direction, 2026-11-10, later the same
@@ -1044,6 +1064,41 @@
 .bk-bleed-caption-flush .bk-caption-meta,
 .bk-bleed-caption-flush .bk-caption-desc {
   color: #fff;
+}
+
+/* The flush caption's title takes the same white as its meta
+   lines (the uniform-caption rule would otherwise hand it the
+   page's muted tone; on this black spread the caption's own
+   register is white throughout). */
+.bk-root .bk-bleed-caption-flush .bk-caption-title {
+  color: #fff;
+}
+
+/* The road spreads' and the Thailand spread's title lines take
+   the same white as their meta lines (her direction,
+   2026-11-15): these corner captions print flat white
+   throughout — the uniform title rule (.bk-root
+   .bk-caption-title) would otherwise hand the title the
+   caption grey while the meta lines print white, two colours
+   in one caption block. Same remedy as the flush caption
+   above; colour only — sizes, alignment and placement keep
+   their standing settings. */
+.bk-root .bk-bleed-caption-road .bk-caption-title,
+.bk-root .bk-bleed-caption-bl .bk-caption-title {
+  color: #fff;
+}
+
+/* The road spreads' title lines also take their own caption's
+   size (her dead rule, 2026-11-15: a work's title is set in
+   exactly the font and size of the other lines of ITS caption,
+   no exceptions). The road caption's register is the stepped-up
+   11.875pt of its meta line; the shared title rule would
+   otherwise import the house caption size (8.75pt) and print
+   the title a step smaller than the lines it stands with. The
+   Thailand spread's caption sits at the house register already,
+   so its title and meta lines match without a rule here. */
+.bk-root .bk-bleed-caption-road .bk-caption-title {
+  font-size: 11.875pt;
 }
 
 
@@ -1129,9 +1184,11 @@
 
 .bk-frontis-caption {
   margin-top: 0.2in;
-  font-size: 7pt;
+  font-size: 8.75pt;
   letter-spacing: 0.08em;
-  color: var(--muted);
+  line-height: 1.2;
+  text-align: center;
+  color: var(--cap);
 }
 
 .bk-title-body {
@@ -1637,6 +1694,16 @@
   margin-top: 0.3in;
 }
 
+/* Medellín plate only (her direction, 2026-11-16): the picture
+   takes a slight soft drop shadow on its beige page, scaled from
+   her reference mock (6px 14px 42px rgba(60,50,35,.28) plus
+   2px 5px 14px rgba(50,42,30,.22) on a 1240px-wide canvas). The
+   img box is the picture's own fitted rect, so the shadow hugs
+   the picture; no border, no outline. */
+.bk-plate-frame-shadow img {
+  box-shadow: 0.041in 0.095in 0.29in rgba(60, 50, 35, 0.28), 0.014in 0.034in 0.095in rgba(50, 42, 30, 0.22);
+}
+
 /* Objects-chapter grids: small works share a page, each with its own
    caption under its image (her grouping rule, 2026-11-07). */
 .bk-plate-grid {
@@ -1682,10 +1749,11 @@
 
 .bk-grid-caption {
   margin-top: 0.12in;
+  text-align: center;
 }
 
 .bk-grid-caption .bk-caption-meta {
-  margin-top: 2px;
+  margin-top: 0;
 }
 
 /* IMMEMORY journal handnotes: one dense grid field filling a whole
@@ -1734,24 +1802,44 @@
 
 .bk-journal-caption {
   margin-top: 0.06in;
+  text-align: center;
 }
 
-.bk-journal-caption .bk-caption-title {
-  font-size: 7pt;
-  line-height: 1.25;
+.bk-root .bk-journal-caption .bk-caption-title {
+  /* The journal captions' compact register: the title matches the
+     journal meta size exactly (her uniform-caption direction,
+     2026-11-15). */
+  font-size: 8.125pt;
 }
 
 .bk-journal-caption .bk-caption-meta {
-  font-size: 6.5pt;
-  margin-top: 1px;
+  font-size: 8.125pt;
+  margin-top: 0;
 }
 
 .bk-caption {
   display: grid;
   grid-template-columns: 0.75in 1fr;
   gap: 0 0.15in;
-  margin-top: 0.3in;
-  padding-top: 0.13in;
+  /* Image-to-caption air (her sample page, 2026-11-15): the gap
+     between the picture and the first caption line measures about
+     one caption line — margin and padding together land there. */
+  margin-top: 0.12in;
+  padding-top: 0.1in;
+  /* Caption hug (her direction, 2026-11-15): a plate picture is
+     centred in its page-height frame and the caption stands after
+     the frame, so a picture shorter than the frame left its
+     caption pinned to the page bottom across a wide empty gap
+     (the Ratchadamnoen plate was the case she flagged). The
+     picture's EdBookImage publishes the frame's empty bottom
+     strip as --cap-lift on the page element; the caption spends
+     it here, rising to stand the standard 0.12in under the
+     picture wherever the picture ends. A transform, not a
+     margin: the layout does not move, so the frame keeps its
+     height, the picture does not move a pixel, and pictures
+     that fill their frame publish no lift and stand exactly
+     as before. */
+  transform: translateY(calc(-1 * var(--cap-lift, 0px)));
 }
 
 /* No plate number is rendered in the caption, so the number gutter would
@@ -1760,6 +1848,9 @@
    The body spans the full caption width instead. */
 .bk-caption-body {
   grid-column: 1 / -1;
+  /* Captions centre under their picture (her sample page,
+     2026-11-15), the whole book over. */
+  text-align: center;
 }
 
 /* A facing plate's work info standing on this page (the road
@@ -1789,22 +1880,72 @@
   text-transform: uppercase;
 }
 
-/* Work titles in captions get no special face (her direction,
-   2026-11-07): same font and size as the caption text around them,
-   just a step bolder. This overrides the shop .product-title serif
-   the title elements also carry. */
+/* Work titles in captions carry no emphasis of their own (her
+   direction, 2026-11-15, superseding the 2026-11-07 "a step
+   bolder" setting): within every caption — plate, grid, journal,
+   bleed, overlay — the title line takes exactly the caption meta
+   text's style (regular weight, the meta letter-spacing), so
+   all work information in a caption reads in one uniform register.
+   This overrides the shop .product-title serif the title elements
+   also carry.
+   The register itself (her sample page, 2026-11-15, later): one
+   clean sans stack for every caption line — Latin in Aileron /
+   Helvetica, Chinese in the system gothic, never the book's
+   Fangsong — one flat light grey (--cap), and one leading shared
+   by title, meta and description alike, the lines spaced by the
+   leading alone. The leading itself: 1.95 until her direction of
+   2026-11-15 ("作品信息的行间距过大，全书改成 1.2") tightened
+   every work-info / caption block in the book to 1.2.
+   Sizes stepped up a quarter across the whole caption register
+   (her direction, 2026-11-15, third pass): title and meta 7pt →
+   8.75pt, description 7.5pt → 9.375pt, the journal compact pair
+   6.5pt → 8.125pt, the frontispiece caption 7pt → 8.75pt, and the
+   road bleed pair 9.5/9pt → 11.875/11.25pt, each keeping its step
+   against the others. The small labels riding inside caption
+   blocks (.bk-caption-num, .bk-caption-facing-label) are not
+   caption lines and keep their 6.5pt label setting. */
 .bk-root .bk-caption-title {
-  font-family: inherit;
-  font-size: 8pt;
-  font-weight: 650;
-  line-height: 1.4;
+  font-family: 'Aileron', 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', Arial, sans-serif;
+  font-size: 8.75pt;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  color: var(--cap);
+}
+
+/* The three-line work caption's title line (her direction,
+   2026-11-15, second pass): the English title prints italic, no
+   brackets; the Chinese title stands upright inside its 《》.
+   The two language blocks stack with no spacing of their own —
+   the shared 1.2 leading spaces every line, as everywhere in
+   the caption register. */
+.bk-root .bk-caption-title em {
+  font-style: italic;
+}
+
+/* Paired bilingual caption lines (her direction, 2026-11-15,
+   fourth pass): in the bilingual view one content line carries
+   its English and Chinese fragments side by side (EN span, a
+   space, ZH span — see JoinedCapLines in CatalogBook.tsx). A
+   paired line never wraps: a caption whose paired line cannot
+   fit its box on one physical line keeps the stacked bilingual
+   composition instead (CAP_JOIN_EXCLUDE in CatalogBook.tsx). */
+.bk-cap-line {
+  white-space: nowrap;
+}
+
+.bk-caption-meta,
+.bk-caption-desc,
+.bk-frontis-caption {
+  font-family: 'Aileron', 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', Arial, sans-serif;
 }
 
 .bk-caption-meta {
-  margin-top: 4px;
-  font-size: 7pt;
+  margin-top: 0;
+  font-size: 8.75pt;
   letter-spacing: 0.06em;
-  color: var(--muted);
+  line-height: 1.2;
+  color: var(--cap);
 }
 
 .bk-caption-desc {
@@ -1813,10 +1954,64 @@
   -webkit-line-clamp: 5;
   overflow: hidden;
   max-width: 4.5in;
-  margin-top: 8px;
-  font-size: 7.5pt;
-  line-height: 1.55;
-  color: var(--muted);
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 9.375pt;
+  line-height: 1.2;
+  color: var(--cap);
+}
+
+/* Full-bleed plates (her direction, 2026-11-15): when a landed
+   full-bleed picture edit covers the whole sheet, the caption
+   under the frame is covered with it and the work would stand
+   with no information at all — so the caption stands ON the
+   picture instead, at the sheet's bottom-left, in the same
+   caption composition and the same unified caption text as
+   every other caption. The z-index clears the full-bleed
+   portal picture, which is appended to the page element.
+   Position update (her direction, 2026-11-15, later): the
+   caption hugs the sheet's edge more closely — insets roughly
+   halved from 0.55in / 0.42in. */
+.bk-plate-overlay-caption {
+  position: absolute;
+  left: 0.3in;
+  bottom: 0.2in;
+  z-index: 4;
+  max-width: 5.4in;
+  text-align: left;
+}
+
+/* Corner rule (her direction, 2026-11-15): a caption aligns toward
+   the corner it sits in — bottom-left captions left-align,
+   bottom-right captions right-align. The overlay caption stands at
+   the sheet's bottom-left, so its lines left-align; the shared
+   caption body's centred setting (the in-flow plate captions'
+   register) is overridden inside the overlay only. */
+.bk-plate-overlay-caption .bk-caption-body {
+  text-align: left;
+}
+
+/* Bottom-right overlay caption (her direction, 2026-11-16): the
+   Still Things #8 overlay caption moves from the sheet's
+   bottom-left to its bottom-right corner, and under the corner
+   rule its lines right-align. */
+.bk-overlay-caption-right {
+  left: auto;
+  right: 0.3in;
+  text-align: right;
+}
+
+.bk-overlay-caption-right .bk-caption-body {
+  text-align: right;
+}
+
+/* Bottom-right framed caption (her direction, 2026-11-16): the
+   Breakfast Inventory #2 plate keeps its caption under the frame,
+   but the caption block right-aligns, so it stands at the page's
+   bottom-right under the corner rule. */
+.bk-caption-right .bk-caption-body {
+  text-align: right;
 }
 
 /* Residuals #1 exhibition view (her direction, 2026-11-11): the
@@ -1834,6 +2029,7 @@
   font-size: 9pt;
   font-weight: 600;
   letter-spacing: 0.03em;
+  line-height: 1.2;
   color: var(--text);
 }
 
@@ -2750,21 +2946,19 @@
 /* Picture-edit tool (edit mode, 2026-11-08): a click selects a framed
    picture, the corner handle drags to resize it, and the panel that
    opens with the selection swaps in a file from the computer. */
+/* The overlay is a pure hit/drag layer: it draws NOTHING on the
+   picture. It once traced the picture with a rust dashed outline
+   on hover (and a solid one when selected) — her rule of
+   2026-11-15 ("所有的图不许加任何边框虚线": no picture in the
+   book carries any border — dashed, solid or outline) removed
+   both. Selection still reads from the corner handles and the
+   panel that opens with it; the layer itself stays invisible,
+   and print hides it outright (see the @media print block). */
 .bk-imgedit-overlay {
   position: absolute;
   inset: 0;
   z-index: 3;
   cursor: pointer;
-}
-
-.bk-imgedit-overlay:hover {
-  outline: 1.5px dashed rgba(138, 60, 0, 0.55);
-  outline-offset: -1.5px;
-}
-
-.bk-imgedit-on {
-  outline: 2px solid #8a3c00;
-  outline-offset: -2px;
 }
 
 .bk-imgedit-handle {

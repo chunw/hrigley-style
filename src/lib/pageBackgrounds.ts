@@ -116,45 +116,99 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   // right reads as the picture's own black ground.
   "bleed:remains:left": "black",
   "bleed:remains:right": "black",
-  "plate:/remains/02/main.jpg": "black",
-  "plate:/remains/03/main.jpg": "black",
-  "plate:/remains/04/main.jpg": "black",
+  // White-ground rule (her direction, 2026-11-15): a framed plate
+  // page whose picture does not fill the sheet stands on WHITE,
+  // not black — the Ratchadamnoen plate (watercolors/50) first,
+  // then every plate page of the same class, flipped in the same
+  // pass: remains/02, /03, /04, /06, watercolors/05, /49, /50, /51,
+  // /53, /59, photography/01, /03, /04, /07, /08 and the Negotiated
+  // Intelligence chimera-haiku plate. Only the ground changes:
+  // picture, caption and folio are untouched, and the light ground
+  // flips each caption to the white-paper grey via the --cap rules,
+  // as on every white page. Held back, unchanged, at her standing
+  // page-specific directions: the Residuals No. 1 pair
+  // (watercolors/01 + its exhibition page — a designed black
+  // spread), the monkeys plate (watercolors/58 — directed to a
+  // single black page, 2026-11-11), the plateGrid ground (the
+  // Rothko 2×2 grid and the objects grid stand on it by design)
+  // and the black Canva facsimile pages (canva:15, canva:16 —
+  // p. 16's black was confirmed by her, 2026-11-11). Full-bleed
+  // plates (watercolors/46) and the bleed spreads keep their
+  // grounds: there the black is the picture itself.
+  "plate:/remains/02/main.jpg": "white",
+  "plate:/remains/03/main.jpg": "white",
+  "plate:/remains/04/main.jpg": "white",
   "plate:/remains/05/main.jpg": "white",
-  "plate:/remains/06/main.jpg": "black",
-  "plate:/watercolors/54/main.jpg": "black",
+  "plate:/remains/06/main.jpg": "white",
+  // Residuals #26 (watercolors/54): black → white (her direction,
+  // 2026-11-15 — the page takes the white ground of her sample
+  // page). Only the ground changes: the plate keeps its folio and
+  // its facing partner (the untitled teapot plate, itself on
+  // white), so the spread and the book's pagination are untouched;
+  // the light ground flips the caption to the white-paper grey via
+  // the --cap rules, as on every white page.
+  "plate:/watercolors/54/main.jpg": "white",
   "plate:/watercolors/01/main.jpg": "black",
   "plate:/book/residuals/residuals-01-exhibition.jpg": "black",
-  "plate:/watercolors/05/main.jpg": "black",
+  "plate:/watercolors/05/main.jpg": "white",
   "plate:/watercolors/13/main.jpg": "black",
   "plate:/watercolors/43/main.jpg": "white",
-  "plate:/watercolors/14/main.jpg": "black",
+  // Still Things No. 8 (watercolors/14), restored by PR #304: the page
+  // ground takes the painting's own paper colour — #D3CEC3, the median
+  // of the picture's paper region — instead of black (her direction,
+  // 2026-11-14: "其八的底色 不要黑色 要复制画里本身的背景色"). The
+  // picture file itself is unchanged; only the page ground moves, and
+  // the light ground flips the caption to the dark-text preset via
+  // hexBgStyle, as on white/cream pages.
+  "plate:/watercolors/14/main.jpg": "#D3CEC3",
   "plate:/watercolors/45/main.jpg": "black",
   "plate:/watercolors/46/main.jpg": "black",
   "plate:/watercolors/47/main.jpg": "black",
-  "plate:/watercolors/53/main.jpg": "black",
+  "plate:/watercolors/53/main.jpg": "white",
   "plate:/watercolors/60/main.jpg": "cream",
   "plate:/book/road/road-castle-cake.jpg": "cream",
   "canva:21": "white",
-  "plate:/watercolors/49/main.jpg": "black",
-  "plate:/watercolors/50/main.jpg": "black",
-  "plate:/watercolors/51/main.jpg": "black",
-  "plate:/watercolors/52/main.jpg": "black",
+  "plate:/watercolors/49/main.jpg": "white",
+  "plate:/watercolors/50/main.jpg": "white",
+  "plate:/watercolors/51/main.jpg": "white",
+  // Medellín rooftops plate (watercolors/52): black → white (her
+  // direction, 2026-11-15: "background for this image should be
+  // white"). Only the ground changes: image, caption and folio are
+  // untouched, and the facing page (folio 65, the Colombia diary) is
+  // already on white, so the spread stands white/white; the light
+  // ground flips the caption to the white-paper grey via the --cap
+  // rules, as on every white page. This also supersedes the
+  // book-edits-8 export table, which still carried this plate as
+  // black — her chat direction is the newer word.
+  // Superseded 2026-11-16 (her direction in chat: "这张背景改成
+  // 米色"): white → warm beige #E9E1CF, the solid mid tone of the
+  // beige gradient in her reference mock (#f2eee3 → #e0d8c4). Only
+  // this page's ground changes; the picture also takes a soft drop
+  // shadow on this page only (see .bk-plate-frame-shadow in
+  // catalog-book.css). Caption, folio and facing page untouched.
+  "plate:/watercolors/52/main.jpg": "#E9E1CF",
   "plate:/watercolors/57/main.jpg": "black",
-  "plate:/watercolors/59/main.jpg": "black",
+  "plate:/watercolors/59/main.jpg": "white",
   "plate:/watercolors/55/main.jpg": "cream",
   "plate:/watercolors/56/main.jpg": "cream",
   "plate:/watercolors/58/main.jpg": "black",
-  "plate:/photography/01/main.jpg": "black",
+  "plate:/photography/01/main.jpg": "white",
   "plate:/photography/02/main.jpg": "white",
-  "plate:/photography/03/main.jpg": "black",
-  "plate:/photography/04/main.jpg": "black",
-  "plate:/photography/08/main.jpg": "black",
-  "plate:/photography/07/main.jpg": "black",
-  "plate:/book/negotiated/work-chimera-haiku.jpg": "black",
+  "plate:/photography/03/main.jpg": "white",
+  "plate:/photography/04/main.jpg": "white",
+  "plate:/photography/08/main.jpg": "white",
+  "plate:/photography/07/main.jpg": "white",
+  "plate:/book/negotiated/work-chimera-haiku.jpg": "white",
   "plateGrid": "black",
   "canva:11": "black",
   "canva:15": "black",
   "canva:16": "black",
+  // Export book-edits-9 (2026-11-16): the full table carries
+  // canva:14 as white; the book had no entry for the page (it
+  // followed the white toolbar default, so the sheet already
+  // rendered white). The entry lands to align the table; no
+  // visible change.
+  "canva:14": "white",
   "canva:3": "#171717",
   "canva:4": "#171717",
   // Still Things title spread (her direction, 2026-11-11): the ground

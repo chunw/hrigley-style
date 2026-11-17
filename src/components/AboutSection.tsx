@@ -1,11 +1,12 @@
 import deliveryGif from "@/assets/delivery.gif";
 import { useLanguage } from "@/contexts/LanguageContext";
+import MarketsSection from "@/components/MarketsSection";
 
 const AboutSection = () => {
   const { t, lang } = useLanguage();
 
   return (
-    <section className="cargo-hero relative">
+    <section className="cargo-hero about-hero relative">
       <div className="cargo-hero-bg" aria-hidden="true">
         <img
           src={deliveryGif}
@@ -22,6 +23,8 @@ const AboutSection = () => {
         )}
 
         <div className="about-columns">
+          <MarketsSection />
+
           <div className="handwritten-note">
             <p
               className="handwritten-note-text whitespace-pre-line"
@@ -29,7 +32,12 @@ const AboutSection = () => {
             />
 
             <nav className="handwritten-note-links" aria-label="about links">
-              <a href="/#products" className="handwritten-note-link">{t.about.backToShop}</a>
+              <a
+                href="/#products"
+                className="sans-label gloria-button-label fun-sticker-btn inline-flex items-center justify-center bg-primary text-primary-foreground px-6 py-2.5 text-base font-bold hover:bg-primary/90 transition-colors text-center cursor-pointer"
+              >
+                {t.paymentSuccess.continueShopping}
+              </a>
             </nav>
           </div>
 

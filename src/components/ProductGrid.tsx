@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import ProductCard from "./ProductCard";
 import { useProducts, getArtboxPrintCount } from "@/hooks/useProducts";
 import { getProductCategories, getProductCategoriesZh, getProductCollections, getProductCollectionsZh } from "@/lib/products";
@@ -30,16 +30,42 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   const zh = lang === "zh";
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [selectedCategory, setSelectedCategory] = useState(() => lockedCategory ?? searchParams.get("category") ?? "ALL");
   const [filtersOpen, setFiltersOpen] = useState(false);
   const { data: products, isLoading, error } = useProducts(true);
   const firstMatchedCardRef = useRef<HTMLDivElement | null>(null);
   const gridTopRef = useRef<HTMLDivElement | null>(null);
 
+  // Filters are deeplinkable: the active category/collection lives in the
+  // ?category= URL param (the same param product detail pages already link to),
+  // so a filtered view can be copied, shared and landed on directly. Build the
+  // next URL from location manually — useSearchParams' setter drops the hash,
+  // which would break deep links like /#products — mirroring LanguageContext.
+  const setCategoryParam = (value: string, replace = false) => {
+    const params = new URLSearchParams(location.search);
+    if (value === "ALL") params.delete("category");
+    else params.set("category", value);
+    navigate(
+      { pathname: location.pathname, search: params.toString(), hash: location.hash },
+      { replace }
+    );
+  };
+
   const handleFilterSelect = (value: string) => {
     setSelectedCategory(value);
+    if (!lockedCategory) setCategoryParam(value);
     gridTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  // Pick up ?category= changes that didn't come from a sidebar click
+  // (deep link navigation, browser back/forward).
+  useEffect(() => {
+    if (lockedCategory) return;
+    const fromUrl = searchParams.get("category") ?? "ALL";
+    if (fromUrl !== selectedCategory) setSelectedCategory(fromUrl);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
   const normalizedSearchQuery = searchQuery?.trim() || "";
   const hasActiveSearch = normalizedSearchQuery.length > 0;
 
@@ -61,6 +87,18 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
     if (indexB === -1) return -1;
     return indexA - indexB;
   });
+  // A ?category= value that matches no category or collection (a stale or
+  // mistyped deep link) falls back to ALL instead of showing an empty grid.
+  useEffect(() => {
+    if (lockedCategory || !products) return;
+    if (selectedCategory === "ALL") return;
+    if (!categories.includes(selectedCategory) && !collections.includes(selectedCategory)) {
+      setSelectedCategory("ALL");
+      setCategoryParam("ALL", true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [products, selectedCategory]);
+
   const tagCount = (tag: string, getTags: (p: typeof visibleProducts[number]) => string[]) => {
     if (tag === "ALL") return visibleProducts?.length ?? 0;
     return visibleProducts?.filter(p => getTags(p).includes(tag)).length ?? 0;

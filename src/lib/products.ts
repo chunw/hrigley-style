@@ -83,8 +83,8 @@ const rawProducts = [
     currency: "USD",
     description: "Collects paintings spanning seven years, demanding the kind of looking that contemporary life rarely permits.",
     detailed_description_html: `<p><i>Chun Wang Paintings 2019–2026</i> collects paintings spanning seven years from watercolour to mixed media, across four series: <i><a href="/watercolor-catalog" target="_blank" rel="noreferrer">Residuals</a></i>, <i><a href="/watercolor-catalog" target="_blank" rel="noreferrer">Still Things</a></i>, <i><a href="/remains-catalog" target="_blank" rel="noreferrer">Remains</a></i>, and <i><a href="/21spirit-catalog" target="_blank" rel="noreferrer">Spirit of the 21st Century</a></i>.</p>`,
-    dimensions: `Full color, 40 pages. 6 × 6 inches. Softcover, sleek and lightweight. Soft touch matte finish, velvety to the hand.`,
-    dimensions_zh: `全彩印刷，40页，6 × 6 英寸。平装本，轻巧灵便，覆哑膜软触感封面。`,
+    dimensions: `Full color, 40 pages. 15 × 15 cm. Softcover, sleek and lightweight. Soft touch matte finish, velvety to the hand.`,
+    dimensions_zh: `全彩印刷，40页，15 × 15 厘米。平装本，轻巧灵便，覆哑膜软触感封面。`,
     edition_info: null,
     edition_size: null,
     alt_text: "Chun Wang Paintings 2019–2026 book",
@@ -211,7 +211,7 @@ One size.</p>
     edition_info: null,
     edition_size: null,
     alt_text: "Every flush is a new beginning Bath mat",
-    image_url: new URL("../assets/products/everyflushnathmat/Fresh Bath Mat 2.png", import.meta.url).href,
+    image_url: new URL("../assets/products/everyflushnathmat/Fresh Bath Mat photo.jpg", import.meta.url).href,
     is_active: true,
     printInCatalog: true,
     showInStorefront: true,
@@ -229,7 +229,7 @@ One size.</p>
     name: "Black Mirrors",
     title_zh: "黑镜",
     description_zh: "一组原创油画，布面。",
-    detailed_description_html_zh: `<p><i>黑镜</i>——油彩与智能手机，布面。我们每天盯着屏幕，屏幕也在打量我们。这两幅画将这种对视定格在画布上：一大一小，一个姿态，两种尺度。</p><p>大幅：12″ × 36″ &nbsp;|&nbsp; 小幅：9″ × 12″<br>共两幅，原创画作。</p>`,
+    detailed_description_html_zh: `<p><i>黑镜</i>——油彩与智能手机，布面。我们每天盯着屏幕，屏幕也在打量我们。这两幅画将这种对视定格在画布上：一大一小，一个姿态，两种尺度。</p><p>大幅：31 × 91 厘米 &nbsp;|&nbsp; 小幅：23 × 31 厘米<br>共两幅，原创画作。</p>`,
     category_zh: "原创艺术",
     edition_info_zh: "",
     price: 600,
@@ -238,7 +238,7 @@ One size.</p>
     currency: "USD",
     description: "Set of 2 original oil paintings. Oil and used smartphone on canvas.",
     detailed_description_html: `<p><i>Black Mirror</i> — Oil and Smartphone on canvas.<br>
-Large: 12″ × 36″ &nbsp;|&nbsp; Small: 9″ × 12″<br>
+Large: 31 × 91 cm &nbsp;|&nbsp; Small: 23 × 31 cm<br>
 Set of 2 original paintings.</p>`.trim(),
     // dimensions: `Large: 12″ × 36″ · Small: 9″ × 12″`,
     // dimensions_zh: `大幅：12″ × 36″ · 小幅：9″ × 12″`,
@@ -341,20 +341,20 @@ Set of 2 original paintings.</p>`.trim(),
     title: "Chun Wang Artbox 02",
     name: "Chun Wang Artbox 02",
     title_zh: "王淳艺术礼盒 02",
-    description_zh: "一盒9×12英寸水彩印刷品, 精选自《残留》与《静物》两个水彩系列。",
-    detailed_description_html_zh: `<p>精选自《残留》与《静物》两个水彩系列，以9×12英寸档案级哑光艺术纸印刷，可直接装框。收于硬质礼盒之中，是将凝视带回家的方式。每张印刷品均有签名和限量版号。</p>`,
+    description_zh: "一盒23 × 30 厘米水彩印刷品, 精选自《残留》与《静物》两个水彩系列。",
+    detailed_description_html_zh: `<p>精选自《残留》与《静物》两个水彩系列，以23 × 30 厘米档案级哑光艺术纸印刷，可直接装框。收于硬质礼盒之中，是将凝视带回家的方式。每张印刷品均有签名和限量版号。</p>`,
     category_zh: "艺术礼盒",
     edition_info_zh: "",
     price: 60,
     currency: "USD",
     description: "Watercolor prints in a box — residuals and still things, made permanent. Signed Edition.",
-    detailed_description_html: `<p>A curated selection of 9×12" archival matte fine art paper prints from the <em>Residuals</em> and <em>Still Things</em> watercolor series — works that catch the everyday just after it has been used, just before it disappears. Presented in a rigid artbox and ready to frame. Each art box is signed and editioned.</p>`,
-    dimensions: `Box: 13.2″ × 9.8″ × 1.8″ · Prints: 12″ × 9″`,
-    dimensions_zh: `礼盒：13.2″ × 9.8″ × 1.8″ · 印刷品：12″ × 9″`,
+    detailed_description_html: `<p>A curated selection of 23 × 30 cm archival matte fine art paper prints from the <em>Residuals</em> and <em>Still Things</em> watercolor series — works that catch the everyday just after it has been used, just before it disappears. Presented in a rigid artbox and ready to frame. Each art box is signed and editioned.</p>`,
+    dimensions: `Box: 34 × 25 × 5 cm · Prints: 31 × 23 cm`,
+    dimensions_zh: `礼盒：34 × 25 × 5 厘米 · 印刷品：31 × 23 厘米`,
     edition_info: null,
     edition_size: null,
-    alt_text: "Watercolor Artbox — curated 9x12 print collection",
-    image_url: new URL("../assets/products/artbox-watercolor/main.jpg", import.meta.url).href,
+    alt_text: "Watercolor Artbox — curated 23 × 30 cm print collection",
+    image_url: new URL("../assets/products/artbox-watercolor/main.webp", import.meta.url).href,
     is_active: true,
     printInCatalog: false,
     showInStorefront: true,
@@ -452,14 +452,14 @@ Set of 2 original paintings.</p>`.trim(),
     name: "Leaky Boundaries: Morning in the Nest",
     title_zh: "渗漏的边界 — 巢中清晨",
     description_zh: "四腿巢碗，摇摇晃晃——小人坐在里面等待那片永不凉透的吐司。",
-    detailed_description_html_zh: `<p>我的陶瓷作品从实用器型起步——烛台、杯子、碗——而后渗入超现实的景观。</p><p>以泥板手工搭建，施以釉料，每件作品都邀请了非陶瓷的客人：干燥植物、皮毛、玻璃与微型塑料小人。一个小职员在粉色蜡烛下靠着电脑睡着了；一头猪站在盛满花朵的玻璃杯上；一个婴儿在摇摇晃晃的巢碗里等待吐司。这些是功能性容器，也属于梦境逻辑与荒诞，在实用、雕塑与故事之间制造出渗漏的边界。</p><p>手建白炻器巢碗，四腿，釉料，枯枝，微型烤面包机与吐司，小人偶。约 6 × 10 × 18 英寸。</p>`,
+    detailed_description_html_zh: `<p>我的陶瓷作品从实用器型起步——烛台、杯子、碗——而后渗入超现实的景观。</p><p>以泥板手工搭建，施以釉料，每件作品都邀请了非陶瓷的客人：干燥植物、皮毛、玻璃与微型塑料小人。一个小职员在粉色蜡烛下靠着电脑睡着了；一头猪站在盛满花朵的玻璃杯上；一个婴儿在摇摇晃晃的巢碗里等待吐司。这些是功能性容器，也属于梦境逻辑与荒诞，在实用、雕塑与故事之间制造出渗漏的边界。</p><p>手建白炻器巢碗，四腿，釉料，枯枝，微型烤面包机与吐司，小人偶。约 15 × 25 × 46 厘米。</p>`,
     category_zh: "家居",
     edition_info_zh: "",
     price: 35,
     currency: "USD",
     description: "A wobbly nest-bowl on four legs — where a tiny figure waits for toast that never cools.",
-    detailed_description_html: `<p>My ceramics begin as functional forms — a candle holder, a cup, a bowl — then leak into surreal landscapes.</p><p>Hand-built in clay with glazes, each piece invites non-ceramic guests: dried plants, fur, glass, and miniature plastic figures. A tiny worker sleeps beside his computer under a pink candle. A pig balances on a flower-filled glass. A baby waits for toast in a wobbly nest-bowl. These are functional containers, but also of dream logic and absurdity, creating leaky boundaries between utility, sculpture, and story.</p><p>Hand-built white stoneware nest-bowl on four legs, glaze, dried twigs, miniature toaster with toast, figure. Approx. 6 × 10 × 18 in.</p>`,
-    dimensions: "Hand-built white stoneware nest-bowl on four legs, glaze, dried twigs, miniature toaster with toast, figure · Approx. 6 × 10 × 18 in.",
+    detailed_description_html: `<p>My ceramics begin as functional forms — a candle holder, a cup, a bowl — then leak into surreal landscapes.</p><p>Hand-built in clay with glazes, each piece invites non-ceramic guests: dried plants, fur, glass, and miniature plastic figures. A tiny worker sleeps beside his computer under a pink candle. A pig balances on a flower-filled glass. A baby waits for toast in a wobbly nest-bowl. These are functional containers, but also of dream logic and absurdity, creating leaky boundaries between utility, sculpture, and story.</p><p>Hand-built white stoneware nest-bowl on four legs, glaze, dried twigs, miniature toaster with toast, figure. Approx. 15 × 25 × 46 cm.</p>`,
+    dimensions: "Hand-built white stoneware nest-bowl on four legs, glaze, dried twigs, miniature toaster with toast, figure · Approx. 15 × 25 × 46 cm.",
     edition_info: null,
     edition_size: null,
     alt_text: "Mixology Planter — Morning in the Nest",
@@ -479,14 +479,14 @@ Set of 2 original paintings.</p>`.trim(),
     name: "Leaky Boundaries: Aperitif",
     title_zh: "渗漏的边界 — 开胃酒",
     description_zh: "陶瓷与玻璃打造的花器，缀以仿皮草。",
-    detailed_description_html_zh: `<p>我的陶瓷作品从实用器型起步, 而后渗入超现实的景观。</p><p>以泥板手工搭建，施以釉料，每件作品都邀请了非陶瓷的客人：干燥植物、皮毛、玻璃与微型塑料小人。一个小职员在粉色蜡烛下靠着电脑睡着了；一头猪站在盛满花朵的玻璃杯上；一个婴儿在摇摇晃晃的巢碗里等待吐司。这些是功能性容器，也属于梦境逻辑与荒诞，在实用、雕塑与故事之间制造出渗漏的边界。</p><p>陶瓷，玻璃鸡尾酒杯，仿皮草，鲜花，樱桃梗，微型猪偶。约 5 × 5 × 6 英寸。</p>`,
+    detailed_description_html_zh: `<p>我的陶瓷作品从实用器型起步, 而后渗入超现实的景观。</p><p>以泥板手工搭建，施以釉料，每件作品都邀请了非陶瓷的客人：干燥植物、皮毛、玻璃与微型塑料小人。一个小职员在粉色蜡烛下靠着电脑睡着了；一头猪站在盛满花朵的玻璃杯上；一个婴儿在摇摇晃晃的巢碗里等待吐司。这些是功能性容器，也属于梦境逻辑与荒诞，在实用、雕塑与故事之间制造出渗漏的边界。</p><p>陶瓷，玻璃鸡尾酒杯，仿皮草，鲜花，樱桃梗，微型猪偶。约 13 × 13 × 15 厘米。</p>`,
     category_zh: "家居",
     edition_info_zh: "",
     price: 35,
     currency: "USD",
     description: "A working flower vessel in ceramic and glass, dressed in faux fur.",
     detailed_description_html: `<p>My ceramics begin as functional forms, then leak into surreal landscapes.</p><p>Hand-built in clay with glazes, each piece invites non-ceramic guests: dried plants, fur, glass, and miniature plastic figures. A tiny worker sleeps beside his computer under a pink candle. A pig balances on a flower-filled glass. A baby waits for toast in a wobbly nest-bowl. These are functional containers, but also of dream logic and absurdity, creating leaky boundaries between utility, sculpture, and story.</p>`,
-    dimensions: "Ceramics, glass cocktail cup, faux fur, miniatures. Approx. 5 × 5 × 6 in.",
+    dimensions: "Ceramics, glass cocktail cup, faux fur, miniatures. Approx. 13 × 13 × 15 cm.",
     edition_info: null,
     edition_size: null,
     alt_text: "Mixology Planter #3",
@@ -506,14 +506,14 @@ Set of 2 original paintings.</p>`.trim(),
     name: "Leaky Boundaries: After Hours Altar",
     title_zh: "渗漏的边界 — 下班后的祭坛",
     description_zh: "小职员在电脑旁睡去，粉色蜡烛在头顶燃烧——加班时光延伸进了另一个维度。",
-    detailed_description_html_zh: `<p>我的陶瓷作品从实用器型起步——烛台、杯子、碗——而后渗入超现实的景观。</p><p>以泥板手工搭建，施以釉料，每件作品都邀请了非陶瓷的客人：干燥植物、皮毛、玻璃与微型塑料小人。一个小职员在粉色蜡烛下靠着电脑睡着了；一头猪站在盛满花朵的玻璃杯上；一个婴儿在摇摇晃晃的巢碗里等待吐司。这些是功能性容器，也属于梦境逻辑与荒诞，在实用、雕塑与故事之间制造出渗漏的边界。</p><p>手建炻器，釉料，蜡烛，干草，微型电脑及人偶。约 5 × 8 × 18 英寸。</p>`,
+    detailed_description_html_zh: `<p>我的陶瓷作品从实用器型起步——烛台、杯子、碗——而后渗入超现实的景观。</p><p>以泥板手工搭建，施以釉料，每件作品都邀请了非陶瓷的客人：干燥植物、皮毛、玻璃与微型塑料小人。一个小职员在粉色蜡烛下靠着电脑睡着了；一头猪站在盛满花朵的玻璃杯上；一个婴儿在摇摇晃晃的巢碗里等待吐司。这些是功能性容器，也属于梦境逻辑与荒诞，在实用、雕塑与故事之间制造出渗漏的边界。</p><p>手建炻器，釉料，蜡烛，干草，微型电脑及人偶。约 13 × 20 × 46 厘米。</p>`,
     category_zh: "家居",
     edition_info_zh: "",
     price: 50,
     currency: "USD",
     description: "A tiny worker asleep at his desk, beneath a pink candle — overtime extended into another dimension.",
-    detailed_description_html: `<p>My ceramics begin as functional forms — a candle holder, a cup, a bowl — then leak into surreal landscapes.</p><p>Hand-built in clay with glazes, each piece invites non-ceramic guests: dried plants, fur, glass, and miniature plastic figures. A tiny worker sleeps beside his computer under a pink candle. A pig balances on a flower-filled glass. A baby waits for toast in a wobbly nest-bowl. These are functional containers, but also of dream logic and absurdity, creating leaky boundaries between utility, sculpture, and story.</p><p>Hand-built stoneware, glaze, candle, dried grass, miniature computer and figure. Approx. 5 × 8 × 18 in.</p>`,
-    dimensions: "Hand-built stoneware, glaze, candle, dried grass, miniature computer and figure · Approx. 5 × 8 × 18 in.",
+    detailed_description_html: `<p>My ceramics begin as functional forms — a candle holder, a cup, a bowl — then leak into surreal landscapes.</p><p>Hand-built in clay with glazes, each piece invites non-ceramic guests: dried plants, fur, glass, and miniature plastic figures. A tiny worker sleeps beside his computer under a pink candle. A pig balances on a flower-filled glass. A baby waits for toast in a wobbly nest-bowl. These are functional containers, but also of dream logic and absurdity, creating leaky boundaries between utility, sculpture, and story.</p><p>Hand-built stoneware, glaze, candle, dried grass, miniature computer and figure. Approx. 13 × 20 × 46 cm.</p>`,
+    dimensions: "Hand-built stoneware, glaze, candle, dried grass, miniature computer and figure · Approx. 13 × 20 × 46 cm.",
     edition_info: null,
     edition_size: null,
     alt_text: "Mixology Planter #4",
@@ -533,20 +533,20 @@ Set of 2 original paintings.</p>`.trim(),
     title: "Chun Wang Artbox 01",
     name: "Chun Wang Artbox 01",
     title_zh: "王淳艺术礼盒 01",
-    description_zh: "一盒9×12英寸摄影印刷品——人物、风景，以及凝视本身。",
-    detailed_description_html_zh: `<p>精选自《另一个，同一个》、《登场》与《苏格兰高地：视域的英雄主义》三个摄影系列，以9×12英寸档案级哑光艺术纸印刷，可直接装框。收于硬质礼盒之中。每张印刷品均有签名和限量版号。</p>`,
+    description_zh: "一盒23 × 30 厘米摄影印刷品——人物、风景，以及凝视本身。",
+    detailed_description_html_zh: `<p>精选自《另一个，同一个》、《登场》与《苏格兰高地：视域的英雄主义》三个摄影系列，以23 × 30 厘米档案级哑光艺术纸印刷，可直接装框。收于硬质礼盒之中。每张印刷品均有签名和限量版号。</p>`,
     category_zh: "艺术礼盒",
     edition_info_zh: "",
     price: 60,
     currency: "USD",
     description: "Photography prints in a box — figures, landscapes, and the long look between them. Signed Edition.",
-    detailed_description_html: `<p>A curated selection of 9×12" archival matte fine art paper prints from the <em>El Otro, El Mismo</em>, <em>Theater</em>, and <em>Highland Scottlands</em> photography series. Each image is a proposition: that the camera is a philosophical instrument, and looking long enough changes what you see. Presented in a rigid artbox and ready to frame. Each art box is signed and editioned.</p>`,
-    dimensions: `Box: 13.2″ × 9.8″ × 1.8″ · Prints: 12″ × 9″`,
-    dimensions_zh: `礼盒：13.2″ × 9.8″ × 1.8″ · 印刷品：12″ × 9″`,
+    detailed_description_html: `<p>A curated selection of 23 × 30 cm archival matte fine art paper prints from the <em>El Otro, El Mismo</em>, <em>Theater</em>, and <em>Highland Scottlands</em> photography series. Each image is a proposition: that the camera is a philosophical instrument, and looking long enough changes what you see. Presented in a rigid artbox and ready to frame. Each art box is signed and editioned.</p>`,
+    dimensions: `Box: 34 × 25 × 5 cm · Prints: 31 × 23 cm`,
+    dimensions_zh: `礼盒：34 × 25 × 5 厘米 · 印刷品：31 × 23 厘米`,
     edition_info: null,
     edition_size: null,
-    alt_text: "Photography Artbox — curated 9x12 print collection",
-    image_url: new URL("../assets/products/artbox-photography/main.jpg", import.meta.url).href,
+    alt_text: "Photography Artbox — curated 23 × 30 cm print collection",
+    image_url: new URL("../assets/products/artbox-photography/main.webp", import.meta.url).href,
     is_active: true,
     printInCatalog: false,
     showInStorefront: true,
@@ -596,12 +596,12 @@ Set of 2 original paintings.</p>`.trim(),
     currency: "USD",
     description: "A packet of fine art prints from Remains — ancient terracotta figures recombined into the present tense.",
     detailed_description_html: `<p><i>Remains</i> was <a href="https://www.licc.uk/winners/winner.php?id=2-36390-25&OS=true" target="_blank" rel="noreferrer">Officially Selected</a> for the 2024 London International Creative Competition (LICC) in the Create/Art category. Drawing on museum collections and material traces from around the world, the series recombines terracotta figures from different civilizations with contemporary graphic language — the past reassembled as a co-author of the present, rather than a specimen behind glass.</p><p>This packet gathers a selection of images from the series, printed as fine art prints on matte archival paper. Small enough to collect, frame, or pass along.</p>`,
-    dimensions: `Collection of 4×6" prints`,
-    dimensions_zh: "4×6英寸印刷品套装",
+    dimensions: `Collection of 10 × 15 cm prints`,
+    dimensions_zh: "10 × 15 厘米印刷品套装",
     edition_info: null,
     edition_size: null,
     alt_text: "Remains Fine Art Print Packet",
-    image_url: new URL("../assets/products/remains-print-packet/main.jpg", import.meta.url).href,
+    image_url: new URL("../assets/products/remains-print-packet/main.webp", import.meta.url).href,
     is_active: true,
     printInCatalog: false,
     showInStorefront: true,
@@ -653,8 +653,8 @@ Set of 2 original paintings.</p>`.trim(),
     currency: "USD",
     description: "A packet of four postcards from Mexico — small watercolor observations from the road, ready to mail or keep.",
     detailed_description_html: `<p><i>Notes from the Road</i> is a set of small watercolor observations made in transit — a window seat, a corner table, a place passed through and not quite arrived at. Each piece is a page torn from somewhere in between.</p><p>This packet gathers four images from the series — all of them made in Mexico — printed as postcards with a blank, writable back. Send them, or keep them for yourself.</p>`,
-    dimensions: `Set of 4 postcards, 4×6"`,
-    dimensions_zh: "4张一套，4×6英寸",
+    dimensions: `Set of 4 postcards, 10 × 15 cm`,
+    dimensions_zh: "4张一套，10 × 15 厘米",
     edition_info: null,
     edition_size: null,
     alt_text: "Notes from the Road Postcard Packet",
@@ -790,14 +790,14 @@ Set of 2 original paintings.</p>`.trim(),
     name: "Egg & Bacon Breakfast Magnet",
     title_zh: "煎蛋培根早餐磁贴",
     description_zh: "一颗太阳蛋，一片培根。帮你压住收据、外卖单，和那张永远写不完的待办清单。",
-    detailed_description_html_zh: `<p>在工作室里手工塑形、手工上色，每一对都略有不同，就像真正的早餐一样。</p><p>有点用。主要提供情感支持。<br><br>细节：<br>手工塑形，手工上色<br>强力磁铁<br>约1.5至2英寸<br>不可食用</p>`,
+    detailed_description_html_zh: `<p>在工作室里手工塑形、手工上色，每一对都略有不同，就像真正的早餐一样。</p><p>有点用。主要提供情感支持。<br><br>细节：<br>手工塑形，手工上色<br>强力磁铁<br>约4至5厘米<br>不可食用</p>`,
     category_zh: "家居",
     collections_zh: ["小用之物"],
     edition_info_zh: "",
     price: 15,
     currency: "USD",
     description: "One sunny-side-up egg, one strip of bacon. Here to hold down your receipts, takeout menus, and that to-do list you'll never finish.",
-    detailed_description_html: `<p>A perfectly committed relationship.</p><p>One sunny-side-up egg and one strip of bacon, permanently holding hands on your fridge. Slightly useful for holding up that receipt you will never expense, a takeout menu from 2022, or a to-do list titled "be more productive."</p><p>Hand-sculpted and painted in the studio, each pair is a little different — like real breakfast. Strong magnet, soft personality.</p><p>Slightly useful. Mostly emotional support.</p><p>Details:<br>Hand-sculpted, hand-painted<br>Strong fridge-grade magnet<br>Approx. 1.5" - 2" — fits in a real pan, if the pan was for ants<br>Not edible. Very holdable.</p>`,
+    detailed_description_html: `<p>A perfectly committed relationship.</p><p>One sunny-side-up egg and one strip of bacon, permanently holding hands on your fridge. Slightly useful for holding up that receipt you will never expense, a takeout menu from 2022, or a to-do list titled "be more productive."</p><p>Hand-sculpted and painted in the studio, each pair is a little different — like real breakfast. Strong magnet, soft personality.</p><p>Slightly useful. Mostly emotional support.</p><p>Details:<br>Hand-sculpted, hand-painted<br>Strong fridge-grade magnet<br>Approx. 4 cm - 5 cm — fits in a real pan, if the pan was for ants<br>Not edible. Very holdable.</p>`,
     dimensions: "",
     edition_info: null,
     edition_size: null,
@@ -844,19 +844,19 @@ Set of 2 original paintings.</p>`.trim(),
   {
     id: "notes-from-the-road-mini-artbox",
     imageFolder: "notes-mini-artbox",
-    title: "Notes from the Road Mini Fine Art Print Art Box",
+    title: "Notes from the Road Mini Fine Art Print Art Box (Chinese Version)",
     name: "Notes from the Road Mini Fine Art Print Art Box",
-    title_zh: "《行旅拾记》迷你版画礼盒装",
-    description_zh: "二十五段途中的观察，收进一只亚麻小盒——整个系列，4×6英寸。",
-    detailed_description_html_zh: `<p><i>行旅拾记</i>是一组在途中完成的水彩速记——车窗边、路旁的小桌、一个途经却未曾真正抵达的地方。每一幅都是旅途中间某处撕下的一页。这只礼盒把整个系列收在掌心大小之内。</p><p>内含25张4×6英寸艺术微喷，印制于哑光档案级纸，可随手翻看、装框，或分送他人。外盒为4×6英寸亚麻带盖防潮硬质礼盒，附收藏证书。</p>`,
+    title_zh: "《行旅拾记》迷你版画礼盒装（中文版）",
+    description_zh: "二十五段途中的观察，收进一只亚麻小盒——整个系列，10 × 15 厘米。",
+    detailed_description_html_zh: `<p><i>行旅拾记</i>是一组在途中完成的水彩速记——车窗边、路旁的小桌、一个途经却未曾真正抵达的地方。每一幅都是旅途中间某处撕下的一页。这只礼盒把整个系列收在掌心大小之内。</p><p>内含25张10 × 15 厘米艺术微喷，印制于哑光档案级纸，可随手翻看、装框，或分送他人。外盒为10 × 15 厘米亚麻带盖防潮硬质礼盒，附收藏证书。</p>`,
     category_zh: "艺术礼盒",
     edition_info_zh: "",
     price: 35,
     currency: "USD",
-    description: "Twenty-five small views from the road, boxed — an entire series at 4×6 inches. Chinese version.",
-    detailed_description_html: `<p><i>Notes from the Road</i> is a set of small watercolor observations made in transit — a window seat, a corner table, a place passed through and not quite arrived at. Each piece is a page torn from somewhere in between. This box holds the whole series in the palm of your hand.</p><p>Inside: 25 fine art prints at 4×6", printed on matte archival paper — loose enough to shuffle through, frame, or hand to someone else. Housed in a 4×6" linen-wrapped rigid box with a moisture-resistant lid. Certificate of authenticity included.</p><p>Chinese-language version.</p>`,
-    dimensions: `Box: 4×6" linen, lidded · 25 fine art prints, 4×6"`,
-    dimensions_zh: `礼盒：4×6英寸亚麻带盖防潮硬盒 · 25张4×6英寸艺术微喷`,
+    description: "Twenty-five small views from the road, boxed — an entire series at 10 × 15 cm. Chinese version.",
+    detailed_description_html: `<p><i>Notes from the Road</i> is a set of small watercolor observations made in transit — a window seat, a corner table, a place passed through and not quite arrived at. Each piece is a page torn from somewhere in between. This box holds the whole series in the palm of your hand.</p><p>Inside: 25 fine art prints at 10 × 15 cm, printed on matte archival paper — loose enough to shuffle through, frame, or hand to someone else. Housed in a 10 × 15 cm linen-wrapped rigid box with a moisture-resistant lid. Certificate of authenticity included.</p><p>Chinese-language version.</p>`,
+    dimensions: `Box: 10 × 15 cm linen, lidded · 25 fine art prints, 10 × 15 cm`,
+    dimensions_zh: `礼盒：10 × 15 厘米亚麻带盖防潮硬盒 · 25张10 × 15 厘米艺术微喷`,
     edition_info: null,
     edition_size: null,
     alt_text: "Notes from the Road Mini Fine Art Print Art Box",
@@ -876,19 +876,19 @@ Set of 2 original paintings.</p>`.trim(),
     name: "Residuals Framed Fine Art Print",
     title_zh: "《残留》装裱艺术微喷版画",
     description_zh: "《残留》系列艺术微喷，已装裱签名，拆开即可上墙。",
-    detailed_description_html_zh: `<p>《残留》看的是日常刚被用过、尚未消失的那一刻——杯底、碎屑、被搁下的物件。留下的东西，往往比事情本身更诚实。</p><p>艺术微喷印制于档案级哑光纸，5×7英寸卡纸装裱，含框尺寸8×10英寸。含艺术家签名，附收藏证书。到手即可悬挂。</p>`,
+    detailed_description_html_zh: `<p>《残留》看的是日常刚被用过、尚未消失的那一刻——杯底、碎屑、被搁下的物件。留下的东西，往往比事情本身更诚实。</p><p>艺术微喷印制于档案级哑光纸，13 × 18 厘米卡纸装裱，含框尺寸20 × 25 厘米。含艺术家签名，附收藏证书。到手即可悬挂。</p>`,
     category_zh: "艺术微喷印刷",
     categories_zh: ["艺术微喷印刷", FRAMED_ART_CATEGORY_ZH],
     edition_info_zh: "",
     price: 35,
     currency: "USD",
     description: "A framed print from Residuals — signed, matted, and ready for the wall.",
-    detailed_description_html: `<p><i>Residuals</i> looks at the everyday just after it has been used and just before it disappears — the bottom of a cup, a few crumbs, an object set down mid-thought. What's left behind tends to be more honest than the event itself.</p><p>Printed as a fine art print on archival matte paper, matted to 5×7" and framed at 8×10". Signed by the artist and accompanied by a certificate of authenticity. Arrives ready to hang.</p>`,
-    dimensions: `Framed: 8×10" · matted to 5×7"`,
-    dimensions_zh: `含框尺寸：8×10英寸 · 卡纸装裱至5×7英寸`,
+    detailed_description_html: `<p><i>Residuals</i> looks at the everyday just after it has been used and just before it disappears — the bottom of a cup, a few crumbs, an object set down mid-thought. What's left behind tends to be more honest than the event itself.</p><p>Printed as a fine art print on archival matte paper, matted to 13 × 18 cm and framed at 20 × 25 cm. Signed by the artist and accompanied by a certificate of authenticity. Arrives ready to hang.</p>`,
+    dimensions: `Framed: 20 × 25 cm · matted to 13 × 18 cm`,
+    dimensions_zh: `含框尺寸：20 × 25 厘米 · 卡纸装裱至13 × 18 厘米`,
     edition_info: null,
     edition_size: null,
-    alt_text: "Residuals framed fine art print, 8x10 inches",
+    alt_text: "Residuals framed fine art print, 20 × 25 cm",
     image_url: "/watercolors/24/main.jpg",
     is_active: true,
     printInCatalog: false,
@@ -908,23 +908,59 @@ export const products = rawProducts.map((product) => {
   return mainUrl ? { ...product, image_url: mainUrl } : product
 })
 
+// Photos that stay in the repo but are hidden from the store: the files
+// remain in their imageFolder untouched — they are only left out of the
+// store's image list below (product page gallery, grid hover image, and
+// every other surface fed by productImages). Keyed by product id, holding
+// the hidden files' names inside that product's imageFolder.
+const HIDDEN_PRODUCT_IMAGES: Record<string, string[]> = {
+  "egg-bacon-breakfast-magnet": ["01.jpg", "03.jpg", "3.webp"],
+  "every-flush-bath-mat": ["Fresh Bath Mat 2.png"],
+}
+
+// Explicit gallery order for products whose thumbnail row should not follow
+// the default cover-first / alphabetical sort below. Keyed by product id,
+// holding filenames inside the product's imageFolder in display order.
+// Hidden files (above) are filtered out before ordering applies, so listing
+// one here only reserves its slot in case it is ever unhidden; files not
+// listed keep their default relative order after the listed ones.
+const PRODUCT_IMAGE_ORDER: Record<string, string[]> = {
+  "every-flush-bath-mat": ["Fresh Bath Mat photo.jpg", "2.png", "1.png", "Fresh Bath Mat 2.png"],
+}
+
 // Auto-generated from each product's imageFolder — no manual entries needed.
 // To add images, drop files into src/assets/products/<imageFolder>/.
 // The cover image (image_url) is always sorted first, and the rest of the
-// thumbnail row is sorted alphabetically ascending by filename.
+// thumbnail row is sorted alphabetically ascending by filename — unless the
+// product has an explicit order in PRODUCT_IMAGE_ORDER above, which wins.
 export const productImages = products.flatMap((product) => {
   const folder = (product as { imageFolder?: string }).imageFolder
   const coverFilename = product.image_url
     ? decodeURIComponent(product.image_url.split('/').pop() || '')
     : ''
+  const hiddenFilenames = HIDDEN_PRODUCT_IMAGES[product.id] ?? []
+  const orderFilenames = PRODUCT_IMAGE_ORDER[product.id] ?? []
   const folderEntries = folder
-    ? Object.entries(_allProductImages).filter(([path]) => path.startsWith(`../assets/products/${folder}/`))
+    ? Object.entries(_allProductImages).filter(
+        ([path]) =>
+          path.startsWith(`../assets/products/${folder}/`) &&
+          !hiddenFilenames.includes(path.split('/').pop() || '')
+      )
     : []
   const coverInFolder = folderEntries.some(([path]) => (path.split('/').pop() || '') === coverFilename)
   const folderImages = folderEntries
     .sort(([a], [b]) => {
       const aFile = a.split('/').pop() || ''
       const bFile = b.split('/').pop() || ''
+      if (orderFilenames.length > 0) {
+        const aOrder = orderFilenames.indexOf(aFile)
+        const bOrder = orderFilenames.indexOf(bFile)
+        if (aOrder !== -1 || bOrder !== -1) {
+          if (aOrder === -1) return 1
+          if (bOrder === -1) return -1
+          if (aOrder !== bOrder) return aOrder - bOrder
+        }
+      }
       if (aFile === coverFilename) return -1
       if (bFile === coverFilename) return 1
       return a.localeCompare(b)

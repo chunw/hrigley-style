@@ -103,7 +103,7 @@ const PaymentSuccess = () => {
               onClick={() => (window.location.href = "/")}
               variant="outline-pink"
               size="lg"
-              className="sans-label"
+              className="sans-label fun-sticker-btn"
             >
               {s.continueShopping}
             </Button>

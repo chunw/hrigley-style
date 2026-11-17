@@ -96,21 +96,21 @@ const PhotographyDetail = () => {
       ? shopOrderNavigableItems[shopIndex + 1]
       : undefined;
 
-  // Purchasable options for the cart: the 9×12" print at the price the
-  // PayPal link charges, plus the 12×18" print where the work has one.
+  // Purchasable options for the cart: the 23 × 30 cm print at the price the
+  // PayPal link charges, plus the 30 × 46 cm print where the work has one.
   const purchaseOptions: ArtworkCartOption[] = [
     {
       key: "print-9x12",
-      labelEn: '9×12" fine art print',
-      labelZh: "9×12英寸艺术微喷印刷品",
+      labelEn: '23 × 30 cm fine art print',
+      labelZh: "23 × 30 厘米艺术微喷印刷品",
       price: work.printPrice ?? work.price ?? 10,
     },
     ...(work.printPrice12x18
       ? [
           {
             key: "print-12x18",
-            labelEn: '12×18" fine art print',
-            labelZh: "12×18英寸艺术微喷印刷品",
+            labelEn: '30 × 46 cm fine art print',
+            labelZh: "30 × 46 厘米艺术微喷印刷品",
             price: work.printPrice12x18,
           } as ArtworkCartOption,
         ]
@@ -133,7 +133,7 @@ const PhotographyDetail = () => {
                   <button
                     type="button"
                     onClick={() => navigate(shopPrevItem.path)}
-                    className="inline-flex items-center gap-2 px-3 py-2 text-xs font-helvetica text-muted-foreground hover:text-foreground transition-colors"
+                    className="prev-next-btn inline-flex items-center gap-2 px-3 py-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
                   >
                     <ArrowLeft className="h-4 w-4" />
                     {lang === "zh" ? "上一件" : "Previous"}
@@ -143,7 +143,7 @@ const PhotographyDetail = () => {
                   <button
                     type="button"
                     onClick={() => navigate(shopNextItem.path)}
-                    className="inline-flex items-center gap-2 px-3 py-2 text-xs font-helvetica text-muted-foreground hover:text-foreground transition-colors"
+                    className="prev-next-btn inline-flex items-center gap-2 px-3 py-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {lang === "zh" ? "下一件" : "Next"}
                     <ArrowRight className="h-4 w-4" />
@@ -247,7 +247,7 @@ const PhotographyDetail = () => {
                 <p>{lang === "zh" && work.dimensionsZh ? work.dimensionsZh : work.dimensions}</p>
               )}
               {work.year && <p>{work.year}</p>}
-              <p>{lang === "zh" ? `现提供${work.printInfoZh ?? '9×12英寸精细艺术哑光纸印刷品'}` : `Available as ${work.printInfo ?? '9×12" fine art matte paper print'}`}</p>
+              <p>{lang === "zh" ? `现提供${work.printInfoZh ?? '23 × 30 厘米精细艺术哑光纸印刷品'}` : `Available as ${work.printInfo ?? '23 × 30 cm fine art matte paper print'}`}</p>
             </div>
 
             <ArtworkPurchase

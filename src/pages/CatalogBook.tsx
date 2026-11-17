@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { createPortal } from "react-dom";
-import { ArrowLeft, ChevronLeft, ChevronRight, Download, Maximize, Minimize, Printer } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Download, Maximize, Minimize } from "lucide-react";
 import "./catalog-book.css";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { artistBioHTML } from "@/lib/artistBio";
@@ -12,7 +12,7 @@ import { PAGE_BACKGROUNDS, hexToRgb, isHexPageBg, rgbToHex, type PageBgKind, typ
 import { IMAGE_EDITS } from "@/lib/imageEdits";
 import { PAGE_BACKGROUND_IMAGES, type PageBgImage } from "@/lib/pageBackgroundImages";
 import { BOOK_SERIES } from "@/lib/bookSeries";
-import { SERIES_PLATES, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, RESIDUALS_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE, ROAD_THAILAND_SPREAD_PLATE } from "@/lib/seriesPlates";
+import { SERIES_PLATES, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, RESIDUALS_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE, ROAD_THAILAND_SPREAD_PLATE, SPIRIT_EXHIBITION_PLATES } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS, PART_WEBSITES } from "@/lib/exhibitions";
@@ -98,8 +98,10 @@ export interface InteriorPage {
 /** Facsimile pages printed full bleed, edge to edge, instead of framed
  * inside the page (her direction, 2026-11-08: the light-blue cloth page,
  * p. 18, fills the sheet; aligned right when cover-fit so the crop eats
- * the scan's blank margin, not the painting). */
-const CANVA_FULL_BLEED_PAGES = new Set([18]);
+ * the scan's blank margin, not the painting). The set stands empty
+ * since 2026-11-15: p. 18 — its only member — is deleted from the book
+ * (see the deletion note at CANVA_KEPT_PAGES below). */
+const CANVA_FULL_BLEED_PAGES = new Set<number>([]);
 
 const CHAPTER_TITLE: Record<CatalogSectionKey, (t: Translations) => string> = {
   spirit: (t) => t.spirit21Catalog.subtitle,
@@ -145,6 +147,346 @@ function stackedTitle(chapter: Chapter): ReactNode {
 }
 const plainText = (html: string) => html.replace(/<br\s*\/?>/gi, " ").replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
 const hasCjk = (s: string) => /[\u4e00-\u9fff]/.test(s);
+// Caption language (her direction, 2026-11-15): the reading toolbar
+// carries a three-way switch for work captions only — bilingual (the
+// book's standing composition, the default), English only, Chinese
+// only. Body pages keep their bilingual side-by-side layout; only the
+// captions' English and Chinese fragments are filtered, through the
+// helpers below.
+export type CapLang = "both" | "en" | "zh";
+type CapPart = { lang: "en" | "zh" | "both"; text?: string | null; inBoth?: boolean };
+/** The caption fragments visible in the selected caption language, in
+    their standing order (English first, Chinese right after). A part
+    marked inBoth:false is a compact caption's Chinese fragment: the
+    bilingual composition does not print it, the Chinese-only view
+    completes the caption from it. */
+const capParts = (parts: CapPart[], capLang: CapLang): string[] =>
+  parts
+    .filter((p) => p.text && (capLang === "both" ? p.inBoth !== false : p.lang === "both" || p.lang === capLang))
+    .map((p) => p.text as string);
+/** A caption's meta fragments in their standing order: the English
+    meta line, the dimensions, then the Chinese medium and dimensions
+    from the artist's own records. zhInBoth is the plate composition,
+    whose bilingual line already carries the Chinese fragments;
+    compact captions (grids, journal cells) print only the English
+    side bilingually, so their Chinese fragments (and, for journal
+    cells, the dimensions) surface only in the single-language views. */
+const capMetaParts = (item: CatalogItem, opts: { zhInBoth: boolean; dimInBoth: boolean }): CapPart[] => {
+  const dimZh = item.dimensionsZh && item.dimensionsZh !== item.dimensions ? item.dimensionsZh : null;
+  return [
+    { lang: "en", text: item.metaLine },
+    { lang: dimZh ? "en" : "both", text: item.dimensions, inBoth: opts.dimInBoth },
+    {
+      lang: "zh",
+      text: item.mediumZh && item.mediumZh !== item.medium && !(item.metaLine ?? "").includes(item.mediumZh) ? item.mediumZh : null,
+      inBoth: opts.zhInBoth,
+    },
+    { lang: "zh", text: dimZh, inBoth: opts.zhInBoth },
+  ];
+};
+/** The year a work caption must print, wherever the record
+    carries it: the item's own year field, else the leading year
+    segment of its composed meta line. */
+const capYearOf = (item: CatalogItem): string | undefined => {
+  const y = (item.year ?? "").trim();
+  if (/^\d{4}$/.test(y)) return y;
+  const seg = (item.metaLine ?? "").split(" · ")[0]?.trim() ?? "";
+  return /^\d{4}$/.test(seg) ? seg : undefined;
+};
+/** A caption's dimensions line (her direction, 2026-11-15, second
+    pass): the compact joined form "8×14cm" — no spaces, no 厘米；
+    the Chinese view prints the same form. Only centimetre records
+    are compacted; a record in another unit keeps its own form, and
+    the figures always keep the order in the artist's records. */
+const CM_DIM_RE = /^\s*(\d+(?:\.\d+)?)\s*×\s*(\d+(?:\.\d+)?)\s*(?:cm|厘米)\s*$/i;
+const compactDimOf = (item: CatalogItem): string | undefined => {
+  const raw = item.dimensions || item.dimensionsZh || "";
+  if (!raw.trim()) return undefined;
+  const m = CM_DIM_RE.exec(raw);
+  if (m) return `${m[1]}×${m[2]}cm`;
+  return raw.replace(/\s+/g, " ").trim();
+};
+/** A caption's Chinese meta text: the Chinese medium with the
+    year ("纸本水彩 2026年"), else the record's full Chinese meta
+    line, else the year alone. A field the record leaves empty is
+    simply omitted — it never takes the other fields down with
+    it (her direction, 2026-11-15, third pass). */
+const capZhMetaOf = (item: CatalogItem): string | undefined => {
+  const year = capYearOf(item);
+  if (item.mediumZh) return year ? `${item.mediumZh} ${year}年` : item.mediumZh;
+  if (item.metaZh) return item.metaZh;
+  return year ? `${year}年` : undefined;
+};
+/** The work caption (her direction, 2026-11-15, second and third
+    passes, against her sample page): EVERY work caption in the
+    book, on every layout path, prints per language on up to three
+    lines, never run together: the title alone (English italic, no
+    brackets; Chinese inside 《》), the dimensions alone in the
+    compact joined form, and the medium with the year (English
+    "Watercolor on paper, 2026"; Chinese "纸本水彩 2026年"). The
+    year prints whenever the record carries one, even when another
+    field is missing; a missing field omits only its own line. In
+    the bilingual view the two languages pair line by line —
+    title with title, dimensions with dimensions, medium-and-year
+    with medium-and-year, each pair on one shared line (fourth
+    pass, 2026-11-15 later; see JoinedCapLines below); the
+    single-language views keep the per-language blocks. An item with
+    no medium field of its own (the hand-set series plates, the
+    shop's products) keeps its composed meta line verbatim as the
+    English meta. Credit lines, place lines and description text
+    are not the caption body and keep the language filtering of
+    capParts/capDesc. The optional titles override serves the road
+    chapter, whose captions name a place instead of a work. */
+type WorkCapBlock = { lang: "en" | "zh"; title?: string; dim?: string; meta?: string };
+const workCapBlocks = (item: CatalogItem, titles?: { en?: string; zh?: string }): WorkCapBlock[] => {
+  const year = capYearOf(item);
+  const enMeta = item.medium ? (year ? `${item.medium}, ${year}` : item.medium) : (item.metaLine ?? undefined);
+  const enTitle = titles ? titles.en : item.title || undefined;
+  let zhTitle = titles ? titles.zh : item.titleZh && item.titleZh !== item.title ? item.titleZh : undefined;
+  // A work whose only recorded title is Chinese （谋杀情人节）: that
+  // title is a Chinese title — the Chinese block carries it, in
+  // 《》, and the English block borrows the same string so no view
+  // loses the work's only name; the bilingual view prints it once,
+  // in 《》 (see workCapVisible).
+  if (!titles && !zhTitle && enTitle && hasCjk(enTitle) && !/[A-Za-z]/.test(enTitle)) zhTitle = enTitle;
+  return [
+    { lang: "en", title: enTitle, dim: compactDimOf(item), meta: enMeta },
+    { lang: "zh", title: zhTitle, dim: compactDimOf(item), meta: capZhMetaOf(item) },
+  ];
+};
+/** The work-caption blocks visible in the selected caption
+    language. Bilingual shows both blocks; a Chinese block carrying
+    neither title nor meta (a work with no Chinese record) would
+    only repeat the dimensions line, so it steps aside in the
+    bilingual view only. */
+const workCapVisible = (blocks: WorkCapBlock[], capLang: CapLang): WorkCapBlock[] => {
+  const hasBody = (b: WorkCapBlock) => !!(b.title || b.dim || b.meta);
+  if (capLang !== "both") return blocks.filter((b) => b.lang === capLang && hasBody(b));
+  // A Chinese-only title stands in both blocks (see workCapBlocks);
+  // the bilingual view prints it once, in its 《》 form.
+  const [en, zh] = blocks;
+  const deduped = en && zh && en.title && en.title === zh.title ? [{ ...en, title: undefined }, zh] : blocks;
+  return deduped.filter((b) => (b.lang === "en" ? hasBody(b) : !!(b.title || b.meta)));
+};
+/** The place a Notes from the Road caption names, lifted out of
+    the work's description (her direction, 2026-11-15, third
+    pass): for the road chapter the place IS the work's title, so
+    it leaves the description and takes the caption's first line
+    under the title rules. The road records' descriptions are the
+    place lines alone (English first, Chinese after, each closed
+    by a sentence period that the title line drops); any further
+    description segments stay behind as description text. */
+const capPlaceOf = (item: CatalogItem): { en?: string; zh?: string; restHtml?: string } => {
+  const html = item.description ?? "";
+  if (!html.trim()) return {};
+  const segs = html.split(/<br\s*\/?>/i);
+  let en: string | undefined;
+  let zh: string | undefined;
+  const used = new Set<number>();
+  segs.forEach((s, i) => {
+    const text = plainText(s);
+    if (!text) return;
+    if (hasCjk(text)) {
+      if (!zh) {
+        zh = text.replace(/。$/, "");
+        used.add(i);
+      }
+    } else if (!en) {
+      en = text.replace(/\.$/, "");
+      used.add(i);
+    }
+  });
+  const rest = segs
+    .filter((_, i) => !used.has(i))
+    .join("<br />")
+    .trim();
+  return { en, zh, restHtml: rest || undefined };
+};
+/** Captions whose paired bilingual lines cannot fit their box on
+    one physical line at the standing size (the fit check of her
+    2026-11-15 fourth-pass direction): they keep the stacked
+    bilingual composition; every other caption pairs. Keyed by the
+    work's image path; the facsimile-page captions and the
+    what-remains credit, which have no work record of their own,
+    use literal keys. Filled from the rendered-book measurement —
+    the figures stand in PR #317's body. */
+const CAP_JOIN_EXCLUDE = new Set<string>([
+  // Folio 59, the Notes from the Road #3 full-bleed plate: its
+  // paired place line measures 556px against the overlay box's
+  // 518px (5.4in) — the one caption in the book whose paired line
+  // cannot fit. It keeps the stacked composition.
+  "/watercolors/46/main.jpg",
+]);
+/** Description texts under captions whose paired English/Chinese
+    segments cannot fit one physical line in the description box:
+    they keep their stacked segments. Same keying as above. */
+const CAP_DESC_JOIN_EXCLUDE = new Set<string>([
+  // Measured in the rendered book (PR #317): the paired segment
+  // runs past the 4.5in description box and wraps — mostly the
+  // prose descriptions, plus the Remains No. 4 motto pair (folio
+  // 22) and four short installation lines (folios 189, 192, 197,
+  // 198) that fit with no headroom to spare.
+  "/remains/04/main.jpg",
+  "/book/spirit/exhibition-wide.jpg",
+  "/book/spirit/exhibition-close.jpg",
+  "/book/sfmoma/death-valley-1.jpg",
+  "/book/sfmoma/death-valley-2.jpg",
+  "/book/sfmoma/death-valley-3.jpg",
+  "/book/google/film-still.jpg",
+  "/book/google/interface.jpg",
+  "/book/google/instructions.jpg",
+  "/book/google/poster.jpg",
+  "/book/google/exhibition-1.jpg",
+  "/book/google/exhibition-2.jpg",
+  "/book/feedscanner/interface-1.jpg",
+  "/book/feedscanner/interface-2.jpg",
+  "/book/feedscanner/interface-3.jpg",
+  "/book/feedscanner/poster.jpg",
+  "/book/feedscanner/installation.jpg",
+  "/book/artempath/printer.jpg",
+  "/book/artempath/sfmoma-bench.jpg",
+  "/book/artempath/interface-sf.jpg",
+  "/book/artempath/responses-rothko.jpg",
+  "/book/artempath/anderson-wide.jpg",
+  "/book/artempath/interface-and.jpg",
+  "/book/artempath/responses-mitchell.jpg",
+  "/book/artempath/visualization.jpg",
+  "/book/artempath/sfmoma-grid.jpg",
+  "/book/artempath/anderson-grid.jpg",
+  "/book/immemory/webby-nominees.jpg",
+  "/book/immemory/open-call.jpg",
+  "/book/immemory/site-room1.jpg",
+  "/book/immemory/site-work-alcaro.jpg",
+  "/book/immemory/site-work-juanita-rea.jpg",
+  "/book/immemory/site-work-sami.jpg",
+  "/book/immemory/site-room2.jpg",
+  "/book/immemory/site-work-bortsova.jpg",
+  "/book/immemory/site-work-face-masks.jpg",
+  "/book/immemory/site-work-sonnet-corona.jpg",
+  "/book/negotiated/diary-page.jpg",
+  "/book/negotiated/work-elsewhere.jpg",
+  "/book/negotiated/work-ave-maria.jpg",
+  "/book/negotiated/work-fractured-star.jpg",
+  "/book/negotiated/work-silence.jpg",
+  "/book/negotiated/work-chimera-haiku.jpg",
+  "/book/negotiated/work-dierenleven.jpg",
+  "/book/negotiated/pavilion-entrance.jpg",
+  "/book/negotiated/work-mythology.jpg",
+  "/book/suo/candle.jpg",
+]);
+/** The bilingual work caption with its lines paired (her
+    direction, 2026-11-15, fourth pass): the English and Chinese
+    fragments of one content line share the line — title with
+    title, dimensions with dimensions, medium-and-year with
+    medium-and-year — joined by a single space, each fragment in
+    its own span so the caption-language switch keeps addressing
+    the two languages separately. The dimensions line is one
+    shared line (the compact form is the same in both languages),
+    so it prints once; a Chinese-only title prints once, in its
+    《》 form, as in the stacked composition. Text, size and
+    colour are the stacked composition's own — only the line
+    joining changes. */
+const JoinedCapLines = ({ blocks }: { blocks: WorkCapBlock[] }) => {
+  const en = blocks.find((b) => b.lang === "en");
+  const zh = blocks.find((b) => b.lang === "zh");
+  const enBody = !!(en && (en.title || en.dim || en.meta));
+  const zhBody = !!(zh && (zh.title || zh.meta));
+  const enTitle = enBody ? en?.title : undefined;
+  const zhTitle = zhBody ? zh?.title : undefined;
+  const dedupTitle = !!enTitle && !!zhTitle && enTitle === zhTitle;
+  const dim = (enBody ? en?.dim : undefined) ?? (zhBody ? zh?.dim : undefined);
+  const enMeta = enBody ? en?.meta : undefined;
+  const zhMeta = zhBody ? zh?.meta : undefined;
+  if (!enTitle && !zhTitle && !dim && !enMeta && !zhMeta) return null;
+  return (
+    <div className="bk-caption-work bk-caption-work-join">
+      {(enTitle || zhTitle) && (
+        <div className="bk-caption-title product-title bk-cap-line">
+          {dedupTitle ? (
+            <span className="bk-cap-zh">{`《${zhTitle}》`}</span>
+          ) : (
+            <>
+              {enTitle && <span className="bk-cap-en"><em>{enTitle}</em></span>}
+              {enTitle && zhTitle && " "}
+              {zhTitle && <span className="bk-cap-zh">{`《${zhTitle}》`}</span>}
+            </>
+          )}
+        </div>
+      )}
+      {dim && <div className="bk-caption-meta bk-cap-line">{dim}</div>}
+      {(enMeta || zhMeta) && (
+        <div className="bk-caption-meta bk-cap-line">
+          {enMeta && <span className="bk-cap-en">{enMeta}</span>}
+          {enMeta && zhMeta && " "}
+          {zhMeta && <span className="bk-cap-zh">{zhMeta}</span>}
+        </div>
+      )}
+    </div>
+  );
+};
+/** The one shared renderer for every work caption body: the
+    title line (English italic, Chinese inside 《》), the
+    dimensions line, the meta line — paired line by line in the
+    bilingual view (JoinedCapLines), per visible language block
+    in the single-language views and in the fit-check exceptions. */
+const WorkCapLines = ({ blocks, capLang, joinKey }: { blocks: WorkCapBlock[]; capLang: CapLang; joinKey?: string }) => {
+  if (capLang === "both" && !(joinKey && CAP_JOIN_EXCLUDE.has(joinKey))) {
+    return <JoinedCapLines blocks={blocks} />;
+  }
+  return (
+    <>
+      {workCapVisible(blocks, capLang).map((blk) => (
+        <div className="bk-caption-work" key={blk.lang}>
+          {blk.title && (
+            <div className="bk-caption-title product-title">{blk.lang === "en" ? <em>{blk.title}</em> : `《${blk.title}》`}</div>
+          )}
+          {blk.dim && <div className="bk-caption-meta">{blk.dim}</div>}
+          {blk.meta && <div className="bk-caption-meta">{blk.meta}</div>}
+        </div>
+      ))}
+    </>
+  );
+};
+/** Filters a caption description's HTML to the selected caption
+    language: segments are split at <br> and " · " boundaries and
+    classified by script (the book's descriptions run English first,
+    Chinese after); a segment mixing both scripts stays visible in
+    every view, as do bare numbers. */
+const capDesc = (html: string, capLang: CapLang): string => {
+  if (capLang === "both" || !html) return html;
+  const keep = (seg: string): boolean => {
+    const text = seg.replace(/<[^>]*>/g, "").trim();
+    if (!text) return false;
+    const zh = hasCjk(text);
+    const en = /[A-Za-z]/.test(text);
+    if (zh && !en) return capLang === "zh";
+    if (en && !zh) return capLang === "en";
+    return true;
+  };
+  return html
+    .split(/(<br\s*\/?>)/gi)
+    .map((part) => (/^<br/i.test(part) ? part : part.split(/\s+·\s+/).filter(keep).join(" · ")))
+    .join("")
+    .replace(/^\s*(<br\s*\/?>\s*)+/i, "")
+    .replace(/(\s*<br\s*\/?>)+\s*$/i, "")
+    .replace(/(<br\s*\/?>\s*){2,}/gi, "<br />");
+};
+/** A caption description's two language segments paired on one
+    line (her direction, 2026-11-15, fourth pass): where the
+    description is exactly an English segment over a Chinese one,
+    the bilingual view joins them with a single space. Longer or
+    differently shaped descriptions keep their stacked segments,
+    as do the ones in CAP_DESC_JOIN_EXCLUDE, whose paired line
+    cannot fit the description box on one physical line. The
+    segments' own markup and text are untouched. */
+const pairDescHtml = (html: string): string => {
+  const segs = html.split(/<br\s*\/?>/i);
+  if (segs.length !== 2) return html;
+  const [a, b] = segs.map((s) => s.trim());
+  if (!a || !b) return html;
+  if (hasCjk(plainText(a)) || !hasCjk(plainText(b))) return html;
+  return `${a} ${b}`;
+};
 // Dated passages — her own writings that carry a date — are indented
 // into a narrower column, date line included (design E, her pick,
 // 2026-11-06; it replaces the white-space setting of PR #145). The
@@ -1059,7 +1401,21 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // visual (the Still Things treatment, applied to Residuals the same
     // night), the "I." is removed from the image itself, and the
     // standalone page is deleted; the front pages are now pp. 6–9.
-    const CANVA_KEPT_PAGES = [6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 18, 21, 22];
+    // Deletion (her direction, 2026-11-15): facsimile p. 18 — the
+    // light-blue draped figure reproduced from the printed edition
+    // with its white border — is deleted from the book. The painting
+    // itself now stands in the chapter as the restored Still Things
+    // #8 plate, full bleed; the facsimile duplicate goes. The Still
+    // Things facsimile run is now p. 17 alone.
+    // Deletion (her direction, 2026-11-16): facsimile pp. 6 and 7 —
+    // the Three Pieces of Fermented Tofu and Lanzhou Lamian pages —
+    // leave the book as facsimiles. Both works now stand as catalog
+    // plates in the Residuals run (the consecutive group behind
+    // Residuals #5, see the plate sequence below), and her standing
+    // rule against printing a work twice takes the facsimile pages
+    // out. The front pages are now pp. 8–9, both behind the
+    // teapot / #26 pair.
+    const CANVA_KEPT_PAGES = [8, 9, 12, 13, 14, 15, 16, 17, 21, 22];
     const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
     // Her direction (2026-11-11, later the same evening): the teapot /
     // Residuals #26 pair moves four pages earlier still (「再提前4页」),
@@ -1069,7 +1425,14 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // loop, immediately after #26).
     const CANVA_FRONT_HEAD_PAGES = CANVA_FRONT_PAGES.filter((p) => p <= 6);
     const CANVA_FRONT_TAIL_PAGES = CANVA_FRONT_PAGES.filter((p) => p > 6);
-    const CANVA_RESIDUALS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 13 && p < 17);
+    // Update (her direction, 2026-11-16): p. 14 — the Still Things
+    // #13 facsimile (the Ultraman figure and the Thai statue) — no
+    // longer rides in this cluster. She named it a facing pair with
+    // the Still Things #14 plate (the bust with the ice-cream cone):
+    // p. 14 on the verso, the plate on the recto. It is emitted in
+    // the plate loop, immediately ahead of that plate, under a
+    // parity guard (see there); the cluster here is pp. 13, 15, 16.
+    const CANVA_RESIDUALS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 13 && p < 17 && p !== 14);
     const CANVA_STILLTHINGS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 17 && p <= 20);
     // Facsimile placement updates (her direction, 2026-11-08, later the
     // same day): p. 11 — the printed book's "II. Still Things" chapter
@@ -1306,6 +1669,15 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       // the New York plate to keep the pair facing, in which case a
       // compensating blank steps in behind Hawaii.
       let roadPairGuard = false;
+      // That compensating blank itself, when one steps in (the
+      // interleave in the plate loop keeps the reference). The
+      // Lofoten / Beijing pair guard below may cancel the two pair
+      // guards' blanks against each other — see the guard itself.
+      let roadPairComp: PageSpec | null = null;
+      // The road chapter's Lofoten / Beijing pair guard (in the
+      // plate loop below) deliberately has no flag here: unlike the
+      // New York pair, it is NOT paired with a compensating blank
+      // behind Beijing — see the guard itself for why.
       const emitHeldBack = () => {
         if (holdBack && !heldBackEmitted) {
           for (let i = leadCount; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
@@ -1362,16 +1734,33 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         const plateSeq = chapter.key === "residuals"
           ? (() => {
               const byTitle = (t: string) => chapter.items.find(({ item }) => item.title === t);
-              const first = byTitle("Residuals #1");
+              const first = byTitle("Breakfast Residuals");
               const exhibition = chapter.items.find(({ item }) => item.image_url.includes("residuals-01-exhibition"));
               const last = byTitle("Residuals #26");
-              const mid = chapter.items.filter(({ item }) => item.title !== "Residuals #1" && item.title !== "Residuals #26" && !item.image_url.includes("residuals-01-exhibition"));
+              const mid = chapter.items.filter(({ item }) => item.title !== "Breakfast Residuals" && item.title !== "Residuals #26" && !item.image_url.includes("residuals-01-exhibition"));
               // mid ends with the appended book-only teapot plate;
               // the teapot and #26 lead the run as a pair (standing
               // between the facsimile front pages, split around them),
               // then the catalog plates, and the #1 pair closes the
               // section.
-              return [...mid.slice(-1), ...(last ? [last] : []), ...mid.slice(0, -1), ...(first ? [first] : []), ...(exhibition ? [exhibition] : [])];
+              // Her direction (2026-11-16): five plates stand
+              // consecutively behind Residuals #5 as one run — the
+              // breakfast inventory piece, Oil, Vinegar, Soup, the
+              // fermented tofu, Hot Pot Aftermath and the Lanzhou
+              // Lamian, in that order — pulled out of the catalog
+              // order by picture and sequenced explicitly here.
+              const groupUrls = [
+                "/watercolors/61/main.jpg",
+                "/watercolors/63/main.jpg",
+                "/watercolors/07/main.jpg",
+                "/watercolors/62/main.jpg",
+                "/watercolors/08/main.jpg",
+              ];
+              const group = groupUrls
+                .map((u) => mid.find(({ item }) => item.image_url.includes(u)))
+                .filter((p): p is (typeof mid)[number] => !!p);
+              const restMid = mid.filter((p) => !group.includes(p));
+              return [...restMid.slice(-1), ...(last ? [last] : []), ...restMid.slice(0, -1), ...group, ...(first ? [first] : []), ...(exhibition ? [exhibition] : [])];
             })()
           : chapter.items;
         for (let ii = 0; ii < plateSeq.length; ii++) {
@@ -1385,7 +1774,22 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
             // guard the #1 pair uses below).
             if (!nextIsVerso()) specs.push({ kind: "blank" });
           }
-          if (chapter.key === "residuals" && item.title === "Residuals #1" && !item.image_url.includes("residuals-01-exhibition")) {
+          if (chapter.key === "stillthings" && item.image_url.includes("/watercolors/43/main.jpg")) {
+            // Her direction (2026-11-16): the Still Things #13
+            // facsimile page (canva p. 14 — the Ultraman figure
+            // facing the golden Thai statue) and this plate, Still
+            // Things #14 (the bust with the ice-cream cone on its
+            // face), are a named facing pair: the facsimile page on
+            // the verso, the plate on the recto. The facsimile page
+            // therefore stands here, immediately ahead of the plate,
+            // instead of in the chapter's head cluster; if the run
+            // would land it on a recto, a blank page steps in first
+            // (the same parity guard the named pairs use), so the
+            // two stay facing under future pagination drift.
+            if (!nextIsVerso()) specs.push({ kind: "blank" });
+            specs.push({ kind: "canva", page: 14 });
+          }
+          if (chapter.key === "residuals" && item.title === "Breakfast Residuals" && !item.image_url.includes("residuals-01-exhibition")) {
             // Her direction (2026-11-11): the painting and its
             // exhibition view face each other as one spread, the
             // painting on the verso. If the run would land the
@@ -1410,6 +1814,49 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
             // the side it had.
             roadPairGuard = !nextIsVerso();
             if (roadPairGuard) specs.push({ kind: "blank" });
+          }
+          if (chapter.key === "road" && item.title === "Notes from the Road #11") {
+            // Her direction (2026-11-14): the Lofoten plate and the
+            // Beijing plate behind it are a named pair under the
+            // same standing rule — Lofoten on the verso, Beijing on
+            // the recto, facing each other as one spread at the end
+            // of the chapter. If the run would land Lofoten on a
+            // recto, a blank page steps in first (the same parity
+            // guard as the New York / Hawaii pair above).
+            //
+            // Unlike the New York pair, NO compensating blank steps
+            // in behind Beijing. Beijing is the chapter's last plate
+            // and the Spirit chapter opener follows it; the opener
+            // aligns itself to a verso, so with the guard blank alone
+            // the opener lands on exactly the verso it stood on
+            // before this guard existed, and every page after the
+            // pair keeps its side with no compensation needed. A
+            // compensating blank here would sit on that verso and
+            // push the opener's own alignment blank in behind it —
+            // the two blanks would face each other as a fully blank
+            // spread in front of the Spirit chapter, which she
+            // flagged and had removed the same day (2026-11-14).
+            if (!nextIsVerso()) {
+              // When both pair guards have fired, the New York
+              // pair's compensating blank (standing immediately in
+              // front, behind Hawaii) and this guard's blank would
+              // face each other as a fully blank spread between
+              // Hawaii and Lofoten — she flagged that spread too
+              // and had it deleted (2026-11-14). The two blanks
+              // cancel instead: with the compensating blank lifted
+              // back out, Lofoten falls on the verso by itself
+              // (Hawaii stands on a recto), so no guard blank is
+              // needed either — and every page behind the pair
+              // keeps the side it had, since the two blanks together
+              // only ever moved folios, never sides. If the page in
+              // front is anything else, the guard blank steps in
+              // as usual and both pairs stay protected.
+              if (roadPairComp && specs[specs.length - 1] === roadPairComp) {
+                specs.pop();
+                roadPairComp = null;
+              }
+              if (!nextIsVerso()) specs.push({ kind: "blank" });
+            }
           }
           if (chapter.key === "remains" && item.image_url === "/remains/01/main.jpg") {
             // Her direction (2026-11-11): Remains No. 1 becomes a
@@ -1480,8 +1927,14 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
             // when a blank stepped in ahead of New York, one steps
             // in behind Hawaii too, so the plates after the pair
             // (Lofoten, Beijing, and everything behind them) keep
-            // the sides they had.
-            if (roadPairGuard) specs.push({ kind: "blank" });
+            // the sides they had. The pushed page is remembered in
+            // roadPairComp: the Lofoten pair guard above may yet
+            // cancel it against its own blank (see there).
+            if (roadPairGuard) {
+              const comp: PageSpec = { kind: "blank" };
+              specs.push(comp);
+              roadPairComp = comp;
+            }
           }
           if (holdBack && item.image_url === holdBack.imageUrl) emitHeldBack();
         }
@@ -1698,13 +2151,40 @@ function EdBookImage({ ctx, src, fallback, alt = "", className, style }: { ctx: 
             measured.rel = rel;
             setPageRel(rel);
           }
+          // Caption hug (her direction, 2026-11-15): on a standard
+          // plate page the picture is centred in a page-height
+          // frame and the caption stands after the frame, so a
+          // picture shorter than its frame left the caption pinned
+          // to the page bottom across a wide empty gap. Publish
+          // the empty strip under the picture — the part of the
+          // frame below the picture's own rect, edits included —
+          // as --cap-lift on the page element; .bk-caption spends
+          // it as a translateY and stands the standard margin
+          // under the picture. Full-bleed pictures (their caption
+          // rides on the picture) and non-plate frames publish
+          // nothing; a picture that fills its frame publishes ~0
+          // and its page stands exactly as before.
+          let liftPx = 0;
+          if (frame.classList.contains("bk-plate-frame") && !full && aspect > 0) {
+            const fyM = aspect > fa ? fa / aspect : 1;
+            const rectYM = (1 - fyM) * 50 + dy + ((fyM * (1 - scale)) / 2) * 100;
+            const rectHM = fyM * scale * 100;
+            const gapFrac = 1 - (rectYM + rectHM) / 100;
+            if (gapFrac > 0.001) liftPx = gapFrac * frame.offsetHeight;
+          }
+          const pageEl2 = page as HTMLElement;
+          if (liftPx > 0) pageEl2.style.setProperty("--cap-lift", `${liftPx.toFixed(1)}px`);
+          else pageEl2.style.removeProperty("--cap-lift");
         }
       }
     };
     measure();
     const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(measure) : null;
     ro?.observe(frame);
-    return () => ro?.disconnect();
+    return () => {
+      ro?.disconnect();
+      if (measured.el) (measured.el as HTMLElement).style.removeProperty("--cap-lift");
+    };
   });
 
   // Default contain-fitted rect as fractions of the frame.
@@ -2474,6 +2954,7 @@ function Collage({ front, back, title, titleSize, above, below }: { front?: Cata
 export interface BookContext {
   t: Translations;
   lang: "en" | "zh";
+  capLang: CapLang;
   chapters: Chapter[];
   years: string;
   coverFront?: CatalogItem;
@@ -3036,12 +3517,12 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           </div>
           {roadWork && (
             <div className="bk-opener-credit bk-opener-credit-left">
-              <div className="bk-caption-meta">{[roadWork.year, roadWork.medium, roadWork.mediumZh].filter(Boolean).join(" · ")}</div>
+              <div className="bk-caption-meta">{capParts([{ lang: "both", text: roadWork.year }, { lang: "en", text: roadWork.medium }, { lang: "zh", text: roadWork.mediumZh }] as CapPart[], ctx.capLang).join(" · ")}</div>
               {/* Production note for this spread, her wording (2026-11-09):
                   painted at a residence in Sugamo, Tokyo, during a Japan
                   trip. (It was first mis-filed to the Japanese Pottery
                   caption; she ruled it belongs here, on the Road opener.) */}
-              <div className="bk-caption-meta">Painted during a trip to Japan, at a residence in Sugamo, Tokyo · 绘于日本旅行中位于东京巢鸭的住所</div>
+              <div className="bk-caption-meta">{capParts([{ lang: "en", text: "Painted during a trip to Japan, at a residence in Sugamo, Tokyo" }, { lang: "zh", text: "绘于日本旅行中位于东京巢鸭的住所" }] as CapPart[], ctx.capLang).join(" · ")}</div>
             </div>
           )}
         </Page>
@@ -3098,9 +3579,18 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               )}
               {a.id === "what-remains" && (
                 <div className="bk-aphorism-workinfo">
-                  <div className="bk-caption-title product-title">Notes from the Road #2 行旅拾记 其二</div>
-                  <div className="bk-caption-meta">2026 · Watercolor on paper 纸本水彩</div>
-                  <div className="bk-caption-meta">San Cristóbal de las Casas, Chiapas, Mexico · 墨西哥，恰帕斯州，圣克里斯托瓦尔-德拉斯卡萨斯</div>
+                  {/* This credit prints the work's own title by design,
+                      so it takes the shared three-line blocks; its
+                      place line stays a place line under them. */}
+                  <WorkCapLines
+                    blocks={[
+                      { lang: "en", title: "Notes from the Road #2", meta: "Watercolor on paper, 2026" },
+                      { lang: "zh", title: "行旅拾记 其二", meta: "纸本水彩 2026年" },
+                    ]}
+                    capLang={ctx.capLang}
+                    joinKey="aphorism:what-remains"
+                  />
+                  <div className="bk-caption-meta">{capParts([{ lang: "en", text: "San Cristóbal de las Casas, Chiapas, Mexico" }, { lang: "zh", text: "墨西哥，恰帕斯州，圣克里斯托瓦尔-德拉斯卡萨斯" }] as CapPart[], ctx.capLang).join(" · ")}</div>
                 </div>
               )}
             </>
@@ -3194,6 +3684,36 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // work (her direction, 2026-11-11: no arrow — a professional
       // label instead of the "←" marker first tried).
       const isRoadNewYork = chapter.key === "road" && item.image_url.includes("/watercolors/55/");
+      // Her direction (2026-11-15): a plate whose landed picture
+      // edit is full-bleed (imageEdits.ts) prints its picture over
+      // the whole sheet — the caption under the frame is covered
+      // with it, and the work would stand with no information at
+      // all. Such plates carry their caption ON the picture, at
+      // the sheet's bottom-left (see .bk-plate-overlay-caption in
+      // catalog-book.css). The road chapter's New York plate is
+      // the one exception: its picture is full-bleed too, but its
+      // work info stands on the facing Hawaii page by design
+      // (below), so it takes no overlay.
+      const fullBleedPlate = !!ctx.imgEditFor(item.image_url)?.full;
+      // Her direction (2026-11-16): two captions move to the sheet's
+      // bottom-right corner, right-aligned under the corner rule —
+      // the Still Things #8 overlay caption (it stood bottom-left),
+      // and the Breakfast Inventory #2 plate's caption under its
+      // frame. No other plate's caption moves.
+      const overlayCaptionCls = item.image_url.includes("/watercolors/14/main.jpg")
+        ? "bk-plate-overlay-caption bk-overlay-caption-right"
+        : "bk-plate-overlay-caption";
+      const frameCaptionCls = item.image_url.includes("/watercolors/61/main.jpg")
+        ? "bk-caption bk-caption-right"
+        : "bk-caption";
+      // Her direction (2026-11-16): the Medellín plate's picture
+      // stands on its beige page with a slight soft shadow, like
+      // her reference mock — this page's picture only (see
+      // .bk-plate-frame-shadow in catalog-book.css). No other
+      // plate's frame takes the class.
+      const frameCls = item.image_url.includes("/watercolors/52/")
+        ? "bk-plate-frame bk-plate-frame-shadow"
+        : "bk-plate-frame";
       const partnerItem = partnerPage?.spec.kind === "plate" ? partnerPage.spec.item : null;
       const facingItem =
         chapter.key === "road" &&
@@ -3202,37 +3722,57 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         partnerItem.image_url.includes("/watercolors/55/")
           ? partnerItem
           : null;
-      const captionBody = (capItem: CatalogItem, facing: boolean) => (
+      const captionBody = (capItem: CatalogItem, facing: boolean) => {
+        // Caption language (her direction, 2026-11-15): the title,
+        // meta and description render in the toolbar's selected
+        // caption language; "both" is the standing composition.
+        // Every work caption prints through the shared three-line
+        // blocks (see workCapBlocks), whatever facts the record
+        // carries — a missing field omits only its own line.
+        const isRoad = chapter.key === "road";
+        // Notes from the Road plates print no catalog work titles
+        // (her direction, 2026-11-10; the works keep their titles
+        // in the catalog data and the shop). Instead the place IS
+        // the title (her direction, 2026-11-15, third pass): it
+        // leaves the description and takes the caption's first
+        // line under the title rules, and the dimensions and
+        // medium-with-year lines follow as on every other plate.
+        const place = isRoad ? capPlaceOf(capItem) : null;
+        const blocks = workCapBlocks(capItem, place ? { en: place.en, zh: place.zh } : undefined);
+        const capDescRaw = isRoad
+          ? place?.restHtml
+            ? capDesc(place.restHtml, ctx.capLang)
+            : ""
+          : capItem.description
+            ? capDesc(capItem.description, ctx.capLang)
+            : "";
+        const capDescHtml =
+          ctx.capLang === "both" && !CAP_DESC_JOIN_EXCLUDE.has(capItem.image_url) ? pairDescHtml(capDescRaw) : capDescRaw;
+        return (
         <div className={facing ? "bk-caption-body bk-caption-facing" : "bk-caption-body"}>
           {facing && <div className="bk-caption-facing-label">LEFT · 左图</div>}
-          {/* Notes from the Road plates print no work titles (her
-              direction, 2026-11-10): the caption opens with the meta
-              line. Book-presentation rule only — the works keep
-              their titles in the catalog data and the shop. A work
-              with no title prints no title line at all: the book
-              never prints "Untitled" as a work name (her rule,
-              2026-11-10). */}
-          {chapter.key !== "road" && capItem.title && (
-            <div className="bk-caption-title product-title">{capItem.title}{capItem.titleZh && capItem.titleZh !== capItem.title ? ` ${capItem.titleZh}` : ""}</div>
-          )}
-          {(capItem.metaLine || capItem.dimensions || capItem.mediumZh || capItem.dimensionsZh) && (
-            <div className="bk-caption-meta">{[capItem.metaLine, capItem.dimensions, capItem.mediumZh && capItem.mediumZh !== capItem.medium && !(capItem.metaLine ?? "").includes(capItem.mediumZh) ? capItem.mediumZh : "", capItem.dimensionsZh && capItem.dimensionsZh !== capItem.dimensions ? capItem.dimensionsZh : ""].filter(Boolean).join(" · ")}</div>
-          )}
+          <WorkCapLines blocks={blocks} capLang={ctx.capLang} joinKey={capItem.image_url} />
           {/* The Residuals #1 painting page prints no exhibition line:
               the line stands, emphasised, on its facing exhibition
               page instead (her direction, 2026-11-11). */}
-          {capItem.description && !(chapter.key === "residuals" && capItem.image_url.includes("/watercolors/01/")) && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: capItem.description }} />}
+          {capDescHtml && !(chapter.key === "residuals" && capItem.image_url.includes("/watercolors/01/")) && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: capDescHtml }} />}
         </div>
-      );
+        );
+      };
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-plate-page${bgImgCls}`}>{bgImgLayer}
-          <div className="bk-plate-frame">
+          <div className={frameCls}>
             <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
           </div>
-          {!isRoadNewYork && (
-            <div className="bk-caption">
+          {!isRoadNewYork && !fullBleedPlate && (
+            <div className={frameCaptionCls}>
               {captionBody(item, false)}
               {facingItem && captionBody(facingItem, true)}
+            </div>
+          )}
+          {!isRoadNewYork && fullBleedPlate && (
+            <div className={overlayCaptionCls}>
+              {captionBody(item, false)}
             </div>
           )}
           <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
@@ -3252,10 +3792,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 </div>
                 {!PLATE_GRID_NO_CAPTION.has(item.image_url) && (
                   <div className="bk-grid-caption">
-                    <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
-                    {(item.metaLine || item.dimensions) && (
-                      <div className="bk-caption-meta">{[item.metaLine, item.dimensions].filter(Boolean).join(" · ")}</div>
-                    )}
+                    <WorkCapLines blocks={workCapBlocks(item)} capLang={ctx.capLang} joinKey={item.image_url} />
                   </div>
                 )}
               </div>
@@ -3283,8 +3820,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                     <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
                   </div>
                   <div className="bk-journal-caption">
-                    <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
-                    {item.metaLine && <div className="bk-caption-meta">{item.metaLine}</div>}
+                    <WorkCapLines blocks={workCapBlocks(item)} capLang={ctx.capLang} joinKey={item.image_url} />
                   </div>
                 </div>
               ))}
@@ -3304,14 +3840,14 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // spread (#4) instead stands at the bottom-right (see
       // carSpread below).
       // Two treatments share that placement: the Thailand spread
-      // prints its two
-      // place-and-medium lines at the house caption size
+      // prints its place and medium lines at the house caption size
       // (bk-bleed-caption-bl); the converted plate spreads (Notes
       // from the Road #13, her trial conversion, and #4) step the
-      // type up (bk-bleed-caption-road) and compose the meta line from the
-      // plate's fields, then the place lines from the work's
-      // description. Other bleed spreads (Pre-iPhone Era) keep
-      // their right-page caption untouched.
+      // type up (bk-bleed-caption-road). On both, the place now
+      // leads as the caption's title line (her direction,
+      // 2026-11-15, third pass) and the meta line follows. Other
+      // bleed spreads (Pre-iPhone Era) print the shared three-line
+      // work caption on their right page.
       const thailand = item.image_url === ROAD_THAILAND_SPREAD_PLATE.image_url;
       const roadSpread = spec.chapter.key === "road" && !thailand;
       // Her direction (2026-11-10, later the same evening): of the
@@ -3328,41 +3864,102 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // full caption on the right page. See .bk-bleed-flush and
       // .bk-bleed-caption-flush in catalog-book.css.
       const flushSpread = item.image_url === "/remains/01/main.jpg";
-      const spreadMeta = [item.metaLine, item.dimensions, item.mediumZh && item.mediumZh !== item.medium && !(item.metaLine ?? "").includes(item.mediumZh) ? item.mediumZh : "", item.dimensionsZh && item.dimensionsZh !== item.dimensions ? item.dimensionsZh : ""].filter(Boolean).join(" \u00b7 ");
+      const spreadMeta = capParts(capMetaParts(item, { zhInBoth: true, dimInBoth: true }), ctx.capLang).join(" · ");
+      const spreadDesc = item.description ? capDesc(item.description, ctx.capLang) : "";
+      const spreadDescPaired =
+        ctx.capLang === "both" && !CAP_DESC_JOIN_EXCLUDE.has(item.image_url) ? pairDescHtml(spreadDesc) : spreadDesc;
+      // Road spreads (her direction, 2026-11-15, third pass): the
+      // place is the title, so it leads the corner caption under
+      // the title rules and the meta line follows. In the Chinese
+      // view the meta line is composed from the Chinese record so
+      // its year survives (the standing fragment join dropped it).
+      const roadPlace = roadSpread ? capPlaceOf(item) : null;
+      const roadMeta = ctx.capLang === "zh" ? [capZhMetaOf(item), compactDimOf(item)].filter(Boolean).join(" · ") : spreadMeta;
+      // The Thailand spread's composed lines fuse place and
+      // medium in one line each; the place half now takes the
+      // title line, the medium half stays as the meta line.
+      const thaiSegEn = (item.metaLine ?? "").split(" · ");
+      const thaiSegZh = (item.metaZh ?? "").split(" · ");
+      // Bilingual pairing (her direction, 2026-11-15, fourth
+      // pass): the corner captions' English and Chinese title
+      // lines pair on one line, as in JoinedCapLines; the road
+      // spreads' meta line is already one composed line in every
+      // view, so only its title lines pair. The paired road meta
+      // carries bk-cap-joined so the stepped-size rule in
+      // catalog-book.css keeps the bilingual size it has today.
+      const roadJoined = ctx.capLang === "both" && !CAP_JOIN_EXCLUDE.has(item.image_url);
+      const roadCapInner = roadJoined ? (
+        <>
+          {(roadPlace?.en || roadPlace?.zh) && (
+            <div className="bk-caption-title product-title bk-cap-line">
+              {roadPlace?.en && <span className="bk-cap-en"><em>{roadPlace.en}</em></span>}
+              {roadPlace?.en && roadPlace?.zh && " "}
+              {roadPlace?.zh && <span className="bk-cap-zh">{`《${roadPlace.zh}》`}</span>}
+            </div>
+          )}
+          {roadMeta && <div className="bk-caption-meta bk-cap-joined">{roadMeta}</div>}
+          {roadPlace?.restHtml && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: capDesc(roadPlace.restHtml, ctx.capLang) }} />}
+        </>
+      ) : (
+        <>
+          {roadPlace?.en && ctx.capLang !== "zh" && <div className="bk-caption-title product-title"><em>{roadPlace.en}</em></div>}
+          {roadPlace?.zh && ctx.capLang !== "en" && <div className="bk-caption-title product-title">{`《${roadPlace.zh}》`}</div>}
+          {roadMeta && <div className="bk-caption-meta">{roadMeta}</div>}
+          {roadPlace?.restHtml && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: capDesc(roadPlace.restHtml, ctx.capLang) }} />}
+        </>
+      );
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-bleed bk-bleed-${spec.half}${flushSpread ? " bk-bleed-flush" : ""}${bgImgCls}`}>{bgImgLayer}
           <div className="bk-spread-canvas">
             <BookImage src={item.image_url} fallback={item.fallback_image_url} alt={item.title} className="bk-bleed-img" />
             {thailand && spec.half === "left" && (
               <div className="bk-bleed-caption bk-bleed-caption-bl">
-                <div className="bk-caption-meta">{item.metaLine}</div>
-                {item.metaZh && <div className="bk-caption-meta">{item.metaZh}</div>}
+                {ctx.capLang === "both" && !CAP_JOIN_EXCLUDE.has(item.image_url) ? (
+                  <>
+                    {(thaiSegEn[0] || thaiSegZh[0]) && (
+                      <div className="bk-caption-title product-title bk-cap-line">
+                        {thaiSegEn[0] && <span className="bk-cap-en"><em>{thaiSegEn[0]}</em></span>}
+                        {thaiSegEn[0] && thaiSegZh[0] && " "}
+                        {thaiSegZh[0] && <span className="bk-cap-zh">{`《${thaiSegZh[0]}》`}</span>}
+                      </div>
+                    )}
+                    {(thaiSegEn.length > 1 || thaiSegZh.length > 1) && (
+                      <div className="bk-caption-meta bk-cap-line">
+                        {thaiSegEn.length > 1 && <span className="bk-cap-en">{thaiSegEn.slice(1).join(" · ")}</span>}
+                        {thaiSegEn.length > 1 && thaiSegZh.length > 1 && " "}
+                        {thaiSegZh.length > 1 && <span className="bk-cap-zh">{thaiSegZh.slice(1).join(" · ")}</span>}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {ctx.capLang !== "zh" && thaiSegEn[0] && <div className="bk-caption-title product-title"><em>{thaiSegEn[0]}</em></div>}
+                    {ctx.capLang !== "en" && thaiSegZh[0] && <div className="bk-caption-title product-title">{`《${thaiSegZh[0]}》`}</div>}
+                    {ctx.capLang !== "zh" && thaiSegEn.length > 1 && <div className="bk-caption-meta">{thaiSegEn.slice(1).join(" · ")}</div>}
+                    {ctx.capLang !== "en" && thaiSegZh.length > 1 && <div className="bk-caption-meta">{thaiSegZh.slice(1).join(" · ")}</div>}
+                  </>
+                )}
               </div>
             )}
             {roadSpread && !carSpread && spec.half === "left" && (
               <div className="bk-bleed-caption bk-bleed-caption-road">
-                {spreadMeta && <div className="bk-caption-meta">{spreadMeta}</div>}
-                {item.description && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: item.description }} />}
+                {roadCapInner}
               </div>
             )}
             {roadSpread && carSpread && spec.half === "right" && (
               <div className="bk-bleed-caption bk-bleed-caption-road bk-bleed-caption-road-br">
-                {spreadMeta && <div className="bk-caption-meta">{spreadMeta}</div>}
-                {item.description && <div className="bk-caption-meta" dangerouslySetInnerHTML={{ __html: item.description }} />}
+                {roadCapInner}
               </div>
             )}
             {flushSpread && spec.half === "right" && (
               <div className="bk-bleed-caption bk-bleed-caption-flush">
-                <div className="bk-caption-title product-title">{item.title}{item.titleZh && item.titleZh !== item.title ? ` ${item.titleZh}` : ""}</div>
-                {spreadMeta && <div className="bk-caption-meta">{spreadMeta}</div>}
-                {item.description && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: item.description }} />}
+                <WorkCapLines blocks={workCapBlocks(item)} capLang={ctx.capLang} joinKey={item.image_url} />
+                {spreadDescPaired && <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: spreadDescPaired }} />}
               </div>
             )}
             {!thailand && !roadSpread && !flushSpread && spec.half === "right" && (
               <div className="bk-bleed-caption">
-                <div className="bk-caption-title product-title">{item.title}</div>
-                <div className="bk-caption-meta">{item.metaLine}</div>
-                {item.metaZh && <div className="bk-caption-meta">{item.metaZh}</div>}
+                <WorkCapLines blocks={workCapBlocks(item)} capLang={ctx.capLang} joinKey={item.image_url} />
               </div>
             )}
           </div>
@@ -3524,6 +4121,9 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // Facsimile p. 7 is the blue-and-white bowl painting, watercolors/08
       // in the catalog data; its caption below reads from that record.
       const lamianWork = spec.page === 7 ? watercolors.find((w) => w.id === "8") : undefined;
+      // Facsimile p. 6 is the three red-brown blocks, watercolors/07 in
+      // the catalog data; its caption below reads from that record.
+      const fuyuWork = spec.page === 6 ? watercolors.find((w) => w.id === "7") : undefined;
       if (CANVA_FULL_BLEED_PAGES.has(spec.page)) {
         // Full bleed like the bleed spreads: the image covers the whole
         // sheet and, as there, no folio is printed over it.
@@ -3546,9 +4146,46 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 {/* Exception to the chapter's no-titles rule: this page
                     closes the Notes from the Road chapter, but the artist
                     decided Japanese Pottery KEEPS its title (2026-11-10). */}
-                <div className="bk-caption-title product-title">Japanese Pottery 日本陶器</div>
-                <div className="bk-caption-meta">2025 · Watercolor on paper · 纸本水彩</div>
-                <div className="bk-caption-desc description-html" dangerouslySetInnerHTML={{ __html: "Japan Folk Crafts Museum, Tokyo.<br />东京，日本民艺馆。" }} />
+                <WorkCapLines
+                  blocks={[
+                    { lang: "en", title: "Japanese Pottery", meta: "Watercolor on paper, 2025" },
+                    { lang: "zh", title: "日本陶器", meta: "纸本水彩 2025年" },
+                  ]}
+                  capLang={ctx.capLang}
+                  joinKey="canva:21"
+                />
+                <div
+                  className="bk-caption-desc description-html"
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      ctx.capLang === "both" && !CAP_DESC_JOIN_EXCLUDE.has("canva:21")
+                        ? pairDescHtml(capDesc("Japan Folk Crafts Museum, Tokyo.<br />东京，日本民艺馆。", ctx.capLang))
+                        : capDesc("Japan Folk Crafts Museum, Tokyo.<br />东京，日本民艺馆。", ctx.capLang),
+                  }}
+                />
+              </div>
+            </div>
+          )}
+          {spec.page === 6 && fuyuWork && (
+            <div className="bk-caption">
+              <div className="bk-caption-body">
+                {/* Third caption exception among the facsimile pages:
+                    the artist named this painting 《三块腐乳》 and
+                    confirmed it as a 2025 work (her word, 2026-11-15) —
+                    facsimile pages otherwise print no caption, so the
+                    title would never show. The caption reads from the
+                    watercolor catalog record (watercolors/07) in the
+                    three-line work-caption form of the section's
+                    plates; the record carries no dimensions, so no
+                    dimensions line prints. */}
+                <WorkCapLines
+                  blocks={[
+                    { lang: "en", title: fuyuWork.title, meta: `${fuyuWork.medium}, ${fuyuWork.year}` },
+                    { lang: "zh", title: fuyuWork.titleZh, meta: `${fuyuWork.mediumZh} ${fuyuWork.year}年` },
+                  ]}
+                  capLang={ctx.capLang}
+                  joinKey="canva:6"
+                />
               </div>
             </div>
           )}
@@ -3560,8 +4197,22 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                     blue-and-white bowl is 兰州拉面 — so its title prints
                     here, read from the watercolor catalog record
                     (watercolors/08), as on the section's plates. */}
-                <div className="bk-caption-title product-title">{lamianWork.title} {lamianWork.titleZh}</div>
-                <div className="bk-caption-meta">{lamianWork.year} · {lamianWork.medium} · {lamianWork.mediumZh}</div>
+                <WorkCapLines
+                  blocks={workCapBlocks({
+                    title: lamianWork.title,
+                    titleZh: lamianWork.titleZh ?? null,
+                    metaLine: [lamianWork.year, lamianWork.medium].filter(Boolean).join(" · "),
+                    year: lamianWork.year,
+                    medium: lamianWork.medium,
+                    mediumZh: lamianWork.mediumZh ?? null,
+                    dimensions: lamianWork.dimensions,
+                    dimensionsZh: lamianWork.dimensionsZh ?? null,
+                    category: "",
+                    image_url: "",
+                  })}
+                  capLang={ctx.capLang}
+                  joinKey="canva:7"
+                />
               </div>
             </div>
           )}
@@ -3719,6 +4370,7 @@ async function waitForAssets(root: HTMLElement) {
 
 function useBookModel(args: {
   editMode: boolean;
+  capLang: CapLang;
   textEdits: Record<string, string>;
   pageBgEdits: Record<string, PageBgValue | "global">;
   pageBgFor: BookContext["pageBgFor"];
@@ -3735,7 +4387,7 @@ function useBookModel(args: {
   imgSel: string | null;
   selectImg: BookContext["selectImg"];
 }): { ctx: BookContext; pages: InteriorPage[] } {
-  const { editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, startEyedrop, openEditor, imgEdits, imgEditFor, setImgEdit, imgSel, selectImg } = args;
+  const { editMode, capLang, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, startEyedrop, openEditor, imgEdits, imgEditFor, setImgEdit, imgSel, selectImg } = args;
   const t = translations.en;
   const ctx = useMemo<BookContext>(() => {
     let plate = 0;
@@ -3833,14 +4485,37 @@ function useBookModel(args: {
     // BEFORE its review — see the pagination notes.)
     const residualsChapter = splitChapters.find((ch) => ch.key === "residuals");
     if (residualsChapter) {
+      // Her rename (2026-11-16): the lead plate's title is now
+      // "Breakfast Residuals" — it no longer carries the "Residuals"
+      // prefix the split above keys on, so admit it explicitly, in
+      // its catalog position ahead of the chapter's other plates.
+      // The plate's place in the chapter (lead, closing pair with
+      // its exhibition view) is unchanged.
+      const breakfastItem = (wcChapter?.items ?? []).find(({ item }) => item.title === "Breakfast Residuals");
+      if (breakfastItem && !residualsChapter.items.includes(breakfastItem)) {
+        residualsChapter.items = [breakfastItem, ...residualsChapter.items];
+      }
       const kept = residualsChapter.items.filter(({ item }) => item.title !== "Residuals #2" && item.title !== "Residuals #3");
       const byTitle = (t: string) => kept.findIndex(({ item }) => item.title === t);
       const lead: typeof kept = [];
-      for (const t of ["Residuals #1", "Residuals #26"]) {
+      for (const t of ["Breakfast Residuals", "Residuals #26"]) {
         const i = byTitle(t);
         if (i >= 0) lead.push(kept[i]);
       }
-      residualsChapter.items = [...lead, ...kept.filter(({ item }) => item.title !== "Residuals #26" && item.title !== "Residuals #1")];
+      residualsChapter.items = [...lead, ...kept.filter(({ item }) => item.title !== "Residuals #26" && item.title !== "Breakfast Residuals")];
+      // Her direction (2026-11-16): Three Pieces of Fermented Tofu
+      // （三块腐乳） joins the chapter as a catalog plate, in the
+      // consecutive group behind Residuals #5 (see the plate
+      // sequence). Its English title carries no "Residuals" prefix —
+      // the title is her deliberate shop title and stays — so the
+      // title-prefix split above cannot route it; the plate is
+      // pulled in here by its picture instead. Its facsimile page
+      // (canva p. 6) leaves the book in the same pass, so the work
+      // prints once.
+      const tofuPlate = (wcChapter?.items ?? []).find(({ item }) => item.image_url.includes("/watercolors/07/main.jpg"));
+      if (tofuPlate && !residualsChapter.items.some(({ item }) => item.image_url.includes("/watercolors/07/main.jpg"))) {
+        residualsChapter.items = [...residualsChapter.items, tofuPlate];
+      }
       // Her direction (2026-11-10): the untitled black-and-white
       // watercolor still life she sent joins the chapter as a book-only
       // plate (see RESIDUALS_EXTRA_PLATES in seriesPlates.ts). It is
@@ -3864,7 +4539,7 @@ function useBookModel(args: {
       // pagination notes). The split is book-only: the catalog work,
       // its shop image and its data stay untouched.
       residualsChapter.items = residualsChapter.items.flatMap((pair) => {
-        if (pair.item.title !== "Residuals #1") return [pair];
+        if (pair.item.title !== "Breakfast Residuals") return [pair];
         const exhibitionPair = {
           ...pair,
           item: {
@@ -3972,13 +4647,10 @@ function useBookModel(args: {
     if (stillThingsChapter) {
       stillThingsChapter.items = stillThingsChapter.items.filter(({ item }) => !item.image_url.includes("/watercolors/48/"));
     }
-    // Her direction (2026-11-11): the Still Things #8 plate on
-    // /watercolors/14/ — the pale-blue draped-cloth watercolor,
-    // folio 47 — is deleted from the book. The piece itself stays
-    // in the watercolor catalog and in the shop.
-    if (stillThingsChapter) {
-      stillThingsChapter.items = stillThingsChapter.items.filter(({ item }) => !item.image_url.includes("/watercolors/14/"));
-    }
+    // Her direction (2026-11-14, reversing her 2026-11-11 call):
+    // the Still Things #8 plate on /watercolors/14/ — the pale-blue
+    // draped-cloth watercolor — is restored to the book, so no
+    // filter applies to it here.
     // The three websites stand as one big chapter (her direction,
     // 2026-11-05): a part opening, "Rooms, Scores, Decisions", then the
     // triptych in the order the IMMEMORY text itself names — first panel
@@ -4105,6 +4777,19 @@ function useBookModel(args: {
       suoChapter.items = [
         ...(SERIES_PLATES.shop ?? []).map((item) => ({ item, plate: 0 })),
         ...suoChapter.items,
+      ];
+    }
+    // Her direction (2026-11-14): the two exhibition photographs she
+    // sent that day close the In the Spirit of the 21st Century
+    // chapter's plate run — they are unanchored, so they follow the
+    // chapter's essay and its four anchored paintings, standing last
+    // before the bridge sentence that closes the chapter (see
+    // SPIRIT_EXHIBITION_PLATES in seriesPlates.ts).
+    const spiritChapter = chapters.find((ch) => ch.key === "spirit");
+    if (spiritChapter) {
+      spiritChapter.items = [
+        ...spiritChapter.items,
+        ...SPIRIT_EXHIBITION_PLATES.map((item) => ({ item, plate: 0 })),
       ];
     }
     // Plates are numbered in book order across the whole volume.
@@ -4546,6 +5231,7 @@ function useBookModel(args: {
     const paintingParas = txParas("paintingIntroBody");
     return {
       t,
+      capLang,
       chapters,
       prefaceChunks: [
         ...chunkParas(prefaceParas.filter((p) => !hasCjk(p.text)), 1500, 20),
@@ -4576,7 +5262,7 @@ function useBookModel(args: {
       coverFront: byKey("residuals")[0] ?? chapters[0]?.items[0]?.item,
       coverBack: byKey("photography")[0] ?? chapters[0]?.items[1]?.item,
     };
-  }, [textEdits, editMode, pageBgEdits, bgImgEdits, imgEdits, imgSel]);
+  }, [textEdits, editMode, capLang, pageBgEdits, bgImgEdits, imgEdits, imgSel]);
   const pages = useMemo(() => paginate(ctx.chapters, ctx.prefaceChunks.length, ctx.paintingChunks.length, Object.fromEntries(Object.entries(ctx.essayChunks).map(([k, v]) => [k, v.length]))), [ctx]);
   return { ctx, pages };
 }
@@ -4630,6 +5316,14 @@ const CatalogBook = () => {
   const [bgImgEdits, setBgImgEdits] = useState<Record<string, PageBgImage | null>>(() => loadJSON("remains-book-bgimg", {}));
   // Picture edits (size / replacement), keyed by picture src.
   const [imgEdits, setImgEdits] = useState<Record<string, ImgEdit>>(() => loadJSON("remains-book-img-edits", {}));
+  // Caption language (her direction, 2026-11-15): the toolbar's
+  // three-way switch filters work captions only — bilingual by
+  // default, English only, or Chinese only. Local only, like the
+  // other reading settings; never part of book-edits.json.
+  const [capLang, setCapLang] = useState<CapLang>(() => loadJSON<CapLang>("remains-book-cap-lang", "both"));
+  useEffect(() => {
+    localStorage.setItem("remains-book-cap-lang", JSON.stringify(capLang));
+  }, [capLang]);
   // "Sent" marks (her request, 2026-11-08): Make PR used to snapshot
   // the editor stores and show a 已发送 chip on items still equal
   // to the snapshot. Superseded 2026-11-09 by clear-after-PR (see
@@ -4947,12 +5641,26 @@ const CatalogBook = () => {
   // (e.g. iPhone Safari).
   const rootRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  // The folio currently being read, tracked continuously by the live-page
+  // tracker below. Entering or leaving fullscreen swaps the scroll
+  // container (window outside, .bk-root itself inside — see the
+  // :fullscreen CSS), and the new container starts at scrollTop 0, which
+  // is why fullscreen used to land back on page 1 (artist, 2026-11-15:
+  // 「每次点fullscreen 不许跳回第一页」). The tracker keeps this ref
+  // current, the fullscreen-restore effect jumps the new container back
+  // to it, and fsSuppressUntilRef stops the tracker from reading the
+  // transient page-1 position while the switch settles.
+  const readingFolioRef = useRef<number | null>(null);
+  const fsSuppressUntilRef = useRef(0);
   const fsSupported =
     typeof document !== "undefined" &&
     document.fullscreenEnabled &&
     typeof HTMLElement.prototype.requestFullscreen === "function";
   useEffect(() => {
-    const onFsChange = () => setIsFullscreen(document.fullscreenElement === rootRef.current);
+    const onFsChange = () => {
+      fsSuppressUntilRef.current = Date.now() + 900;
+      setIsFullscreen(document.fullscreenElement === rootRef.current);
+    };
     document.addEventListener("fullscreenchange", onFsChange);
     return () => document.removeEventListener("fullscreenchange", onFsChange);
   }, []);
@@ -4972,7 +5680,7 @@ const CatalogBook = () => {
     noindex: true,
   });
 
-  const { ctx, pages } = useBookModel({ editMode, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, startEyedrop, openEditor, imgEdits, imgEditFor, setImgEdit, imgSel, selectImg });
+  const { ctx, pages } = useBookModel({ editMode, capLang, textEdits, pageBgEdits, pageBgFor, setPageBg, bgImgEdits, bgImgFor, setBgImg, openBgImagePanel, startEyedrop, openEditor, imgEdits, imgEditFor, setImgEdit, imgSel, selectImg });
   // Every picture already in the book, for the background-image picker.
   const bookImages = useMemo(() => {
     const seen = new Map<string, string>();
@@ -5186,6 +5894,127 @@ const CatalogBook = () => {
     };
   }, [deepLinkPage]);
 
+  // ── Live page tracking: the URL always names the page being read ──────
+  // (artist, 2026-11-15: 「翻阅的时候 随着下滑 页号全部能自动加在url里
+  // deeplink 到页码」). The folio under the viewport's middle line is the
+  // page being read; on a spread row both pages share the line, so the
+  // row's first (left) page is reported — the same folio a ?page= link
+  // to this row lands on. Scrolling is listened to in the capture phase
+  // on the document, so it is heard whichever container is scrolling:
+  // the window in normal view, or .bk-root itself in fullscreen. The
+  // writer below uses history.replaceState only — no history entry per
+  // page, no reload, no scroll jump — and because it never touches state
+  // the deep-link jump above cannot be re-triggered by it (no loop).
+  const [readingFolio, setReadingFolio] = useState<number | null>(null);
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    // Deep-link landing guard: while a ?page=/?section= jump is still on
+    // its way, the viewport still shows the front of the book — those
+    // readings must not overwrite the folio (in the ref or in the URL)
+    // before the jump lands. Tracking unlocks when the target folio is
+    // first observed at the middle line, or when the reader takes over
+    // with a real interaction (the same sovereignty signals the jump
+    // itself stands down on).
+    let landed = deepLinkPage === null;
+    if (!landed) {
+      readingFolioRef.current = deepLinkPage;
+      setReadingFolio((prev) => (prev === deepLinkPage ? prev : deepLinkPage));
+    }
+    const unlock = () => {
+      landed = true;
+    };
+    window.addEventListener("wheel", unlock, { passive: true });
+    window.addEventListener("touchstart", unlock, { passive: true });
+    window.addEventListener("pointerdown", unlock);
+    window.addEventListener("keydown", unlock);
+    let raf = 0;
+    const compute = () => {
+      raf = 0;
+      // While a fullscreen switch settles, the incoming container sits
+      // at scrollTop 0 for a few frames; never let that transient
+      // page-1 reading overwrite the folio the reader is actually on.
+      if (Date.now() < fsSuppressUntilRef.current) return;
+      const midY = window.innerHeight / 2;
+      let folio: number | null = null;
+      stage.querySelectorAll<HTMLElement>('[id^="bk-page-"]').forEach((el) => {
+        const r = el.getBoundingClientRect();
+        if (r.top <= midY && r.bottom > midY) {
+          const n = Number(el.id.slice("bk-page-".length));
+          if (Number.isInteger(n) && (folio === null || n < folio)) folio = n;
+        }
+      });
+      if (folio !== null) {
+        if (!landed) {
+          if (folio !== deepLinkPage) return; // still travelling: stay silent
+          landed = true;
+        }
+        readingFolioRef.current = folio;
+        setReadingFolio((prev) => (prev === folio ? prev : folio));
+      }
+    };
+    const schedule = () => {
+      if (!raf) raf = requestAnimationFrame(compute);
+    };
+    compute();
+    document.addEventListener("scroll", schedule, { capture: true, passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      document.removeEventListener("scroll", schedule, { capture: true });
+      window.removeEventListener("resize", schedule);
+      window.removeEventListener("wheel", unlock);
+      window.removeEventListener("touchstart", unlock);
+      window.removeEventListener("pointerdown", unlock);
+      window.removeEventListener("keydown", unlock);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [sheets, deepLinkPage]);
+  useEffect(() => {
+    if (readingFolio === null) return;
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("page") === String(readingFolio)) return;
+    // Preserve every other parameter (notably ?section=) exactly as-is.
+    url.searchParams.set("page", String(readingFolio));
+    window.history.replaceState(window.history.state, "", url.toString());
+  }, [readingFolio]);
+
+  // ── Fullscreen keeps the page ─────────────────────────────────────────
+  // Toggling fullscreen swaps the scroll container (see the note on
+  // readingFolioRef above), and the new container starts at the top.
+  // After every enter/exit, jump the new container back to the folio
+  // that was being read, retrying briefly while the zoom recompute and
+  // layout settle — with the same reader-sovereignty guard as the
+  // deep-link jump: any real interaction stands the restore down.
+  const prevFullscreenRef = useRef(isFullscreen);
+  useEffect(() => {
+    if (prevFullscreenRef.current === isFullscreen) return;
+    prevFullscreenRef.current = isFullscreen;
+    const folio = readingFolioRef.current;
+    if (folio === null) return;
+    let cancelled = false;
+    const stop = () => {
+      cancelled = true;
+    };
+    window.addEventListener("wheel", stop, { passive: true });
+    window.addEventListener("touchstart", stop, { passive: true });
+    window.addEventListener("pointerdown", stop);
+    window.addEventListener("keydown", stop);
+    const jump = () => {
+      if (cancelled) return;
+      document.getElementById(`bk-page-${folio}`)?.scrollIntoView({ behavior: "auto", block: "start" });
+    };
+    jump();
+    const timers = [120, 350, 700].map((ms) => window.setTimeout(jump, ms));
+    return () => {
+      cancelled = true;
+      timers.forEach((t) => window.clearTimeout(t));
+      window.removeEventListener("wheel", stop);
+      window.removeEventListener("touchstart", stop);
+      window.removeEventListener("pointerdown", stop);
+      window.removeEventListener("keydown", stop);
+    };
+  }, [isFullscreen]);
+
   const handleSave = async () => {
     if (!stageRef.current) return;
     setPreparing(true);
@@ -5244,7 +6073,7 @@ const CatalogBook = () => {
     }`;
 
   return (
-    <div ref={rootRef} className={`bk-root bk-paper-${paper}${isMobile ? " bk-mobile" : ""}${eyedropPick ? " bk-eyedropping" : ""}`} style={rootStyle}>
+    <div ref={rootRef} data-caplang={capLang} className={`bk-root bk-paper-${paper}${isMobile ? " bk-mobile" : ""}${eyedropPick ? " bk-eyedropping" : ""}`} style={rootStyle}>
       {/* One @page size per export: interior/complete pages, or the wide cover wrap. */}
       <style>{`@page { size: ${sheetW}in ${pageH}in; margin: 0; }`}</style>
 
@@ -5300,19 +6129,27 @@ const CatalogBook = () => {
             <button type="button" onClick={() => setBleed((v) => !v)} className={toggleClass(bleed)}>
               {b.bleed} {BLEED}in
             </button>
-            <div className="flex">
+            {/* Caption language (her direction, 2026-11-15): one
+                switch, three views — bilingual captions (the book's
+                standing composition), English only, Chinese only.
+                Captions only; body pages are untouched. */}
+            <div className="flex" role="group" aria-label="Caption language 图注语言">
               {(
                 [
-                  ["white", "White", "白色"],
-                  ["cream", "Cream", "米色"],
-                  ["black", "Black", "黑色"],
+                  ["both", "双语"],
+                  ["en", "EN"],
+                  ["zh", "中文"],
                 ] as const
-              ).map(([k, en, zh]) => (
-                <button key={k} type="button" onClick={() => setPaper(k)} className={`${toggleClass(paper === k)} -ml-px first:ml-0`}>
-                  {lang === "zh" ? zh : en}
+              ).map(([k, label]) => (
+                <button key={k} type="button" onClick={() => setCapLang(k)} className={`${toggleClass(capLang === k)} -ml-px first:ml-0`}>
+                  {label}
                 </button>
               ))}
             </div>
+            {/* Paper-colour switcher removed (artist, 2026-11-15): no
+                visible White / Cream / Black control. The paper state
+                stays at its "white" default, which the root class and
+                page grounds keep using exactly as before. */}
             <button type="button" onClick={() => setEditMode((v) => !v)} className={toggleClass(editMode)}>
               {lang === "zh" ? "编辑模式" : "Edit mode"}
             </button>
@@ -5340,28 +6177,24 @@ const CatalogBook = () => {
                 )}
               </>
             )}
-            <button
-              type="button"
-              onClick={handleSave}
-              disabled={preparing}
-              className="sans-label inline-flex items-center gap-2 text-xs uppercase tracking-widest px-4 py-2 bg-primary text-primary-foreground disabled:opacity-60"
-            >
-              <Printer className="h-4 w-4" />
-              {preparing ? b.preparing : b.savePdf}
-            </button>
-            <div className="ml-auto flex flex-col items-end gap-1">
+            {/* The old "Save as PDF" button was removed (artist,
+                2026-11-15): it duplicated Download PDF — both ended at
+                window.print(). handleSave itself stays: handleDownloadPdf
+                calls it after forcing the standard layout. */}
+            <div className="ml-auto">
+              {/* The how-to text that used to sit under this button is
+                  now its hover tooltip (artist, 2026-11-15) — nothing
+                  instructional is printed on the page anymore. */}
               <button
                 type="button"
                 onClick={handleDownloadPdf}
                 disabled={preparing}
+                title="In the dialog, choose “Save as PDF” — size, margins and backgrounds are already set. 在弹窗里选「另存为 PDF」即可，尺寸、边距和背景都已设好。"
                 className="sans-label inline-flex items-center gap-2 text-xs tracking-widest px-4 py-2 bg-primary text-primary-foreground disabled:opacity-60"
               >
                 <Download className="h-4 w-4" />
                 {preparing ? b.preparing : b.downloadPdf}
               </button>
-              <span className="max-w-[340px] text-[11px] normal-case tracking-normal leading-snug text-right text-foreground/60">
-                In the dialog, choose “Save as PDF” — size, margins and backgrounds are already set. 在弹窗里选「另存为 PDF」即可，尺寸、边距和背景都已设好。
-              </span>
             </div>
           </div>
         </div>
@@ -5370,7 +6203,10 @@ const CatalogBook = () => {
             {part === "cover" ? `${wrapW.toFixed(3)} × ${pageH.toFixed(3)} in` : `${pageW} × ${pageH} in`} · {pages.length} {b.pagesShort} · {b.spine}{" "}
             {spine.toFixed(3)} in
           </span>
-          <span className="normal-case tracking-normal">{b.printHint}</span>
+          {/* The old printHint line ("set Margins to None…") was removed
+              (artist, 2026-11-15): it duplicated — and contradicted —
+              the Download PDF guidance, which now lives in that
+              button's tooltip. */}
         </div>
       </div>
 

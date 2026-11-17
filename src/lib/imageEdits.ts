@@ -33,7 +33,27 @@ export const IMAGE_EDITS: Record<string, LandedImgEdit> = {
   "/book/canva-paintings/p04.jpg": { full: true },
   "/book/canva-paintings/p10.jpg": { full: true },
   "/book/canva-paintings/p02.jpg": { full: false, scale: 1, dx: 0.042613218914391515, dy: -0.0634831823366115 },
-  "/watercolors/14/main.jpg": { full: false, scale: 1.343, dx: -7.2721581120530026, dy: 2.9039708327036458 },
+  // The watercolor plate 14 (Still Things No. 8), full-bleed
+  // (her direction, 2026-11-15). History: export #17's scale-up
+  // (scale 1.343, dx -7.2721581120530026, dy 2.9039708327036458)
+  // was withdrawn by PR #304 because at that scale the painting
+  // painted over the plate's caption; the plate then stood in a
+  // natural frame on a page ground sampled from the painting's
+  // own paper (#D3CEC3) — but the flat ground read as a visible
+  // band against the photograph's uneven paper ("不太融合啊 要
+  // 看不出来有底色"), so she directed the full-bleed version
+  // instead, with the caption standing on the picture. The #17
+  // scale-up alone was re-checked first: it still leaves the
+  // flat ground showing at the sheet's right and bottom (pixel-
+  // sampled #D3CEC3 in the render), so the plate stands as a
+  // true edge-to-edge bleed. The crop position (50/44) is set
+  // from the painting itself: it keeps the hood's top inside
+  // the sheet and lands the overlay caption on the empty paper
+  // below the figure (figure pixels end at 85% of the picture's
+  // height in the caption's span; the grey shadow at the lower
+  // right stays clear of it). The caption overlay itself is
+  // rendered by the plate case in CatalogBook.tsx.
+  "/watercolors/14/main.jpg": { full: true, pos: { x: 50, y: 44 } },
   // Export book-edits-5 (2026-11-10): the watercolor plate 46
   // full-bleed is restated plain — her newest export carries
   // { full: true } and nothing else for this picture, superseding
@@ -53,10 +73,45 @@ export const IMAGE_EDITS: Record<string, LandedImgEdit> = {
   "/book/canva-paintings/p21.jpg": { full: false, scale: 1, dx: 0.8101345770781698, dy: 2.169518520031037 },
   "/book/canva-paintings/p22.jpg": { full: false, scale: 1, dx: -0.07166107953165234, dy: 0.10316980326585791 },
   "/watercolors/55/main.jpg": { full: true },
-  "/book/road/road-castle-cake.jpg": { full: true, pos: { x: 50, y: 4.2 } },
-  // Export book-edits-7 (2026-11-11): the Still Things No. 14 plate
-  // (watercolors/43) goes full-bleed with a slight offset, and its
-  // page ground goes white in the same export (pageBackgrounds.ts).
-  // Her editor values, verbatim.
-  "/watercolors/43/main.jpg": { full: true, scale: 1, dx: 0.1408929699266385, dy: -0.11888689624599512 },
+  // Export book-edits-7 (2026-11-11) set the Still Things No. 14
+  // plate (watercolors/43) full-bleed with a slight offset, its page
+  // ground going white in the same export (pageBackgrounds.ts — the
+  // white ground stands). Withdrawn 2026-11-14, her call: the
+  // full-bleed portal painted over the plate's caption and folio
+  // (pixel test: forcing the caption bright red changed 0 pixels —
+  // the same failure as the watercolors/14 scale-up withdrawn in
+  // PR #304). The record stands empty: the plate sits in its
+  // natural frame and its caption prints.
+  // Export book-edits-8 (2026-11-15): she re-asserts the full-bleed
+  // on this same picture — { full: true } plain, no offset — so the
+  // 2026-11-14 withdrawal above is superseded by her newest export.
+  // The export's pageBg table (47 keys) and all three pageBgImages
+  // entries were verified identical to the landed state, so this
+  // picture edit is its only change; the white page ground from
+  // book-edits-7 stands. Her value, verbatim.
+  // Export book-edits-9 (2026-11-16) supersedes it again: the
+  // full-bleed comes OFF this picture, replaced by a scale-and-shift
+  // in its frame (scale 1.19, dx 2.94, dy 5.19). Her newest value,
+  // verbatim — the plate's overlay caption goes with the bleed, and
+  // its framed caption prints under the frame again.
+  "/watercolors/43/main.jpg": { full: false, scale: 1.19, dx: 2.9424380807853736, dy: 5.188778758173049 },
+  // Export book-edits-9 (2026-11-16): three Canva facsimile
+  // pictures — pp. 13 and 14 go full-bleed, p. 12 takes a
+  // scale-1 shift. Her editor values, verbatim.
+  "/book/canva-paintings/p13.jpg": { full: true },
+  "/book/canva-paintings/p14.jpg": { full: true },
+  "/book/canva-paintings/p12.jpg": { full: false, scale: 1, dx: 0.49999999999999867, dy: 0.36611824675147747 },
+  // Export book-edits__1-3 (2026-11-16): the Residuals #5 plate
+  // (watercolors/05) is reframed — scaled down to 0.563 and shifted
+  // up-left in its frame. Her editor value, verbatim.
+  "/watercolors/05/main.jpg": { full: false, scale: 0.563, dx: -1.7063532991926138, dy: -8.404055233704803 },
+  // Her direction (2026-11-16): the shop cover of watercolor 1
+  // (Breakfast Residuals) becomes a framed photograph (the new
+  // main.jpg), but the book's plate of the same work must show the
+  // painting itself — a clean scan she sent for the book. The swap
+  // is book-only: EdBookImage renders the book file for this plate,
+  // while the shop keeps reading main.jpg. The plate's page ground
+  // (black, pageBackgrounds.ts) and caption are keyed to the
+  // unchanged image_url and stand as they were.
+  "/watercolors/01/main.jpg": { src: "/book/residuals/residuals-01-scan.jpg" },
 };
