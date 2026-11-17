@@ -4176,6 +4176,13 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // Facsimile p. 6 is the three red-brown blocks, watercolors/07 in
       // the catalog data; its caption below reads from that record.
       const fuyuWork = spec.page === 6 ? watercolors.find((w) => w.id === "7") : undefined;
+      // Facsimile p. 8 is the oil, vinegar and soup painting,
+      // watercolors/63 in the catalog data; its caption below reads
+      // from that record.
+      const youcuWork = spec.page === 8 ? watercolors.find((w) => w.id === "63") : undefined;
+      // Facsimile p. 9 is the hotpot-leavings painting, watercolors/62
+      // in the catalog data; its caption below reads from that record.
+      const huoguoWork = spec.page === 9 ? watercolors.find((w) => w.id === "62") : undefined;
       if (CANVA_FULL_BLEED_PAGES.has(spec.page)) {
         // Full bleed like the bleed spreads: the image covers the whole
         // sheet and, as there, no folio is printed over it.
@@ -4264,6 +4271,48 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                   })}
                   capLang={ctx.capLang}
                   joinKey="canva:7"
+                />
+              </div>
+            </div>
+          )}
+          {spec.page === 8 && youcuWork && (
+            <div className="bk-caption">
+              <div className="bk-caption-body">
+                {/* Caption exception among the facsimile pages, in the
+                    p. 6 form: the artist identified this page as the
+                    real 《油、醋、汤》 (2026-11-17) — the painting the
+                    watercolors/63 image was cropped from — so the work's
+                    title and info print here, read from that record;
+                    the record carries no dimensions, so no dimensions
+                    line prints. */}
+                <WorkCapLines
+                  blocks={[
+                    { lang: "en", title: youcuWork.title, meta: `${youcuWork.medium}, ${youcuWork.year}` },
+                    { lang: "zh", title: youcuWork.titleZh, meta: `${youcuWork.mediumZh} ${youcuWork.year}年` },
+                  ]}
+                  capLang={ctx.capLang}
+                  joinKey="canva:8"
+                />
+              </div>
+            </div>
+          )}
+          {spec.page === 9 && huoguoWork && (
+            <div className="bk-caption">
+              <div className="bk-caption-body">
+                {/* Caption exception among the facsimile pages, in the
+                    p. 6 form: the artist identified this page as the
+                    real 《火锅余韵》 (2026-11-17) — the painting the
+                    watercolors/62 image was cropped from — so the work's
+                    title and info print here, read from that record;
+                    the record carries no dimensions, so no dimensions
+                    line prints. */}
+                <WorkCapLines
+                  blocks={[
+                    { lang: "en", title: huoguoWork.title, meta: `${huoguoWork.medium}, ${huoguoWork.year}` },
+                    { lang: "zh", title: huoguoWork.titleZh, meta: `${huoguoWork.mediumZh} ${huoguoWork.year}年` },
+                  ]}
+                  capLang={ctx.capLang}
+                  joinKey="canva:9"
                 />
               </div>
             </div>
