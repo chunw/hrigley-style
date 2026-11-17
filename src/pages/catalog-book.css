@@ -2485,12 +2485,17 @@
    bottom offset puts the whole block below the painting: the wash's
    lowest grey reaches 0.84in above the sheet's bottom edge, and her
    direction (2026-11-09) is that the credit clear the artwork
-   entirely, so the block's top sits at 0.79in. */
+   entirely, so the block's top sits at 0.79in. The box must stay wide
+   enough for the bilingual place line on ONE line (measured 558px at
+   the caption size): at 5.6in it wrapped, and the extra row pushed
+   the bottom-anchored block's top up into the wash (her verdict
+   2026-11-17: 太不整洁 — text on the picture, one character dangling
+   on a second line). 6.1in restores the designed three-line block. */
 .bk-aphorism-workinfo {
   position: absolute;
   right: 0.55in;
   bottom: 0.28in;
-  max-width: 5.6in;
+  max-width: 6.1in;
   text-align: right;
 }
 
