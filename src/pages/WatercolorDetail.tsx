@@ -247,11 +247,7 @@ const WatercolorDetail = () => {
 
             <div className={`space-y-1 font-mono text-muted-foreground ${lang === "zh" ? "text-sm" : "text-xs"}`}>
               {work.medium && <p>{lang === "zh" && work.mediumZh ? work.mediumZh : work.medium}</p>}
-              {(work.dimensions || work.dimensionsZh) && (
-                <p>{lang === "zh" && work.dimensionsZh ? work.dimensionsZh : work.dimensions}</p>
-              )}
               <p>{work.year}</p>
-              <p>{lang === "zh" ? (work.availabilityTextZh ?? `现提供${work.printInfoZh ?? '23 × 30 厘米精细艺术哑光纸印刷品'}`) : (work.availabilityText ?? `Available as ${work.printInfo ?? '23 × 30 cm fine art matte paper print'}`)}</p>
             </div>
 
             <ArtworkPurchase
