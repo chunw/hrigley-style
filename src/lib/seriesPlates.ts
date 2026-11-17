@@ -22,7 +22,7 @@ const plate = (
   metaLine,
   ...(metaZh ? { metaZh } : {}),
   year,
-  description: `<p>${en}<br />${zh}</p>`,
+  description: en === "" && zh === "" ? "" : `<p>${en}<br />${zh}</p>`,
   category: "Series plates",
   image_url: img,
   fallback_image_url: img,
@@ -330,6 +330,33 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
       "Mythology by Slitrobo: thirty audiovisual pieces arranged as a wheel of spherical specimens, the robot artist's work as it sits in the archive.",
       "Slitrobo 的《Mythology》：30 件视听作品排成一圈球体标本，这位机器人艺术家的作品在档案中的样子。",
       "/book/negotiated/work-mythology.jpg",
+    ),
+    // Her direction (2026-11-17): stills from her own video work
+    // In the Spirit of the 21st Century (2024) close this section.
+    // They carry no anchor, so they stand after the text, at the
+    // section's end. The first is the diptych she sent that day (its
+    // black centre bar made white, at her direction; nothing else in
+    // the picture touched); the second is the second image of her
+    // Instagram post of the work (instagram.com/p/DE-iZHuuM9C). The
+    // Chinese meta line is our rendering of "Video stills, 2024",
+    // pending her veto. Both plates' description sentences were
+    // removed at her direction (2026-11-17); the plates carry
+    // caption only.
+    plate(
+      "In the Spirit of the 21st Century", "Video stills, 2024", "2024",
+      "",
+      "",
+      "/book/negotiated/spirit-21st-century-stills.jpg",
+      undefined,
+      "视频静帧 2024年",
+    ),
+    plate(
+      "In the Spirit of the 21st Century", "Video stills, 2024", "2024",
+      "",
+      "",
+      "/book/negotiated/spirit-21st-century-still.jpg",
+      undefined,
+      "视频静帧 2024年",
     ),
   ],
   feedscanner: [

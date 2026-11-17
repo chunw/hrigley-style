@@ -104,6 +104,12 @@ export const PART_WEBSITES: Record<number, { key: string; url: string; nameEn?: 
     // project's own full name (the name the project itself and
     // artistBioProjects carry), not this book's chapter title.
     { key: "series:negotiated", url: "negotiated-intelligence.org", nameEn: "Negotiated Intelligence: Unearthing Power Dynamics in Human-AI Co-Creation", nameZh: "协商智能：揭开人机共创中的权力动态" },
+    // Her direction (2026-11-17): the video of her own work
+    // In the Spirit of the 21st Century, whose stills close the
+    // Negotiated Intelligence section, is her Instagram post of the
+    // work; its line stands in this archives group under the work's
+    // name, in the same form as the lines above.
+    { key: "series:negotiated", url: "instagram.com/p/DE-iZHuuM9C", nameEn: "In the Spirit of the 21st Century (Video)", nameZh: "21世纪精神（视频）" },
   ],
 };
 
