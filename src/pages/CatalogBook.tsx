@@ -1754,11 +1754,14 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
               // fermented tofu, Hot Pot Aftermath and the Lanzhou
               // Lamian, in that order — pulled out of the catalog
               // order by picture and sequenced explicitly here.
+              // Her direction (2026-11-17): the first four of those
+              // plates leave the book (their printInCatalog is now
+              // false; the works stay in the catalog and the shop —
+              // the real Oil, Vinegar, Soup and Hot Pot Aftermath
+              // live on the facsimile pages). Only the Lanzhou
+              // Lamian remains, holding the group's slot behind
+              // Residuals #5, directly ahead of the #1 pair.
               const groupUrls = [
-                "/watercolors/61/main.jpg",
-                "/watercolors/63/main.jpg",
-                "/watercolors/07/main.jpg",
-                "/watercolors/62/main.jpg",
                 "/watercolors/08/main.jpg",
               ];
               const group = groupUrls
