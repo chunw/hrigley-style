@@ -100,7 +100,7 @@ const WatercolorDetail = () => {
       : undefined;
 
   // Purchasable options for the cart. Works with a two-price label
-  // (e.g. "$10 / $35") offer the 9×12" print at the first price and the
+  // (e.g. "$10 / $35") offer the 23 × 30 cm print at the first price and the
   // framed original at the second; everything else is a single option at
   // the price the page already charges through its PayPal link.
   const priceLabelPrices = work.priceLabel
@@ -114,7 +114,7 @@ const WatercolorDetail = () => {
         ? (priceLabelPrices as [number, number])
         : [work.price ?? 10, work.printPrice ?? 35];
     purchaseOptions = [
-      { key: "print-9x12", labelEn: '9×12" fine art print', labelZh: "9×12英寸艺术微喷印刷品", price: firstPrice },
+      { key: "print-9x12", labelEn: '23 × 30 cm fine art print', labelZh: "23 × 30 厘米艺术微喷印刷品", price: firstPrice },
       { key: "framed-original", labelEn: "Framed original", labelZh: "原作（已装裱）", price: secondPrice },
     ];
   } else {
@@ -124,12 +124,12 @@ const WatercolorDetail = () => {
       ? "Studio card"
       : price === 25
         ? "Framed print"
-        : (work.printInfo ?? (price === 4 ? '4×6" fine art print' : '9×12" fine art print'));
+        : (work.printInfo ?? (price === 4 ? '10 × 15 cm fine art print' : '23 × 30 cm fine art print'));
     const labelZh = isStudioCard
       ? "工作室卡片"
       : price === 25
         ? "装裱印刷品"
-        : (work.printInfoZh ?? (price === 4 ? "4×6英寸艺术微喷印刷品" : "9×12英寸艺术微喷印刷品"));
+        : (work.printInfoZh ?? (price === 4 ? "10 × 15 厘米艺术微喷印刷品" : "23 × 30 厘米艺术微喷印刷品"));
     purchaseOptions = [{ key: "standard", labelEn, labelZh, price }];
   }
 
@@ -240,7 +240,7 @@ const WatercolorDetail = () => {
                 <p>{lang === "zh" && work.dimensionsZh ? work.dimensionsZh : work.dimensions}</p>
               )}
               <p>{work.year}</p>
-              <p>{lang === "zh" ? (work.availabilityTextZh ?? `现提供${work.printInfoZh ?? '9×12英寸精细艺术哑光纸印刷品'}`) : (work.availabilityText ?? `Available as ${work.printInfo ?? '9×12" fine art matte paper print'}`)}</p>
+              <p>{lang === "zh" ? (work.availabilityTextZh ?? `现提供${work.printInfoZh ?? '23 × 30 厘米精细艺术哑光纸印刷品'}`) : (work.availabilityText ?? `Available as ${work.printInfo ?? '23 × 30 cm fine art matte paper print'}`)}</p>
             </div>
 
             <ArtworkPurchase

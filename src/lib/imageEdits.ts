@@ -89,7 +89,22 @@ export const IMAGE_EDITS: Record<string, LandedImgEdit> = {
   // entries were verified identical to the landed state, so this
   // picture edit is its only change; the white page ground from
   // book-edits-7 stands. Her value, verbatim.
-  "/watercolors/43/main.jpg": { full: true },
+  // Export book-edits-9 (2026-11-16) supersedes it again: the
+  // full-bleed comes OFF this picture, replaced by a scale-and-shift
+  // in its frame (scale 1.19, dx 2.94, dy 5.19). Her newest value,
+  // verbatim — the plate's overlay caption goes with the bleed, and
+  // its framed caption prints under the frame again.
+  "/watercolors/43/main.jpg": { full: false, scale: 1.19, dx: 2.9424380807853736, dy: 5.188778758173049 },
+  // Export book-edits-9 (2026-11-16): three Canva facsimile
+  // pictures — pp. 13 and 14 go full-bleed, p. 12 takes a
+  // scale-1 shift. Her editor values, verbatim.
+  "/book/canva-paintings/p13.jpg": { full: true },
+  "/book/canva-paintings/p14.jpg": { full: true },
+  "/book/canva-paintings/p12.jpg": { full: false, scale: 1, dx: 0.49999999999999867, dy: 0.36611824675147747 },
+  // Export book-edits__1-3 (2026-11-16): the Residuals #5 plate
+  // (watercolors/05) is reframed — scaled down to 0.563 and shifted
+  // up-left in its frame. Her editor value, verbatim.
+  "/watercolors/05/main.jpg": { full: false, scale: 0.563, dx: -1.7063532991926138, dy: -8.404055233704803 },
   // Her direction (2026-11-16): the shop cover of watercolor 1
   // (Breakfast Residuals) becomes a framed photograph (the new
   // main.jpg), but the book's plate of the same work must show the

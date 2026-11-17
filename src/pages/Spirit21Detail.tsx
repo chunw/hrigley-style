@@ -97,8 +97,8 @@ const Spirit21Detail = () => {
     : undefined;
 
   // Purchasable options for the cart. The one work with its own paylink has
-  // a two-price label ("$4 / $10"): the 4×6" print at the first price and
-  // the 9×12" print at the second. Every other work is the 4×6" print only,
+  // a two-price label ("$4 / $10"): the 10 × 15 cm print at the first price and
+  // the 23 × 30 cm print at the second. Every other work is the 10 × 15 cm print only,
   // at the same $4 the studio-card PayPal link charges.
   const priceLabelPrices = work.priceLabel
     ? [...work.priceLabel.matchAll(/\$(\d+(?:\.\d+)?)/g)].map((m) => parseFloat(m[1]))
@@ -106,14 +106,14 @@ const Spirit21Detail = () => {
   const purchaseOptions: ArtworkCartOption[] =
     work.paylink && priceLabelPrices.length === 2
       ? [
-          { key: "print-4x6", labelEn: '4×6" fine art print', labelZh: "4×6英寸艺术微喷印刷品", price: priceLabelPrices[0] },
-          { key: "print-9x12", labelEn: '9×12" fine art print', labelZh: "9×12英寸艺术微喷印刷品", price: priceLabelPrices[1] },
+          { key: "print-4x6", labelEn: '10 × 15 cm fine art print', labelZh: "10 × 15 厘米艺术微喷印刷品", price: priceLabelPrices[0] },
+          { key: "print-9x12", labelEn: '23 × 30 cm fine art print', labelZh: "23 × 30 厘米艺术微喷印刷品", price: priceLabelPrices[1] },
         ]
       : [
           {
             key: "print-4x6",
-            labelEn: '4×6" fine art print',
-            labelZh: "4×6英寸艺术微喷印刷品",
+            labelEn: '10 × 15 cm fine art print',
+            labelZh: "10 × 15 厘米艺术微喷印刷品",
             price: work.price ?? 4,
           },
         ];
@@ -217,8 +217,8 @@ const Spirit21Detail = () => {
               )}
               {work.year && <p>{work.year}</p>}
               <p>{work.paylink
-                ? (lang === "zh" ? "现提供9×12英寸或4×6英寸精细艺术哑光纸印刷品" : `Available as 9×12" or 4×6" fine art matte paper print`)
-                : (lang === "zh" ? "现提供4×6英寸精细艺术哑光纸印刷品" : `Available as 4×6" fine art matte paper print`)
+                ? (lang === "zh" ? "现提供23 × 30 厘米或10 × 15 厘米精细艺术哑光纸印刷品" : `Available as 23 × 30 cm or 10 × 15 cm fine art matte paper print`)
+                : (lang === "zh" ? "现提供10 × 15 厘米精细艺术哑光纸印刷品" : `Available as 10 × 15 cm fine art matte paper print`)
               }</p>
             </div>
 

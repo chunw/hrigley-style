@@ -1407,7 +1407,15 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // itself now stands in the chapter as the restored Still Things
     // #8 plate, full bleed; the facsimile duplicate goes. The Still
     // Things facsimile run is now p. 17 alone.
-    const CANVA_KEPT_PAGES = [6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 21, 22];
+    // Deletion (her direction, 2026-11-16): facsimile pp. 6 and 7 —
+    // the Three Pieces of Fermented Tofu and Lanzhou Lamian pages —
+    // leave the book as facsimiles. Both works now stand as catalog
+    // plates in the Residuals run (the consecutive group behind
+    // Residuals #5, see the plate sequence below), and her standing
+    // rule against printing a work twice takes the facsimile pages
+    // out. The front pages are now pp. 8–9, both behind the
+    // teapot / #26 pair.
+    const CANVA_KEPT_PAGES = [8, 9, 12, 13, 14, 15, 16, 17, 21, 22];
     const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
     // Her direction (2026-11-11, later the same evening): the teapot /
     // Residuals #26 pair moves four pages earlier still (「再提前4页」),
@@ -1417,7 +1425,14 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // loop, immediately after #26).
     const CANVA_FRONT_HEAD_PAGES = CANVA_FRONT_PAGES.filter((p) => p <= 6);
     const CANVA_FRONT_TAIL_PAGES = CANVA_FRONT_PAGES.filter((p) => p > 6);
-    const CANVA_RESIDUALS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 13 && p < 17);
+    // Update (her direction, 2026-11-16): p. 14 — the Still Things
+    // #13 facsimile (the Ultraman figure and the Thai statue) — no
+    // longer rides in this cluster. She named it a facing pair with
+    // the Still Things #14 plate (the bust with the ice-cream cone):
+    // p. 14 on the verso, the plate on the recto. It is emitted in
+    // the plate loop, immediately ahead of that plate, under a
+    // parity guard (see there); the cluster here is pp. 13, 15, 16.
+    const CANVA_RESIDUALS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 13 && p < 17 && p !== 14);
     const CANVA_STILLTHINGS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 17 && p <= 20);
     // Facsimile placement updates (her direction, 2026-11-08, later the
     // same day): p. 11 — the printed book's "II. Still Things" chapter
@@ -1728,7 +1743,24 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
               // between the facsimile front pages, split around them),
               // then the catalog plates, and the #1 pair closes the
               // section.
-              return [...mid.slice(-1), ...(last ? [last] : []), ...mid.slice(0, -1), ...(first ? [first] : []), ...(exhibition ? [exhibition] : [])];
+              // Her direction (2026-11-16): five plates stand
+              // consecutively behind Residuals #5 as one run — the
+              // breakfast inventory piece, Oil, Vinegar, Soup, the
+              // fermented tofu, Hot Pot Aftermath and the Lanzhou
+              // Lamian, in that order — pulled out of the catalog
+              // order by picture and sequenced explicitly here.
+              const groupUrls = [
+                "/watercolors/61/main.jpg",
+                "/watercolors/63/main.jpg",
+                "/watercolors/07/main.jpg",
+                "/watercolors/62/main.jpg",
+                "/watercolors/08/main.jpg",
+              ];
+              const group = groupUrls
+                .map((u) => mid.find(({ item }) => item.image_url.includes(u)))
+                .filter((p): p is (typeof mid)[number] => !!p);
+              const restMid = mid.filter((p) => !group.includes(p));
+              return [...restMid.slice(-1), ...(last ? [last] : []), ...restMid.slice(0, -1), ...group, ...(first ? [first] : []), ...(exhibition ? [exhibition] : [])];
             })()
           : chapter.items;
         for (let ii = 0; ii < plateSeq.length; ii++) {
@@ -1741,6 +1773,21 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
             // recto, a blank page steps in first (the same parity
             // guard the #1 pair uses below).
             if (!nextIsVerso()) specs.push({ kind: "blank" });
+          }
+          if (chapter.key === "stillthings" && item.image_url.includes("/watercolors/43/main.jpg")) {
+            // Her direction (2026-11-16): the Still Things #13
+            // facsimile page (canva p. 14 — the Ultraman figure
+            // facing the golden Thai statue) and this plate, Still
+            // Things #14 (the bust with the ice-cream cone on its
+            // face), are a named facing pair: the facsimile page on
+            // the verso, the plate on the recto. The facsimile page
+            // therefore stands here, immediately ahead of the plate,
+            // instead of in the chapter's head cluster; if the run
+            // would land it on a recto, a blank page steps in first
+            // (the same parity guard the named pairs use), so the
+            // two stay facing under future pagination drift.
+            if (!nextIsVerso()) specs.push({ kind: "blank" });
+            specs.push({ kind: "canva", page: 14 });
           }
           if (chapter.key === "residuals" && item.title === "Breakfast Residuals" && !item.image_url.includes("residuals-01-exhibition")) {
             // Her direction (2026-11-11): the painting and its
@@ -3648,6 +3695,25 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // work info stands on the facing Hawaii page by design
       // (below), so it takes no overlay.
       const fullBleedPlate = !!ctx.imgEditFor(item.image_url)?.full;
+      // Her direction (2026-11-16): two captions move to the sheet's
+      // bottom-right corner, right-aligned under the corner rule —
+      // the Still Things #8 overlay caption (it stood bottom-left),
+      // and the Breakfast Inventory #2 plate's caption under its
+      // frame. No other plate's caption moves.
+      const overlayCaptionCls = item.image_url.includes("/watercolors/14/main.jpg")
+        ? "bk-plate-overlay-caption bk-overlay-caption-right"
+        : "bk-plate-overlay-caption";
+      const frameCaptionCls = item.image_url.includes("/watercolors/61/main.jpg")
+        ? "bk-caption bk-caption-right"
+        : "bk-caption";
+      // Her direction (2026-11-16): the Medellín plate's picture
+      // stands on its beige page with a slight soft shadow, like
+      // her reference mock — this page's picture only (see
+      // .bk-plate-frame-shadow in catalog-book.css). No other
+      // plate's frame takes the class.
+      const frameCls = item.image_url.includes("/watercolors/52/")
+        ? "bk-plate-frame bk-plate-frame-shadow"
+        : "bk-plate-frame";
       const partnerItem = partnerPage?.spec.kind === "plate" ? partnerPage.spec.item : null;
       const facingItem =
         chapter.key === "road" &&
@@ -3695,17 +3761,17 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       };
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-plate-page${bgImgCls}`}>{bgImgLayer}
-          <div className="bk-plate-frame">
+          <div className={frameCls}>
             <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
           </div>
           {!isRoadNewYork && !fullBleedPlate && (
-            <div className="bk-caption">
+            <div className={frameCaptionCls}>
               {captionBody(item, false)}
               {facingItem && captionBody(facingItem, true)}
             </div>
           )}
           {!isRoadNewYork && fullBleedPlate && (
-            <div className="bk-plate-overlay-caption">
+            <div className={overlayCaptionCls}>
               {captionBody(item, false)}
             </div>
           )}
@@ -4437,6 +4503,19 @@ function useBookModel(args: {
         if (i >= 0) lead.push(kept[i]);
       }
       residualsChapter.items = [...lead, ...kept.filter(({ item }) => item.title !== "Residuals #26" && item.title !== "Breakfast Residuals")];
+      // Her direction (2026-11-16): Three Pieces of Fermented Tofu
+      // （三块腐乳） joins the chapter as a catalog plate, in the
+      // consecutive group behind Residuals #5 (see the plate
+      // sequence). Its English title carries no "Residuals" prefix —
+      // the title is her deliberate shop title and stays — so the
+      // title-prefix split above cannot route it; the plate is
+      // pulled in here by its picture instead. Its facsimile page
+      // (canva p. 6) leaves the book in the same pass, so the work
+      // prints once.
+      const tofuPlate = (wcChapter?.items ?? []).find(({ item }) => item.image_url.includes("/watercolors/07/main.jpg"));
+      if (tofuPlate && !residualsChapter.items.some(({ item }) => item.image_url.includes("/watercolors/07/main.jpg"))) {
+        residualsChapter.items = [...residualsChapter.items, tofuPlate];
+      }
       // Her direction (2026-11-10): the untitled black-and-white
       // watercolor still life she sent joins the chapter as a book-only
       // plate (see RESIDUALS_EXTRA_PLATES in seriesPlates.ts). It is

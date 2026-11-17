@@ -180,7 +180,13 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   // rules, as on every white page. This also supersedes the
   // book-edits-8 export table, which still carried this plate as
   // black — her chat direction is the newer word.
-  "plate:/watercolors/52/main.jpg": "white",
+  // Superseded 2026-11-16 (her direction in chat: "这张背景改成
+  // 米色"): white → warm beige #E9E1CF, the solid mid tone of the
+  // beige gradient in her reference mock (#f2eee3 → #e0d8c4). Only
+  // this page's ground changes; the picture also takes a soft drop
+  // shadow on this page only (see .bk-plate-frame-shadow in
+  // catalog-book.css). Caption, folio and facing page untouched.
+  "plate:/watercolors/52/main.jpg": "#E9E1CF",
   "plate:/watercolors/57/main.jpg": "black",
   "plate:/watercolors/59/main.jpg": "white",
   "plate:/watercolors/55/main.jpg": "cream",
@@ -197,6 +203,12 @@ export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "canva:11": "black",
   "canva:15": "black",
   "canva:16": "black",
+  // Export book-edits-9 (2026-11-16): the full table carries
+  // canva:14 as white; the book had no entry for the page (it
+  // followed the white toolbar default, so the sheet already
+  // rendered white). The entry lands to align the table; no
+  // visible change.
+  "canva:14": "white",
   "canva:3": "#171717",
   "canva:4": "#171717",
   // Still Things title spread (her direction, 2026-11-11): the ground

@@ -198,7 +198,7 @@ const RemainsDetail = () => {
                 <p>{lang === "zh" && work.dimensionsZh ? work.dimensionsZh : work.dimensions}</p>
               )}
               {work.year && <p>{work.year}</p>}
-              <p>{lang === "zh" ? "现提供4×6英寸精细艺术哑光纸印刷品" : `Available as 4×6" fine art matte paper print`}</p>
+              <p>{lang === "zh" ? "现提供10 × 15 厘米精细艺术哑光纸印刷品" : `Available as 10 × 15 cm fine art matte paper print`}</p>
             </div>
 
             <ArtworkPurchase
@@ -208,8 +208,8 @@ const RemainsDetail = () => {
               options={[
                 {
                   key: "print-4x6",
-                  labelEn: '4×6" fine art print',
-                  labelZh: "4×6英寸艺术微喷印刷品",
+                  labelEn: '10 × 15 cm fine art print',
+                  labelZh: "10 × 15 厘米艺术微喷印刷品",
                   price: work.price ?? 4,
                 },
               ]}
