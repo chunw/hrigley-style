@@ -3706,6 +3706,14 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const frameCaptionCls = item.image_url.includes("/watercolors/61/main.jpg")
         ? "bk-caption bk-caption-right"
         : "bk-caption";
+      // Her direction (2026-11-16): the Medellín plate's picture
+      // stands on its beige page with a slight soft shadow, like
+      // her reference mock — this page's picture only (see
+      // .bk-plate-frame-shadow in catalog-book.css). No other
+      // plate's frame takes the class.
+      const frameCls = item.image_url.includes("/watercolors/52/")
+        ? "bk-plate-frame bk-plate-frame-shadow"
+        : "bk-plate-frame";
       const partnerItem = partnerPage?.spec.kind === "plate" ? partnerPage.spec.item : null;
       const facingItem =
         chapter.key === "road" &&
@@ -3753,7 +3761,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       };
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-plate-page${bgImgCls}`}>{bgImgLayer}
-          <div className="bk-plate-frame">
+          <div className={frameCls}>
             <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
           </div>
           {!isRoadNewYork && !fullBleedPlate && (
