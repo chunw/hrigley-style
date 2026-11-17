@@ -5,8 +5,8 @@ import { photographyWorks } from "@/lib/photography";
 import { remainsWorks } from "@/lib/remains";
 import { spiritWorks } from "@/lib/21spirit";
 
-const DEFAULT_PRINT_INFO = '9×12" fine art matte paper print';
-const DEFAULT_PRINT_INFO_ZH = '9×12英寸精细艺术哑光纸印刷品';
+const DEFAULT_PRINT_INFO = '23 × 30 cm fine art matte paper print';
+const DEFAULT_PRINT_INFO_ZH = '23 × 30 厘米精细艺术哑光纸印刷品';
 const DEFAULT_PRINT_PRICE = 10;
 
 const buildDescription = (desc: string | undefined | null, printInfo: string) => {
@@ -53,8 +53,8 @@ function buildCatalogProducts(showAll: boolean) {
       name: w.title,
       title: w.title,
       title_zh: w.titleZh ?? null,
-      description: buildDescription(w.description, '4×6" print on matte fine art paper'),
-      description_zh: buildDescription(w.descriptionZh, "4×6英寸哑光艺术微喷"),
+      description: buildDescription(w.description, '10 × 15 cm print on matte fine art paper'),
+      description_zh: buildDescription(w.descriptionZh, "10 × 15 厘米哑光艺术微喷"),
       price: w.price ?? 4,
       currency: "USD",
       image_url: `/remains/${paddedId}/main.jpg`,
@@ -78,8 +78,8 @@ function buildCatalogProducts(showAll: boolean) {
       name: w.title,
       title: w.title,
       title_zh: w.titleZh ?? null,
-      description: buildDescription(w.description, '4×6" print on matte fine art paper'),
-      description_zh: buildDescription(w.descriptionZh, "4×6英寸哑光艺术微喷"),
+      description: buildDescription(w.description, '10 × 15 cm print on matte fine art paper'),
+      description_zh: buildDescription(w.descriptionZh, "10 × 15 厘米哑光艺术微喷"),
       price: w.price ?? 4,
       priceLabel: w.priceLabel,
       currency: "USD",

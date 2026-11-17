@@ -24,7 +24,7 @@ interface PrintSize {
   hIn: number;
 }
 
-// Preset print (image) sizes, portrait. 9 x 12 in is the size Residuals #1
+// Preset print (image) sizes, portrait. 23 x 30 cm is the size Residuals #1
 // is sold at on its detail page; the others span the small-to-large range a
 // buyer weighs against a sofa.
 const PRINT_SIZES: PrintSize[] = [
@@ -710,8 +710,7 @@ export default function WallPreview() {
             <div className="absolute top-3 left-3 bg-black/55 text-white px-3 py-2 pointer-events-none">
               <p className="font-mono text-[11px] uppercase tracking-widest">{title}</p>
               <p className="font-mono text-[11px] text-white/70">
-                {zh ? "含框" : "Framed"} {fmtIn(outer.wIn)} × {fmtIn(outer.hIn)} in ·{" "}
-                {(outer.wIn * 2.54).toFixed(1)} × {(outer.hIn * 2.54).toFixed(1)} cm
+                {zh ? "含框" : "Framed"} {Math.round(outer.wIn * 2.54)} × {Math.round(outer.hIn * 2.54)} cm
               </p>
             </div>
             <button
@@ -732,8 +731,8 @@ export default function WallPreview() {
           </div>
           <p className="font-mono text-[11px] text-muted-foreground mt-2">
             {zh
-              ? `沙发宽 ${sofaW} 英寸（${(sofaW * 2.54).toFixed(0)} 厘米），含框宽度约为沙发的 ${framedPct}%。房间墙高 2.75 米。预览图会裁切至所选尺寸，居中显示。`
-              : `Sofa ${sofaW} in wide (${(sofaW * 2.54).toFixed(0)} cm); framed width is about ${framedPct}% of the sofa. Wall 2.75 m high. Artwork is centre-cropped to fill the chosen print size.`}
+              ? `沙发宽 ${(sofaW * 2.54).toFixed(0)} 厘米，含框宽度约为沙发的 ${framedPct}%。房间墙高 2.75 米。预览图会裁切至所选尺寸，居中显示。`
+              : `Sofa ${Math.round(sofaW * 2.54)} cm wide (${(sofaW * 2.54).toFixed(0)} cm); framed width is about ${framedPct}% of the sofa. Wall 2.75 m high. Artwork is centre-cropped to fill the chosen print size.`}
           </p>
         </div>
 
@@ -785,7 +784,7 @@ export default function WallPreview() {
                           : "border-border hover:border-foreground"
                       }`}
                     >
-                      {s.wIn} × {s.hIn} in
+                      {Math.round(s.wIn * 2.54)} × {Math.round(s.hIn * 2.54)} cm
                     </button>
                   ))}
                 </div>
@@ -819,7 +818,7 @@ export default function WallPreview() {
                     aria-label={zh ? "卡纸装裱" : "Mat"}
                   />
                   <label htmlFor="mat-toggle" className="sans-label text-xs uppercase tracking-widest cursor-pointer">
-                    {zh ? `卡纸装裱（四边各 ${MAT_W_IN} 英寸）` : `Mat (${MAT_W_IN} in border)`}
+                    {zh ? `卡纸装裱（四边各 ${Math.round(MAT_W_IN * 2.54)} 厘米）` : `Mat (${Math.round(MAT_W_IN * 2.54)} cm border)`}
                   </label>
                 </div>
               </section>
@@ -833,18 +832,18 @@ export default function WallPreview() {
                 <div className="flex justify-between gap-4">
                   <dt>{zh ? "印刷" : "Print"}</dt>
                   <dd className="text-foreground">
-                    {size.wIn} × {size.hIn} in
+                    {Math.round(size.wIn * 2.54)} × {Math.round(size.hIn * 2.54)} cm
                   </dd>
                 </div>
                 <div className="flex justify-between gap-4">
                   <dt>{zh ? "含框" : "Framed"}</dt>
                   <dd className="text-foreground">
-                    {fmtIn(outer.wIn)} × {fmtIn(outer.hIn)} in
+                    {Math.round(outer.wIn * 2.54)} × {Math.round(outer.hIn * 2.54)} cm
                   </dd>
                 </div>
                 <div className="flex justify-between gap-4">
                   <dt>{zh ? "沙发" : "Sofa"}</dt>
-                  <dd className="text-foreground">{sofaW} in wide</dd>
+                  <dd className="text-foreground">{Math.round(sofaW * 2.54)} cm wide</dd>
                 </div>
               </dl>
               <div className="mt-5 space-y-2" aria-hidden="true">
