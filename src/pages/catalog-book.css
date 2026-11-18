@@ -677,21 +677,14 @@
   white-space: nowrap;
 }
 
-/* Running footer split (2026-11-18): book title at the left of the
-   foot, chapter name at the right. Where the folio number sits in the
-   same corner — title on a verso, chapter name on a recto — the text
-   starts 0.55in in from the margin line so the two never touch. */
+/* Running footer split by page (2026-11-18, her correction): a verso
+   carries only the book title (tag-l), a recto only the chapter name
+   (tag-r) — one text per page, never both. Each stands where it stood
+   in the same-page split: the title at the verso's left, the chapter
+   name at the recto's right, each starting 0.55in in from the margin
+   line so it never touches the folio number in that corner. */
 .bk-verso .bk-folio-tag-l {
   left: calc(var(--bleed) + var(--m-outer) + 0.55in);
-}
-
-.bk-recto .bk-folio-tag-l {
-  left: calc(var(--bleed) + var(--m-inner));
-}
-
-.bk-verso .bk-folio-tag-r {
-  right: calc(var(--bleed) + var(--m-inner));
-  text-align: right;
 }
 
 .bk-recto .bk-folio-tag-r {
