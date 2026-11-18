@@ -2985,19 +2985,24 @@ function EyedropPanel({
 
 
 function Folio({ number, tag }: { number: number; tag?: string }) {
-  // Running footer, split at her word (2026-11-18): the old single tag
-  // "TITLE | CHAPTER" comes apart — the book title stands at the left
-  // of the foot, the chapter name at the right, no bar between them.
-  // The folio number keeps its outer corner; where a half shares that
-  // corner (title on a verso, chapter on a recto) the CSS moves the
-  // text in so the two never touch. Both halves keep their wording.
+  // Running footer, split by page at her correction (2026-11-18): a
+  // verso carries the book title only — the bilingual title "Remains
+  // 遗迹", as the cover prints it — and a recto the chapter name only,
+  // the half of the old tag after its " | ". Never both on one page
+  // (左页只写书名，右页只写章节名). PR #356 first split the tag across
+  // every page; she corrected it the same evening. Side follows the
+  // folio number, the same parity that sides the page itself. The
+  // folio number keeps its outer corner; the CSS keeps the one text
+  // clear of it. Both texts keep their wording.
   const cut = tag ? tag.indexOf(" | ") : -1;
   const head = tag ? (cut >= 0 ? tag.slice(0, cut) : tag) : undefined;
   const tail = tag && cut >= 0 ? tag.slice(cut + 3) : undefined;
+  const verso = number % 2 === 0;
   return (
     <>
-      {head && <div className="bk-folio-tag bk-folio-tag-l">{head}</div>}
-      {tail && <div className="bk-folio-tag bk-folio-tag-r">{tail}</div>}
+      {verso
+        ? head && <div className="bk-folio-tag bk-folio-tag-l">{`${head} 遗迹`}</div>
+        : tail && <div className="bk-folio-tag bk-folio-tag-r">{tail}</div>}
       <div className="bk-folio">
         {pad2(number)} <Crosshair />
       </div>
