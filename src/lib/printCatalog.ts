@@ -54,6 +54,10 @@ export interface CatalogItem {
   /** Chinese medium from the artist's own records, appended to the book's caption meta line. */
   mediumZh?: string | null;
   description?: string | null;
+  /** Body text printed above the picture on this item's book plate page (HTML, book only). */
+  plateTextAbove?: string | null;
+  /** Body text printed below the caption on this item's book plate page (HTML, book only). */
+  plateTextBelow?: string | null;
   dimensions?: string | null;
   /** Chinese dimensions from the artist's own records, appended to the book's caption meta line. */
   dimensionsZh?: string | null;

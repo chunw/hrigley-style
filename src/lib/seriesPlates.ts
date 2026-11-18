@@ -16,6 +16,7 @@ const plate = (
   img: string,
   titleZh?: string,
   metaZh?: string,
+  pageText?: { above?: string; below?: string },
 ): CatalogItem => ({
   title,
   ...(titleZh ? { titleZh } : {}),
@@ -23,6 +24,8 @@ const plate = (
   ...(metaZh ? { metaZh } : {}),
   year,
   description: en === "" && zh === "" ? "" : `<p>${en}<br />${zh}</p>`,
+  ...(pageText?.above ? { plateTextAbove: pageText.above } : {}),
+  ...(pageText?.below ? { plateTextBelow: pageText.below } : {}),
   category: "Series plates",
   image_url: img,
   fallback_image_url: img,
@@ -345,6 +348,14 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
     // our rendering of "Video stills, 2024", pending her veto.
     // Both plates' description sentences were removed at her
     // direction (2026-11-17); the plates carry caption only.
+    // Her direction (2026-11-18, later): the pair gains two texts,
+    // hers verbatim, Chinese only — a paragraph above the single
+    // still on the verso, and the section's reading list below the
+    // diptych on the recto (the same list the section text prints
+    // at folio 262, in the form she settled there: original-language
+    // titles, no book-title brackets, Paglen's year plain 2016).
+    // The texts print as book body text, outside the captions,
+    // which stay as they are.
     plate(
       "In the Spirit of the 21st Century", "Video stills, 2024", "2024",
       "",
@@ -352,6 +363,10 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
       "/book/negotiated/spirit-21st-century-still.jpg",
       "21世纪精神",
       "视频静帧 2024年",
+      {
+        above:
+          "<p>这个展览是一份活的研究材料。一个集体适应变化的故事。大多数艺术展览只展示结果。图像精致，视频无缝，合作的表面光洁，劳动的痕迹已经被抹去。我要的是相反的 - 把这个网站建成一处发掘现场，展览的单位不是作品，是决定。我把展览的问题放进了网站的加载画面：人机共创的问题，不是机器能做出什么，是谁在做决定，而决定，需要时间加载。11 个项目，每个都是一叠倾斜的半透明层片，在三维空间里，访客可以拖动、缩放，一层一层打开。它展示的是我们这个时代的创作档案：提示词、草稿、犹豫，被否决的产出，与被采纳的产出一样保存。网站没有顶部导航栏，也没有稳定的网格。全屏菜单在循环的光轨上打开。档案里的作品不保持固定顺序，访客没法把参观变成一张打勾清单。这种迷失不是游戏。它是访客分到的那一份艺术家处境。要发掘一场协商，就要接受：AI 辅助创作里的因果是分层的，有一部分看不透，只能靠挖掘找回。</p>",
+      },
     ),
     plate(
       "In the Spirit of the 21st Century", "Video stills, 2024", "2024",
@@ -360,6 +375,10 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
       "/book/negotiated/spirit-21st-century-stills.jpg",
       "21世纪精神",
       "视频静帧 2024年",
+      {
+        below:
+          "<p><strong>延伸阅读 / 影响来源</strong></p><p>Christian Boltanski, Les Archives de C.B.（1989）<br />Walid Raad / The Atlas Group, Hostage: The Bachar Tapes（2001）<br />Harun Farocki, Workers Leaving the Factory in Eleven Decades（2006）<br />Trevor Paglen, Machine Visions（2016）<br />Hito Steyerl, How Not to Be Seen（2013）<br />Kate Crawford, Atlas of AI（2021）</p>",
+      },
     ),
   ],
   feedscanner: [
