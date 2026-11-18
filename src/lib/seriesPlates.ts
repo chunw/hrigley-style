@@ -334,28 +334,31 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
     // Her direction (2026-11-17): stills from her own video work
     // In the Spirit of the 21st Century (2024) close this section.
     // They carry no anchor, so they stand after the text, at the
-    // section's end. The first is the diptych she sent that day (its
-    // black centre bar made white, at her direction; nothing else in
-    // the picture touched); the second is the second image of her
-    // Instagram post of the work (instagram.com/p/DE-iZHuuM9C). The
-    // Chinese meta line is our rendering of "Video stills, 2024",
-    // pending her veto. Both plates' description sentences were
-    // removed at her direction (2026-11-17); the plates carry
-    // caption only.
+    // section's end. The first is the second image of her Instagram
+    // post of the work (instagram.com/p/DE-iZHuuM9C); the second is
+    // the diptych she sent that day (its black centre bar made
+    // white, at her direction; nothing else in the picture
+    // touched). The pair first stood diptych-first; she swapped
+    // their order on 2026-11-18, when the plates also gained their
+    // Chinese title (《21世纪精神》, set here as the bare titleZh;
+    // the caption renderer adds the 《》). The Chinese meta line is
+    // our rendering of "Video stills, 2024", pending her veto.
+    // Both plates' description sentences were removed at her
+    // direction (2026-11-17); the plates carry caption only.
     plate(
       "In the Spirit of the 21st Century", "Video stills, 2024", "2024",
       "",
       "",
-      "/book/negotiated/spirit-21st-century-stills.jpg",
-      undefined,
+      "/book/negotiated/spirit-21st-century-still.jpg",
+      "21世纪精神",
       "视频静帧 2024年",
     ),
     plate(
       "In the Spirit of the 21st Century", "Video stills, 2024", "2024",
       "",
       "",
-      "/book/negotiated/spirit-21st-century-still.jpg",
-      undefined,
+      "/book/negotiated/spirit-21st-century-stills.jpg",
+      "21世纪精神",
       "视频静帧 2024年",
     ),
   ],
