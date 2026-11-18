@@ -3877,6 +3877,13 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       };
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-plate-page${bgImgCls}`}>{bgImgLayer}
+          {/* A plate may carry body text above its picture (the NI
+              stills' verso paragraph, her direction 2026-11-18): it
+              prints in the book's essay text setting, outside the
+              caption, and the frame flexes to the space left. */}
+          {item.plateTextAbove && (
+            <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: item.plateTextAbove }} />
+          )}
           <div className="bk-plate-frame">
             <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
           </div>
@@ -3890,6 +3897,12 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             <div className={overlayCaptionCls}>
               {captionBody(item, false)}
             </div>
+          )}
+          {/* And body text below the caption (the NI diptych's
+              reading list, same direction): essay setting again,
+              the caption itself untouched above it. */}
+          {item.plateTextBelow && (
+            <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: item.plateTextBelow }} />
           )}
           <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
         </Page>
