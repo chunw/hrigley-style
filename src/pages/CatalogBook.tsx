@@ -76,6 +76,7 @@ type PageSpec =
   | { kind: "painting-intro"; chunk: number }
   | { kind: "opener"; half: "left" | "right"; chapter: Chapter; titleSpread?: boolean }
   | { kind: "essay"; chapter: Chapter; chunk: number }
+  | { kind: "chapterPreface"; chapter: Chapter }
   | { kind: "exhibitions"; chapter: Chapter }
   | { kind: "part-exhibitions"; part: number; chunk: number }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
@@ -1042,6 +1043,16 @@ const COLLAGE_METHOD = {
   zh: "拼贴是我思考的方式。一个为陪伴逝者而做的陶俑，站在博物馆的玻璃柜里；我把它剪下来，放进一场视频会议，放在一只马桶旁边，一辆豪车旁边，它们之间的两千年，就塌成了一个扁平的、好笑的表面。搜索记录，那一小堆电子垃圾，从浏览器里剪出来，贴在一份来自疫情另一端的陌生人证言旁边。他人的肖像与自画像在同一页上轮流出现，互相借出一个自我。没有什么还留在原来的语境里。每一块都留着自己的边缘。我不把这些碎片融成一个光滑的声音。我让它们并排站着，接缝露在外面，直到连续性的火花从缝隙里跳过去。这就是档案，按我的做法：不是一只收纳过去的箱子，而是一张桌子，即将消失的东西被摆在已经幸存下来的东西旁边，让它们彼此做伴。",
 };
 
+/** Negotiated Intelligence's own preface page (her direction and her
+ * words, verbatim, 2026-11-18): a single page standing inside the
+ * chapter, after its cover-story page and before the essay, under a
+ * 前言 head in the essay text's subhead treatment. Chinese only — she
+ * gave no English text for it, and none is to be invented. */
+const NI_PREFACE = {
+  head: "前言",
+  body: "当机器学会了创造，人还剩下什么？《协商智能》是一个研究型展览。在这里，技术不是躲在后面的基础设施，它就是主角。它赋予人一些新的自由，也悄悄拿走另一些自由。我们协商的，不只是谁是作者，还有人是什么，它的主体性、边界在哪里。这个网站不只是记录，更是一处考古现场，捕捉一个关键时刻，就在这些协商本身也被自动化之前。",
+};
+
 /** The reverse index (her idea; sample page approved 2026-11-05): back
  * matter that indexes the book not by page but by what remains — a sound,
  * a temperature, an unfinished sentence. It stands after the last chapter,
@@ -1575,6 +1586,12 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       if (cs.en && cs.zh) {
         specs.push({ kind: "motto", chapter, text: { en: cs.en, zh: cs.zh }, keySuffix: "cover-story" });
       }
+      // Her preface page (2026-11-18): her own Chinese text under a
+      // 前言 head, standing between the cover-story page and the
+      // chapter's essay. The page this adds ahead of the chapter's
+      // stills pair is absorbed there by the pair's parity guard (see
+      // the unanchored plate loop below), so the pair stays facing.
+      specs.push({ kind: "chapterPreface", chapter });
     }
     // The facsimile front matter follows the Residuals opener (her
     // direction, 2026-11-09): the opener spread stands directly after
@@ -2532,6 +2549,8 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `painting:${spec.chunk}`;
     case "essay":
       return `essay:${spec.chapter.key}:${spec.chunk}`;
+    case "chapterPreface":
+      return `chapterPreface:${spec.chapter.key}`;
     case "exhibitions":
       return `exhibitions:${spec.chapter.key}`;
     case "part-exhibitions":
@@ -3712,6 +3731,25 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                   dangerouslySetInnerHTML={{ __html: it.html.replace(/^<p[^>]*>/, "").replace(/<\/p>$/, "") }}
                 />
               ))}
+            </div>
+          </div>
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+        </Page>
+      );
+    }
+
+    case "chapterPreface": {
+      // Negotiated Intelligence's preface page (her direction,
+      // 2026-11-18): set exactly like an essay page — same measure,
+      // same text styles — but with no essay head: the page carries
+      // only its 前言 subhead and her paragraph. Chinese only.
+      const { chapter } = spec;
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
+          <div className="bk-essay">
+            <div className="bk-essay-text description-html">
+              <p><strong>{NI_PREFACE.head}</strong></p>
+              <p>{NI_PREFACE.body}</p>
             </div>
           </div>
           <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
