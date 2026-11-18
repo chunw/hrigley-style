@@ -1663,14 +1663,16 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         } else {
           // The two In the Spirit of the 21st Century stills plates
           // close Negotiated Intelligence as a FACING pair — the
-          // diptych on the verso, the second still on the recto (her
-          // direction, 2026-11-17). Unanchored, they follow the essay
-          // in order and would otherwise land back-to-back on one
-          // leaf (recto, then the next leaf's verso), so the book's
-          // usual parity guard steps in ahead of the diptych.
+          // second still on the verso, the diptych on the recto (the
+          // pair first stood diptych-first, 2026-11-17; she swapped
+          // their order, 2026-11-18). Unanchored, they follow the
+          // essay in order and would otherwise land back-to-back on
+          // one leaf (recto, then the next leaf's verso), so the
+          // book's usual parity guard steps in ahead of the pair's
+          // first plate.
           if (
             chapter.key === "series:negotiated" &&
-            item.image_url === "/book/negotiated/spirit-21st-century-stills.jpg" &&
+            item.image_url === "/book/negotiated/spirit-21st-century-still.jpg" &&
             !nextIsVerso()
           ) {
             specs.push({ kind: "blank" });
