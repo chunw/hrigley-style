@@ -2983,9 +2983,19 @@ function EyedropPanel({
 
 
 function Folio({ number, tag }: { number: number; tag?: string }) {
+  // Running footer, split at her word (2026-11-18): the old single tag
+  // "TITLE | CHAPTER" comes apart — the book title stands at the left
+  // of the foot, the chapter name at the right, no bar between them.
+  // The folio number keeps its outer corner; where a half shares that
+  // corner (title on a verso, chapter on a recto) the CSS moves the
+  // text in so the two never touch. Both halves keep their wording.
+  const cut = tag ? tag.indexOf(" | ") : -1;
+  const head = tag ? (cut >= 0 ? tag.slice(0, cut) : tag) : undefined;
+  const tail = tag && cut >= 0 ? tag.slice(cut + 3) : undefined;
   return (
     <>
-      {tag && <div className="bk-folio-tag">{tag}</div>}
+      {head && <div className="bk-folio-tag bk-folio-tag-l">{head}</div>}
+      {tail && <div className="bk-folio-tag bk-folio-tag-r">{tail}</div>}
       <div className="bk-folio">
         {pad2(number)} <Crosshair />
       </div>
