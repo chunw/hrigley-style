@@ -1001,7 +1001,7 @@ const APHORISMS: Record<string, Aphorism> = {
   "cover-story": {
     id: "cover-story",
     long: true,
-    en: "Ah, the glamorous cover being the story they sell: AI for humanity, curing disease, abundance for all. The shinier the mission looks, the less anyone asks what's underneath it: the capex machine, the credit, the concentration of compute and power in a handful of hands. Wealth extraction works best when it looks like salvation.",
+    en: "Ah, the glamorous cover being the story they sell: AI for humanity, curing disease, abundance for all. The shinier the mission looks, the less anyone asks what's hidden underneath it: the capex machine, the credit, the concentration of compute and power in a handful of hands. Wealth extraction works best when it looks like salvation.",
     zh: "啊，光鲜的封面正是他们兜售的故事：AI 为了人类，治愈疾病，人人富足。使命看上去越闪亮，越没有人追问它底下掩藏着什么：资本开支的机器、信贷、集中在一小撮人手里的算力和权力。财富的榨取，在看起来像救赎的时候，最为奏效。",
   },
 };
