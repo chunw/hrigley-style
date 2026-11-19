@@ -390,7 +390,7 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
       "视频静帧 2024年",
       {
         above:
-          "<p>Ah, the glamorous cover being the story they sell: AI for humanity, curing disease, abundance for all. The shinier the mission looks, the less anyone asks what's underneath it. Profit extraction works best when it looks like salvation.</p><p>啊，光鲜的封面正是他们兜售的故事：AI 为了人类，治愈疾病，人人富足。使命看上去越闪亮，越没有人追问它底下掩藏着什么。利润的榨取，在看起来像救赎的时候，最为奏效。</p>",
+          "<p>Ah, the glamorous cover being the story they sell: AI for humanity, curing disease, abundance for all.<br />The shinier the mission looks,<br />the less anyone asks what's hidden underneath it.<br />Wealth extraction works best when it looks like salvation.</p><p>啊，光鲜的封面正是他们兜售的故事：AI 为了人类，治愈疾病，人人富足。<br />使命看上去越闪亮，<br />越没有人追问它底下掩藏着什么。<br />财富的榨取，在看起来像救赎的时候，最为奏效。</p>",
       },
     ),
     plate(
