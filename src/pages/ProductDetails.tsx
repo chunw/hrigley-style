@@ -282,6 +282,14 @@ const ProductDetails = () => {
               </div>
             )}
 
+            {product.soldOut && (
+              <div className="pt-4">
+                <div className="w-full border border-foreground/30 px-8 py-4 text-center font-helvetica text-sm uppercase tracking-[0.15em] text-muted-foreground">
+                  {zh ? "已售出" : "Sold Out"}
+                </div>
+              </div>
+            )}
+
             <p className="pt-4 w-full text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>
           </div>
         </div>
