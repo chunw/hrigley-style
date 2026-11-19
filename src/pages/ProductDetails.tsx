@@ -110,7 +110,9 @@ const ProductDetails = () => {
   const displayDetailedHtml = (zh && product.detailed_description_html_zh) ? product.detailed_description_html_zh : product.detailed_description_html;
   const displayEditionInfo = (zh && product.edition_info_zh) ? product.edition_info_zh : product.edition_info;
   const artboxPrintCount = getArtboxPrintCount(product.id);
-  const displayDimensions = (zh && (product as any).dimensions_zh) ? (product as any).dimensions_zh : product.dimensions;
+  // Dimensions never falls back across languages: in Chinese mode a product
+  // without dimensions_zh shows no dimensions line at all.
+  const displayDimensions = zh ? (product as any).dimensions_zh : product.dimensions;
 
   return (
     <div className="min-h-screen bg-background">
