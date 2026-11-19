@@ -60,8 +60,8 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
   const displayImageUrl = (hovered && secondImageReady && secondImageUrl) ? secondImageUrl : image_url;
 
   const zh = lang === "zh";
-  const displayTitle = (zh && title_zh) ? title_zh : (title || name);
-  const displayDescription = (zh && description_zh) ? description_zh : description;
+  const displayTitle = zh ? title_zh : (title || name);
+  const displayDescription = zh ? description_zh : description;
   const displayCategoryList = zh
     ? getProductCategoriesZh({ category_zh, categories_zh })
     : getProductCategories({ category, categories });
@@ -141,7 +141,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
       image_url,
       variant: cartVariantLabel,
     });
-    toast(`${title || name} added to cart`);
+    toast(`${displayTitle ?? ""}${t.productDetails.addedToCartSuffix}`);
   };
 
   return (
@@ -168,7 +168,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
           />
           {soldOut && (
             <div className="absolute top-3 left-3 z-10 w-16 h-16 bg-red-600 rounded-full shadow-lg border-2 border-white/80 flex items-center justify-center p-1">
-              <span className="font-helvetica text-[10px] uppercase tracking-[0.15em] text-white text-center leading-tight">Sold Out</span>
+              <span className="font-helvetica text-[10px] uppercase tracking-[0.15em] text-white text-center leading-tight">{zh ? "已售出" : "Sold Out"}</span>
             </div>
           )}
         </div>
@@ -200,7 +200,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
                     onClick={handleAddToCart}
                   >
                     <ShoppingBag className="h-3.5 w-3.5 mr-1.5" />
-                    ADD TO CART
+                    {t.productDetails.addToCart}
                   </Button>
                 )}
               </>

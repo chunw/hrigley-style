@@ -84,7 +84,7 @@ const Spirit21Detail = () => {
 
   const handleInquire = () => {
     navigator.clipboard.writeText(INQUIRY_EMAIL).then(() => {
-      toast("Email copied to clipboard", { description: INQUIRY_EMAIL });
+      toast(lang === "zh" ? "邮箱已复制到剪贴板" : "Email copied to clipboard", { description: INQUIRY_EMAIL });
     });
   };
 
@@ -118,7 +118,7 @@ const Spirit21Detail = () => {
           },
         ];
 
-  const title = lang === "zh" && work.titleZh ? work.titleZh : work.title;
+  const title = lang === "zh" ? work.titleZh : work.title;
 
   const detailChips: { en: string; zh: string }[] = [{ en: "Fine Art Prints", zh: "版画 · 限量版号" }];
 
@@ -201,19 +201,19 @@ const Spirit21Detail = () => {
               ))}
             </div>
 
-            {(work.description || work.descriptionZh) && (
+            {(lang === "zh" ? work.descriptionZh : work.description) && (
               <p
                 className="description-html text-sm text-muted-foreground leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: lang === "zh" && work.descriptionZh ? work.descriptionZh : work.description ?? "" }}
+                dangerouslySetInnerHTML={{ __html: (lang === "zh" ? work.descriptionZh : work.description) ?? "" }}
               />
             )}
 
             <div className={`space-y-1 font-mono text-muted-foreground ${lang === "zh" ? "text-sm" : "text-xs"}`}>
-              {(work.medium || work.mediumZh) && (
-                <p>{lang === "zh" && work.mediumZh ? work.mediumZh : work.medium}</p>
+              {(lang === "zh" ? work.mediumZh : work.medium) && (
+                <p>{lang === "zh" ? work.mediumZh : work.medium}</p>
               )}
-              {(work.dimensions || work.dimensionsZh) && (
-                <p>{lang === "zh" && work.dimensionsZh ? work.dimensionsZh : work.dimensions}</p>
+              {(lang === "zh" ? work.dimensionsZh : work.dimensions) && (
+                <p>{lang === "zh" ? work.dimensionsZh : work.dimensions}</p>
               )}
               {work.year && <p>{work.year}</p>}
               <p>{work.paylink

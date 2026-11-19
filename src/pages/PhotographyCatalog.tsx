@@ -12,7 +12,7 @@ const WorkCard = ({ work, uniformHeight }: { work: PhotographyWork; uniformHeigh
   const { lang } = useLanguage();
   const navigate = useNavigate();
   const padded = work.id.padStart(2, "0");
-  const title = lang === "zh" ? (work.titleZh ?? work.title) : work.title;
+  const title = lang === "zh" ? work.titleZh : work.title;
   const series = seriesList.find((s) => s.id === work.series);
 
   const [objPos, setObjPos] = useState(work.cropPosition ?? { x: 50, y: 50 });
@@ -186,9 +186,9 @@ const PhotographyCatalog = () => {
             <p className="font-mono text-xs text-muted-foreground/60 mt-1">
               {photographyWorks.length} {t.photographyCatalog.works}
             </p>
-            {catalogMeta.description && (
+            {(lang === "zh" ? catalogMeta.descriptionZh : catalogMeta.description) && (
               <div className="mt-3 max-w-prose space-y-3">
-                {(lang === "zh" ? (catalogMeta.descriptionZh ?? catalogMeta.description) : catalogMeta.description)
+                {(lang === "zh" ? catalogMeta.descriptionZh : catalogMeta.description)
                   .split("\n\n")
                   .map((para, i) => (
                     <p key={i} className="description-html text-sm text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: para }} />
@@ -242,7 +242,7 @@ const PhotographyCatalog = () => {
                   : "text-muted-foreground hover:text-primary"
               }`}
             >
-              {uniformHeight ? "View Original Image Height" : "Uniform Height"}
+              {uniformHeight ? (lang === "zh" ? "查看原图高度" : "View Original Image Height") : (lang === "zh" ? "统一高度" : "Uniform Height")}
             </button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
