@@ -3916,10 +3916,18 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-plate-page${bgImgCls}`}>{bgImgLayer}
           {/* A plate may carry body text above its picture (the NI
               stills' verso paragraph, her direction 2026-11-18): it
-              prints in the book's essay text setting, outside the
-              caption, and the frame flexes to the space left. */}
+              stands outside the caption, and the frame flexes to the
+              space left. Later the same day she set its typesetting:
+              not the essay setting but the book's quiet-page setting
+              (.bk-quiet — the Spirit motto page's small serif set,
+              line-height opened to 2, right-aligned in a narrow
+              measure, a short rule above), the picture below it
+              untouched: a quiet page that carries a picture. */}
           {item.plateTextAbove && (
-            <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: item.plateTextAbove }} />
+            <div className="bk-quiet bk-quiet-plate">
+              <div className="bk-quiet-rule" />
+              <div className="bk-quiet-html" dangerouslySetInnerHTML={{ __html: item.plateTextAbove }} />
+            </div>
           )}
           <div className="bk-plate-frame">
             <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />

@@ -1511,14 +1511,26 @@
   border-top: 1px solid #44403c;
 }
 
-.bk-quiet-p {
+.bk-quiet-p,
+.bk-quiet-html p {
   margin: 0;
   font-size: 0.135in;
   line-height: 2;
 }
 
-.bk-quiet-p + .bk-quiet-p {
+.bk-quiet-p + .bk-quiet-p,
+.bk-quiet-html p + p {
   margin-top: 0.38in;
+}
+
+/* A quiet page that carries a picture (her direction, 2026-11-18):
+   the NI stills verso sets its bilingual paragraph in the quiet
+   setting above the plate. The plate page composes this page, so
+   the block takes the plate page's text-above margin (0.65in, the
+   essay block's before it) instead of the standalone quiet page's
+   2.6in drop; every type metric is .bk-quiet's own, unchanged. */
+.bk-quiet-plate {
+  margin-top: 0.65in;
 }
 
 /* A closing sentence kept whole on one line inside a quiet page, so
