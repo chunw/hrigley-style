@@ -165,8 +165,9 @@ const hasCjk = (s: string) => /[\u4e00-\u9fff]/.test(s);
 // before; the single-language views re-paginate (essay and preface
 // chunks of the other language are not emitted — see paginate), while
 // fixed single-language pages (the NI preface, the stills' lead text)
-// stand but print blank in the other language's view. Folios, page
-// furniture and the toolbar itself never switch.
+// stand but print blank in the other language's view. The folio
+// numbers and the toolbar itself never switch; the folio tags do
+// (her bug report, 2026-11-19 — see Folio).
 export type CapLang = "both" | "en" | "zh";
 type CapPart = { lang: "en" | "zh" | "both"; text?: string | null; inBoth?: boolean };
 /** The caption fragments visible in the selected caption language, in
@@ -272,10 +273,44 @@ const workCapBlocks = (item: CatalogItem, titles?: { en?: string; zh?: string })
     language. Bilingual shows both blocks; a Chinese block carrying
     neither title nor meta (a work with no Chinese record) would
     only repeat the dimensions line, so it steps aside in the
-    bilingual view only. */
+    bilingual view only. In a single-language view a composed
+    bilingual title or meta line — the hand-set series plates and
+    the shop plates carry their two languages in one string, with
+    no separate Chinese fields on the record — sheds the other
+    language's stretch, and the Chinese block takes its title and
+    medium back out of the composed English string, the way the
+    reverse index's pointers do (her bug report, 2026-11-19: the
+    After Hours Altar caption printed bilingually in the English
+    view). The bilingual composition is never touched. */
 const workCapVisible = (blocks: WorkCapBlock[], capLang: CapLang): WorkCapBlock[] => {
   const hasBody = (b: WorkCapBlock) => !!(b.title || b.dim || b.meta);
-  if (capLang !== "both") return blocks.filter((b) => b.lang === capLang && hasBody(b));
+  if (capLang !== "both") {
+    const en = blocks.find((b) => b.lang === "en");
+    const zh = blocks.find((b) => b.lang === "zh");
+    if (capLang === "en") {
+      if (!en) return [];
+      // A title or meta segment carrying Chinese is the composed
+      // string's Chinese stretch and comes off; a title that is
+      // Chinese only (the borrowed-title case in workCapBlocks)
+      // would be left empty and keeps its string whole.
+      const title = en.title && hasCjk(en.title) ? en.title.slice(0, en.title.search(/[\u4e00-\u9fff]/)).trim() || en.title : en.title;
+      const meta = en.meta ? en.meta.split(" · ").filter((s) => !hasCjk(s)).join(" · ") || en.meta : en.meta;
+      const out = { ...en, title, meta };
+      return hasBody(out) ? [out] : [];
+    }
+    const out: WorkCapBlock = { ...(zh ?? { lang: "zh" as const }) };
+    if (!out.title && en?.title && hasCjk(en.title)) {
+      const m = en.title.match(/[\u4e00-\u9fff][\s\S]*$/);
+      if (m) out.title = m[0].trim();
+    }
+    if (en?.meta) {
+      const zhSegs = en.meta.split(" · ").filter((s) => hasCjk(s));
+      if (zhSegs.length && !(out.meta && zhSegs.every((s) => out.meta!.includes(s)))) {
+        out.meta = [...zhSegs, out.meta].filter(Boolean).join(" ");
+      }
+    }
+    return hasBody(out) ? [out] : [];
+  }
   // A Chinese-only title stands in both blocks (see workCapBlocks);
   // the bilingual view prints it once, in its 《》 form.
   const [en, zh] = blocks;
@@ -3073,7 +3108,7 @@ function EyedropPanel({
 }
 
 
-function Folio({ number, tag }: { number: number; tag?: string }) {
+function Folio({ number, tag, lang = "both", tagEn, tagZh }: { number: number; tag?: string; lang?: CapLang; tagEn?: string; tagZh?: string }) {
   // Running footer, split by page at her correction (2026-11-18): a
   // verso carries the book title only — the bilingual title "Remains
   // 遗迹", as the cover prints it — and a recto the chapter name only,
@@ -3082,16 +3117,35 @@ function Folio({ number, tag }: { number: number; tag?: string }) {
   // every page; she corrected it the same evening. Side follows the
   // folio number, the same parity that sides the page itself. The
   // folio number keeps its outer corner; the CSS keeps the one text
-  // clear of it. Both texts keep their wording.
+  // clear of it. Both texts keep their wording. In a single-language
+  // view the tag follows the view (her bug report, 2026-11-19): the
+  // verso prints the book title in that language alone, and the
+  // recto takes the chapter name's own-language stretch whole, the
+  // way the reverse index's pointers do; a chapter name carrying no
+  // Chinese (Paintings 2019–2026, ART.EMPATH.IO) stands in every
+  // view. The bilingual tag is never touched.
   const cut = tag ? tag.indexOf(" | ") : -1;
   const head = tag ? (cut >= 0 ? tag.slice(0, cut) : tag) : undefined;
   const tail = tag && cut >= 0 ? tag.slice(cut + 3) : undefined;
   const verso = number % 2 === 0;
+  const enStretch = (s: string) => {
+    const i = s.search(/[\u4e00-\u9fff]/);
+    return i < 0 ? s : s.slice(0, i).replace(/[\s·]+$/, "");
+  };
+  const zhStretch = (s: string) => s.match(/[\u4e00-\u9fff][\s\S]*$/)?.[0] ?? s;
+  const versoText = head && (lang === "en" ? enStretch(head) : lang === "zh" ? "遗迹" : `${head} 遗迹`);
+  // A call site that knows its chapter name's two recorded halves
+  // passes them (tagEn/tagZh) and the single-language views print
+  // the record exactly — a Chinese name may itself open with Latin
+  // or digits (IMMEMORY：对抗遗忘的档案, 21世纪精神), which a stretch
+  // cut at the first Chinese character would clip. The stretch
+  // split above is the fallback for a name with no recorded halves.
+  const rectoText = tail && (lang === "en" ? tagEn ?? enStretch(tail) : lang === "zh" ? tagZh ?? zhStretch(tail) : tail);
   return (
     <>
       {verso
-        ? head && <div className="bk-folio-tag bk-folio-tag-l">{`${head} 遗迹`}</div>
-        : tail && <div className="bk-folio-tag bk-folio-tag-r">{tail}</div>}
+        ? versoText && <div className="bk-folio-tag bk-folio-tag-l">{versoText}</div>
+        : rectoText && <div className="bk-folio-tag bk-folio-tag-r">{rectoText}</div>}
       <div className="bk-folio">
         {pad2(number)} <Crosshair />
       </div>
@@ -3576,7 +3630,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               ))}
             </div>
           </div>
-          <Folio number={number} tag={`${b.title} | ${translations.en.catalogBook.preface} · ${translations.zh.catalogBook.preface}`} />
+          <Folio number={number} tag={`${b.title} | ${translations.en.catalogBook.preface} · ${translations.zh.catalogBook.preface}`} lang={ctx.capLang} tagEn={translations.en.catalogBook.preface} tagZh={translations.zh.catalogBook.preface} />
         </Page>
       );
     }
@@ -3599,7 +3653,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               ))}
             </div>
           </div>
-          <Folio number={number} tag={`${b.title} | ${translations.en.catalogBook.paintingIntro} · ${translations.zh.catalogBook.paintingIntro}`} />
+          <Folio number={number} tag={`${b.title} | ${translations.en.catalogBook.paintingIntro} · ${translations.zh.catalogBook.paintingIntro}`} lang={ctx.capLang} tagEn={translations.en.catalogBook.paintingIntro} tagZh={translations.zh.catalogBook.paintingIntro} />
         </Page>
       );
     }
@@ -3857,7 +3911,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               ))}
             </div>
           </div>
-          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
     }
@@ -3879,7 +3933,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               </div>
             </div>
           )}
-          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
     }
@@ -3903,7 +3957,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: spec.html }} />
             </div>
           )}
-          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
     }
@@ -3921,7 +3975,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             <div className="bk-quiet-html" dangerouslySetInnerHTML={{ __html: htmlParasByLang(spec.aboveHtml, ctx.capLang) }} />
           </div>
           <div className="bk-essay-text description-html bk-quiet-readings" dangerouslySetInnerHTML={{ __html: readingsHeadByLang(spec.belowHtml, ctx.capLang) }} />
-          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
     }
@@ -3947,7 +4001,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               </div>
             </div>
           </div>
-          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
     }
@@ -3987,7 +4041,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               {ctx.capLang !== "zh" && reviewBlock(series?.textEn, "en")}
               {ctx.capLang !== "en" && reviewBlock(series?.textZh, "zh")}
             </div>
-            <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+            <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
           </Page>
         );
       }
@@ -4107,7 +4161,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           {item.plateTextBelow && (
             <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: readingsHeadByLang(item.plateTextBelow, ctx.capLang) }} />
           )}
-          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
     }
@@ -4130,7 +4184,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               </div>
             ))}
           </div>
-          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
     }
@@ -4158,7 +4212,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               ))}
             </div>
           </div>
-          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
     }
@@ -4315,7 +4369,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               <div className="bk-essay-text bk-about-text description-html" dangerouslySetInnerHTML={{ __html: spec.chunk === 0 ? artistBioHTML("en") : artistBioHTML("zh") }} />
             )}
           </div>
-          <Folio number={number} tag={`${b.title} | ${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`} />
+          <Folio number={number} tag={`${b.title} | ${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`} lang={ctx.capLang} tagEn={translations.en.catalogBook.aboutArtist} tagZh={translations.zh.catalogBook.aboutArtist} />
         </Page>
       );
 
@@ -4336,7 +4390,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               {ctx.capLang !== "en" && <p>{COLLAGE_METHOD.zh}</p>}
             </div>
           </div>
-          <Folio number={number} tag={`${b.title} | Collage as Method · 作为方法的拼贴`} />
+          <Folio number={number} tag={`${b.title} | Collage as Method · 作为方法的拼贴`} lang={ctx.capLang} tagEn="Collage as Method" tagZh="作为方法的拼贴" />
         </Page>
       );
 
@@ -4632,7 +4686,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               </div>
             </div>
           )}
-          <Folio number={number} tag={`${b.title} | Paintings 2019–2026`} />
+          <Folio number={number} tag={`${b.title} | Paintings 2019–2026`} lang={ctx.capLang} tagEn="Paintings 2019–2026" />
         </Page>
       );
     }
@@ -4705,7 +4759,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               </section>
             ))}
           </div>
-          <Folio number={number} tag={`${b.title} | An Index of What Remains · 反向索引`} />
+          <Folio number={number} tag={`${b.title} | An Index of What Remains · 反向索引`} lang={ctx.capLang} tagEn="An Index of What Remains" tagZh="反向索引" />
         </Page>
       );
     }
@@ -4749,7 +4803,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             {ctx.capLang !== "zh" && <p className="bk-quiet-p">{enNode}</p>}
             {ctx.capLang !== "en" && <p className="bk-quiet-p">{zhNode}</p>}
           </div>
-          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
     }
