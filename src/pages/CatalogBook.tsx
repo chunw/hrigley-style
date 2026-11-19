@@ -3727,6 +3727,12 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const { chapter } = spec;
       const chunk = ctx.essayChunks[chapter.key]?.[spec.chunk];
       const items = chunk?.items ?? [];
+      // Her direction, 2026-11-18: the road chapter's Chinese intro page
+      // (the chapter's first Chinese essay chunk) sets its text
+      // left-aligned, explicitly — see .bk-essay-left in the stylesheet.
+      const firstZhChunk =
+        chapter.key === "road" ? (ctx.essayChunks[chapter.key] ?? []).findIndex((c) => c.lang === "zh") : -1;
+      const alignLeft = firstZhChunk >= 0 && spec.chunk === firstZhChunk;
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
           <div className="bk-essay">
@@ -3737,7 +3743,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                 <div className="bk-essay-meta sans-label">{chapter.years}</div>
               </div>
             )}
-            <div className={`bk-essay-text description-html ${items.reduce((n, it) => n + plainText(it.html).length, 0) > 450 ? "bk-essay-cols" : ""}`}>
+            <div className={`bk-essay-text description-html ${items.reduce((n, it) => n + plainText(it.html).length, 0) > 450 ? "bk-essay-cols" : ""}${alignLeft ? " bk-essay-left" : ""}`}>
               {items.map((it, i) => (
                 <p
                   key={i}
