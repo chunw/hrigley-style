@@ -3094,15 +3094,17 @@ export function FrontCoverFace({ ctx }: { ctx: BookContext }) {
   const still = ctx.chapters.find((c) => c.key === "stillthings");
   // The cover piece is pinned by image, not by title: the plain title
   // "Still Things" is shared by more than one plate in the section. It
-  // was originally settled with the landscape plate (watercolors/43);
-  // on 2026-10-24 she asked to try the portrait plate that joined the
-  // section in 2026 (watercolors/48) as the cover centre instead. The
-  // plate page left the Still Things section on 2026-11-08 (her
-  // direction), but the piece stays the cover centre, so it is found
-  // in the watercolor catalog rather than in the chapter.
+  // was originally settled with the Still Things #14 plate
+  // (watercolors/43); on 2026-10-24 she asked to try the portrait
+  // plate that joined the section in 2026 (watercolors/48) as the
+  // cover centre instead. The 48 file is a different, tighter
+  // photograph of the same painting and did not match the #14 plate
+  // image, so on 2026-11-18 she directed the cover back to the work's
+  // own plate image (watercolors/43). The piece is found in the
+  // watercolor catalog rather than in the chapter.
   const catalogArt = getCombinedCatalogSections("", "en")
     .find((s) => s.key === "watercolor")
-    ?.items.find((item) => item.image_url.includes("/watercolors/48/"));
+    ?.items.find((item) => item.image_url.includes("/watercolors/43/"));
   const art = catalogArt ?? still?.items[0]?.item ?? ctx.coverFront;
   return (
     <div className="bk-face bk-face-front bk-face-rust">
