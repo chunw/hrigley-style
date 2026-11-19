@@ -175,11 +175,11 @@ const Header = () => {
                   <DrawerTitle className="shop-title gloria-title text-lg font-bold leading-tight tracking-wide text-left pl-2">
                     <DrawerClose asChild>
                     <Link to="/" className="block cursor-pointer">
-                      {t.shopTitle.line1}
+                      <span className="text-primary">{t.shopTitle.line1}</span>
                       <br />
                       {t.shopTitle.line2}
                       <br />
-                      <span className="text-primary">{t.shopTitle.line3}</span>
+                      <span>{t.shopTitle.line3}</span>
                     </Link>
                     </DrawerClose>
                   </DrawerTitle>
@@ -258,11 +258,11 @@ const Header = () => {
               (
                 <div className="shop-title gloria-title text-2xl leading-none transition-colors header-shop-scale">
                   <Link to="/" className="header-brand-link block cursor-pointer">
-                    {t.shopTitle.line1}
+                    <span className="text-primary">{t.shopTitle.line1}</span>
                     <br />
                     {t.shopTitle.line2}
                   </Link>
-                  <Link to="/" className="block text-primary cursor-pointer">
+                  <Link to="/" className="block cursor-pointer">
                     {t.shopTitle.line3}
                   </Link>
                 </div>
