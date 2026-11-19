@@ -253,7 +253,7 @@ export const translations = {
       copyright: "版权所有。",
       locationShipping: "所有作品在纽约市设计并发货，全球配送。",
       exploreTitle: "导航",
-      contactTitle: "联系",
+      contactTitle: "联系方式",
       navShop: "商店",
       navCatalogs: "作品系列",
       navAbout: "关于",

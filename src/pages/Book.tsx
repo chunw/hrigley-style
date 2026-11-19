@@ -510,7 +510,7 @@ function backPages(lang: Lang2): ReactNode[] {
         <p className="book-caption mt-[2%]">{zh ? "Chun Wang · 纽约" : "王淳 · New York City"}</p>
         <p className="book-body-serif mt-[6%]">{bioText.slice(0, zh ? 420 : 640)}{bioText.length > 640 ? "…" : ""}</p>
         <div className="book-rule mt-auto pt-[4%]">
-          <p className="book-eyebrow">{zh ? "联系" : "Contact"}</p>
+          <p className="book-eyebrow">{zh ? "联系方式" : "Contact"}</p>
           <p className="book-caption mt-[2%]" style={{ color: "var(--book-ink)" }}>{CONTACT_EMAIL} · chunwang.art · chunwangshop.com</p>
         </div>
       </div>
