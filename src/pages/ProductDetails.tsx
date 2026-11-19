@@ -100,18 +100,17 @@ const ProductDetails = () => {
     toast(`${product.title || product.name} added to cart`);
   };
 
-  // Pick the right language field, fall back to English if Chinese not filled in
-  const displayTitle = (zh && product.title_zh) ? product.title_zh : (product.title || product.name);
+  // Language fields never fall back across languages: in Chinese mode a field
+  // without a Chinese version is not shown at all (no English mixed in).
+  const displayTitle = zh ? product.title_zh : (product.title || product.name);
   const englishCategories = getProductCategories(product);
   const displayCategories = zh ? getProductCategoriesZh(product) : englishCategories;
   const englishCollections = getProductCollections(product);
   const displayCollections = zh ? getProductCollectionsZh(product) : englishCollections;
-  const displayDescription = (zh && product.description_zh) ? product.description_zh : product.description;
-  const displayDetailedHtml = (zh && product.detailed_description_html_zh) ? product.detailed_description_html_zh : product.detailed_description_html;
-  const displayEditionInfo = (zh && product.edition_info_zh) ? product.edition_info_zh : product.edition_info;
+  const displayDescription = zh ? product.description_zh : product.description;
+  const displayDetailedHtml = zh ? product.detailed_description_html_zh : product.detailed_description_html;
+  const displayEditionInfo = zh ? product.edition_info_zh : product.edition_info;
   const artboxPrintCount = getArtboxPrintCount(product.id);
-  // Dimensions never falls back across languages: in Chinese mode a product
-  // without dimensions_zh shows no dimensions line at all.
   const displayDimensions = zh ? (product as any).dimensions_zh : product.dimensions;
 
   return (
