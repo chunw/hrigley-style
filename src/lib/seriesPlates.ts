@@ -371,6 +371,16 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
     // paragraph — English block, then Chinese block, hers
     // verbatim — in its place above the still. The texts print as
     // book body text, outside the captions, which stay as they are.
+    // Her direction (2026-11-19): the pair's one caption — the
+    // diptych's, the only one the consolidated stills page prints —
+    // carries her name: she is the video's author, and the page
+    // must say so. The name stands first in the meta line, the
+    // book's standing way of crediting an artist in a caption
+    // (compare the other pavilion plates above: "Daria Belkina ·
+    // The Wrong Biennale, 7th Edition"), in both languages —
+    // "Chun Wang · Video stills, 2024" / "王淳 · 视频静帧 2024年".
+    // The single still's record is untouched: its caption never
+    // prints anywhere.
     plate(
       "In the Spirit of the 21st Century", "Video stills, 2024", "2024",
       "",
@@ -380,16 +390,16 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
       "视频静帧 2024年",
       {
         above:
-          "<p>Ah, the glamorous cover being the story they sell: AI for humanity, curing disease, abundance for all. The shinier the mission looks, the less anyone asks what's underneath it. Profit extraction works best when it looks like salvation.</p><p>啊，光鲜的封面正是他们兜售的故事：AI 为了人类，治愈疾病，人人富足。使命看上去越闪亮，越没有人追问它底下掩藏着什么。利润的榨取，在看起来像救赎的时候，最为奏效。</p>",
+          "<p>Ah, the glamorous cover being the story they sell: AI for humanity, curing disease, abundance for all.<br />The shinier the mission looks,<br />the less anyone asks what's hidden underneath it.<br />Wealth extraction works best when it looks like salvation.</p><p>啊，光鲜的封面正是他们兜售的故事：AI 为了人类，治愈疾病，人人富足。<br />使命看上去越闪亮，<br />越没有人追问它底下掩藏着什么。<br />财富的榨取，在看起来像救赎的时候，最为奏效。</p>",
       },
     ),
     plate(
-      "In the Spirit of the 21st Century", "Video stills, 2024", "2024",
+      "In the Spirit of the 21st Century", "Chun Wang · Video stills, 2024", "2024",
       "",
       "",
       "/book/negotiated/spirit-21st-century-stills.jpg",
       "21世纪精神",
-      "视频静帧 2024年",
+      "王淳 · 视频静帧 2024年",
       {
         below:
           "<p><strong>Further Readings 延伸阅读</strong></p><p>Christian Boltanski, <em>Les Archives de C.B.</em> (1989)<br />The Atlas Group (Walid Raad), <em>Hostage: The Bachar Tapes</em> (2001)<br />Harun Farocki, <em>Workers Leaving the Factory in Eleven Decades</em> (2006)<br />Hito Steyerl, <em>How Not to Be Seen</em> (2013)<br />Trevor Paglen, <em>Machine Visions</em> (2016)<br />Kate Crawford, <em>Atlas of AI</em> (2021)</p>",

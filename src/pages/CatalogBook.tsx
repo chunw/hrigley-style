@@ -1065,8 +1065,8 @@ const APHORISMS: Record<string, Aphorism> = {
   "cover-story": {
     id: "cover-story",
     long: true,
-    en: "Ah, the glamorous cover being the story they sell: AI for humanity, curing disease, abundance for all. The shinier the mission looks, the less anyone asks what's underneath it: the capex machine, the credit, the concentration of compute and power in a handful of hands. Profit extraction works best when it looks like salvation.",
-    zh: "啊，光鲜的封面正是他们兜售的故事：AI 为了人类，治愈疾病，人人富足。使命看上去越闪亮，越没有人追问它底下掩藏着什么：资本开支的机器、信贷、集中在一小撮人手里的算力和权力。利润的榨取，在看起来像救赎的时候，最为奏效。",
+    en: "Ah, the glamorous cover being the story they sell: AI for humanity, curing disease, abundance for all. The shinier the mission looks, the less anyone asks what's hidden underneath it: the capex machine, the credit, the concentration of compute and power in a handful of hands. Wealth extraction works best when it looks like salvation.",
+    zh: "啊，光鲜的封面正是他们兜售的故事：AI 为了人类，治愈疾病，人人富足。使命看上去越闪亮，越没有人追问它底下掩藏着什么：资本开支的机器、信贷、集中在一小撮人手里的算力和权力。财富的榨取，在看起来像救赎的时候，最为奏效。",
   },
 };
 
@@ -3966,12 +3966,15 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // The stills' verso as a standalone quiet page (her direction,
       // 2026-11-18): the bilingual paragraph in the .bk-quiet setting
       // at its own 2.6in drop, and the diptych's Further Readings set
-      // below it in the essay setting.
+      // below it in the essay setting. This page alone drops the
+      // quiet setting's short rule (her direction, 2026-11-19, on the
+      // #374 preview — she circled the line and had it removed); the
+      // .bk-quiet-norule class folds the rule's height into the drop
+      // so the text keeps its place. Other quiet pages keep the rule.
       const { chapter } = spec;
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
-          <div className="bk-quiet">
-            <div className="bk-quiet-rule" />
+          <div className="bk-quiet bk-quiet-norule">
             <div className="bk-quiet-html" dangerouslySetInnerHTML={{ __html: htmlParasByLang(spec.aboveHtml, ctx.capLang) }} />
           </div>
           <div className="bk-essay-text description-html bk-quiet-readings" dangerouslySetInnerHTML={{ __html: readingsHeadByLang(spec.belowHtml, ctx.capLang) }} />
@@ -4778,7 +4781,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // only — the text itself is untouched.
       const enText = spec.text.en;
       const zhText = spec.text.zh;
-      const tailCut = chapter.key === "series:negotiated" ? zhText.indexOf("利润的榨取") : -1;
+      const tailCut = chapter.key === "series:negotiated" ? zhText.indexOf("财富的榨取") : -1;
       // Her direction, 2026-11-13 (later the same day): on this page
       // the mission sentence stands on a row by itself in both
       // languages — a break before it and a break after the colon
