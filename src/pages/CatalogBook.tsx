@@ -1526,20 +1526,13 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // keeps its full title (Residuals #27 / 《早餐存量分析 其二》)
     // and the shop is untouched — the override lives only on this
     // page's item.
-    // Update (her direction, 2026-11-18): Still Things #8 leaves this
-    // spread — it moves behind the Remains chapter, into a new facing
-    // pair with Still Things #14 (see the remains tail in paginate
-    // below). The Breakfast Inventory plate is left standing alone
-    // here: a blank keeps the page #8 stood on, so the inventory
-    // plate keeps its folio and its side, the title spread behind it
-    // does not move, and nothing downstream shifts.
     if (chapter.key === "stillthings") {
       const residualsChapter = chapters.find((c) => c.key === "residuals");
       const still8 = chapter.items.find(({ item }) => item.image_url.includes("/watercolors/14/main.jpg"));
       const inventory = residualsChapter?.items.find(({ item }) => item.image_url.includes("/watercolors/61/main.jpg"));
       if (residualsChapter && still8 && inventory) {
         if (!nextIsVerso()) specs.push({ kind: "blank" });
-        specs.push({ kind: "blank" });
+        specs.push({ kind: "plate", chapter: residualsChapter, item: still8.item, plate: still8.plate });
         specs.push({
           kind: "plate",
           chapter: residualsChapter,
@@ -1883,14 +1876,6 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
             // would land it on a recto, a blank page steps in first
             // (the same parity guard the named pairs use), so the
             // two stay facing under future pagination drift.
-            // Update (her direction, 2026-11-18): the pair is
-            // dissolved at her word — #14 leaves the chapter and
-            // stands behind the Remains chapter instead, in a new
-            // facing pair with Still Things #8 (see the remains tail
-            // in paginate below). The facsimile page keeps its place
-            // here under the same guard; a blank stands where the
-            // plate stood (see the plate chain below), so #13 is
-            // left facing a blank and no page behind it moves.
             if (!nextIsVerso()) specs.push({ kind: "blank" });
             specs.push({ kind: "canva", page: 14 });
           }
@@ -1963,13 +1948,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
               if (!nextIsVerso()) specs.push({ kind: "blank" });
             }
           }
-          if (chapter.key === "stillthings" && item.image_url.includes("/watercolors/43/main.jpg")) {
-            // Still Things #14 itself no longer stands here (her
-            // direction, 2026-11-18 — see the pre-block above): the
-            // blank that keeps its page, facing the #13 facsimile
-            // page the pre-block just emitted.
-            specs.push({ kind: "blank" });
-          } else if (chapter.key === "remains" && item.image_url === "/remains/01/main.jpg") {
+          if (chapter.key === "remains" && item.image_url === "/remains/01/main.jpg") {
             // Her direction (2026-11-11): Remains No. 1 becomes a
             // full-bleed spread, on the same verso guard as the other
             // designed spreads. It is the one bleed spread that does
@@ -2052,32 +2031,6 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       }
       if (holdBack && !heldBackEmitted) {
         for (let i = leadCount; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
-      }
-    }
-    // Her direction (2026-11-18): a new facing pair stands immediately
-    // behind the Remains chapter, ahead of the Residuals opener —
-    // Still Things #14 (the bust with the ice-cream cone; she named
-    // the David picture for the left page: 「大卫在左边」) on the verso
-    // and Still Things #8 (the blue lamp; full bleed, its caption on
-    // the picture at the bottom right) on the recto, each keeping its
-    // own work info. Both plates are lifted out of the Still Things
-    // run — #14's old page there becomes a blank facing the #13
-    // facsimile page, and #8's page in front of the Still Things
-    // title spread becomes a blank facing the Breakfast Inventory
-    // plate (see both places) — so each work still prints exactly
-    // once, here. The pair carries the Remains chapter, whose run it
-    // closes (the stillthings head pair in front of the title spread
-    // carries its host chapter the same way). The usual parity guard
-    // steps in ahead of #14 if the Remains run would land it on a
-    // recto, so the two stay facing.
-    if (chapter.key === "remains") {
-      const stillChapter = chapters.find((c) => c.key === "stillthings");
-      const still14 = stillChapter?.items.find(({ item }) => item.image_url.includes("/watercolors/43/main.jpg"));
-      const still8 = stillChapter?.items.find(({ item }) => item.image_url.includes("/watercolors/14/main.jpg"));
-      if (still14 && still8) {
-        if (!nextIsVerso()) specs.push({ kind: "blank" });
-        specs.push({ kind: "plate", chapter, item: still14.item, plate: still14.plate });
-        specs.push({ kind: "plate", chapter, item: still8.item, plate: still8.plate });
       }
     }
     // Facsimile chapters close their own sections (see the placement
