@@ -133,8 +133,12 @@ const displaySize = (text: string, lineInches: number, max: number) =>
 const pad2 = (n: number) => String(n).padStart(2, "0");
 
 /** Her direction (2026-11-05): a bilingual display title never runs the two
- * languages together — English on its own line, Chinese on the line below. */
-function stackedPair(en: string, zh?: string): ReactNode {
+ * languages together — English on its own line, Chinese on the line below.
+ * In a single-language view (see CapLang below) only that language's line
+ * stands. */
+function stackedPair(en: string, zh?: string, lang: CapLang = "both"): ReactNode {
+  if (lang === "en") return en;
+  if (lang === "zh") return zh ? <span className="bk-title-zh-line">{zh}</span> : en;
   if (zh && zh !== en) {
     return (
       <>
@@ -146,17 +150,24 @@ function stackedPair(en: string, zh?: string): ReactNode {
   return en;
 }
 
-function stackedTitle(chapter: Chapter): ReactNode {
-  return stackedPair(chapter.titleEn ?? chapter.title, chapter.titleZh);
+function stackedTitle(chapter: Chapter, lang: CapLang = "both"): ReactNode {
+  return stackedPair(chapter.titleEn ?? chapter.title, chapter.titleZh, lang);
 }
 const plainText = (html: string) => html.replace(/<br\s*\/?>/gi, " ").replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
 const hasCjk = (s: string) => /[\u4e00-\u9fff]/.test(s);
-// Caption language (her direction, 2026-11-15): the reading toolbar
-// carries a three-way switch for work captions only — bilingual (the
-// book's standing composition, the default), English only, Chinese
-// only. Body pages keep their bilingual side-by-side layout; only the
-// captions' English and Chinese fragments are filtered, through the
-// helpers below.
+// Book language (her direction, 2026-11-15; scope widened 2026-11-19):
+// the reading toolbar carries a three-way switch — bilingual (the
+// book's standing composition, the default and the print layout),
+// English only, Chinese only. It began as a captions-only switch; at
+// her direction of 2026-11-19 it governs the whole book: body essays,
+// quiet pages, mottos, prefaces, captions and bilingual title lines
+// all show only the selected language. Bilingual renders exactly as
+// before; the single-language views re-paginate (essay and preface
+// chunks of the other language are not emitted — see paginate), while
+// fixed single-language pages (the NI preface, the stills' lead text)
+// stand but print blank in the other language's view. The folio
+// numbers and the toolbar itself never switch; the folio tags do
+// (her bug report, 2026-11-19 — see Folio).
 export type CapLang = "both" | "en" | "zh";
 type CapPart = { lang: "en" | "zh" | "both"; text?: string | null; inBoth?: boolean };
 /** The caption fragments visible in the selected caption language, in
@@ -262,10 +273,44 @@ const workCapBlocks = (item: CatalogItem, titles?: { en?: string; zh?: string })
     language. Bilingual shows both blocks; a Chinese block carrying
     neither title nor meta (a work with no Chinese record) would
     only repeat the dimensions line, so it steps aside in the
-    bilingual view only. */
+    bilingual view only. In a single-language view a composed
+    bilingual title or meta line — the hand-set series plates and
+    the shop plates carry their two languages in one string, with
+    no separate Chinese fields on the record — sheds the other
+    language's stretch, and the Chinese block takes its title and
+    medium back out of the composed English string, the way the
+    reverse index's pointers do (her bug report, 2026-11-19: the
+    After Hours Altar caption printed bilingually in the English
+    view). The bilingual composition is never touched. */
 const workCapVisible = (blocks: WorkCapBlock[], capLang: CapLang): WorkCapBlock[] => {
   const hasBody = (b: WorkCapBlock) => !!(b.title || b.dim || b.meta);
-  if (capLang !== "both") return blocks.filter((b) => b.lang === capLang && hasBody(b));
+  if (capLang !== "both") {
+    const en = blocks.find((b) => b.lang === "en");
+    const zh = blocks.find((b) => b.lang === "zh");
+    if (capLang === "en") {
+      if (!en) return [];
+      // A title or meta segment carrying Chinese is the composed
+      // string's Chinese stretch and comes off; a title that is
+      // Chinese only (the borrowed-title case in workCapBlocks)
+      // would be left empty and keeps its string whole.
+      const title = en.title && hasCjk(en.title) ? en.title.slice(0, en.title.search(/[\u4e00-\u9fff]/)).trim() || en.title : en.title;
+      const meta = en.meta ? en.meta.split(" · ").filter((s) => !hasCjk(s)).join(" · ") || en.meta : en.meta;
+      const out = { ...en, title, meta };
+      return hasBody(out) ? [out] : [];
+    }
+    const out: WorkCapBlock = { ...(zh ?? { lang: "zh" as const }) };
+    if (!out.title && en?.title && hasCjk(en.title)) {
+      const m = en.title.match(/[\u4e00-\u9fff][\s\S]*$/);
+      if (m) out.title = m[0].trim();
+    }
+    if (en?.meta) {
+      const zhSegs = en.meta.split(" · ").filter((s) => hasCjk(s));
+      if (zhSegs.length && !(out.meta && zhSegs.every((s) => out.meta!.includes(s)))) {
+        out.meta = [...zhSegs, out.meta].filter(Boolean).join(" ");
+      }
+    }
+    return hasBody(out) ? [out] : [];
+  }
   // A Chinese-only title stands in both blocks (see workCapBlocks);
   // the bilingual view prints it once, in its 《》 form.
   const [en, zh] = blocks;
@@ -475,6 +520,25 @@ const capDesc = (html: string, capLang: CapLang): string => {
     .replace(/(\s*<br\s*\/?>)+\s*$/i, "")
     .replace(/(<br\s*\/?>\s*){2,}/gi, "<br />");
 };
+/** Body HTML set as whole paragraphs, one language per paragraph
+    (the NI stills' quiet passage above the still): in a
+    single-language view only that language's paragraphs stand.
+    "both" returns the HTML untouched. A paragraph carrying CJK
+    reads as Chinese; one without reads as English. */
+const htmlParasByLang = (html: string, lang: CapLang): string => {
+  if (lang === "both" || !html) return html;
+  const paras = html.match(/<p[^>]*>[\s\S]*?<\/p>/g);
+  if (!paras) return hasCjk(plainText(html)) === (lang === "zh") ? html : "";
+  return paras.filter((p) => hasCjk(plainText(p)) === (lang === "zh")).join("");
+};
+/** The Further Readings block's paired head line in a
+    single-language view: the entries are citations in their own
+    languages and stand in every view; only the head's other
+    language comes off. */
+const readingsHeadByLang = (html: string, lang: CapLang): string =>
+  lang === "both"
+    ? html
+    : html.replace("Further Readings 延伸阅读", lang === "en" ? "Further Readings" : "延伸阅读");
 /** A caption description's two language segments paired on one
     line (her direction, 2026-11-15, fourth pass): where the
     description is exactly an English segment over a Chinese one,
@@ -1302,9 +1366,18 @@ const smallObject = (item: CatalogItem): boolean => {
   return false;
 };
 
-function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkCount: number, essayChunkCounts: Record<string, number>): InteriorPage[] {
+function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkCount: number, essayChunkCounts: Record<string, number>, lang: CapLang = "both", prefaceChunkLangs: ("en" | "zh")[] = [], essayChunkLangs: Record<string, ("en" | "zh")[]> = {}): InteriorPage[] {
   const specs: PageSpec[] = [];
   const nextIsVerso = () => (specs.length + 1) % 2 === 0;
+  // Book language (her direction, 2026-11-19): in a single-language
+  // view, essay and preface chunks of the other language are not
+  // emitted; chunk indices stay in the bilingual numbering, so every
+  // anchor, break and held-back count below keeps its meaning. The
+  // bilingual view emits everything, exactly as before.
+  const chunkVisible = (l?: "en" | "zh") => lang === "both" || l === undefined || l === lang;
+  const pushEssay = (chapter: Chapter, chunk: number) => {
+    if (chunkVisible(essayChunkLangs[chapter.key]?.[chunk])) specs.push({ kind: "essay", chapter, chunk });
+  };
   const pushAphorism = (a: Aphorism) => {
     if (!nextIsVerso()) specs.push({ kind: "blank" });
     specs.push({ kind: "aphorism", half: "left", aphorism: a });
@@ -1334,7 +1407,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
   // contents render in renderPage): always exactly two pages.
   const tocPages = 2;
   for (let i = 0; i < tocPages; i++) specs.push({ kind: "contents", chunk: i });
-  for (let i = 0; i < prefaceChunkCount; i++) specs.push({ kind: "preface", chunk: i });
+  for (let i = 0; i < prefaceChunkCount; i++) if (chunkVisible(prefaceChunkLangs[i])) specs.push({ kind: "preface", chunk: i });
   // About the Artist stands at the front of the book, right after the preface
   // (her direction, 2026-10-18).
   specs.push({ kind: "about", chunk: 0 });
@@ -1648,7 +1721,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         const { item, plate } = anchored[ai];
         const target = Math.min(breaks[item.image_url] ?? 0, essayCount);
         while (emitted < target) {
-          specs.push({ kind: "essay", chapter, chunk: emitted });
+          pushEssay(chapter, emitted);
           emitted++;
         }
         const group = gridGroups.find((g) => g[0] === item.image_url);
@@ -1666,7 +1739,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         }
       }
       while (emitted < essayCount) {
-        specs.push({ kind: "essay", chapter, chunk: emitted });
+        pushEssay(chapter, emitted);
         emitted++;
       }
       const unanchored = chapter.items.filter(({ item }) => !anchoredUrls.has(item.image_url));
@@ -1739,7 +1812,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       // follow, and the #1 pair (painting, then its exhibition
       // view) closes the section.
       const leadCount = chapter.key === "residuals" ? 0 : holdBack ? Math.max(0, essayCount - holdBack.trailingChunks) : essayCount;
-      for (let i = 0; i < leadCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
+      for (let i = 0; i < leadCount; i++) pushEssay(chapter, i);
       // The Thailand watercolor full-bleed spread stands inside Notes
       // from the Road AFTER the chapter's essay pages and before its
       // plate run (her direction, 2026-11-10 — correcting the same-day
@@ -1776,7 +1849,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
       // behind Beijing — see the guard itself for why.
       const emitHeldBack = () => {
         if (holdBack && !heldBackEmitted) {
-          for (let i = leadCount; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
+          for (let i = leadCount; i < essayCount; i++) pushEssay(chapter, i);
           heldBackEmitted = true;
         }
       };
@@ -2056,7 +2129,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
         }
       }
       if (holdBack && !heldBackEmitted) {
-        for (let i = leadCount; i < essayCount; i++) specs.push({ kind: "essay", chapter, chunk: i });
+        for (let i = leadCount; i < essayCount; i++) pushEssay(chapter, i);
       }
     }
     // Facsimile chapters close their own sections (see the placement
@@ -3035,7 +3108,7 @@ function EyedropPanel({
 }
 
 
-function Folio({ number, tag }: { number: number; tag?: string }) {
+function Folio({ number, tag, lang = "both", tagEn, tagZh }: { number: number; tag?: string; lang?: CapLang; tagEn?: string; tagZh?: string }) {
   // Running footer, split by page at her correction (2026-11-18): a
   // verso carries the book title only — the bilingual title "Remains
   // 遗迹", as the cover prints it — and a recto the chapter name only,
@@ -3044,16 +3117,35 @@ function Folio({ number, tag }: { number: number; tag?: string }) {
   // every page; she corrected it the same evening. Side follows the
   // folio number, the same parity that sides the page itself. The
   // folio number keeps its outer corner; the CSS keeps the one text
-  // clear of it. Both texts keep their wording.
+  // clear of it. Both texts keep their wording. In a single-language
+  // view the tag follows the view (her bug report, 2026-11-19): the
+  // verso prints the book title in that language alone, and the
+  // recto takes the chapter name's own-language stretch whole, the
+  // way the reverse index's pointers do; a chapter name carrying no
+  // Chinese (Paintings 2019–2026, ART.EMPATH.IO) stands in every
+  // view. The bilingual tag is never touched.
   const cut = tag ? tag.indexOf(" | ") : -1;
   const head = tag ? (cut >= 0 ? tag.slice(0, cut) : tag) : undefined;
   const tail = tag && cut >= 0 ? tag.slice(cut + 3) : undefined;
   const verso = number % 2 === 0;
+  const enStretch = (s: string) => {
+    const i = s.search(/[\u4e00-\u9fff]/);
+    return i < 0 ? s : s.slice(0, i).replace(/[\s·]+$/, "");
+  };
+  const zhStretch = (s: string) => s.match(/[\u4e00-\u9fff][\s\S]*$/)?.[0] ?? s;
+  const versoText = head && (lang === "en" ? enStretch(head) : lang === "zh" ? "遗迹" : `${head} 遗迹`);
+  // A call site that knows its chapter name's two recorded halves
+  // passes them (tagEn/tagZh) and the single-language views print
+  // the record exactly — a Chinese name may itself open with Latin
+  // or digits (IMMEMORY：对抗遗忘的档案, 21世纪精神), which a stretch
+  // cut at the first Chinese character would clip. The stretch
+  // split above is the fallback for a name with no recorded halves.
+  const rectoText = tail && (lang === "en" ? tagEn ?? enStretch(tail) : lang === "zh" ? tagZh ?? zhStretch(tail) : tail);
   return (
     <>
       {verso
-        ? head && <div className="bk-folio-tag bk-folio-tag-l">{`${head} 遗迹`}</div>
-        : tail && <div className="bk-folio-tag bk-folio-tag-r">{tail}</div>}
+        ? versoText && <div className="bk-folio-tag bk-folio-tag-l">{versoText}</div>
+        : rectoText && <div className="bk-folio-tag bk-folio-tag-r">{rectoText}</div>}
       <div className="bk-folio">
         {pad2(number)} <Crosshair />
       </div>
@@ -3099,7 +3191,9 @@ export interface BookContext {
   coverFront?: CatalogItem;
   coverBack?: CatalogItem;
   prefaceChunks: { paras: ParaItem[] }[];
+  prefaceChunkLangs: ("en" | "zh")[];
   essayChunks: Record<string, EssayChunk[]>;
+  essayChunkLangs: Record<string, ("en" | "zh")[]>;
   editMode: boolean;
   fieldTexts: Record<string, string>;
   openEditor: (edit: string, label: string, current: string) => void;
@@ -3290,15 +3384,23 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-title-page${bgImgCls}`}>{bgImgLayer}
           <div className="bk-title-body">
-            <h1 className="bk-title-main shop-title gloria-title" style={{ fontSize: displaySize(translations.en.catalogBook.title, 6.8, 1.35) }}>
-              {translations.en.catalogBook.title}
-            </h1>
-            <div className="bk-title-zh">遗迹</div>
+            {ctx.capLang !== "zh" && (
+              <h1 className="bk-title-main shop-title gloria-title" style={{ fontSize: displaySize(translations.en.catalogBook.title, 6.8, 1.35) }}>
+                {translations.en.catalogBook.title}
+              </h1>
+            )}
+            {ctx.capLang !== "en" && <div className="bk-title-zh">遗迹</div>}
             <div className="bk-rule" />
             <div className="bk-title-meta">
               <span>{years}</span>
             </div>
-            <div className="bk-title-decade">十年选集 2017–2026 · A Ten-Year Anthology, 2017–2026</div>
+            <div className="bk-title-decade">
+              {ctx.capLang === "en"
+                ? "A Ten-Year Anthology, 2017–2026"
+                : ctx.capLang === "zh"
+                  ? "十年选集 2017–2026"
+                  : "十年选集 2017–2026 · A Ten-Year Anthology, 2017–2026"}
+            </div>
           </div>
         </Page>
       );
@@ -3308,16 +3410,30 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-colophon${bgImgCls}`}>{bgImgLayer}
           <div className="bk-colophon-body">
-            <p className="bk-colophon-title shop-title">{translations.en.catalogBook.title} · {"遗迹"}</p>
-            <p>© {year} Chun Wang. {translations.en.catalogBook.rights}</p>
-            <p>© {year} 王淳。{translations.zh.catalogBook.rights}</p>
+            <p className="bk-colophon-title shop-title">
+              {ctx.capLang === "en"
+                ? translations.en.catalogBook.title
+                : ctx.capLang === "zh"
+                  ? "遗迹"
+                  : `${translations.en.catalogBook.title} · 遗迹`}
+            </p>
+            {ctx.capLang !== "zh" && <p>© {year} Chun Wang. {translations.en.catalogBook.rights}</p>}
+            {ctx.capLang !== "en" && <p>© {year} 王淳。{translations.zh.catalogBook.rights}</p>}
             <p>
-              {translations.en.catalogBook.publisher}, {translations.en.catalogBook.city} · {translations.zh.catalogBook.publisher}，{translations.zh.catalogBook.city}
+              {ctx.capLang === "en"
+                ? `${translations.en.catalogBook.publisher}, ${translations.en.catalogBook.city}`
+                : ctx.capLang === "zh"
+                  ? `${translations.zh.catalogBook.publisher}，${translations.zh.catalogBook.city}`
+                  : `${translations.en.catalogBook.publisher}, ${translations.en.catalogBook.city} · ${translations.zh.catalogBook.publisher}，${translations.zh.catalogBook.city}`}
               <br />
               {SITE_URL.replace(/^https?:\/\/|\/$/g, "")} · {SHOP_URL.replace(/^https?:\/\/|\/$/g, "")}
             </p>
             <p>
-              {translations.en.catalogBook.edition}, {year} · {translations.zh.catalogBook.edition}，{year}
+              {ctx.capLang === "en"
+                ? `${translations.en.catalogBook.edition}, ${year}`
+                : ctx.capLang === "zh"
+                  ? `${translations.zh.catalogBook.edition}，${year}`
+                  : `${translations.en.catalogBook.edition}, ${year} · ${translations.zh.catalogBook.edition}，${year}`}
             </p>
           </div>
         </Page>
@@ -3420,8 +3536,8 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const renderSmall = (r: TocRow) => (
         <div key={r.titleEn} className="bk-tocmap-small" onClick={() => go(r.page)}>
           <span className="bk-tocmap-sec-no">{r.num}</span>
-          <span className="bk-tocmap-small-en">{r.titleEn}</span>
-          {r.titleZh && <span className="bk-tocmap-small-zh">{r.titleZh}</span>}
+          {ctx.capLang !== "zh" && <span className="bk-tocmap-small-en">{r.titleEn}</span>}
+          {r.titleZh && ctx.capLang !== "en" && <span className="bk-tocmap-small-zh">{r.titleZh}</span>}
           <span className="bk-tocmap-pg">{pad2(r.page)}</span>
         </div>
       );
@@ -3429,8 +3545,8 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         <div key={r.titleEn} className="bk-tocmap-sec" onClick={() => go(r.page)}>
           <span className="bk-tocmap-sec-no">{r.num}</span>
           <span className="bk-tocmap-sec-titles">
-            <span className="bk-tocmap-sec-en">{r.titleEn}<span className="bk-tocmap-pg">{pad2(r.page)}</span></span>
-            {r.titleZh && <span className="bk-tocmap-sec-zh">{r.titleZh}</span>}
+            <span className="bk-tocmap-sec-en">{ctx.capLang !== "zh" ? r.titleEn : ""}<span className="bk-tocmap-pg">{pad2(r.page)}</span></span>
+            {r.titleZh && ctx.capLang !== "en" && <span className="bk-tocmap-sec-zh">{r.titleZh}</span>}
           </span>
         </div>
       );
@@ -3442,8 +3558,8 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             <div className="bk-tocmap-head" onClick={() => go(head.page)}>
               <span className="bk-tocmap-num">{head.part}</span>
               <span className="bk-tocmap-head-titles">
-                <span className="bk-tocmap-pen">{head.titleEn}</span>
-                {head.titleZh && <span className="bk-tocmap-pzh">{head.titleZh}</span>}
+                {ctx.capLang !== "zh" && <span className="bk-tocmap-pen">{head.titleEn}</span>}
+                {head.titleZh && ctx.capLang !== "en" && <span className="bk-tocmap-pzh">{head.titleZh}</span>}
                 <span className="bk-tocmap-ppage">P. {head.page}</span>
               </span>
             </div>
@@ -3459,7 +3575,13 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             {spec.chunk === 0 ? (
               <>
                 <div>
-                  <div className="bk-tocmap-kicker">{translations.en.catalogBook.contents} · {translations.zh.catalogBook.contents}</div>
+                  <div className="bk-tocmap-kicker">
+                    {ctx.capLang === "en"
+                      ? translations.en.catalogBook.contents
+                      : ctx.capLang === "zh"
+                        ? translations.zh.catalogBook.contents
+                        : `${translations.en.catalogBook.contents} · ${translations.zh.catalogBook.contents}`}
+                  </div>
                   <div className="bk-tocmap-front">{front.map(renderSmall)}</div>
                 </div>
                 {renderCluster(clusters[0], "bk-tocmap-p1")}
@@ -3484,12 +3606,16 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
     case "preface": {
       const paras = ctx.prefaceChunks[spec.chunk]?.paras ?? [];
       const long = paras.map((p) => p.text).join("").length > 1400;
+      // The head stands on the view's first preface page: chunk 0 in
+      // the bilingual view, the first chunk of the selected language
+      // in a single-language view.
+      const firstPrefaceChunk = ctx.capLang === "both" ? 0 : ctx.prefaceChunkLangs.indexOf(ctx.capLang);
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
           <div className="bk-essay">
-            {spec.chunk === 0 && (
+            {spec.chunk === firstPrefaceChunk && (
               <div className="bk-essay-head">
-                <h2 className="bk-section-title shop-title gloria-title">{stackedPair(translations.en.catalogBook.preface, translations.zh.catalogBook.preface)}</h2>
+                <h2 className="bk-section-title shop-title gloria-title">{stackedPair(translations.en.catalogBook.preface, translations.zh.catalogBook.preface, ctx.capLang)}</h2>
               </div>
             )}
             <div className={`bk-essay-text description-html ${long ? "bk-essay-long" : ""}`}>
@@ -3504,7 +3630,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               ))}
             </div>
           </div>
-          <Folio number={number} tag={`${b.title} | ${translations.en.catalogBook.preface} · ${translations.zh.catalogBook.preface}`} />
+          <Folio number={number} tag={`${b.title} | ${translations.en.catalogBook.preface} · ${translations.zh.catalogBook.preface}`} lang={ctx.capLang} tagEn={translations.en.catalogBook.preface} tagZh={translations.zh.catalogBook.preface} />
         </Page>
       );
     }
@@ -3527,7 +3653,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               ))}
             </div>
           </div>
-          <Folio number={number} tag={`${b.title} | ${translations.en.catalogBook.paintingIntro} · ${translations.zh.catalogBook.paintingIntro}`} />
+          <Folio number={number} tag={`${b.title} | ${translations.en.catalogBook.paintingIntro} · ${translations.zh.catalogBook.paintingIntro}`} lang={ctx.capLang} tagEn={translations.en.catalogBook.paintingIntro} tagZh={translations.zh.catalogBook.paintingIntro} />
         </Page>
       );
     }
@@ -3611,15 +3737,17 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             )}
             {epigraph && epigraph.en && (
               <p className="bk-opener-epigraph">
-                {epigraph.en}
-                <span className="bk-opener-epigraph-zh">{epigraph.zh}</span>
+                {ctx.capLang !== "zh" && epigraph.en}
+                {ctx.capLang !== "en" && <span className="bk-opener-epigraph-zh">{epigraph.zh}</span>}
               </p>
             )}
             {chapter.key === "part:afterimages" && (
               <div className="bk-opener-intro">
-                {(ctx.paintingChunks[0]?.paras ?? []).map((p, i) => (
-                  <p key={i}>{p.text}</p>
-                ))}
+                {(ctx.paintingChunks[0]?.paras ?? [])
+                  .filter((p) => ctx.capLang === "both" || hasCjk(p.text) === (ctx.capLang === "zh"))
+                  .map((p, i) => (
+                    <p key={i}>{p.text}</p>
+                  ))}
               </div>
             )}
             {/* The Residuals opener carries the old printed edition's
@@ -3637,7 +3765,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             )}
             {(chapter.key !== "road" || titleSpread) && (
             <Collage
-              title={chapter.key === "residuals" ? <span className="bk-title-zh-line">{chapter.titleZh}</span> : chapter.key === "stillthings" ? (chapter.titleZh ?? chapter.title) : stackedTitle(chapter)}
+              title={chapter.key === "residuals" ? (ctx.capLang !== "en" && <span className="bk-title-zh-line">{chapter.titleZh}</span>) : chapter.key === "stillthings" ? (ctx.capLang === "en" ? "" : (chapter.titleZh ?? chapter.title)) : stackedTitle(chapter, ctx.capLang)}
               titleSize={titleSize}
               above={
                 <>
@@ -3693,8 +3821,8 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             {spec.half === "left" && (
               <div className="bk-quiet">
                 <div className="bk-quiet-rule" />
-                {a.en && <p className="bk-quiet-p">{a.en}</p>}
-                {a.zh && <p className="bk-quiet-p">{a.zh}</p>}
+                {a.en && ctx.capLang !== "zh" && <p className="bk-quiet-p">{a.en}</p>}
+                {a.zh && ctx.capLang !== "en" && <p className="bk-quiet-p">{a.zh}</p>}
               </div>
             )}
           </Page>
@@ -3713,12 +3841,12 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-aphorism bk-aphorism-${spec.half} bk-aph-${a.id}${a.long ? " bk-aphorism-long" : ""}${bgImgCls}`}>{bgImgLayer}
           {spec.half === "left" ? (
-            a.en ? (
+            a.en && ctx.capLang !== "zh" ? (
               <p className={`bk-aphorism-en bk-aphorism-en-${enTier}`}>{withRustQ(a.en)}</p>
             ) : null
           ) : (
             <>
-              {a.zh && (
+              {a.zh && ctx.capLang !== "en" && (
                 <p className={`bk-aphorism-zh bk-aphorism-zh-${zhTier}`}>{withRustQ(a.zh)}</p>
               )}
               {a.id === "what-remains" && (
@@ -3753,13 +3881,18 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const firstZhChunk =
         chapter.key === "road" ? (ctx.essayChunks[chapter.key] ?? []).findIndex((c) => c.lang === "zh") : -1;
       const alignLeft = firstZhChunk >= 0 && spec.chunk === firstZhChunk;
+      // The chapter head stands on the view's first essay page: chunk
+      // 0 in the bilingual view, the first chunk of the selected
+      // language in a single-language view.
+      const firstEssayChunk =
+        ctx.capLang === "both" ? 0 : (ctx.essayChunks[chapter.key] ?? []).findIndex((c) => c.lang === ctx.capLang);
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
           <div className="bk-essay">
-            {spec.chunk === 0 && !chapter.partIntro && !chapter.partHead && chapter.key !== "stillthings" && (
+            {spec.chunk === firstEssayChunk && !chapter.partIntro && !chapter.partHead && chapter.key !== "stillthings" && (
               <div className="bk-essay-head">
                 {chapter.number > 0 && <span className="bk-num-box">{pad2(chapter.number)}</span>}
-                <h2 className="bk-section-title shop-title">{stackedTitle(chapter)}</h2>
+                <h2 className="bk-section-title shop-title">{stackedTitle(chapter, ctx.capLang)}</h2>
                 <div className="bk-essay-meta sans-label">{chapter.years}</div>
               </div>
             )}
@@ -3778,7 +3911,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               ))}
             </div>
           </div>
-          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
     }
@@ -3791,13 +3924,16 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const { chapter } = spec;
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
-          <div className="bk-essay">
-            <div className="bk-essay-text description-html">
-              <p><strong>{NI_PREFACE.head}</strong></p>
-              <p>{NI_PREFACE.body}</p>
+          {/* Chinese only: in the English view the page stands blank. */}
+          {ctx.capLang !== "en" && (
+            <div className="bk-essay">
+              <div className="bk-essay-text description-html">
+                <p><strong>{NI_PREFACE.head}</strong></p>
+                <p>{NI_PREFACE.body}</p>
+              </div>
             </div>
-          </div>
-          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+          )}
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
     }
@@ -3814,10 +3950,14 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const { chapter } = spec;
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
-          <div className="bk-essay">
-            <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: spec.html }} />
-          </div>
-          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+          {/* The lead text is Chinese only (NI_STILLS_LEAD_TEXT): in
+              the English view the page stands blank. */}
+          {ctx.capLang !== "en" && (
+            <div className="bk-essay">
+              <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: spec.html }} />
+            </div>
+          )}
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
     }
@@ -3835,10 +3975,10 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
           <div className="bk-quiet bk-quiet-norule">
-            <div className="bk-quiet-html" dangerouslySetInnerHTML={{ __html: spec.aboveHtml }} />
+            <div className="bk-quiet-html" dangerouslySetInnerHTML={{ __html: htmlParasByLang(spec.aboveHtml, ctx.capLang) }} />
           </div>
-          <div className="bk-essay-text description-html bk-quiet-readings" dangerouslySetInnerHTML={{ __html: spec.belowHtml }} />
-          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+          <div className="bk-essay-text description-html bk-quiet-readings" dangerouslySetInnerHTML={{ __html: readingsHeadByLang(spec.belowHtml, ctx.capLang) }} />
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
     }
@@ -3864,7 +4004,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               </div>
             </div>
           </div>
-          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
     }
@@ -3901,10 +4041,10 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
             </div>
             {item.description && <div className="bk-exhibition-info">{item.description}</div>}
             <div className="bk-exhibition-review">
-              {reviewBlock(series?.textEn, "en")}
-              {reviewBlock(series?.textZh, "zh")}
+              {ctx.capLang !== "zh" && reviewBlock(series?.textEn, "en")}
+              {ctx.capLang !== "en" && reviewBlock(series?.textZh, "zh")}
             </div>
-            <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+            <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
           </Page>
         );
       }
@@ -3978,7 +4118,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           ctx.capLang === "both" && !CAP_DESC_JOIN_EXCLUDE.has(capItem.image_url) ? pairDescHtml(capDescRaw) : capDescRaw;
         return (
         <div className={facing ? "bk-caption-body bk-caption-facing" : "bk-caption-body"}>
-          {facing && <div className="bk-caption-facing-label">LEFT · 左图</div>}
+          {facing && <div className="bk-caption-facing-label">{ctx.capLang === "en" ? "LEFT" : ctx.capLang === "zh" ? "左图" : "LEFT · 左图"}</div>}
           <WorkCapLines blocks={blocks} capLang={ctx.capLang} joinKey={capItem.image_url} />
           {/* The Residuals #1 painting page prints no exhibition line:
               the line stands, emphasised, on its facing exhibition
@@ -4001,7 +4141,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           {item.plateTextAbove && (
             <div className="bk-quiet bk-quiet-plate">
               <div className="bk-quiet-rule" />
-              <div className="bk-quiet-html" dangerouslySetInnerHTML={{ __html: item.plateTextAbove }} />
+              <div className="bk-quiet-html" dangerouslySetInnerHTML={{ __html: htmlParasByLang(item.plateTextAbove, ctx.capLang) }} />
             </div>
           )}
           <div className="bk-plate-frame">
@@ -4022,9 +4162,9 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               reading list, same direction): essay setting again,
               the caption itself untouched above it. */}
           {item.plateTextBelow && (
-            <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: item.plateTextBelow }} />
+            <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: readingsHeadByLang(item.plateTextBelow, ctx.capLang) }} />
           )}
-          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
     }
@@ -4047,7 +4187,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               </div>
             ))}
           </div>
-          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
     }
@@ -4075,7 +4215,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               ))}
             </div>
           </div>
-          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
     }
@@ -4222,12 +4362,17 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           <div className="bk-essay">
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
-                <h2 className="bk-section-title shop-title gloria-title">{stackedPair("About the Author", "关于作者")}</h2>
+                <h2 className="bk-section-title shop-title gloria-title">{stackedPair("About the Author", "关于作者", ctx.capLang)}</h2>
               </div>
             )}
-            <div className="bk-essay-text bk-about-text description-html" dangerouslySetInnerHTML={{ __html: spec.chunk === 0 ? artistBioHTML("en") : artistBioHTML("zh") }} />
+            {/* One language per page (English, then Chinese): in a
+                single-language view the other language's page stands
+                blank. */}
+            {(spec.chunk === 0 ? ctx.capLang !== "zh" : ctx.capLang !== "en") && (
+              <div className="bk-essay-text bk-about-text description-html" dangerouslySetInnerHTML={{ __html: spec.chunk === 0 ? artistBioHTML("en") : artistBioHTML("zh") }} />
+            )}
           </div>
-          <Folio number={number} tag={`${b.title} | ${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`} />
+          <Folio number={number} tag={`${b.title} | ${translations.en.catalogBook.aboutArtist} · ${translations.zh.catalogBook.aboutArtist}`} lang={ctx.capLang} tagEn={translations.en.catalogBook.aboutArtist} tagZh={translations.zh.catalogBook.aboutArtist} />
         </Page>
       );
 
@@ -4237,16 +4382,18 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
           <div className="bk-essay">
             {spec.chunk === 0 && (
               <div className="bk-essay-head">
-                <div className="bk-essay-meta sans-label">Collage as Method · 作为方法的拼贴</div>
-                <h2 className="bk-section-title bk-collage-method-title shop-title gloria-title">{stackedPair("Collage as Method", "作为方法的拼贴")}</h2>
+                <div className="bk-essay-meta sans-label">
+                  {ctx.capLang === "en" ? "Collage as Method" : ctx.capLang === "zh" ? "作为方法的拼贴" : "Collage as Method · 作为方法的拼贴"}
+                </div>
+                <h2 className="bk-section-title bk-collage-method-title shop-title gloria-title">{stackedPair("Collage as Method", "作为方法的拼贴", ctx.capLang)}</h2>
               </div>
             )}
             <div className="bk-essay-text description-html">
-              <p>{COLLAGE_METHOD.en}</p>
-              <p>{COLLAGE_METHOD.zh}</p>
+              {ctx.capLang !== "zh" && <p>{COLLAGE_METHOD.en}</p>}
+              {ctx.capLang !== "en" && <p>{COLLAGE_METHOD.zh}</p>}
             </div>
           </div>
-          <Folio number={number} tag={`${b.title} | Collage as Method · 作为方法的拼贴`} />
+          <Folio number={number} tag={`${b.title} | Collage as Method · 作为方法的拼贴`} lang={ctx.capLang} tagEn="Collage as Method" tagZh="作为方法的拼贴" />
         </Page>
       );
 
@@ -4254,25 +4401,36 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const entries = EXHIBITIONS[spec.chapter.key] ?? [];
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
-          <div className="bk-eyebrow">{[spec.chapter.titleZh, spec.chapter.titleEn ?? spec.chapter.title].filter(Boolean).join(" · ")}</div>
+          <div className="bk-eyebrow">
+            {(ctx.capLang === "en"
+              ? [spec.chapter.titleEn ?? spec.chapter.title]
+              : ctx.capLang === "zh"
+                ? [spec.chapter.titleZh]
+                : [spec.chapter.titleZh, spec.chapter.titleEn ?? spec.chapter.title]
+            ).filter(Boolean).join(" · ")}
+          </div>
           <div className="bk-exhibitions">
-            <h3 className="bk-exhibitions-head shop-title">{stackedPair(CREDITS_TITLE.en, CREDITS_TITLE.zh)}</h3>
+            <h3 className="bk-exhibitions-head shop-title">{stackedPair(CREDITS_TITLE.en, CREDITS_TITLE.zh, ctx.capLang)}</h3>
             <ul>
               {entries.map((e, i) => {
                 const en = exhibitionParts(e.en);
                 const zh = exhibitionParts(e.zh);
                 return (
                   <li key={i}>
-                    <span className="bk-exhibitions-en">
-                      {en.year && <strong>{en.year}</strong>}
-                      {en.year ? " " : ""}
-                      {en.rest}
-                    </span>
-                    <span className="bk-exhibitions-zh">
-                      {zh.year && <strong>{zh.year}</strong>}
-                      {zh.year ? " " : ""}
-                      {zh.rest}
-                    </span>
+                    {ctx.capLang !== "zh" && (
+                      <span className="bk-exhibitions-en">
+                        {en.year && <strong>{en.year}</strong>}
+                        {en.year ? " " : ""}
+                        {en.rest}
+                      </span>
+                    )}
+                    {ctx.capLang !== "en" && (
+                      <span className="bk-exhibitions-zh">
+                        {zh.year && <strong>{zh.year}</strong>}
+                        {zh.year ? " " : ""}
+                        {zh.rest}
+                      </span>
+                    )}
                   </li>
                 );
               })}
@@ -4304,28 +4462,35 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const groupTitle = (key: string) => {
         const canon = CANONICAL_SECTION_TITLE[key];
         const ch = chapters.find((c) => c.key === key);
-        return stackedPair(canon?.en ?? ch?.titleEn ?? ch?.title ?? key, canon?.zh ?? ch?.titleZh);
+        return stackedPair(canon?.en ?? ch?.titleEn ?? ch?.title ?? key, canon?.zh ?? ch?.titleZh, ctx.capLang);
       };
       /** One-line section name for the website lines: EN · 中文, from the
-       * same canonical sources as the group heads above. */
+       * same canonical sources as the group heads above; a
+       * single-language view keeps only its own language's name. */
       const sectionName = (key: string) => {
         const canon = CANONICAL_SECTION_TITLE[key];
         const ch = chapters.find((c) => c.key === key);
         const en = canon?.en ?? ch?.titleEn ?? ch?.title ?? key;
         const zh = canon?.zh ?? ch?.titleZh;
+        if (ctx.capLang === "en") return en;
+        if (ctx.capLang === "zh") return zh ?? en;
         return zh ? `${en} · ${zh}` : en;
       };
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctl}>
-          <div className="bk-eyebrow">{[partTitle.zh, partTitle.en].filter(Boolean).join(" · ")}</div>
+          <div className="bk-eyebrow">
+            {(ctx.capLang === "en" ? [partTitle.en] : ctx.capLang === "zh" ? [partTitle.zh] : [partTitle.zh, partTitle.en]).filter(Boolean).join(" · ")}
+          </div>
           <div className="bk-exhibitions">
             {spec.chunk === 0 && (
-              <h3 className="bk-exhibitions-head shop-title">{stackedPair(CREDITS_TITLE.en, CREDITS_TITLE.zh)}</h3>
+              <h3 className="bk-exhibitions-head shop-title">{stackedPair(CREDITS_TITLE.en, CREDITS_TITLE.zh, ctx.capLang)}</h3>
             )}
             {groups.map((g) => (
               <div className={`bk-exhibitions-group${g.key === "__websites__" ? " bk-exhibitions-websites" : ""}`} key={`${g.key}${g.continued ? "-cont" : ""}`}>
                 {g.key === "__websites__" ? (
-                  <h4 className="bk-exhibitions-subhead shop-title">线上查阅 · Online Archives</h4>
+                  <h4 className="bk-exhibitions-subhead shop-title">
+                    {ctx.capLang === "en" ? "Online Archives" : ctx.capLang === "zh" ? "线上查阅" : "线上查阅 · Online Archives"}
+                  </h4>
                 ) : (
                   <h4 className="bk-exhibitions-subhead shop-title">{groupTitle(g.key)}</h4>
                 )}
@@ -4335,7 +4500,13 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                       return (
                         <li key={i}>
                           <span className="bk-exhibitions-en">
-                            {e.nameEn ? (<>{e.nameEn}{e.nameZh ? ` · ${e.nameZh}` : ""}</>) : sectionName(e.nameKey ?? "")} — {e.url}
+                            {e.nameEn
+                              ? ctx.capLang === "en"
+                                ? e.nameEn
+                                : ctx.capLang === "zh"
+                                  ? (e.nameZh ?? e.nameEn)
+                                  : (<>{e.nameEn}{e.nameZh ? ` · ${e.nameZh}` : ""}</>)
+                              : sectionName(e.nameKey ?? "")} — {e.url}
                           </span>
                         </li>
                       );
@@ -4344,16 +4515,20 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                     const zh = exhibitionParts(e.zh);
                     return (
                       <li key={i}>
-                        <span className="bk-exhibitions-en">
-                          {en.year && <strong>{en.year}</strong>}
-                          {en.year ? " " : ""}
-                          {en.rest}
-                        </span>
-                        <span className="bk-exhibitions-zh">
-                          {zh.year && <strong>{zh.year}</strong>}
-                          {zh.year ? " " : ""}
-                          {zh.rest}
-                        </span>
+                        {ctx.capLang !== "zh" && (
+                          <span className="bk-exhibitions-en">
+                            {en.year && <strong>{en.year}</strong>}
+                            {en.year ? " " : ""}
+                            {en.rest}
+                          </span>
+                        )}
+                        {ctx.capLang !== "en" && (
+                          <span className="bk-exhibitions-zh">
+                            {zh.year && <strong>{zh.year}</strong>}
+                            {zh.year ? " " : ""}
+                            {zh.rest}
+                          </span>
+                        )}
                       </li>
                     );
                   })}
@@ -4514,7 +4689,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               </div>
             </div>
           )}
-          <Folio number={number} tag={`${b.title} | Paintings 2019–2026`} />
+          <Folio number={number} tag={`${b.title} | Paintings 2019–2026`} lang={ctx.capLang} tagEn="Paintings 2019–2026" />
         </Page>
       );
     }
@@ -4533,24 +4708,31 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         const m = to.match(/^([一-鿿]+)\s*(.*)$/);
         return m ? { zh: m[1], en: m[2] } : { zh: "", en: to };
       };
+      // Single-language views take the pointer's own-language stretch
+      // whole: a Chinese chapter name may itself carry a colon and a
+      // second phrase (苏格兰高地：视域的英雄主义), which the bilingual
+      // split above divides mid-name. A pointer with no Chinese in it
+      // is a proper noun and stands in every view.
+      const enPointer = (to: string) => to.replace(/^[\s\S]*[一-鿿]\s*/, "");
+      const zhPointer = (to: string) => to.match(/^[\s\S]*[一-鿿]/)?.[0] ?? to;
       const chunkGroups = (REVERSE_INDEX_CHUNKS[spec.chunk] ?? []).map((gi) => REVERSE_INDEX.groups[gi]);
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-revindex-page${bgImgCls}`}>{bgImgLayer}
           <div className="bk-revindex">
             {spec.chunk === 0 && (
               <header className="bk-revindex-head">
-                <h2 className="bk-revindex-title">{REVERSE_INDEX.titleZh}</h2>
-                <div className="bk-revindex-title-en">{REVERSE_INDEX.titleEn}</div>
+                {ctx.capLang !== "en" && <h2 className="bk-revindex-title">{REVERSE_INDEX.titleZh}</h2>}
+                {ctx.capLang !== "zh" && <div className="bk-revindex-title-en">{REVERSE_INDEX.titleEn}</div>}
                 <div className="bk-revindex-rule" />
-                <p className="bk-revindex-tagline">{REVERSE_INDEX.taglineZh}</p>
-                <p className="bk-revindex-tagline-en">{REVERSE_INDEX.taglineEn}</p>
+                {ctx.capLang !== "en" && <p className="bk-revindex-tagline">{REVERSE_INDEX.taglineZh}</p>}
+                {ctx.capLang !== "zh" && <p className="bk-revindex-tagline-en">{REVERSE_INDEX.taglineEn}</p>}
               </header>
             )}
             {chunkGroups.map((g) => (
               <section key={g.zh} className="bk-revindex-group">
                 <h3 className="bk-revindex-group-name">
-                  <span className="bk-revindex-group-zh">{g.zh}</span>
-                  <span className="bk-revindex-group-en">{g.en}</span>
+                  {ctx.capLang !== "en" && <span className="bk-revindex-group-zh">{g.zh}</span>}
+                  {ctx.capLang !== "zh" && <span className="bk-revindex-group-en">{g.en}</span>}
                   <span className="bk-revindex-group-line" />
                 </h3>
                 {g.entries.map((e) => {
@@ -4558,13 +4740,21 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
                   return (
                     <div key={e.zh} className="bk-revindex-entry">
                       <p className="bk-revindex-phrase">
-                        {e.zh}
-                        <span className="bk-revindex-phrase-en">{e.en}</span>
+                        {ctx.capLang !== "en" && e.zh}
+                        {ctx.capLang !== "zh" && <span className="bk-revindex-phrase-en">{e.en}</span>}
                       </p>
                       <span className="bk-revindex-leader" />
                       <p className="bk-revindex-to">
-                        {ptr.zh}
-                        {ptr.en && <span className="bk-revindex-to-en">{ptr.en}</span>}
+                        {ctx.capLang === "en" ? (
+                          <span className="bk-revindex-to-en">{enPointer(e.to)}</span>
+                        ) : ctx.capLang === "zh" ? (
+                          zhPointer(e.to)
+                        ) : (
+                          <>
+                            {ptr.zh}
+                            {ptr.en && <span className="bk-revindex-to-en">{ptr.en}</span>}
+                          </>
+                        )}
                       </p>
                     </div>
                   );
@@ -4572,7 +4762,7 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               </section>
             ))}
           </div>
-          <Folio number={number} tag={`${b.title} | An Index of What Remains · 反向索引`} />
+          <Folio number={number} tag={`${b.title} | An Index of What Remains · 反向索引`} lang={ctx.capLang} tagEn="An Index of What Remains" tagZh="反向索引" />
         </Page>
       );
     }
@@ -4613,10 +4803,10 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-motto-page${bgImgCls}`}>{bgImgLayer}
           <div className="bk-quiet">
             <div className="bk-quiet-rule" />
-            <p className="bk-quiet-p">{enNode}</p>
-            <p className="bk-quiet-p">{zhNode}</p>
+            {ctx.capLang !== "zh" && <p className="bk-quiet-p">{enNode}</p>}
+            {ctx.capLang !== "en" && <p className="bk-quiet-p">{zhNode}</p>}
           </div>
-          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
     }
@@ -5534,14 +5724,22 @@ function useBookModel(args: {
     const byKey = (key: CatalogSectionKey) => chapters.find((c) => c.key === key)?.items.map((i) => i.item) ?? [];
     const prefaceParas = txParas("prefaceBody");
     const paintingParas = txParas("paintingIntroBody");
+    const prefaceChunksBuilt = [
+      ...chunkParas(prefaceParas.filter((p) => !hasCjk(p.text)), 1500, 20),
+      ...chunkParas(prefaceParas.filter((p) => hasCjk(p.text)), 880, 22),
+    ];
+    // Per-chunk languages for paginate's single-language emission:
+    // preface chunks are built English first, then Chinese, each
+    // homogeneous; essay chunks carry their language on the chunk.
+    const prefaceChunkLangs = prefaceChunksBuilt.map((c) => (c.paras.some((p) => hasCjk(p.text)) ? "zh" : "en") as "en" | "zh");
+    const essayChunkLangs = Object.fromEntries(Object.entries(essayChunks).map(([k, v]) => [k, v.map((c) => c.lang)]));
     return {
       t,
       capLang,
       chapters,
-      prefaceChunks: [
-        ...chunkParas(prefaceParas.filter((p) => !hasCjk(p.text)), 1500, 20),
-        ...chunkParas(prefaceParas.filter((p) => hasCjk(p.text)), 880, 22),
-      ],
+      prefaceChunks: prefaceChunksBuilt,
+      prefaceChunkLangs,
+      essayChunkLangs,
       // One page, both languages (her direction, 2026-11-08): the
       // introduction is short (553 EN + 218 ZH chars) and the old
       // language split left its second page nearly empty. English
@@ -5568,7 +5766,7 @@ function useBookModel(args: {
       coverBack: byKey("photography")[0] ?? chapters[0]?.items[1]?.item,
     };
   }, [textEdits, editMode, capLang, pageBgEdits, bgImgEdits, imgEdits, imgSel]);
-  const pages = useMemo(() => paginate(ctx.chapters, ctx.prefaceChunks.length, ctx.paintingChunks.length, Object.fromEntries(Object.entries(ctx.essayChunks).map(([k, v]) => [k, v.length]))), [ctx]);
+  const pages = useMemo(() => paginate(ctx.chapters, ctx.prefaceChunks.length, ctx.paintingChunks.length, Object.fromEntries(Object.entries(ctx.essayChunks).map(([k, v]) => [k, v.length])), capLang, ctx.prefaceChunkLangs, ctx.essayChunkLangs), [ctx, capLang]);
   return { ctx, pages };
 }
 
@@ -6434,11 +6632,12 @@ const CatalogBook = () => {
             <button type="button" onClick={() => setBleed((v) => !v)} className={toggleClass(bleed)}>
               {b.bleed} {BLEED}in
             </button>
-            {/* Caption language (her direction, 2026-11-15): one
-                switch, three views — bilingual captions (the book's
-                standing composition), English only, Chinese only.
-                Captions only; body pages are untouched. */}
-            <div className="flex" role="group" aria-label="Caption language 图注语言">
+            {/* Book language (her direction, 2026-11-15; scope widened
+                2026-11-19): one switch, three views — bilingual (the
+                book's standing composition), English only, Chinese
+                only. The switch governs the whole book, not captions
+                only. */}
+            <div className="flex" role="group" aria-label="Book language 全书语言">
               {(
                 [
                   ["both", "双语"],
