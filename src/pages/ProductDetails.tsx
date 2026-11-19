@@ -97,7 +97,8 @@ const ProductDetails = () => {
       currency: product.currency ?? "USD",
       image_url: product.image_url,
     });
-    toast(`${product.title || product.name} added to cart`);
+    const cartTitle = zh ? product.title_zh : (product.title || product.name);
+    toast(`${cartTitle}${t.productDetails.addedToCartSuffix}`);
   };
 
   // Language fields never fall back across languages: in Chinese mode a field
@@ -181,7 +182,7 @@ const ProductDetails = () => {
                 />
               ) : (
                 <div className="aspect-[4/5] bg-[#f7f6f3] flex items-center justify-center text-xs uppercase tracking-[0.2em] text-muted-foreground/60">
-                  No image
+                  {t.productDetails.noImage}
                 </div>
               )}
             </div>
@@ -278,7 +279,7 @@ const ProductDetails = () => {
                   className="w-full rounded-none text-sm px-8 py-6 transition-colors"
                 >
                   <ShoppingBag className="h-4 w-4 mr-2" />
-                  ADD TO CART
+                  {t.productDetails.addToCart}
                 </Button>
               </div>
             )}
