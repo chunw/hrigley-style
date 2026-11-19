@@ -655,6 +655,10 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  /* The folio's line box at 8.04pt is 16.08px; the height is stated
+     explicitly so the folio tag beside it can take the same box and
+     the two share one vertical center (see .bk-folio-tag). */
+  height: 16.08px;
   font-size: 8.04pt;
   letter-spacing: 0.1em;
   color: var(--muted);
@@ -677,15 +681,18 @@
   white-space: nowrap;
   /* Vertically aligned with the folio number beside it (her
      correction, 2026-11-18 evening: "vertically aligned" — the text
-     on the folio number's line, not centered on the page). The tag
-     takes the folio's own height — the folio's 7pt line box is 14px —
-     and centers its text in it, so the two share one vertical center
-     on their shared bottom line. The old 3px vertical padding made
-     the tag 18px tall against the folio's 14px and floated its text
-     about 2px high. */
+     on the folio number's line, not centered on the page). The two
+     stand on the same bottom anchor, so they share a vertical center
+     only when their boxes are the same height: the tag takes the
+     folio's own height and centers its text in it. At 7pt that box
+     was 14px; #379 raised both to 8.04pt — whose line box is
+     16.08px — but left the tag at 14px, which put the tag's center
+     1.04px off the folio's on every page (her correction,
+     2026-11-19, on the folio 156/157 spread: not vertically
+     aligned). Both boxes are now 16.08px, so the centers coincide. */
   display: flex;
   align-items: center;
-  height: 14px;
+  height: 16.08px;
 }
 
 /* Running footer split by page (2026-11-18, her correction): a verso
