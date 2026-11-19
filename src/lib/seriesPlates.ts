@@ -377,7 +377,7 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
       "视频静帧 2024年",
       {
         below:
-          "<p><strong>延伸阅读 / 影响来源</strong></p><p>Christian Boltanski, Les Archives de C.B.（1989）<br />Walid Raad / The Atlas Group, Hostage: The Bachar Tapes（2001）<br />Harun Farocki, Workers Leaving the Factory in Eleven Decades（2006）<br />Trevor Paglen, Machine Visions（2016）<br />Hito Steyerl, How Not to Be Seen（2013）<br />Kate Crawford, Atlas of AI（2021）</p>",
+          "<p><strong>Further Readings 延伸阅读</strong></p><p>Christian Boltanski, <em>Les Archives de C.B.</em> (1989)<br />The Atlas Group (Walid Raad), <em>Hostage: The Bachar Tapes</em> (2001)<br />Harun Farocki, <em>Workers Leaving the Factory in Eleven Decades</em> (2006)<br />Hito Steyerl, <em>How Not to Be Seen</em> (2013)<br />Trevor Paglen, <em>Machine Visions</em> (2016)<br />Kate Crawford, <em>Atlas of AI</em> (2021)</p>",
       },
     ),
   ],
