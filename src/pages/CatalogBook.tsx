@@ -3826,12 +3826,15 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // The stills' verso as a standalone quiet page (her direction,
       // 2026-11-18): the bilingual paragraph in the .bk-quiet setting
       // at its own 2.6in drop, and the diptych's Further Readings set
-      // below it in the essay setting.
+      // below it in the essay setting. This page alone drops the
+      // quiet setting's short rule (her direction, 2026-11-19, on the
+      // #374 preview — she circled the line and had it removed); the
+      // .bk-quiet-norule class folds the rule's height into the drop
+      // so the text keeps its place. Other quiet pages keep the rule.
       const { chapter } = spec;
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
-          <div className="bk-quiet">
-            <div className="bk-quiet-rule" />
+          <div className="bk-quiet bk-quiet-norule">
             <div className="bk-quiet-html" dangerouslySetInnerHTML={{ __html: spec.aboveHtml }} />
           </div>
           <div className="bk-essay-text description-html bk-quiet-readings" dangerouslySetInnerHTML={{ __html: spec.belowHtml }} />
