@@ -1544,6 +1544,44 @@
   margin-top: 0.65in;
 }
 
+/* The NI stills consolidated onto one page (her direction,
+   2026-11-18): the stack column takes the plate frame's place and
+   rhythm (0.3in top margin); each picture stands at 83% of the
+   plate measure in its own aspect box, centred; the two pictures
+   are separated by the plate grid's 0.34in gap; the single caption
+   follows the plate caption's own spacing. The readings block on
+   the facing quiet page stands 0.55in below the quiet text. */
+.bk-stills-stack {
+  flex: 1;
+  min-height: 0;
+  margin-top: 0.3in;
+  display: flex;
+  flex-direction: column;
+}
+
+.bk-stills-fig {
+  position: relative;
+  width: 83%;
+  margin: 0 auto;
+  flex: none;
+}
+
+.bk-stills-fig + .bk-stills-fig {
+  margin-top: 0.34in;
+}
+
+.bk-stills-fig img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.bk-quiet-readings {
+  margin-top: 0.55in;
+}
+
 /* A closing sentence kept whole on one line inside a quiet page, so
    its last characters never strand alone on the final line (her
    direction, 2026-11-13, for the cover-story page). */

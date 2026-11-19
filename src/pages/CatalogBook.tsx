@@ -78,6 +78,8 @@ type PageSpec =
   | { kind: "essay"; chapter: Chapter; chunk: number }
   | { kind: "chapterPreface"; chapter: Chapter }
   | { kind: "plateLeadText"; chapter: Chapter; html: string }
+  | { kind: "stillsQuiet"; chapter: Chapter; aboveHtml: string; belowHtml: string }
+  | { kind: "stillsStack"; chapter: Chapter; first: CatalogItem; second: CatalogItem }
   | { kind: "exhibitions"; chapter: Chapter }
   | { kind: "part-exhibitions"; part: number; chunk: number }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
@@ -1680,31 +1682,45 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
           pushJournalRun(chapter, run);
         } else {
           // The two In the Spirit of the 21st Century stills plates
-          // close Negotiated Intelligence as a FACING pair — the
-          // second still on the verso, the diptych on the recto (the
-          // pair first stood diptych-first, 2026-11-17; she swapped
-          // their order, 2026-11-18). Unanchored, they follow the
-          // essay in order and would otherwise land back-to-back on
-          // one leaf (recto, then the next leaf's verso), so the
-          // book's usual parity guard steps in ahead of the pair's
-          // first plate.
-          // The page immediately before the pair carries a text of
-          // its own (her direction, 2026-11-18, later): the Chinese
-          // paragraph that stood above the verso still until today
-          // moves onto that page as its body text — the page the
-          // parity guard used to leave blank — and a bilingual
-          // paragraph stands above the still in its place. The lead
-          // text page is emitted first; the parity guard then steps
-          // in between it and the pair only if the pair would still
-          // not open on a verso.
-          if (
+          // close Negotiated Intelligence (layout settled by her
+          // direction, 2026-11-18, in three steps the same evening:
+          // the bilingual paragraph set in the quiet setting above
+          // the first still; then both stills consolidated onto ONE
+          // page; then the duplicate caption dropped — "去掉中间多余
+          // 的作品说明，留一个就行"). They no longer stand as a
+          // facing pair. The page immediately before them carries a
+          // text of its own: the Chinese paragraph that stood above
+          // the first still until that day, on the page the parity
+          // guard used to leave blank. The first still's page then
+          // becomes a standalone quiet page — the bilingual paragraph
+          // in the quiet setting, and the Further Readings that stood
+          // under the diptych set below it — and both stills stack on
+          // the facing recto, the wide still above, the diptych
+          // below, with a single caption under the diptych only.
+          // The lead text page is emitted first; the parity guard
+          // then steps in between it and the quiet page only if the
+          // quiet page would still not open on a verso.
+          const stillsCompanion =
             chapter.key === "series:negotiated" &&
             item.image_url === "/book/negotiated/spirit-21st-century-still.jpg"
-          ) {
+              ? unanchored[ui + 1]
+              : undefined;
+          if (stillsCompanion && stillsCompanion.item.image_url === "/book/negotiated/spirit-21st-century-stills.jpg") {
             specs.push({ kind: "plateLeadText", chapter, html: NI_STILLS_LEAD_TEXT });
             if (!nextIsVerso()) specs.push({ kind: "blank" });
+            specs.push({ kind: "stillsQuiet", chapter, aboveHtml: item.plateTextAbove ?? "", belowHtml: stillsCompanion.item.plateTextBelow ?? "" });
+            specs.push({ kind: "stillsStack", chapter, first: item, second: stillsCompanion.item });
+            ui++;
+          } else {
+            if (
+              chapter.key === "series:negotiated" &&
+              item.image_url === "/book/negotiated/spirit-21st-century-still.jpg"
+            ) {
+              specs.push({ kind: "plateLeadText", chapter, html: NI_STILLS_LEAD_TEXT });
+              if (!nextIsVerso()) specs.push({ kind: "blank" });
+            }
+            specs.push({ kind: "plate", chapter, item, plate });
           }
-          specs.push({ kind: "plate", chapter, item, plate });
         }
       }
     } else {
@@ -2563,6 +2579,10 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `chapterPreface:${spec.chapter.key}`;
     case "plateLeadText":
       return `plateLeadText:${spec.chapter.key}`;
+    case "stillsQuiet":
+      return `stillsQuiet:${spec.chapter.key}`;
+    case "stillsStack":
+      return `stillsStack:${spec.chapter.key}`;
     case "exhibitions":
       return `exhibitions:${spec.chapter.key}`;
     case "part-exhibitions":
@@ -3796,6 +3816,50 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
           <div className="bk-essay">
             <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: spec.html }} />
+          </div>
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+        </Page>
+      );
+    }
+
+    case "stillsQuiet": {
+      // The stills' verso as a standalone quiet page (her direction,
+      // 2026-11-18): the bilingual paragraph in the .bk-quiet setting
+      // at its own 2.6in drop, and the diptych's Further Readings set
+      // below it in the essay setting.
+      const { chapter } = spec;
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
+          <div className="bk-quiet">
+            <div className="bk-quiet-rule" />
+            <div className="bk-quiet-html" dangerouslySetInnerHTML={{ __html: spec.aboveHtml }} />
+          </div>
+          <div className="bk-essay-text description-html bk-quiet-readings" dangerouslySetInnerHTML={{ __html: spec.belowHtml }} />
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+        </Page>
+      );
+    }
+
+    case "stillsStack": {
+      // Both NI stills on one page (her direction, 2026-11-18): the
+      // wide still above, the diptych below, and ONE caption, under
+      // the diptych only. The caption that stood between the two
+      // pictures is not rendered.
+      const { chapter, first, second } = spec;
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-plate-page${bgImgCls}`}>{bgImgLayer}
+          <div className="bk-stills-stack">
+            <div className="bk-stills-fig" style={{ aspectRatio: "1080 / 610" }}>
+              <EdBookImage ctx={ctx} src={first.image_url} fallback={first.fallback_image_url} alt={first.title} />
+            </div>
+            <div className="bk-stills-fig" style={{ aspectRatio: "1374 / 1084" }}>
+              <EdBookImage ctx={ctx} src={second.image_url} fallback={second.fallback_image_url} alt={second.title} />
+            </div>
+            <div className="bk-caption">
+              <div className="bk-caption-body">
+                <WorkCapLines blocks={workCapBlocks(second)} capLang={ctx.capLang} joinKey={second.image_url} />
+              </div>
+            </div>
           </div>
           <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
         </Page>
