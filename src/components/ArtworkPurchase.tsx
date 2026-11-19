@@ -84,7 +84,7 @@ const ArtworkPurchase = ({ baseId, title, imageUrl, options, soldOut }: ArtworkP
         {soldOut ? t.productDetails.soldOut : zh ? "加入购物车" : "Add to Cart"}
       </button>
 
-      <p className="!mt-0 pt-[29px] text-xs text-muted-foreground font-mono">
+      <p className="!mt-0 pt-[10px] text-xs text-muted-foreground font-mono">
         {t.watercolor.shippingIncluded}
       </p>
     </div>
