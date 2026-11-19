@@ -1,6 +1,5 @@
 import { remainsWorks } from "./remains";
 import { spiritWorks } from "./21spirit";
-import { watercolors } from "./watercolors";
 
 // Auto-discovers all images in each product's imageFolder at build time.
 // To add images to a product, just drop files into src/assets/products/<imageFolder>/.
@@ -14,9 +13,6 @@ const _allProductImages = import.meta.glob(
 const PRINT_PACKET_SERIES_IMAGES: Record<string, string[]> = {
   "remains-fine-art-print-packet": remainsWorks.map((w) => `/remains/${w.id.padStart(2, "0")}/main.jpg`),
   "spirit-21-fine-art-print-packet": spiritWorks.map((w) => `/21spirit/${w.id.padStart(2, "0")}/main.jpg`),
-  "notes-from-the-road-postcard-packet": watercolors
-    .filter((w) => w.series === "IV")
-    .map((w) => `/watercolors/${w.id.padStart(2, "0")}/main.jpg`),
 }
 
 // Reference these when tagging a product as framed, to keep the name consistent.
@@ -642,19 +638,19 @@ Set of 2 original paintings.</p>`.trim(),
   {
     id: "notes-from-the-road-postcard-packet",
     imageFolder: "notes-postcard-packet",
-    title: "Notes from the Road: Mexico Postcard Packet (Set of 4)",
-    name: "Notes from the Road: Mexico Postcard Packet (Set of 4)",
-    title_zh: "《行旅拾记》明信片套装·墨西哥（4张一套）",
-    description_zh: "一套四张《行旅拾记》明信片，全部画于墨西哥途中——随手画下的小小观察，寄给别人，或者留给自己。",
-    detailed_description_html_zh: `<p><i>行旅拾记</i>是一组在途中完成的水彩速记——车窗边、路旁小桌、一个途经却未曾真正抵达的地方。每一幅都是旅途中间某处撕下的一页。</p><p>本套装收录四张精选画面，全部取材于墨西哥之旅，印制成明信片，背面留白可书写与邮寄。适合寄给远方的人，或者留在自己的桌上。</p>`,
+    title: "Notes from the Road: Postcard Packet (Set of 16)",
+    name: "Notes from the Road: Postcard Packet (Set of 16)",
+    title_zh: "《行旅拾记》明信片套装（16张一套）",
+    description_zh: "一套十六张《行旅拾记》明信片，全部画于旅途中——随手画下的小小观察，寄给别人，或者留给自己。",
+    detailed_description_html_zh: `<p><i>行旅拾记</i>是一组在途中完成的水彩速记——车窗边、路旁小桌、一个途经却未曾真正抵达的地方。每一幅都是旅途中间某处撕下的一页。</p><p>本套装收录十六张精选画面，取材于墨西哥、泰国、哥伦比亚、挪威、哥斯达黎加、夏威夷、中国与纽约之旅，印制成明信片，背面留白可书写与邮寄。适合寄给远方的人，或者留在自己的桌上。</p>`,
     category_zh: "文具",
     edition_info_zh: "",
-    price: 12,
+    price: 40,
     currency: "USD",
-    description: "A packet of four postcards from Mexico — small watercolor observations from the road, ready to mail or keep.",
-    detailed_description_html: `<p><i>Notes from the Road</i> is a set of small watercolor observations made in transit — a window seat, a corner table, a place passed through and not quite arrived at. Each piece is a page torn from somewhere in between.</p><p>This packet gathers four images from the series — all of them made in Mexico — printed as postcards with a blank, writable back. Send them, or keep them for yourself.</p>`,
-    dimensions: `Set of 4 postcards, 10 × 15 cm`,
-    dimensions_zh: "4张一套，10 × 15 厘米",
+    description: "A packet of sixteen postcards: small watercolor observations from the road, ready to mail or keep.",
+    detailed_description_html: `<p><i>Notes from the Road</i> is a set of small watercolor observations made in transit — a window seat, a corner table, a place passed through and not quite arrived at. Each piece is a page torn from somewhere in between.</p><p>This packet gathers sixteen images from the series, made on roads across Mexico, Thailand, Colombia, Norway, Costa Rica, Hawaii, China and New York, printed as postcards with a blank, writable back. Send them, or keep them for yourself.</p>`,
+    dimensions: `Set of 16 postcards, 10 × 15 cm each`,
+    dimensions_zh: "16张一套，每张 10 × 15 厘米",
     edition_info: null,
     edition_size: null,
     alt_text: "Notes from the Road Postcard Packet",
