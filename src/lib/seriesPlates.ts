@@ -371,6 +371,16 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
     // paragraph — English block, then Chinese block, hers
     // verbatim — in its place above the still. The texts print as
     // book body text, outside the captions, which stay as they are.
+    // Her direction (2026-11-19): the pair's one caption — the
+    // diptych's, the only one the consolidated stills page prints —
+    // carries her name: she is the video's author, and the page
+    // must say so. The name stands first in the meta line, the
+    // book's standing way of crediting an artist in a caption
+    // (compare the other pavilion plates above: "Daria Belkina ·
+    // The Wrong Biennale, 7th Edition"), in both languages —
+    // "Chun Wang · Video stills, 2024" / "王淳 · 视频静帧 2024年".
+    // The single still's record is untouched: its caption never
+    // prints anywhere.
     plate(
       "In the Spirit of the 21st Century", "Video stills, 2024", "2024",
       "",
@@ -384,12 +394,12 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
       },
     ),
     plate(
-      "In the Spirit of the 21st Century", "Video stills, 2024", "2024",
+      "In the Spirit of the 21st Century", "Chun Wang · Video stills, 2024", "2024",
       "",
       "",
       "/book/negotiated/spirit-21st-century-stills.jpg",
       "21世纪精神",
-      "视频静帧 2024年",
+      "王淳 · 视频静帧 2024年",
       {
         below:
           "<p><strong>Further Readings 延伸阅读</strong></p><p>Christian Boltanski, <em>Les Archives de C.B.</em> (1989)<br />The Atlas Group (Walid Raad), <em>Hostage: The Bachar Tapes</em> (2001)<br />Harun Farocki, <em>Workers Leaving the Factory in Eleven Decades</em> (2006)<br />Hito Steyerl, <em>How Not to Be Seen</em> (2013)<br />Trevor Paglen, <em>Machine Visions</em> (2016)<br />Kate Crawford, <em>Atlas of AI</em> (2021)</p>",
