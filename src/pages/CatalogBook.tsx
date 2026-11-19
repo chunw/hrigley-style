@@ -12,7 +12,7 @@ import { PAGE_BACKGROUNDS, hexToRgb, isHexPageBg, rgbToHex, type PageBgKind, typ
 import { IMAGE_EDITS } from "@/lib/imageEdits";
 import { PAGE_BACKGROUND_IMAGES, type PageBgImage } from "@/lib/pageBackgroundImages";
 import { BOOK_SERIES } from "@/lib/bookSeries";
-import { SERIES_PLATES, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, RESIDUALS_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE, ROAD_THAILAND_SPREAD_PLATE, SPIRIT_EXHIBITION_PLATES } from "@/lib/seriesPlates";
+import { SERIES_PLATES, NI_STILLS_LEAD_TEXT, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, RESIDUALS_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE, ROAD_THAILAND_SPREAD_PLATE, SPIRIT_EXHIBITION_PLATES } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS, PART_WEBSITES } from "@/lib/exhibitions";
@@ -77,6 +77,7 @@ type PageSpec =
   | { kind: "opener"; half: "left" | "right"; chapter: Chapter; titleSpread?: boolean }
   | { kind: "essay"; chapter: Chapter; chunk: number }
   | { kind: "chapterPreface"; chapter: Chapter }
+  | { kind: "plateLeadText"; chapter: Chapter; html: string }
   | { kind: "exhibitions"; chapter: Chapter }
   | { kind: "part-exhibitions"; part: number; chunk: number }
   | { kind: "plate"; chapter: Chapter; item: CatalogItem; plate: number }
@@ -1687,12 +1688,21 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
           // one leaf (recto, then the next leaf's verso), so the
           // book's usual parity guard steps in ahead of the pair's
           // first plate.
+          // The page immediately before the pair carries a text of
+          // its own (her direction, 2026-11-18, later): the Chinese
+          // paragraph that stood above the verso still until today
+          // moves onto that page as its body text — the page the
+          // parity guard used to leave blank — and a bilingual
+          // paragraph stands above the still in its place. The lead
+          // text page is emitted first; the parity guard then steps
+          // in between it and the pair only if the pair would still
+          // not open on a verso.
           if (
             chapter.key === "series:negotiated" &&
-            item.image_url === "/book/negotiated/spirit-21st-century-still.jpg" &&
-            !nextIsVerso()
+            item.image_url === "/book/negotiated/spirit-21st-century-still.jpg"
           ) {
-            specs.push({ kind: "blank" });
+            specs.push({ kind: "plateLeadText", chapter, html: NI_STILLS_LEAD_TEXT });
+            if (!nextIsVerso()) specs.push({ kind: "blank" });
           }
           specs.push({ kind: "plate", chapter, item, plate });
         }
@@ -2551,6 +2561,8 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `essay:${spec.chapter.key}:${spec.chunk}`;
     case "chapterPreface":
       return `chapterPreface:${spec.chapter.key}`;
+    case "plateLeadText":
+      return `plateLeadText:${spec.chapter.key}`;
     case "exhibitions":
       return `exhibitions:${spec.chapter.key}`;
     case "part-exhibitions":
@@ -3764,6 +3776,26 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       );
     }
 
+    case "plateLeadText": {
+      // The text page immediately before the NI stills pair (her
+      // direction, 2026-11-18, later): set exactly like an essay
+      // page — same measure, same text styles — carrying the
+      // paragraph that stood above the pair's verso still until
+      // today. The page takes the slot the pair's parity guard
+      // used to leave blank, so its folio is a recto and the
+      // running footer shows the chapter name, per the book's
+      // per-side footer rule.
+      const { chapter } = spec;
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
+          <div className="bk-essay">
+            <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: spec.html }} />
+          </div>
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} />
+        </Page>
+      );
+    }
+
     case "plate": {
       const { item, chapter } = spec;
       // Her direction (2026-11-11): the Residuals #1 exhibition view
@@ -3886,10 +3918,18 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-plate-page${bgImgCls}`}>{bgImgLayer}
           {/* A plate may carry body text above its picture (the NI
               stills' verso paragraph, her direction 2026-11-18): it
-              prints in the book's essay text setting, outside the
-              caption, and the frame flexes to the space left. */}
+              stands outside the caption, and the frame flexes to the
+              space left. Later the same day she set its typesetting:
+              not the essay setting but the book's quiet-page setting
+              (.bk-quiet — the Spirit motto page's small serif set,
+              line-height opened to 2, right-aligned in a narrow
+              measure, a short rule above), the picture below it
+              untouched: a quiet page that carries a picture. */}
           {item.plateTextAbove && (
-            <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: item.plateTextAbove }} />
+            <div className="bk-quiet bk-quiet-plate">
+              <div className="bk-quiet-rule" />
+              <div className="bk-quiet-html" dangerouslySetInnerHTML={{ __html: item.plateTextAbove }} />
+            </div>
           )}
           <div className="bk-plate-frame">
             <EdBookImage ctx={ctx} src={item.image_url} fallback={item.fallback_image_url} alt={item.title} />
