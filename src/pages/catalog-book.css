@@ -1675,6 +1675,16 @@
   margin-bottom: 0;
 }
 
+/* One page pinned left (her direction, 2026-11-18): the road chapter's
+   Chinese intro page reached her right-aligned, so its essay text sets
+   text-align: left outright instead of relying on the default
+   alignment, which not every rendering engine treats the same way. The
+   essay renderer adds this class to that page only (the road chapter's
+   first Chinese essay chunk). */
+.bk-essay-text.bk-essay-left {
+  text-align: left;
+}
+
 /* Two-column measure for long essay pages (her direction, 2026-11-07,
    after Kim Hastreiter's STUFF: dense text pages set against the book's
    quiet ones). The essay renderer adds this class per page, only when the
