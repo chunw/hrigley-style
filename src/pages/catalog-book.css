@@ -1544,6 +1544,16 @@
   margin-top: 0.65in;
 }
 
+/* One quiet page drops the rule (her direction, 2026-11-19): the
+   stills verso renders no .bk-quiet-rule, and the height the rule
+   held — its 1px border plus the 0.55in of space below it — folds
+   into this page's drop instead, so the text stands exactly where
+   it stood with the rule. Every other quiet page keeps the rule
+   and the plain 2.6in drop. */
+.bk-quiet.bk-quiet-norule {
+  margin-top: calc(2.6in + 0.55in + 1px);
+}
+
 /* The NI stills consolidated onto one page (her direction,
    2026-11-18): the stack column takes the plate frame's place and
    rhythm (0.3in top margin); each picture stands at 83% of the
