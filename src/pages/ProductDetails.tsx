@@ -290,7 +290,9 @@ const ProductDetails = () => {
               </div>
             )}
 
-            <p className="pt-4 w-full text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>
+            {!product.soldOut && (
+              <p className="pt-4 w-full text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>
+            )}
           </div>
         </div>
       </main>
