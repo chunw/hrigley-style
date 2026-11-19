@@ -25,10 +25,7 @@ const Footer = () => {
       <div className="mx-auto max-w-[1600px] px-4 sm:px-5 lg:px-7">
         <div className="grid gap-10 py-12 md:grid-cols-[1.5fr_1fr_1fr]">
           <div>
-            <div className="text-sm font-semibold uppercase tracking-[0.22em]">
-              Chun Wang Studio Shop
-            </div>
-            <p className="mt-3 max-w-xs text-sm leading-relaxed text-foreground/70">
+            <p className="max-w-xs text-sm leading-relaxed text-foreground/70">
               {t.footer.locationShipping}
             </p>          </div>
 
