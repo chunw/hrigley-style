@@ -673,8 +673,19 @@
   font-size: 6pt;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  padding: 3px 8px;
+  padding: 0 8px;
   white-space: nowrap;
+  /* Vertically aligned with the folio number beside it (her
+     correction, 2026-11-18 evening: "vertically aligned" — the text
+     on the folio number's line, not centered on the page). The tag
+     takes the folio's own height — the folio's 7pt line box is 14px —
+     and centers its text in it, so the two share one vertical center
+     on their shared bottom line. The old 3px vertical padding made
+     the tag 18px tall against the folio's 14px and floated its text
+     about 2px high. */
+  display: flex;
+  align-items: center;
+  height: 14px;
 }
 
 /* Running footer split by page (2026-11-18, her correction): a verso
