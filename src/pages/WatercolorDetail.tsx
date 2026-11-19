@@ -92,7 +92,7 @@ const WatercolorDetail = () => {
 
   const handleInquire = () => {
     navigator.clipboard.writeText(INQUIRY_EMAIL).then(() => {
-      toast("Email copied to clipboard", { description: INQUIRY_EMAIL });
+      toast(lang === "zh" ? "邮箱已复制到剪贴板" : "Email copied to clipboard", { description: INQUIRY_EMAIL });
     });
   };
 
@@ -225,7 +225,7 @@ const WatercolorDetail = () => {
                 {seriesData ? `${lang === "zh" ? seriesData.chineseName : seriesData.englishName}` : `${t.watercolor.seriesPrefix} ${work.series}`}
               </p>
               <h1 className="shop-title product-title text-4xl leading-none">
-                {lang === "zh" && work.titleZh ? work.titleZh : work.title}
+                {lang === "zh" ? work.titleZh : work.title}
               </h1>
             </div>
             <div className="flex flex-wrap gap-2 mt-3">
@@ -238,15 +238,15 @@ const WatercolorDetail = () => {
               ))}
             </div>
 
-            {(work.description || work.descriptionZh) && (
+            {(lang === "zh" ? work.descriptionZh : work.description) && (
               <p
                 className="description-html text-sm text-muted-foreground leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: lang === "zh" && work.descriptionZh ? work.descriptionZh : work.description ?? "" }}
+                dangerouslySetInnerHTML={{ __html: (lang === "zh" ? work.descriptionZh : work.description) ?? "" }}
               />
             )}
 
             <div className={`space-y-1 font-mono text-muted-foreground ${lang === "zh" ? "text-sm" : "text-xs"}`}>
-              {work.medium && <p>{lang === "zh" && work.mediumZh ? work.mediumZh : work.medium}</p>}
+              {(lang === "zh" ? work.mediumZh : work.medium) && <p>{lang === "zh" ? work.mediumZh : work.medium}</p>}
               <p>{work.year}</p>
             </div>
 

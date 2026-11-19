@@ -74,13 +74,13 @@ const WorkCard = ({ work }: { work: Watercolor }) => {
 
         {work.soldOut && (
           <div className="absolute top-2 right-2 w-16 h-16 bg-red-600 rounded-full z-10 shadow-lg border-2 border-white/80 flex items-center justify-center p-1">
-            <span className="sans-label text-white text-xs leading-tight text-center">SOLD OUT</span>
+            <span className="sans-label text-white text-xs leading-tight text-center">{lang === "zh" ? "已售出" : "SOLD OUT"}</span>
           </div>
         )}
       </Link>
 
       <div className="mt-3">
-        <h3 className="text-sm leading-snug product-title">{work.title}</h3>
+        <h3 className="text-sm leading-snug product-title">{lang === "zh" ? work.titleZh : work.title}</h3>
       </div>
     </article>
   );
@@ -126,21 +126,19 @@ const WatercolorCatalog = () => {
             <p className="font-mono text-xs text-muted-foreground/60 mt-1">
               {watercolors.length} {t.watercolorCatalog.works}
             </p>
-            {catalogMeta.descriptionHtml ? (
+            {(lang === "zh" ? catalogMeta.descriptionHtmlZh : catalogMeta.descriptionHtml) ? (
               <div
                 className="description-html text-sm text-muted-foreground mt-3 max-w-prose space-y-3 [&_em]:italic"
                 dangerouslySetInnerHTML={{
-                  __html: lang === "zh"
-                    ? (catalogMeta.descriptionHtmlZh ?? catalogMeta.descriptionHtml)
-                    : catalogMeta.descriptionHtml,
+                  __html: (lang === "zh" ? catalogMeta.descriptionHtmlZh : catalogMeta.descriptionHtml) ?? "",
                 }}
               />
-            ) : catalogMeta.description && (
+            ) : (lang === "zh" ? catalogMeta.descriptionZh : catalogMeta.description) ? (
               <p
                 className="description-html text-sm text-muted-foreground mt-3 max-w-prose"
-                dangerouslySetInnerHTML={{ __html: lang === "zh" ? (catalogMeta.descriptionZh ?? catalogMeta.description) : catalogMeta.description }}
+                dangerouslySetInnerHTML={{ __html: (lang === "zh" ? catalogMeta.descriptionZh : catalogMeta.description) ?? "" }}
               />
-            )}
+            ) : null}
           </div>
         </header>
 

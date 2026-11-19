@@ -25,6 +25,14 @@ const AboutSection = () => {
         <div className="about-columns">
           <MarketsSection />
 
+          <aside className="about-bio-column">
+            <h2 className="about-bio-heading">{t.about.artistLabel}</h2>
+            <p
+              className="about-bio-text whitespace-pre-line"
+              dangerouslySetInnerHTML={{ __html: t.about.bio }}
+            />
+          </aside>
+
           <div className="handwritten-note">
             <p
               className="handwritten-note-text whitespace-pre-line"
@@ -41,13 +49,6 @@ const AboutSection = () => {
             </nav>
           </div>
 
-          <aside className="about-bio-column">
-            <h2 className="about-bio-heading">{t.about.artistLabel}</h2>
-            <p
-              className="about-bio-text whitespace-pre-line"
-              dangerouslySetInnerHTML={{ __html: t.about.bio }}
-            />
-          </aside>
         </div>
       </div>
     </section>

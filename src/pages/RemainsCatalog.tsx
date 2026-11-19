@@ -13,7 +13,7 @@ const printPacket = products.find((p) => p.id === "remains-fine-art-print-packet
 const WorkCard = ({ work }: { work: RemainsWork }) => {
   const { lang } = useLanguage();
   const padded = work.id.padStart(2, "0");
-  const title = lang === "zh" ? (work.titleZh ?? work.title) : work.title;
+  const title = lang === "zh" ? work.titleZh : work.title;
   const { imgRef, imgStyle, hoverHandlers, wrapperHoverClassName } = useImageHoverExpand("contain");
 
   return (
@@ -108,10 +108,10 @@ const RemainsCatalog = () => {
             <p className="font-mono text-xs text-muted-foreground/60 mt-1">
               {remainsWorks.length} {t.remainsCatalog.works}
             </p>
-            {catalogMeta.description && (
+            {(lang === "zh" ? catalogMeta.descriptionZh : catalogMeta.description) && (
               <p
                 className="description-html text-sm text-muted-foreground mt-3 max-w-prose"
-                dangerouslySetInnerHTML={{ __html: lang === "zh" ? (catalogMeta.descriptionZh ?? catalogMeta.description) : catalogMeta.description }}
+                dangerouslySetInnerHTML={{ __html: (lang === "zh" ? catalogMeta.descriptionZh : catalogMeta.description) ?? "" }}
               />
             )}
           </div>

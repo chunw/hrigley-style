@@ -17,7 +17,7 @@ const Cart = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { state, updateQuantity, removeItem, clearCart } = useCart();
-  const { lang } = useLanguage();
+  const { t, lang } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
 
   const formatPrice = (price: number, currency: string) => {
@@ -57,8 +57,8 @@ const Cart = () => {
   const onError = (error: unknown) => {
     console.error("PayPal checkout error:", error);
     toast({
-      title: "Checkout Error",
-      description: "Something went wrong with PayPal checkout. Please try again.",
+      title: t.cart.checkoutErrorTitle,
+      description: t.cart.checkoutErrorDescription,
       variant: "destructive",
     });
   };
@@ -90,7 +90,7 @@ const Cart = () => {
         <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
         <main className="container mx-auto px-4 py-8">
           <div className="max-w-2xl mx-auto text-center">
-            <h1 className="cart-title font-bold uppercase tracking-[0.1em] leading-[0.9] text-3xl md:text-4xl mb-6">YOUR CART</h1>
+            <h1 className="cart-title font-bold uppercase tracking-[0.1em] leading-[0.9] text-3xl md:text-4xl mb-6">{t.cart.title}</h1>
             <div className="space-y-6">
               <p className="font-helvetica text-lg text-foreground">
                 {lang === "zh" ? "购物车是空的，工作室是满的。" : "Your cart is empty, but the studio is full."}
@@ -100,7 +100,7 @@ const Cart = () => {
                 onClick={() => navigate("/")}
                 className="sans-label gloria-button-label fun-sticker-btn inline-flex items-center justify-center bg-primary text-primary-foreground px-6 py-2.5 text-base font-bold hover:bg-primary/90 transition-colors text-center cursor-pointer"
               >
-                CONTINUE SHOPPING
+                🛒 {t.cart.continueShopping}
               </button>
             </div>
           </div>
@@ -117,13 +117,13 @@ const Cart = () => {
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
-            <h1 className="cart-title font-bold uppercase tracking-[0.1em] leading-[0.9] text-3xl md:text-4xl">YOUR CART</h1>
+            <h1 className="cart-title font-bold uppercase tracking-[0.1em] leading-[0.9] text-3xl md:text-4xl">{t.cart.title}</h1>
             <button
               type="button"
               onClick={() => navigate("/")}
               className="sans-label gloria-button-label fun-sticker-btn inline-flex items-center justify-center bg-primary text-primary-foreground px-6 py-2.5 text-base font-bold hover:bg-primary/90 transition-colors text-center cursor-pointer"
             >
-              CONTINUE SHOPPING
+              🛒 {t.cart.continueShopping}
             </button>
           </div>
 
@@ -191,7 +191,7 @@ const Cart = () => {
                     {/* Subtotal for this item */}
                     <div className="mt-2 text-right">
                       <span className="font-helvetica text-sm text-muted-foreground">
-                        <span className="uppercase tracking-[0.15em]">Subtotal:</span>{" "}
+                        <span className="uppercase tracking-[0.15em]">{t.cart.subtotal}</span>{" "}
                         <span className="tracking-wide text-foreground">{formatPrice(item.price * item.quantity, item.currency)}</span>
                       </span>
                     </div>
@@ -204,20 +204,20 @@ const Cart = () => {
             <div className="lg:col-span-1">
               <Card className="border-2 border-border sticky top-4">
                 <CardContent className="p-6">
-                  <h2 className="product-title text-xl mb-4">ORDER SUMMARY</h2>
+                  <h2 className="product-title text-xl mb-4">{t.cart.orderSummary}</h2>
 
                   <div className="space-y-3 mb-6">
                     <div className="flex justify-between items-baseline font-helvetica text-sm">
-                      <span className="uppercase tracking-[0.15em] text-muted-foreground">Items ({state.itemCount}):</span>
+                      <span className="uppercase tracking-[0.15em] text-muted-foreground">{t.cart.items} ({state.itemCount}):</span>
                       <span className="tracking-wide">${state.total.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between items-baseline font-helvetica text-sm">
-                      <span className="uppercase tracking-[0.15em] text-muted-foreground">Shipping:</span>
-                      <span className="tracking-wide">Included</span>
+                      <span className="uppercase tracking-[0.15em] text-muted-foreground">{t.cart.shipping}</span>
+                      <span className="tracking-wide">{t.cart.included}</span>
                     </div>
                     <div className="border-t border-border pt-3">
                       <div className="flex justify-between items-baseline font-helvetica text-lg">
-                        <span className="uppercase tracking-[0.12em] font-medium">Total:</span>
+                        <span className="uppercase tracking-[0.12em] font-medium">{t.cart.total}</span>
                         <span className="tracking-wide font-medium">${state.total.toFixed(2)}</span>
                       </div>
                     </div>
@@ -226,11 +226,11 @@ const Cart = () => {
                   <div className="space-y-3">
                     {state.total < MINIMUM_ORDER_AMOUNT ? (
                       <p className="text-sm text-muted-foreground text-center font-helvetica">
-                        Add at least {formatPrice(MINIMUM_ORDER_AMOUNT, "usd")} to check out.
+                        {t.cart.minimumPrefix}{formatPrice(MINIMUM_ORDER_AMOUNT, "usd")}{t.cart.minimumSuffix}
                       </p>
                     ) : !PAYPAL_CLIENT_ID ? (
                       <p className="text-sm text-destructive text-center font-helvetica">
-                        PayPal checkout isn't configured yet.
+                        {t.cart.paypalNotConfigured}
                       </p>
                     ) : (
                       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID, currency: "USD" }}>
@@ -248,7 +248,7 @@ const Cart = () => {
                       variant="ghost"
                       className="w-full text-sm"
                     >
-                      CLEAR CART
+                      {t.cart.clearCart}
                     </Button>
                   </div>
                 </CardContent>

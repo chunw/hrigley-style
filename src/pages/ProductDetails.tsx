@@ -97,20 +97,22 @@ const ProductDetails = () => {
       currency: product.currency ?? "USD",
       image_url: product.image_url,
     });
-    toast(`${product.title || product.name} added to cart`);
+    const cartTitle = zh ? product.title_zh : (product.title || product.name);
+    toast(`${cartTitle}${t.productDetails.addedToCartSuffix}`);
   };
 
-  // Pick the right language field, fall back to English if Chinese not filled in
-  const displayTitle = (zh && product.title_zh) ? product.title_zh : (product.title || product.name);
+  // Language fields never fall back across languages: in Chinese mode a field
+  // without a Chinese version is not shown at all (no English mixed in).
+  const displayTitle = zh ? product.title_zh : (product.title || product.name);
   const englishCategories = getProductCategories(product);
   const displayCategories = zh ? getProductCategoriesZh(product) : englishCategories;
   const englishCollections = getProductCollections(product);
   const displayCollections = zh ? getProductCollectionsZh(product) : englishCollections;
-  const displayDescription = (zh && product.description_zh) ? product.description_zh : product.description;
-  const displayDetailedHtml = (zh && product.detailed_description_html_zh) ? product.detailed_description_html_zh : product.detailed_description_html;
-  const displayEditionInfo = (zh && product.edition_info_zh) ? product.edition_info_zh : product.edition_info;
+  const displayDescription = zh ? product.description_zh : product.description;
+  const displayDetailedHtml = zh ? product.detailed_description_html_zh : product.detailed_description_html;
+  const displayEditionInfo = zh ? product.edition_info_zh : product.edition_info;
   const artboxPrintCount = getArtboxPrintCount(product.id);
-  const displayDimensions = (zh && (product as any).dimensions_zh) ? (product as any).dimensions_zh : product.dimensions;
+  const displayDimensions = zh ? (product as any).dimensions_zh : product.dimensions;
 
   return (
     <div className="min-h-screen bg-background">
@@ -180,7 +182,7 @@ const ProductDetails = () => {
                 />
               ) : (
                 <div className="aspect-[4/5] bg-[#f7f6f3] flex items-center justify-center text-xs uppercase tracking-[0.2em] text-muted-foreground/60">
-                  No image
+                  {t.productDetails.noImage}
                 </div>
               )}
             </div>
@@ -277,12 +279,22 @@ const ProductDetails = () => {
                   className="w-full rounded-none text-sm px-8 py-6 transition-colors"
                 >
                   <ShoppingBag className="h-4 w-4 mr-2" />
-                  ADD TO CART
+                  {t.productDetails.addToCart}
                 </Button>
               </div>
             )}
 
-            <p className="pt-4 w-full text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>
+            {product.soldOut && (
+              <div className="pt-4">
+                <div className="w-full border border-foreground/30 px-8 py-4 text-center font-helvetica text-sm uppercase tracking-[0.15em] text-muted-foreground">
+                  {zh ? "已售出" : "Sold Out"}
+                </div>
+              </div>
+            )}
+
+            {!product.soldOut && (
+              <p className="pt-2 w-full text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>
+            )}
           </div>
         </div>
       </main>
