@@ -31,6 +31,17 @@ const plate = (
   fallback_image_url: img,
 });
 
+/** The Chinese paragraph that closes Negotiated Intelligence ahead of
+ * the In the Spirit of the 21st Century stills pair. It first stood
+ * above the single still on the pair's verso (2026-11-18); later the
+ * same day she moved it onto its own page immediately before the
+ * pair — the page the pair's parity guard used to leave blank — and
+ * put a bilingual paragraph in its place above the still (see the
+ * stills plates in the negotiated run below, and the plateLeadText
+ * emission in CatalogBook.tsx). Hers verbatim, Chinese only. */
+export const NI_STILLS_LEAD_TEXT =
+  "<p>这个展览是一份活的研究材料。一个集体适应变化的故事。大多数艺术展览只展示结果。图像精致，视频无缝，合作的表面光洁，劳动的痕迹已经被抹去。我要的是相反的 - 把这个网站建成一处发掘现场，展览的单位不是作品，是决定。我把展览的问题放进了网站的加载画面：人机共创的问题，不是机器能做出什么，是谁在做决定，而决定，需要时间加载。11 个项目，每个都是一叠倾斜的半透明层片，在三维空间里，访客可以拖动、缩放，一层一层打开。它展示的是我们这个时代的创作档案：提示词、草稿、犹豫，被否决的产出，与被采纳的产出一样保存。网站没有顶部导航栏，也没有稳定的网格。全屏菜单在循环的光轨上打开。档案里的作品不保持固定顺序，访客没法把参观变成一张打勾清单。这种迷失不是游戏。它是访客分到的那一份艺术家处境。</p>";
+
 export const SERIES_PLATES: Record<string, CatalogItem[]> = {
   artempath: [
     // Her directions (2026-11-11, alternative to PR #249): the four
@@ -349,13 +360,17 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
     // Both plates' description sentences were removed at her
     // direction (2026-11-17); the plates carry caption only.
     // Her direction (2026-11-18, later): the pair gains two texts,
-    // hers verbatim, Chinese only — a paragraph above the single
-    // still on the verso, and the section's reading list below the
-    // diptych on the recto (the same list the section text prints
-    // at folio 262, in the form she settled there: original-language
-    // titles, no book-title brackets, Paglen's year plain 2016).
-    // The texts print as book body text, outside the captions,
-    // which stay as they are.
+    // hers verbatim — the section's reading list below the diptych
+    // on the recto (the same list the section text prints, in the
+    // form she settled: original-language titles, no book-title
+    // brackets, Paglen's year plain 2016), and a paragraph above
+    // the single still on the verso. That paragraph first stood as
+    // a Chinese text (hers, verbatim); later the same day she
+    // moved the Chinese paragraph onto its own page before the
+    // pair (NI_STILLS_LEAD_TEXT above) and put a bilingual
+    // paragraph — English block, then Chinese block, hers
+    // verbatim — in its place above the still. The texts print as
+    // book body text, outside the captions, which stay as they are.
     plate(
       "In the Spirit of the 21st Century", "Video stills, 2024", "2024",
       "",
@@ -365,7 +380,7 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
       "视频静帧 2024年",
       {
         above:
-          "<p>这个展览是一份活的研究材料。一个集体适应变化的故事。大多数艺术展览只展示结果。图像精致，视频无缝，合作的表面光洁，劳动的痕迹已经被抹去。我要的是相反的 - 把这个网站建成一处发掘现场，展览的单位不是作品，是决定。我把展览的问题放进了网站的加载画面：人机共创的问题，不是机器能做出什么，是谁在做决定，而决定，需要时间加载。11 个项目，每个都是一叠倾斜的半透明层片，在三维空间里，访客可以拖动、缩放，一层一层打开。它展示的是我们这个时代的创作档案：提示词、草稿、犹豫，被否决的产出，与被采纳的产出一样保存。网站没有顶部导航栏，也没有稳定的网格。全屏菜单在循环的光轨上打开。档案里的作品不保持固定顺序，访客没法把参观变成一张打勾清单。这种迷失不是游戏。它是访客分到的那一份艺术家处境。</p>",
+          "<p>Ah, the glamorous cover being the story they sell: AI for humanity, curing disease, abundance for all. The shinier the mission looks, the less anyone asks what's underneath it: the capex machine, the credit, the concentration of compute and power in a handful of hands. Profit extraction works best when it looks like salvation.</p><p>啊，光鲜的封面正是他们兜售的故事：AI 为了人类，治愈疾病，人人富足。使命看上去越闪亮，越没有人追问它底下掩藏着什么：资本开支的机器、信贷、集中在一小撮人手里的算力和权力。利润的榨取，在看起来像救赎的时候，最为奏效。</p>",
       },
     ),
     plate(
