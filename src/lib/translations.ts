@@ -399,7 +399,7 @@ export const translations = {
       continueShopping: "继续购物",
     },
     cart: {
-      title: "购物车",
+      title: "你的购物车",
       continueShopping: "继续购物",
       subtotal: "小计：",
       orderSummary: "订单总计",
