@@ -41,7 +41,7 @@ export const translations = {
     },
     footer: {
       copyright: "All rights reserved.",
-      locationShipping: "Designed & shipped from New York City. Ships worldwide.",
+      locationShipping: "All works are designed & shipped from New York City. Ships worldwide.",
       exploreTitle: "Explore",
       contactTitle: "Contact",
       navShop: "Shop",
@@ -251,7 +251,7 @@ export const translations = {
     },
     footer: {
       copyright: "版权所有。",
-      locationShipping: "所有作品在纽约市设计并发货，全球配送。",
+      locationShipping: "所有作品均在纽约市设计并发货，全球配送。",
       exploreTitle: "导航",
       contactTitle: "联系方式",
       navShop: "商店",

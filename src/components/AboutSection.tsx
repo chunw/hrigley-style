@@ -7,15 +7,12 @@ const AboutSection = () => {
 
   return (
     <section className="cargo-hero about-hero relative">
-      <div className="cargo-hero-bg" aria-hidden="true">
+      <div className="cargo-hero-inner">
         <img
           src={deliveryGif}
           alt=""
-          className="cargo-hero-bg-img"
+          className="block w-full max-w-[720px] h-auto mb-10"
         />
-        <div className="cargo-hero-overlay" />
-      </div>
-      <div className="cargo-hero-inner">
         {lang !== "zh" && (
           <>
             <h1 className="shop-title about-hero-title gloria-title !text-white">{t.about.title}</h1>
@@ -49,6 +46,14 @@ const AboutSection = () => {
             </nav>
           </div>
 
+        </div>
+
+        <div className="about-studio-gallery grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-16">
+          <img
+            src="/about/studio-1.jpg"
+            alt=""
+            className="block w-full h-auto"
+          />
         </div>
       </div>
     </section>
