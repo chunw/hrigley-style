@@ -1275,13 +1275,13 @@ const SERIES_PLATE_ANCHORS: Record<string, { image: string; afterPair: number }[
     { image: "/book/negotiated/diary-page.jpg", afterPair: 6 },
     { image: "/book/negotiated/work-elsewhere.jpg", afterPair: 12 },
     { image: "/book/negotiated/work-ave-maria.jpg", afterPair: 19 },
-    { image: "/book/negotiated/work-fractured-star.jpg", afterPair: 26 },
-    { image: "/book/negotiated/work-silence.jpg", afterPair: 33 },
-    { image: "/book/negotiated/work-chimera-haiku.jpg", afterPair: 40 },
-    { image: "/book/negotiated/work-dierenleven.jpg", afterPair: 46 },
-    { image: "/book/negotiated/pavilion-entrance.jpg", afterPair: 49 },
-    { image: "/book/negotiated/work-mythology.jpg", afterPair: 51 },
-    { image: "/book/negotiated/awwwards-nominee.jpg", afterPair: 52 },
+    { image: "/book/negotiated/work-fractured-star.jpg", afterPair: 27 },
+    { image: "/book/negotiated/work-silence.jpg", afterPair: 34 },
+    { image: "/book/negotiated/work-chimera-haiku.jpg", afterPair: 41 },
+    { image: "/book/negotiated/work-dierenleven.jpg", afterPair: 47 },
+    { image: "/book/negotiated/pavilion-entrance.jpg", afterPair: 50 },
+    { image: "/book/negotiated/work-mythology.jpg", afterPair: 52 },
+    { image: "/book/negotiated/awwwards-nominee.jpg", afterPair: 53 },
   ],
   // Feed Scanner: interfaces 1–2 show the homepage walkthrough, interface
   // 3 the font-size control walkthrough. Poster and installation views
@@ -1507,7 +1507,13 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // rule against printing a work twice takes the facsimile pages
     // out. The front pages are now pp. 8–9, both behind the
     // teapot / #26 pair.
-    const CANVA_KEPT_PAGES = [8, 9, 12, 13, 14, 15, 16, 17, 21, 22];
+    // Deletion (her direction, 2026-11-20): facsimile p. 17 — the
+    // draped figure seated on the red book among the coffee things
+    // (dripper, SALT mug, cake stand, pan and stove) — leaves the
+    // book, and the blank recto that faced it goes with it: the
+    // whole spread is deleted. The Still Things facsimile run,
+    // p. 17 alone since the p. 18 deletion, is now empty.
+    const CANVA_KEPT_PAGES = [8, 9, 12, 13, 14, 15, 16, 21, 22];
     const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
     // Her direction (2026-11-11, later the same evening): the teapot /
     // Residuals #26 pair moves four pages earlier still (「再提前4页」),
@@ -5430,6 +5436,34 @@ function useBookModel(args: {
                 ...chunkItems(zhBlocks.slice(zhSeg.end + 1), 1400, { overhead: 15, brCost: 24 }),
               ];
             }
+            // Her direction, 2026-11-20: the expanded "optimization"
+            // paragraph she placed at the Fractured Star spread opens
+            // a page of its own in both streams — split the chunk that
+            // would carry it mid-page at the paragraph itself. (The
+            // paragraph sits at spliced block 26, ahead of the closing
+            // passage at 27; the plate anchors from the closing
+            // passage on were bumped one block in
+            // SERIES_PLATE_ANCHORS to keep pointing at their own
+            // paragraphs.)
+            const splitChunkAt = (chunks: EssayItem[][] | undefined, needle: string): EssayItem[][] | undefined => {
+              if (!chunks) return chunks;
+              const out: EssayItem[][] = [];
+              for (const chunk of chunks) {
+                const i = chunk.findIndex((it) => it.html.includes(needle));
+                if (i > 0) out.push(chunk.slice(0, i), chunk.slice(i));
+                else out.push(chunk);
+              }
+              return out;
+            };
+            enChunkedOverride = splitChunkAt(enChunkedOverride, "has never been neutral");
+            zhChunkedOverride = splitChunkAt(zhChunkedOverride, "谁得到名声、谁不被看见");
+            // The closing passage that follows the new paragraph
+            // likewise opens its own chunk, so the Fractured Star
+            // plate (anchored to it, afterPair 27) stands between
+            // the two — the paragraph at the head of the plate's old
+            // page, the plate on the page after.
+            enChunkedOverride = splitChunkAt(enChunkedOverride, "To negotiate intelligence is to remain awake");
+            zhChunkedOverride = splitChunkAt(zhChunkedOverride, "协商智能，就是在一个自动化的世界里保持清醒");
           }
           if (s.id === "google") {
             // Her direction, 2026-11-13 (dated-text consistency): the
