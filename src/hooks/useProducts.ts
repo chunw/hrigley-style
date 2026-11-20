@@ -14,6 +14,24 @@ const buildDescription = (desc: string | undefined | null, printInfo: string) =>
   return base ? `${base} · ${printInfo}` : printInfo;
 };
 
+const DIMENSION_RE = /\d+\s*[×x]\s*\d+\s*(cm|厘米)/;
+// Grid cards for multi-option works (her rule, 2026-11-20): state the
+// options plainly — original first, then the print — with no prices and
+// no dimensions in the card description.
+const MULTI_FRAMED_EN = "Framed original available; also available as a fine art print.";
+const MULTI_FRAMED_ZH = "原作（已装裱）可购买；亦提供艺术微喷印刷品";
+const MULTI_ORIGINAL_EN = "Original available; also available as a fine art print.";
+const MULTI_ORIGINAL_ZH = "原作可购买；亦提供艺术微喷印刷品";
+const TWO_PRINTS_EN = "Available as fine art prints in two sizes.";
+const TWO_PRINTS_ZH = "提供两种尺寸的艺术微喷印刷品";
+const buildMultiDescription = (desc: string | undefined | null, segment: string) => {
+  const base = desc?.trim();
+  // A base that itself states dimensions is an availability note, not a
+  // description; the generated segment replaces it.
+  if (base && !DIMENSION_RE.test(base)) return `${base} · ${segment}`;
+  return segment;
+};
+
 function buildCatalogProducts(showAll: boolean) {
   return [
   ...photographyWorks
@@ -22,13 +40,14 @@ function buildCatalogProducts(showAll: boolean) {
       const paddedId = p.id.padStart(2, "0");
       const printInfo = p.printInfo ?? DEFAULT_PRINT_INFO;
       const printInfoZh = p.printInfoZh ?? DEFAULT_PRINT_INFO_ZH;
+      const twoPrints = Boolean(p.printPrice && p.printPrice12x18);
       return {
         id: `photography-${p.id}`,
         name: p.title,
         title: p.title,
         title_zh: p.titleZh ?? null,
-        description: buildDescription(p.description, printInfo),
-        description_zh: buildDescription(p.descriptionZh, printInfoZh),
+        description: twoPrints ? buildDescription(p.description, TWO_PRINTS_EN) : buildDescription(p.description, printInfo),
+        description_zh: twoPrints ? buildDescription(p.descriptionZh, TWO_PRINTS_ZH) : buildDescription(p.descriptionZh, printInfoZh),
         price: p.printPrice ?? DEFAULT_PRINT_PRICE,
         priceLabel: p.printPrice && p.printPrice12x18 ? `$${p.printPrice} / $${p.printPrice12x18}` : undefined,
         currency: "USD",
@@ -78,8 +97,8 @@ function buildCatalogProducts(showAll: boolean) {
       name: w.title,
       title: w.title,
       title_zh: w.titleZh ?? null,
-      description: buildDescription(w.description, '10 × 15 cm print on matte fine art paper'),
-      description_zh: buildDescription(w.descriptionZh, "10 × 15 厘米哑光艺术微喷"),
+      description: buildDescription(w.description, (w.priceLabel?.match(/\$/g) ?? []).length === 2 ? TWO_PRINTS_EN : '10 × 15 cm print on matte fine art paper'),
+      description_zh: buildDescription(w.descriptionZh, (w.priceLabel?.match(/\$/g) ?? []).length === 2 ? TWO_PRINTS_ZH : "10 × 15 厘米哑光艺术微喷"),
       price: w.price ?? 4,
       priceLabel: w.priceLabel,
       currency: "USD",
@@ -101,6 +120,9 @@ function buildCatalogProducts(showAll: boolean) {
       const paddedId = w.id.padStart(2, "0");
       const printInfo = w.printInfo ?? DEFAULT_PRINT_INFO;
       const printInfoZh = w.printInfoZh ?? DEFAULT_PRINT_INFO_ZH;
+      const isMultiOption = Boolean(w.multiOptionsPaylink) || (w.priceLabel?.match(/\$/g) ?? []).length === 2;
+      const multiSegEn = w.framedDimensions ? MULTI_FRAMED_EN : MULTI_ORIGINAL_EN;
+      const multiSegZh = w.framedDimensions ? MULTI_FRAMED_ZH : MULTI_ORIGINAL_ZH;
       const baseCategory = w.series === "III" ? "Cards" : "Fine Art Prints";
       const baseCategoryZh = w.series === "III" ? "卡片" : "版画 · 限量版号";
       return {
@@ -108,8 +130,8 @@ function buildCatalogProducts(showAll: boolean) {
         name: w.title,
         title: w.title,
         title_zh: w.titleZh ?? null,
-        description: buildDescription(w.description, printInfo),
-        description_zh: buildDescription(w.descriptionZh, printInfoZh),
+        description: isMultiOption ? buildMultiDescription(w.description, multiSegEn) : buildDescription(w.description, printInfo),
+        description_zh: isMultiOption ? buildMultiDescription(w.descriptionZh, multiSegZh) : buildDescription(w.descriptionZh, printInfoZh),
         price: w.price ?? w.printPrice ?? DEFAULT_PRINT_PRICE,
         priceLabel: w.priceLabel,
         currency: "USD",

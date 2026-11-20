@@ -93,7 +93,7 @@ const Cart = () => {
             <h1 className="cart-title font-bold uppercase tracking-[0.1em] leading-[0.9] text-3xl md:text-4xl mb-6">{t.cart.title}</h1>
             <div className="space-y-6">
               <p className="font-helvetica text-lg text-foreground">
-                {lang === "zh" ? "购物车是空的，工作室是满的。" : "Your cart is empty, but the studio is full."}
+                {lang === "zh" ? "你的购物车是空的，不过工作室是满的 👀" : "Your cart is empty, but the studio is full 👀"}
               </p>
               <button
                 type="button"
