@@ -1561,6 +1561,39 @@
   margin-top: calc(2.6in + 0.55in + 1px);
 }
 
+/* The stills verso with the facing paragraph standing at its head
+   (her direction, 2026-11-20): the paragraph prints in the essay
+   setting at the page's top, and the quiet block below it gives up
+   its folded drop for the page's ordinary 0.55in rhythm, so the
+   three texts compose down the one page. */
+.bk-quiet.bk-quiet-norule.bk-quiet-after-top {
+  margin-top: 0.55in;
+}
+
+/* The cover-story quote on that verso stands in italic with more
+   air around it (her direction, 2026-11-20): both of its paragraphs
+   go italic, the block's own drop grows by 0.35in, and the readings
+   below it stand a full inch under it — the essay block's 0.65in
+   rhythm that already wins there, plus the same 0.35in. Measured
+   before the change on the bilingual page: the two increments
+   together still leave the readings clear of the folio line. No
+   other quiet page carries the class. */
+.bk-quiet-quote .bk-quiet-html p {
+  font-style: italic;
+}
+
+.bk-quiet.bk-quiet-norule.bk-quiet-quote {
+  margin-top: calc(2.6in + 0.55in + 1px + 0.35in);
+}
+
+.bk-quiet.bk-quiet-norule.bk-quiet-after-top.bk-quiet-quote {
+  margin-top: 0.9in;
+}
+
+.bk-quiet-quote + .bk-quiet-readings {
+  margin-top: 1in;
+}
+
 /* The NI stills consolidated onto one page (her direction,
    2026-11-18): the stack column takes the plate frame's place and
    rhythm (0.3in top margin); each picture stands at 83% of the

@@ -42,6 +42,21 @@ const plate = (
 export const NI_STILLS_LEAD_TEXT =
   "<p>这个展览是一份活的研究材料。一个集体适应变化的故事。大多数艺术展览只展示结果。图像精致，视频无缝，合作的表面光洁，劳动的痕迹已经被抹去。我要的是相反的 - 把这个网站建成一处发掘现场，展览的单位不是作品，是决定。我把展览的问题放进了网站的加载画面：人机共创的问题，不是机器能做出什么，是谁在做决定，而决定，需要时间加载。11 个项目，每个都是一叠倾斜的半透明层片，在三维空间里，访客可以拖动、缩放，一层一层打开。它展示的是我们这个时代的创作档案：提示词、草稿、犹豫，被否决的产出，与被采纳的产出一样保存。网站没有顶部导航栏，也没有稳定的网格。全屏菜单在循环的光轨上打开。档案里的作品不保持固定顺序，访客没法把参观变成一张打勾清单。这种迷失不是游戏。它是访客分到的那一份艺术家处境。</p>";
 
+/** The expanded "optimization" paragraph (hers, verbatim). It first
+ * stood in the Curator's Notes text stream (PR #391 as opened); the
+ * same day she moved it to the verso facing the In the Spirit of the
+ * 21st Century stills page — "要出现在21世纪精神 视频still那页的
+ * 对页上的最上方" (2026-11-20). Both languages on that verso
+ * overflowed it, so she split the pair: the Chinese stands at the
+ * head of the facing verso in the essay setting, and the English
+ * stands on the page before it, below the excavation-site lead text.
+ * The English is the rendering settled with the paragraph; the
+ * Chinese is hers word for word. */
+export const NI_STILLS_PARA_EN =
+  "<p>Yet optimization itself has never been neutral. The architecture of AI, its data centers, training models and platform economy, is built on enormous flows of capital and labor, and the direction of optimization is profit and scale. What looks like a technical necessity is, in fact, a mapping of institutional intent. In this sense, AI is less a tool of intelligence than an agent of power: a system that encodes who gets to decide and who must obey; who gets the fame, and who goes unseen; whose creations are taken away, and who takes the profit; whose labor trained the model, and at whose doorstep the data center is built. No one throws a punch. The harm hides inside the arrangement itself. It needs no villain. It only needs the process to keep running as usual.</p>";
+export const NI_STILLS_PARA_ZH =
+  "<p>然而优化本身从来不是中性的。AI 的架构，它的数据中心、训练模型与平台经济，建立在资本与劳动的巨大流动之上，优化的方向是盈利与规模。看似技术必然的东西，实际上是机构意图的映射。在这个意义上，AI 与其说是智能的工具，不如说是权力的代理人，一套编码了谁可以决定、谁需要服从；谁得到名声、谁不被看见；谁的创作被拿走、谁拿到利润；谁的劳动训练了模型、数据中心建在谁的家门口的系统。没有人挥拳，伤害就藏在安排本身里面，它不需要一个坏人，它只需要流程照常运转下去。</p>";
+
 export const SERIES_PLATES: Record<string, CatalogItem[]> = {
   artempath: [
     // Her directions (2026-11-11, alternative to PR #249): the four
