@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { withInches } from "@/lib/dimensions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useProductDetails, useProductImages } from "@/hooks/useProductDetails";
@@ -235,7 +236,7 @@ const ProductDetails = () => {
 
             {displayDescription && (
               <div className="space-y-2">
-                <p className="text-muted-foreground font-helvetica">{displayDescription}</p>
+                <p className="text-muted-foreground font-helvetica">{withInches(displayDescription, zh ? "zh" : "en")}</p>
               </div>
             )}
 
@@ -250,14 +251,14 @@ const ProductDetails = () => {
                 <h3 className="font-helvetica text-[11px] uppercase tracking-[0.15em] text-muted-foreground">{t.productDetails.details}</h3>
                 <div
                   className="text-muted-foreground font-helvetica whitespace-pre-wrap product-details-html"
-                  dangerouslySetInnerHTML={{ __html: displayDetailedHtml }}
+                  dangerouslySetInnerHTML={{ __html: withInches(displayDetailedHtml, zh ? "zh" : "en") }}
                 />
               </div>
             )}
 
             {displayDimensions && (
               <div className="space-y-2">
-                <p className="text-muted-foreground font-helvetica">{displayDimensions}</p>
+                <p className="text-muted-foreground font-helvetica">{withInches(displayDimensions, zh ? "zh" : "en")}</p>
               </div>
             )}
 
