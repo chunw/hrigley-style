@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { remainsWorks } from "@/lib/remains";
+import { withInches } from "@/lib/dimensions";
 import { studioCardPayLink, PRINT_9X12_PAYLINK } from "@/lib/watercolors";
 import { shopOrderNavigableItems } from "@/hooks/useProducts";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -195,10 +196,10 @@ const RemainsDetail = () => {
                 <p>{lang === "zh" ? work.mediumZh : work.medium}</p>
               )}
               {(lang === "zh" ? work.dimensionsZh : work.dimensions) && (
-                <p>{lang === "zh" ? work.dimensionsZh : work.dimensions}</p>
+                <p>{withInches(lang === "zh" ? work.dimensionsZh : work.dimensions, lang)}</p>
               )}
               {work.year && <p>{work.year}</p>}
-              <p>{lang === "zh" ? "现提供10 × 15 厘米精细艺术哑光纸印刷品" : `Available as 10 × 15 cm fine art matte paper print`}</p>
+              <p>{withInches(lang === "zh" ? "现提供10 × 15 厘米精细艺术哑光纸印刷品" : `Available as 10 × 15 cm fine art matte paper print`, lang)}</p>
             </div>
 
             <ArtworkPurchase
@@ -208,8 +209,8 @@ const RemainsDetail = () => {
               options={[
                 {
                   key: "print-4x6",
-                  labelEn: '10 × 15 cm fine art print',
-                  labelZh: "10 × 15 厘米艺术微喷印刷品",
+                  labelEn: '10 × 15 cm (4 × 6 in) fine art print',
+                  labelZh: "10 × 15 厘米（4 × 6 英寸）艺术微喷印刷品",
                   price: work.price ?? 4,
                 },
               ]}

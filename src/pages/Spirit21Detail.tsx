@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { spiritWorks } from "@/lib/21spirit";
+import { withInches } from "@/lib/dimensions";
 import { studioCardPayLink, PRINT_9X12_PAYLINK } from "@/lib/watercolors";
 import { shopOrderNavigableItems } from "@/hooks/useProducts";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -118,6 +119,12 @@ const Spirit21Detail = () => {
           },
         ];
 
+  // Shop display rule (2026-11-20): option labels carry inch conversions.
+  purchaseOptions.forEach((o) => {
+    o.labelEn = withInches(o.labelEn, "en");
+    o.labelZh = withInches(o.labelZh, "zh");
+  });
+
   const title = lang === "zh" ? work.titleZh : work.title;
 
   const detailChips: { en: string; zh: string }[] = [{ en: "Fine Art Prints", zh: "版画 · 限量版号" }];
@@ -213,13 +220,12 @@ const Spirit21Detail = () => {
                 <p>{lang === "zh" ? work.mediumZh : work.medium}</p>
               )}
               {(lang === "zh" ? work.dimensionsZh : work.dimensions) && (
-                <p>{lang === "zh" ? work.dimensionsZh : work.dimensions}</p>
+                <p>{withInches(lang === "zh" ? work.dimensionsZh : work.dimensions, lang)}</p>
               )}
               {work.year && <p>{work.year}</p>}
-              <p>{work.paylink
+              <p>{withInches(work.paylink
                 ? (lang === "zh" ? "现提供23 × 30 厘米或10 × 15 厘米精细艺术哑光纸印刷品" : `Available as 23 × 30 cm or 10 × 15 cm fine art matte paper print`)
-                : (lang === "zh" ? "现提供10 × 15 厘米精细艺术哑光纸印刷品" : `Available as 10 × 15 cm fine art matte paper print`)
-              }</p>
+                : (lang === "zh" ? "现提供10 × 15 厘米精细艺术哑光纸印刷品" : `Available as 10 × 15 cm fine art matte paper print`), lang)}</p>
             </div>
 
             <ArtworkPurchase
