@@ -74,7 +74,10 @@ const ArtworkPurchase = ({ baseId, title, imageUrl, options, soldOut }: ArtworkP
         </div>
       )}
 
-      <p className="sans-label text-2xl font-bold">${selected.price}</p>
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <p className="sans-label text-2xl font-bold">${selected.price}</p>
+        <p className="text-xs text-muted-foreground font-mono">{t.watercolor.shippingIncluded}</p>
+      </div>
 
       <button
         onClick={soldOut ? undefined : handleAddToCart}
@@ -84,9 +87,6 @@ const ArtworkPurchase = ({ baseId, title, imageUrl, options, soldOut }: ArtworkP
         {soldOut ? t.productDetails.soldOut : zh ? "加入购物车" : "Add to Cart"}
       </button>
 
-      <p className="!mt-0 pt-[29px] text-xs text-muted-foreground font-mono">
-        {t.watercolor.shippingIncluded}
-      </p>
     </div>
   );
 };
