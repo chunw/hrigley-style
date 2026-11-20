@@ -60,6 +60,10 @@ export interface Watercolor {
   descriptionZh?: string;
   printInfo?: string;
   printInfoZh?: string;
+  // Optional override for the print option's button label on multi-option
+  // works (defaults to the 23 × 30 cm print label in WatercolorDetail).
+  printOptionLabel?: string;
+  printOptionLabelZh?: string;
   // Full override for the "Available as ..." line on the detail page, used
   // when the piece's availability doesn't fit that template (e.g. original
   // art for sale rather than a print).
@@ -388,11 +392,15 @@ export const watercolors: Watercolor[] = [
     dimensionsZh: "",
     description: "",
     descriptionZh: "",
-    printInfo: `13 × 18 cm framed print, white frame, matted to 10 × 15 cm`,
-    printInfoZh: "13 × 18 厘米装裱印刷品，白色画框，10 × 15 厘米裱装",
-    price: 25,
-    paylink: PRINT_FRAMED_PAYLINK,
-    originalArt: true,
+    printInfo: `10 × 15 cm fine art print`,
+    printInfoZh: "10 × 15 厘米艺术微喷印刷品",
+    price: 4,
+    priceLabel: "$4 / $100",
+    printPrice: 100,
+    printOptionLabel: "10 × 15 cm fine art print",
+    printOptionLabelZh: "10 × 15 厘米艺术微喷印刷品",
+    framedDimensions: "20 × 25 cm",
+    framedDimensionsZh: "20 × 25 厘米",
     framed: true,
   },
   {
@@ -454,6 +462,8 @@ export const watercolors: Watercolor[] = [
     printInfo: `Also available as framed print 20 × 25 cm, $10`,
     printInfoZh: `亦提供20 × 25 厘米装裱印刷品，$10`,
     printPrice: 100,
+    framedDimensions: "20 × 28 cm",
+    framedDimensionsZh: "20 × 28 厘米",
     framed: true,
   },
   
@@ -549,6 +559,8 @@ export const watercolors: Watercolor[] = [
     description: `Available as original art (framed) or as 23 × 30 cm fine art matte paper print.`,
     descriptionZh: "可选原作（已装裱）或 23 × 30 厘米艺术微喷哑光纸印刷版。",
     priceLabel: "$10 / $35",
+    framedDimensions: "20 × 28 cm",
+    framedDimensionsZh: "20 × 28 厘米",
     multiOptionsPaylink: "https://www.paypal.com/ncp/payment/T259S58429CAL",
   },
 
@@ -752,8 +764,17 @@ export const watercolors: Watercolor[] = [
     mediumZh: "纸本水彩",
     dimensions: "",
     dimensionsZh: "",
-    description: "",
-    descriptionZh: "",
+    description: "Framed original, 20 × 25 cm.",
+    descriptionZh: "装框版原作，20 × 25 厘米。",
+    price: 10,
+    priceLabel: "$10 / $100",
+    printPrice: 100,
+    printInfo: `Framed original 20 × 25 cm`,
+    printInfoZh: "原作（已装裱）20 × 25 厘米",
+    originalArt: true,
+    framed: true,
+    framedDimensions: "20 × 25 cm",
+    framedDimensionsZh: "20 × 25 厘米",
   },
 
   {

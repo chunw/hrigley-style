@@ -74,6 +74,13 @@ const WatercolorDetail = () => {
     return <Navigate to="/watercolors/2" replace />;
   }
 
+  // Shop-only dedupe: #64 is the same painting as #14 (Still Things #8);
+  // the shop sells the work only as #14, whose listing also carries #64's
+  // image and the 9 x 12 in fine art print option.
+  if (id === "64") {
+    return <Navigate to="/watercolors/14" replace />;
+  }
+
   if (!work) {
     return (
       <div className="min-h-screen bg-background">
@@ -120,7 +127,7 @@ const WatercolorDetail = () => {
         ? (priceLabelPrices as [number, number])
         : [work.price ?? 10, work.printPrice ?? 35];
     purchaseOptions = [
-      { key: "print-9x12", labelEn: '23 × 30 cm fine art print', labelZh: "23 × 30 厘米艺术微喷印刷品", price: firstPrice },
+      { key: "print-9x12", labelEn: work.printOptionLabel ?? '23 × 30 cm fine art print', labelZh: work.printOptionLabelZh ?? "23 × 30 厘米艺术微喷印刷品", price: firstPrice },
       {
         key: "framed-original",
         labelEn: work.framedDimensions ? `Framed original ${work.framedDimensions}` : "Framed original",

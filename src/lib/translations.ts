@@ -282,7 +282,7 @@ export const translations = {
       loading: "加载中……",
       details: "详情",
       orderNow: "立即购买",
-      soldOut: "已售罄",
+      soldOut: "售罄",
       addToCart: "加入购物车",
       addedToCartSuffix: "已加入购物车",
       noImage: "暂无图片",
