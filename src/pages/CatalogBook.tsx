@@ -12,7 +12,7 @@ import { PAGE_BACKGROUNDS, hexToRgb, isHexPageBg, rgbToHex, type PageBgKind, typ
 import { IMAGE_EDITS } from "@/lib/imageEdits";
 import { PAGE_BACKGROUND_IMAGES, type PageBgImage } from "@/lib/pageBackgroundImages";
 import { BOOK_SERIES } from "@/lib/bookSeries";
-import { SERIES_PLATES, NI_STILLS_LEAD_TEXT, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, RESIDUALS_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE, ROAD_THAILAND_SPREAD_PLATE, SPIRIT_EXHIBITION_PLATES } from "@/lib/seriesPlates";
+import { SERIES_PLATES, NI_STILLS_LEAD_TEXT, NI_STILLS_PARA_EN, NI_STILLS_PARA_ZH, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, RESIDUALS_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE, ROAD_THAILAND_SPREAD_PLATE, SPIRIT_EXHIBITION_PLATES } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS, PART_WEBSITES } from "@/lib/exhibitions";
@@ -77,8 +77,8 @@ type PageSpec =
   | { kind: "opener"; half: "left" | "right"; chapter: Chapter; titleSpread?: boolean }
   | { kind: "essay"; chapter: Chapter; chunk: number }
   | { kind: "chapterPreface"; chapter: Chapter }
-  | { kind: "plateLeadText"; chapter: Chapter; html: string }
-  | { kind: "stillsQuiet"; chapter: Chapter; aboveHtml: string; belowHtml: string }
+  | { kind: "plateLeadText"; chapter: Chapter; html: string; enHtml?: string }
+  | { kind: "stillsQuiet"; chapter: Chapter; topHtml: string; aboveHtml: string; belowHtml: string }
   | { kind: "stillsStack"; chapter: Chapter; first: CatalogItem; second: CatalogItem }
   | { kind: "exhibitions"; chapter: Chapter }
   | { kind: "part-exhibitions"; part: number; chunk: number }
@@ -1275,13 +1275,13 @@ const SERIES_PLATE_ANCHORS: Record<string, { image: string; afterPair: number }[
     { image: "/book/negotiated/diary-page.jpg", afterPair: 6 },
     { image: "/book/negotiated/work-elsewhere.jpg", afterPair: 12 },
     { image: "/book/negotiated/work-ave-maria.jpg", afterPair: 19 },
-    { image: "/book/negotiated/work-fractured-star.jpg", afterPair: 27 },
-    { image: "/book/negotiated/work-silence.jpg", afterPair: 34 },
-    { image: "/book/negotiated/work-chimera-haiku.jpg", afterPair: 41 },
-    { image: "/book/negotiated/work-dierenleven.jpg", afterPair: 47 },
-    { image: "/book/negotiated/pavilion-entrance.jpg", afterPair: 50 },
-    { image: "/book/negotiated/work-mythology.jpg", afterPair: 52 },
-    { image: "/book/negotiated/awwwards-nominee.jpg", afterPair: 53 },
+    { image: "/book/negotiated/work-fractured-star.jpg", afterPair: 26 },
+    { image: "/book/negotiated/work-silence.jpg", afterPair: 33 },
+    { image: "/book/negotiated/work-chimera-haiku.jpg", afterPair: 40 },
+    { image: "/book/negotiated/work-dierenleven.jpg", afterPair: 46 },
+    { image: "/book/negotiated/pavilion-entrance.jpg", afterPair: 49 },
+    { image: "/book/negotiated/work-mythology.jpg", afterPair: 51 },
+    { image: "/book/negotiated/awwwards-nominee.jpg", afterPair: 52 },
   ],
   // Feed Scanner: interfaces 1–2 show the homepage walkthrough, interface
   // 3 the font-size control walkthrough. Poster and installation views
@@ -1770,9 +1770,13 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
           // facing pair. The page immediately before them carries a
           // text of its own: the Chinese paragraph that stood above
           // the first still until that day, on the page the parity
-          // guard used to leave blank. The first still's page then
-          // becomes a standalone quiet page — the bilingual paragraph
-          // in the quiet setting, and the Further Readings that stood
+          // guard used to leave blank (it now also carries, below the
+          // lead text, the English half of the expanded "optimization"
+          // paragraph). The first still's page then
+          // becomes a standalone quiet page — the Chinese half of
+          // that paragraph at its head in the essay setting, the
+          // bilingual cover-story paragraph in the quiet setting,
+          // and the Further Readings that stood
           // under the diptych set below it — and both stills stack on
           // the facing recto, the wide still above, the diptych
           // below, with a single caption under the diptych only.
@@ -1785,9 +1789,9 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
               ? unanchored[ui + 1]
               : undefined;
           if (stillsCompanion && stillsCompanion.item.image_url === "/book/negotiated/spirit-21st-century-stills.jpg") {
-            specs.push({ kind: "plateLeadText", chapter, html: NI_STILLS_LEAD_TEXT });
+            specs.push({ kind: "plateLeadText", chapter, html: NI_STILLS_LEAD_TEXT, enHtml: NI_STILLS_PARA_EN });
             if (!nextIsVerso()) specs.push({ kind: "blank" });
-            specs.push({ kind: "stillsQuiet", chapter, aboveHtml: item.plateTextAbove ?? "", belowHtml: stillsCompanion.item.plateTextBelow ?? "" });
+            specs.push({ kind: "stillsQuiet", chapter, topHtml: NI_STILLS_PARA_ZH, aboveHtml: item.plateTextAbove ?? "", belowHtml: stillsCompanion.item.plateTextBelow ?? "" });
             specs.push({ kind: "stillsStack", chapter, first: item, second: stillsCompanion.item });
             ui++;
           } else {
@@ -1795,7 +1799,7 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
               chapter.key === "series:negotiated" &&
               item.image_url === "/book/negotiated/spirit-21st-century-still.jpg"
             ) {
-              specs.push({ kind: "plateLeadText", chapter, html: NI_STILLS_LEAD_TEXT });
+              specs.push({ kind: "plateLeadText", chapter, html: NI_STILLS_LEAD_TEXT, enHtml: NI_STILLS_PARA_EN });
               if (!nextIsVerso()) specs.push({ kind: "blank" });
             }
             specs.push({ kind: "plate", chapter, item, plate });
@@ -3956,13 +3960,24 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const { chapter } = spec;
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
-          {/* The lead text is Chinese only (NI_STILLS_LEAD_TEXT): in
-              the English view the page stands blank. */}
-          {ctx.capLang !== "en" && (
-            <div className="bk-essay">
-              <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: spec.html }} />
-            </div>
-          )}
+          {/* The lead text is Chinese only (NI_STILLS_LEAD_TEXT).
+              Below it stands the English half of the expanded
+              "optimization" paragraph whose Chinese half opens the
+              facing verso (her split, 2026-11-20: both languages on
+              the verso overflowed it). Each view shows only its own
+              language: the English view carries the English paragraph
+              alone, the Chinese view the lead text alone. */}
+          {(() => {
+            const leadHtml = [
+              ctx.capLang !== "en" ? spec.html : "",
+              ctx.capLang !== "zh" && spec.enHtml ? spec.enHtml : "",
+            ].filter(Boolean).join("");
+            return leadHtml ? (
+              <div className="bk-essay">
+                <div className="bk-essay-text description-html" dangerouslySetInnerHTML={{ __html: leadHtml }} />
+              </div>
+            ) : null;
+          })()}
           <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
@@ -3970,9 +3985,14 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
 
     case "stillsQuiet": {
       // The stills' verso as a standalone quiet page (her direction,
-      // 2026-11-18): the bilingual paragraph in the .bk-quiet setting
-      // at its own 2.6in drop, and the diptych's Further Readings set
-      // below it in the essay setting. This page alone drops the
+      // 2026-11-18): the bilingual cover-story paragraph in the
+      // .bk-quiet setting, and the diptych's Further Readings set
+      // below it in the essay setting. At its head stands the Chinese
+      // half of the expanded "optimization" paragraph in the essay
+      // setting (her direction, 2026-11-20; the English half stands
+      // on the lead page before it, because both languages together
+      // overflowed this page). In the English view the head stands
+      // empty and the quiet block keeps its full drop. This page alone drops the
       // quiet setting's short rule (her direction, 2026-11-19, on the
       // #374 preview — she circled the line and had it removed); the
       // .bk-quiet-norule class folds the rule's height into the drop
@@ -3980,7 +4000,10 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const { chapter } = spec;
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
-          <div className="bk-quiet bk-quiet-norule">
+          {spec.topHtml && ctx.capLang !== "en" && (
+            <div className="bk-essay-text description-html bk-facing-top" dangerouslySetInnerHTML={{ __html: htmlParasByLang(spec.topHtml, ctx.capLang) }} />
+          )}
+          <div className={spec.topHtml && ctx.capLang !== "en" ? "bk-quiet bk-quiet-norule bk-quiet-after-top" : "bk-quiet bk-quiet-norule"}>
             <div className="bk-quiet-html" dangerouslySetInnerHTML={{ __html: htmlParasByLang(spec.aboveHtml, ctx.capLang) }} />
           </div>
           <div className="bk-essay-text description-html bk-quiet-readings" dangerouslySetInnerHTML={{ __html: readingsHeadByLang(spec.belowHtml, ctx.capLang) }} />
@@ -5436,34 +5459,6 @@ function useBookModel(args: {
                 ...chunkItems(zhBlocks.slice(zhSeg.end + 1), 1400, { overhead: 15, brCost: 24 }),
               ];
             }
-            // Her direction, 2026-11-20: the expanded "optimization"
-            // paragraph she placed at the Fractured Star spread opens
-            // a page of its own in both streams — split the chunk that
-            // would carry it mid-page at the paragraph itself. (The
-            // paragraph sits at spliced block 26, ahead of the closing
-            // passage at 27; the plate anchors from the closing
-            // passage on were bumped one block in
-            // SERIES_PLATE_ANCHORS to keep pointing at their own
-            // paragraphs.)
-            const splitChunkAt = (chunks: EssayItem[][] | undefined, needle: string): EssayItem[][] | undefined => {
-              if (!chunks) return chunks;
-              const out: EssayItem[][] = [];
-              for (const chunk of chunks) {
-                const i = chunk.findIndex((it) => it.html.includes(needle));
-                if (i > 0) out.push(chunk.slice(0, i), chunk.slice(i));
-                else out.push(chunk);
-              }
-              return out;
-            };
-            enChunkedOverride = splitChunkAt(enChunkedOverride, "has never been neutral");
-            zhChunkedOverride = splitChunkAt(zhChunkedOverride, "谁得到名声、谁不被看见");
-            // The closing passage that follows the new paragraph
-            // likewise opens its own chunk, so the Fractured Star
-            // plate (anchored to it, afterPair 27) stands between
-            // the two — the paragraph at the head of the plate's old
-            // page, the plate on the page after.
-            enChunkedOverride = splitChunkAt(enChunkedOverride, "To negotiate intelligence is to remain awake");
-            zhChunkedOverride = splitChunkAt(zhChunkedOverride, "协商智能，就是在一个自动化的世界里保持清醒");
           }
           if (s.id === "google") {
             // Her direction, 2026-11-13 (dated-text consistency): the
