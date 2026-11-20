@@ -3997,13 +3997,16 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       // #374 preview — she circled the line and had it removed); the
       // .bk-quiet-norule class folds the rule's height into the drop
       // so the text keeps its place. Other quiet pages keep the rule.
+      // The quote itself stands in italic with more air above and
+      // below it (her direction, 2026-11-20; the .bk-quiet-quote
+      // styles), measured so the readings stay clear of the folio.
       const { chapter } = spec;
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={bgImgCls}>{bgImgLayer}
           {spec.topHtml && ctx.capLang !== "en" && (
             <div className="bk-essay-text description-html bk-facing-top" dangerouslySetInnerHTML={{ __html: htmlParasByLang(spec.topHtml, ctx.capLang) }} />
           )}
-          <div className={spec.topHtml && ctx.capLang !== "en" ? "bk-quiet bk-quiet-norule bk-quiet-after-top" : "bk-quiet bk-quiet-norule"}>
+          <div className={spec.topHtml && ctx.capLang !== "en" ? "bk-quiet bk-quiet-norule bk-quiet-after-top bk-quiet-quote" : "bk-quiet bk-quiet-norule bk-quiet-quote"}>
             <div className="bk-quiet-html" dangerouslySetInnerHTML={{ __html: htmlParasByLang(spec.aboveHtml, ctx.capLang) }} />
           </div>
           <div className="bk-essay-text description-html bk-quiet-readings" dangerouslySetInnerHTML={{ __html: readingsHeadByLang(spec.belowHtml, ctx.capLang) }} />
