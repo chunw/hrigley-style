@@ -224,8 +224,13 @@ const ProductDetails = () => {
               )}
             </div>
 
-            <div className="text-xl font-helvetica tracking-wide text-foreground">
-              {formatPrice(product.price)}
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <span className="text-xl font-helvetica tracking-wide text-foreground">
+                {formatPrice(product.price)}
+              </span>
+              {!product.soldOut && (
+                <span className="text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</span>
+              )}
             </div>
 
             {displayDescription && (
@@ -292,9 +297,6 @@ const ProductDetails = () => {
               </div>
             )}
 
-            {!product.soldOut && (
-              <p className="!mt-0 pt-[29px] w-full text-xs text-muted-foreground font-helvetica">{t.productDetails.shippingIncluded}</p>
-            )}
           </div>
         </div>
       </main>
