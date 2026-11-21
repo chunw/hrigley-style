@@ -17,11 +17,13 @@ const plate = (
   titleZh?: string,
   metaZh?: string,
   pageText?: { above?: string; below?: string },
+  metaBoth?: string,
 ): CatalogItem => ({
   title,
   ...(titleZh ? { titleZh } : {}),
   metaLine,
   ...(metaZh ? { metaZh } : {}),
+  ...(metaBoth ? { metaBoth } : {}),
   year,
   description: en === "" && zh === "" ? "" : `<p>${en}<br />${zh}</p>`,
   ...(pageText?.above ? { plateTextAbove: pageText.above } : {}),
@@ -396,6 +398,16 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
     // "Chun Wang · Video stills, 2024" / "王淳 · 视频静帧 2024年".
     // The single still's record is untouched: its caption never
     // prints anywhere.
+    // Her direction (2026-11-21): the diptych's meta line is
+    // recast. The medium names the source — "Video stills (from
+    // single-channel video)" / "视频静帧（选自单频视频）" — and the
+    // year stands once, at the very end, with no 年. The bilingual
+    // line interleaves: the author pair first ("Chun Wang 王淳"),
+    // then the medium pair, then ", 2024"; it rides on the
+    // record's metaBoth, while metaLine and metaZh carry the
+    // single-language forms ("Chun Wang · Video stills (from
+    // single-channel video), 2024" / "王淳 · 视频静帧（选自
+    // 单频视频）, 2024") the caption mechanism derives from.
     plate(
       "In the Spirit of the 21st Century", "Video stills, 2024", "2024",
       "",
@@ -409,16 +421,17 @@ export const SERIES_PLATES: Record<string, CatalogItem[]> = {
       },
     ),
     plate(
-      "In the Spirit of the 21st Century", "Chun Wang · Video stills, 2024", "2024",
+      "In the Spirit of the 21st Century", "Chun Wang · Video stills (from single-channel video), 2024", "2024",
       "",
       "",
       "/book/negotiated/spirit-21st-century-stills.jpg",
       "21世纪精神",
-      "王淳 · 视频静帧 2024年",
+      "王淳 · 视频静帧（选自单频视频）, 2024",
       {
         below:
           "<p><strong>Further Readings 延伸阅读</strong></p><p>Christian Boltanski, <em>Les Archives de C.B.</em> (1989)<br />The Atlas Group (Walid Raad), <em>Hostage: The Bachar Tapes</em> (2001)<br />Harun Farocki, <em>Workers Leaving the Factory in Eleven Decades</em> (2006)<br />Hito Steyerl, <em>How Not to Be Seen</em> (2013)<br />Trevor Paglen, <em>Machine Visions</em> (2016)<br />Kate Crawford, <em>Atlas of AI</em> (2021)</p>",
       },
+      "Chun Wang 王淳 · Video stills (from single-channel video) 视频静帧（选自单频视频）, 2024",
     ),
   ],
   feedscanner: [

@@ -49,6 +49,12 @@ export interface CatalogItem {
   metaLine?: string | null;
   /** Full Chinese meta line, rendered under metaLine where a caption carries both (e.g. the Pre-iPhone Era bleed spread). */
   metaZh?: string | null;
+  /** The caption's meta line as composed for the bilingual view alone,
+   * for the rare caption whose bilingual line interleaves the two
+   * languages (an author pair, a medium pair, one shared year) instead
+   * of running the English meta and the Chinese meta end to end. The
+   * single-language views still derive from metaLine and metaZh. */
+  metaBoth?: string | null;
   year?: string | null;
   medium?: string | null;
   /** Chinese medium from the artist's own records, appended to the book's caption meta line. */
