@@ -252,7 +252,7 @@ const capZhMetaOf = (item: CatalogItem): string | undefined => {
     are not the caption body and keep the language filtering of
     capParts/capDesc. The optional titles override serves the road
     chapter, whose captions name a place instead of a work. */
-type WorkCapBlock = { lang: "en" | "zh"; title?: string; dim?: string; meta?: string };
+type WorkCapBlock = { lang: "en" | "zh"; title?: string; dim?: string; meta?: string; metaBoth?: string };
 const workCapBlocks = (item: CatalogItem, titles?: { en?: string; zh?: string }): WorkCapBlock[] => {
   const year = capYearOf(item);
   const enMeta = item.medium ? (year ? `${item.medium}, ${year}` : item.medium) : (item.metaLine ?? undefined);
@@ -265,7 +265,7 @@ const workCapBlocks = (item: CatalogItem, titles?: { en?: string; zh?: string })
   // in 《》 (see workCapVisible).
   if (!titles && !zhTitle && enTitle && hasCjk(enTitle) && !/[A-Za-z]/.test(enTitle)) zhTitle = enTitle;
   return [
-    { lang: "en", title: enTitle, dim: compactDimOf(item), meta: enMeta },
+    { lang: "en", title: enTitle, dim: compactDimOf(item), meta: enMeta, metaBoth: item.metaBoth ?? undefined },
     { lang: "zh", title: zhTitle, dim: compactDimOf(item), meta: capZhMetaOf(item) },
   ];
 };
@@ -465,9 +465,19 @@ const JoinedCapLines = ({ blocks }: { blocks: WorkCapBlock[] }) => {
       {dim && <div className="bk-caption-meta bk-cap-line">{dim}</div>}
       {(enMeta || zhMeta) && (
         <div className="bk-caption-meta bk-cap-line">
-          {enMeta && <span className="bk-cap-en">{enMeta}</span>}
-          {enMeta && zhMeta && " "}
-          {zhMeta && <span className="bk-cap-zh">{zhMeta}</span>}
+          {en?.metaBoth ? (
+            // A record whose bilingual meta line interleaves the
+            // two languages (see CatalogItem.metaBoth) prints that
+            // composed line whole; the language spans carry no
+            // styling of their own, so nothing else changes.
+            en.metaBoth
+          ) : (
+            <>
+              {enMeta && <span className="bk-cap-en">{enMeta}</span>}
+              {enMeta && zhMeta && " "}
+              {zhMeta && <span className="bk-cap-zh">{zhMeta}</span>}
+            </>
+          )}
         </div>
       )}
     </div>
