@@ -114,4 +114,10 @@ export const IMAGE_EDITS: Record<string, LandedImgEdit> = {
   // (black, pageBackgrounds.ts) and caption are keyed to the
   // unchanged image_url and stand as they were.
   "/watercolors/01/main.jpg": { src: "/book/residuals/residuals-01-scan.jpg" },
+  // Her direction (2026-11-22): the fermented-tofu diptych that
+  // closes the Residuals chapter is a 1280 × 962 px source — the
+  // chapter's lowest-resolution plate. It prints reduced, at
+  // 0.8 of its frame (about 5.6 in wide, ≈229 DPI), never
+  // full-bleed and never stretched to the full frame.
+  "/book/residuals/residuals-tofu-diptych.jpg": { scale: 0.8 },
 };
