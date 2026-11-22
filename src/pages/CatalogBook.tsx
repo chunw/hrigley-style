@@ -12,7 +12,7 @@ import { PAGE_BACKGROUNDS, hexToRgb, isHexPageBg, rgbToHex, type PageBgKind, typ
 import { IMAGE_EDITS } from "@/lib/imageEdits";
 import { PAGE_BACKGROUND_IMAGES, type PageBgImage } from "@/lib/pageBackgroundImages";
 import { BOOK_SERIES } from "@/lib/bookSeries";
-import { SERIES_PLATES, NI_STILLS_LEAD_TEXT, NI_STILLS_PARA_EN, NI_STILLS_PARA_ZH, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, RESIDUALS_EXTRA_PLATES, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE, ROAD_THAILAND_SPREAD_PLATE, SPIRIT_EXHIBITION_PLATES } from "@/lib/seriesPlates";
+import { SERIES_PLATES, NI_STILLS_LEAD_TEXT, NI_STILLS_PARA_EN, NI_STILLS_PARA_ZH, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, RESIDUALS_EXTRA_PLATES, RESIDUALS_TOFU_DIPTYCH, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE, ROAD_THAILAND_SPREAD_PLATE, SPIRIT_EXHIBITION_PLATES } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS, PART_WEBSITES } from "@/lib/exhibitions";
@@ -1631,6 +1631,18 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
           item: { ...inventory.item, title: "Breakfast Inventory Analysis", titleZh: "早餐存量分析" },
           plate: inventory.plate,
         });
+        // Her direction (2026-11-22): the fermented-tofu diptych
+        // (RESIDUALS_TOFU_DIPTYCH in seriesPlates.ts — the reference
+        // photograph and the watercolor side by side, as one
+        // picture) closes the Residuals chapter as its last plate,
+        // standing immediately in front of this chapter's title
+        // spread, behind the closing spread above. It takes a
+        // recto, like the road chapter's closing plate: a blank
+        // steps in if it would land on a verso, and the title
+        // spread's own verso guard then needs no blank of its own,
+        // so the run behind it only ever gains the pair of pages.
+        if (nextIsVerso()) specs.push({ kind: "blank" });
+        specs.push({ kind: "plate", chapter: residualsChapter, item: RESIDUALS_TOFU_DIPTYCH, plate: 0 });
       }
     }
     if (CHAPTER_EPIGRAPH[chapter.key] || chapter.partHead || chapter.partIntro) {

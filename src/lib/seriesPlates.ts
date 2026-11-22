@@ -766,6 +766,41 @@ export const RESIDUALS_EXTRA_PLATES: CatalogItem[] = [
 ];
 
 /**
+ * Closing plate for the Residuals chapter (her direction,
+ * 2026-11-22): a diptych she supplied — on the left the reference
+ * photograph (a piece of fermented tofu on a small blue-and-white
+ * dish), on the right the watercolor it was painted from, Three
+ * Pieces of Fermented Tofu (watercolor no. 7). It stands as ONE
+ * picture, the last plate of the Residuals chapter, on a recto
+ * immediately in front of the Still Things title spread, behind
+ * the chapter's closing spread (see the stillthings head in
+ * CatalogBook.tsx's paginate). The photograph is a reference, not
+ * a work: the caption is hers, settled word for word the same
+ * day, and it names the watercolor alone — its title, and the
+ * medium line in the interleaved bilingual form the NI stills
+ * caption set (author pair first, then the medium pair, the year
+ * once at the end, no 年）: "Chun Wang 王淳 · 水彩纸本（写生）
+ * Watercolor on paper (from life), 2025". The single-language
+ * forms ride on metaLine / metaZh, as there. The work's catalog
+ * record (watercolors.ts no. 7) keeps printInCatalog false and
+ * is untouched: this plate is book-only, so the work still
+ * prints exactly once in the book. The source is 1280 × 962 px,
+ * the chapter's lowest-resolution plate, so the picture prints
+ * at a reduced scale (see imageEdits.ts), never full-bleed.
+ */
+export const RESIDUALS_TOFU_DIPTYCH: CatalogItem = {
+  title: "Three Pieces of Fermented Tofu",
+  titleZh: "三块腐乳",
+  metaLine: "Chun Wang · Watercolor on paper (from life), 2025",
+  metaZh: "王淳 · 水彩纸本（写生）, 2025",
+  metaBoth: "Chun Wang 王淳 · 水彩纸本（写生） Watercolor on paper (from life), 2025",
+  year: "2025",
+  category: "Watercolor",
+  image_url: "/book/residuals/residuals-tofu-diptych.jpg",
+  fallback_image_url: "/book/residuals/residuals-tofu-diptych.jpg",
+};
+
+/**
  * Extra plate for the Notes from the Road （出发） chapter (her
  * direction, 2026-11-10): a sepia watercolor landscape — a road
  * running diagonally past a small truck lettered "Exotic Fruit &
