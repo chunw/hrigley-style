@@ -322,7 +322,14 @@ All colors MUST be HSL.
   }
 
   .description-html a {
+    color: inherit;
+    font-style: italic;
+  }
+
+  /* The book keeps its existing pink link style */
+  .bk-root .description-html a {
     color: hsl(var(--primary));
+    font-style: normal;
   }
 
   .description-html a:hover {
