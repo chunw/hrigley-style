@@ -59,6 +59,20 @@ export const NI_STILLS_PARA_EN =
 export const NI_STILLS_PARA_ZH =
   "<p>然而优化本身从来不是中性的。AI 的架构，它的数据中心、训练模型与平台经济，建立在资本与劳动的巨大流动之上，优化的方向是盈利与规模。看似技术必然的东西，实际上是机构意图的映射。在这个意义上，AI 与其说是智能的工具，不如说是权力的代理人，一套编码了谁可以决定、谁需要服从；谁得到名声、谁不被看见；谁的创作被拿走、谁拿到利润；谁的劳动训练了模型、数据中心建在谁的家门口的系统。没有人挥拳，伤害就藏在安排本身里面，它不需要一个坏人，它只需要流程照常运转下去。</p>";
 
+/** Her text for the Remains No. 3 plate page (the limousine painting:
+ * "I AM VERY IMPORTANT THAT IS WHY I YELL INTO THIS PHONE / THE LIMO
+ * AGREES"), given 2026-11-23, hers verbatim in both languages (the
+ * Chinese is her own final wording, settled the same day: the quote
+ * alone, her earlier first sentence struck). It stands below the
+ * picture under the caption, in the Breakfast Residuals exhibition
+ * page's text setting — English block, then Chinese block, each
+ * single-language view keeping its own block. In both languages the
+ * final sentence stands on its own line by a hard break, as in her
+ * Story caption. Attached to the work's item where the Remains
+ * chapter is assembled in CatalogBook.tsx. */
+export const REMAINS_LIMO_TEXT =
+  "<p>So here is the not-so-shocking tale of modern society:</p><p>“Let's live and die by a single moral code, above ALL others:<br />THE NUMBER MUST GO UP.”</p><p>“让我们死守这条道德准则，高于其他一切：<br />一切向钱看。”</p>";
+
 export const SERIES_PLATES: Record<string, CatalogItem[]> = {
   artempath: [
     // Her directions (2026-11-11, alternative to PR #249): the four

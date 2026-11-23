@@ -2187,6 +2187,33 @@
   margin-top: 0.24in;
 }
 
+/* A plate's bilingual text below its caption (the Remains No. 3
+   plate, her direction, 2026-11-23) takes the exhibition page's
+   text setting whole: the same measure, size and leading as
+   .bk-exhibition-review, the Chinese block a step below the
+   English, the caption standing above it where the exhibition
+   page's info line stands above its review. The frame flexes to
+   the space left. */
+.bk-plate-belowtext {
+  margin-top: 0.26in;
+  max-width: 5.95in;
+  font-size: 9pt;
+  line-height: 1.65;
+  color: var(--text);
+}
+
+.bk-plate-belowtext p {
+  margin: 0 0 0.9em;
+}
+
+.bk-plate-belowtext p:last-child {
+  margin-bottom: 0;
+}
+
+.bk-plate-belowtext-zh {
+  margin-top: 0.24in;
+}
+
 /* ── List of plates ────────────────────────────────────────────────────────── */
 .bk-index {
   margin-top: 0.55in;
