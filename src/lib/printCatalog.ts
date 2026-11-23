@@ -64,6 +64,10 @@ export interface CatalogItem {
   plateTextAbove?: string | null;
   /** Body text printed below the caption on this item's book plate page (HTML, book only). */
   plateTextBelow?: string | null;
+  /** Bilingual body text printed below the caption in the exhibition
+   * text setting — English paragraphs, then Chinese ones, split per
+   * view by paragraph language (HTML, book only). */
+  plateBelowText?: string | null;
   dimensions?: string | null;
   /** Chinese dimensions from the artist's own records, appended to the book's caption meta line. */
   dimensionsZh?: string | null;
