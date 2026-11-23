@@ -12,7 +12,7 @@ import { PAGE_BACKGROUNDS, hexToRgb, isHexPageBg, rgbToHex, type PageBgKind, typ
 import { IMAGE_EDITS } from "@/lib/imageEdits";
 import { PAGE_BACKGROUND_IMAGES, type PageBgImage } from "@/lib/pageBackgroundImages";
 import { BOOK_SERIES } from "@/lib/bookSeries";
-import { SERIES_PLATES, NI_STILLS_LEAD_TEXT, NI_STILLS_PARA_EN, NI_STILLS_PARA_ZH, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, RESIDUALS_EXTRA_PLATES, RESIDUALS_TOFU_DIPTYCH, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE, ROAD_THAILAND_SPREAD_PLATE, SPIRIT_EXHIBITION_PLATES } from "@/lib/seriesPlates";
+import { SERIES_PLATES, NI_STILLS_LEAD_TEXT, NI_STILLS_PARA_EN, NI_STILLS_PARA_ZH, REMAINS_LIMO_TEXT_EN, DEATH_VALLEY_PLATES, SAHARA_EXTRA_PLATES, RESIDUALS_EXTRA_PLATES, RESIDUALS_TOFU_DIPTYCH, EL_OTRO_EXTRA_PLATES, THEATER_EXTRA_PLATES, ROAD_EXTRA_PLATES, REMAINS_ORIGIN_PLATES, PRE_IPHONE_ERA_PLATE, ROAD_THAILAND_SPREAD_PLATE, SPIRIT_EXHIBITION_PLATES } from "@/lib/seriesPlates";
 import { SPIRIT_BACKGROUNDS, SPIRIT_MOMENT } from "@/lib/spiritBackgrounds";
 import { photographyWorks } from "@/lib/photography";
 import { EXHIBITIONS, PART_WEBSITES } from "@/lib/exhibitions";
@@ -4192,7 +4192,13 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               line-height opened to 2, right-aligned in a narrow
               measure, a short rule above), the picture below it
               untouched: a quiet page that carries a picture. */}
-          {item.plateTextAbove && (
+          {/* The block stands only when the view's language keeps
+              some of its text: a single-language text (the Remains
+              No. 3 plate's English note) leaves no empty ruled block
+              behind in the other single-language view, whose page
+              keeps its unaltered form. Bilingual texts filter to a
+              non-empty result in every view, as before. */}
+          {item.plateTextAbove && htmlParasByLang(item.plateTextAbove, ctx.capLang) && (
             <div className="bk-quiet bk-quiet-plate">
               <div className="bk-quiet-rule" />
               <div className="bk-quiet-html" dangerouslySetInnerHTML={{ __html: htmlParasByLang(item.plateTextAbove, ctx.capLang) }} />
@@ -4981,7 +4987,20 @@ function useBookModel(args: {
           // prints "Untitled" as a work name) — a work without a title
           // keeps its empty title, and the plate renderer opens its
           // caption with the meta line instead.
-          return { item: { ...item, ...(caption ? { description: caption } : {}) }, plate: ++plate };
+          // Remains No. 3 (the limousine painting) carries her English
+          // text above its picture (her direction, 2026-11-23; the
+          // text is English only, so the plate renderer shows it in
+          // the bilingual and English views alone).
+          const plateAbove =
+            s.key === "remains" && ii === 2 ? REMAINS_LIMO_TEXT_EN : undefined;
+          return {
+            item: {
+              ...item,
+              ...(caption ? { description: caption } : {}),
+              ...(plateAbove ? { plateTextAbove: plateAbove } : {}),
+            },
+            plate: ++plate,
+          };
         }),
         years: yearRange(s.items.map((item) => item.year)),
       }));
