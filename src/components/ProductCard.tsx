@@ -116,16 +116,16 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
   const cartVariantLabel = (() => {
     const en = lang !== "zh";
     if (id.startsWith("remains-") || id.startsWith("spirit-")) {
-      return en ? '10 × 15 cm fine art print' : "10 × 15 厘米艺术微喷印刷品";
+      return en ? '10 × 15 cm (4 × 6 in) fine art print' : "10 × 15 厘米（4 × 6 英寸）艺术微喷印刷品";
     }
     if (id.startsWith("photography-")) {
-      return en ? '23 × 30 cm fine art print' : "23 × 30 厘米艺术微喷印刷品";
+      return en ? '23 × 30 cm (9 × 12 in) fine art print' : "23 × 30 厘米（9 × 12 英寸）艺术微喷印刷品";
     }
     if (id.startsWith("watercolor-")) {
       if (category === "Cards") return en ? "Studio card" : "工作室卡片";
-      if (price === 4) return en ? '10 × 15 cm fine art print' : "10 × 15 厘米艺术微喷印刷品";
+      if (price === 4) return en ? '10 × 15 cm (4 × 6 in) fine art print' : "10 × 15 厘米（4 × 6 英寸）艺术微喷印刷品";
       if (price === 25) return en ? "Framed print" : "装裱印刷品";
-      return en ? '23 × 30 cm fine art print' : "23 × 30 厘米艺术微喷印刷品";
+      return en ? '23 × 30 cm (9 × 12 in) fine art print' : "23 × 30 厘米（9 × 12 英寸）艺术微喷印刷品";
     }
     return null;
   })();

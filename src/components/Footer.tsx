@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ArrowUpRight, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { CONTACT_EMAIL, INSTAGRAM_URL } from "@/lib/constants";
+import { INSTAGRAM_URL } from "@/lib/constants";
 
 const LINKEDIN_URL = "https://www.linkedin.com/company/107686784/";
 
@@ -102,7 +102,7 @@ const Footer = () => {
             >
               <X className="h-4 w-4" />
             </button>
-            <p className="select-all text-base text-foreground">{CONTACT_EMAIL}</p>
+            <p className="text-base text-foreground">{t.footer.emailPopup}</p>
           </div>
         </div>
       )}

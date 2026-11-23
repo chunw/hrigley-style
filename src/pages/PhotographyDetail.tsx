@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { photographyWorks, catalogMeta } from "@/lib/photography";
+import { withInches } from "@/lib/dimensions";
 import { PRINT_9X12_PAYLINK } from "@/lib/watercolors";
 import { shopOrderNavigableItems } from "@/hooks/useProducts";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -116,6 +117,12 @@ const PhotographyDetail = () => {
         ]
       : []),
   ];
+
+  // Shop display rule (2026-11-20): option labels carry inch conversions.
+  purchaseOptions.forEach((o) => {
+    o.labelEn = withInches(o.labelEn, "en");
+    o.labelZh = withInches(o.labelZh, "zh");
+  });
 
   const title = lang === "zh" ? work.titleZh : work.title;
 
@@ -244,10 +251,10 @@ const PhotographyDetail = () => {
                 <p>{lang === "zh" ? work.mediumZh : work.medium}</p>
               )}
               {(lang === "zh" ? work.dimensionsZh : work.dimensions) && (
-                <p>{lang === "zh" ? work.dimensionsZh : work.dimensions}</p>
+                <p>{withInches(lang === "zh" ? work.dimensionsZh : work.dimensions, lang)}</p>
               )}
               {work.year && <p>{work.year}</p>}
-              <p>{lang === "zh" ? `现提供${work.printInfoZh ?? '23 × 30 厘米精细艺术哑光纸印刷品'}` : `Available as ${work.printInfo ?? '23 × 30 cm fine art matte paper print'}`}</p>
+              <p>{withInches(lang === "zh" ? `现提供${work.printInfoZh ?? '23 × 30 厘米精细艺术哑光纸印刷品'}` : `Available as ${work.printInfo ?? '23 × 30 cm fine art matte paper print'}`, lang)}</p>
             </div>
 
             <ArtworkPurchase
