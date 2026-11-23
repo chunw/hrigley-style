@@ -562,7 +562,7 @@ function backPages(lang: Lang2): ReactNode[] {
             [zh ? "21世纪精神" : "In the Spirit of the 21st Century", "/21spirit-catalog"],
             [zh ? "内在荒原（摄影）" : "Inner Wilderness (Photography)", "/photography-catalog"],
             [zh ? "摄影画册（在线阅读）" : "Photography Photobook (read online)", "/photography-photobook"],
-            [zh ? "小有用的物件" : "Slightly Useful Object", "/slightlyusefulobject"],
+            [zh ? "微用之物" : "Slightly Useful Object", "/slightlyusefulobject"],
           ] as [string, string][]).map(([label, href]) => (
             <Link key={href} to={href} className="group flex items-center gap-2 border-t py-[2.1%]" style={{ borderColor: "var(--book-rule)" }}>
               <span className="book-plate-title group-hover:text-[hsl(328_85%_62%)]" style={{ fontSize: "calc(var(--book-page-w) * 0.026)" }}>{label}</span>

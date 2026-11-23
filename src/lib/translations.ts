@@ -328,7 +328,7 @@ export const translations = {
       categoryLabel: "In the Spirit of the 21st Century · 21世纪精神",
     },
     usefulCatalog: {
-      subtitle: "小有用的物件",
+      subtitle: "微用之物",
     },
     catalogBook: {
       cta: "画册",
