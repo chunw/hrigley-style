@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link, Navigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getWatercolor, seriesList, studioCardPayLink, PRINT_9X12_PAYLINK } from "@/lib/watercolors";
+import { withInches } from "@/lib/dimensions";
 import { shopOrderNavigableItems } from "@/hooks/useProducts";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -151,6 +152,12 @@ const WatercolorDetail = () => {
     purchaseOptions = [{ key: "standard", labelEn, labelZh, price }];
   }
 
+  // Shop display rule (2026-11-20): option labels carry inch conversions.
+  purchaseOptions.forEach((o) => {
+    o.labelEn = withInches(o.labelEn, "en");
+    o.labelZh = withInches(o.labelZh, "zh");
+  });
+
   const detailChips: { en: string; zh: string }[] = [
     work.series === "III" ? { en: "Cards", zh: "卡片" } : { en: "Fine Art Prints", zh: "版画 · 限量版号" },
     ...(work.framed ? [{ en: FRAMED_ART_CATEGORY, zh: FRAMED_ART_CATEGORY_ZH }] : []),
@@ -248,7 +255,7 @@ const WatercolorDetail = () => {
             {(lang === "zh" ? work.descriptionZh : work.description) && (
               <p
                 className="description-html text-sm text-muted-foreground leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: (lang === "zh" ? work.descriptionZh : work.description) ?? "" }}
+                dangerouslySetInnerHTML={{ __html: withInches((lang === "zh" ? work.descriptionZh : work.description) ?? "", lang) }}
               />
             )}
 
