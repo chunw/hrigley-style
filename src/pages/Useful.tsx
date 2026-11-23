@@ -101,7 +101,11 @@ const Useful = () => {
       <HeroSection
         titleOverride={
           <>
-            Slightly Useful <span className="text-primary">Objects</span>
+            {lang === "zh" ? (
+              <>微用之<span className="text-primary">物</span></>
+            ) : (
+              <>Slightly Useful <span className="text-primary">Objects</span></>
+            )}
           </>
         }
         bordered

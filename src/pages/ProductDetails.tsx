@@ -217,7 +217,7 @@ const ProductDetails = () => {
                 <p className="text-sm text-muted-foreground font-helvetica mt-3">
                   {t.productDetails.partOfCollectionPrefix}{" "}
                   <Link to="/slightlyusefulobject" className="text-foreground font-semibold">
-                    {zh ? "小用之物" : "Slightly Useful Object"}
+                    {zh ? "微用之物" : "Slightly Useful Object"}
                   </Link>{" "}
                   {t.productDetails.partOfCollectionSuffix}
                 </p>

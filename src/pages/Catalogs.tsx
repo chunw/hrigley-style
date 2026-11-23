@@ -228,13 +228,6 @@ const Catalogs = () => {
             isLeftColumn={index % 2 === 0}
           />
         ))}
-        {/* The printed book, same tile language, linking to the full print-ready edition */}
-        <CatalogTile
-          to="/book"
-          images={["/watercolors/01/main.jpg", "/remains/01/main.jpg"]}
-          label={lang === "zh" ? "王淳绘画集" : "Chun Wang Paintings"}
-          isLeftColumn={false}
-        />
       </section>
 
       <Footer />

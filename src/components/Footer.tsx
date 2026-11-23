@@ -1,4 +1,5 @@
-import { ArrowUpRight } from "lucide-react";
+import { useState } from "react";
+import { ArrowUpRight, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { CONTACT_EMAIL, INSTAGRAM_URL } from "@/lib/constants";
 
@@ -6,6 +7,7 @@ const LINKEDIN_URL = "https://www.linkedin.com/company/107686784/";
 
 const Footer = () => {
   const { t, lang } = useLanguage();
+  const [showEmail, setShowEmail] = useState(false);
 
   const exploreLinks = [
     { href: "/#products", label: t.footer.navShop },
@@ -15,7 +17,6 @@ const Footer = () => {
   ];
 
   const contactLinks = [
-    { href: `mailto:${CONTACT_EMAIL}`, label: t.footer.emailLabel, external: false },
     { href: INSTAGRAM_URL, label: t.footer.instagramLabel, external: true },
     { href: LINKEDIN_URL, label: t.footer.linkedinLabel, external: true },
   ];
@@ -52,6 +53,15 @@ const Footer = () => {
               {t.footer.contactTitle}
             </div>
             <ul className="mt-4 space-y-2.5 text-sm">
+              <li>
+                <button
+                  type="button"
+                  onClick={() => setShowEmail(true)}
+                  className="text-foreground/75 underline-offset-4 transition-colors hover:text-foreground hover:underline"
+                >
+                  {t.footer.emailLabel}
+                </button>
+              </li>
               {contactLinks.map(({ href, label, external }) => (
                 <li key={label}>
                   <a
@@ -74,6 +84,28 @@ const Footer = () => {
           <div>© Chun Wang Studio 2026 · {t.footer.copyright}</div>
         </div>
       </div>
+
+      {showEmail && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 px-4"
+          onClick={() => setShowEmail(false)}
+        >
+          <div
+            className="relative border border-border bg-background px-8 py-6 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              aria-label="Close"
+              onClick={() => setShowEmail(false)}
+              className="absolute right-3 top-3 text-foreground/60 transition-colors hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <p className="select-all text-base text-foreground">{CONTACT_EMAIL}</p>
+          </div>
+        </div>
+      )}
     </footer>
   );
 };
