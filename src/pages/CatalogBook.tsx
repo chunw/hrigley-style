@@ -86,6 +86,7 @@ type PageSpec =
   | { kind: "plateGrid"; chapter: Chapter; entries: { item: CatalogItem; plate: number }[] }
   | { kind: "plateSpread"; half: "left" | "right"; chapter: Chapter; entries: { item: CatalogItem; plate: number }[] }
   | { kind: "bleed"; half: "left" | "right"; chapter: Chapter; item: CatalogItem }
+  | { kind: "meaningless"; half: "left" | "right"; chapter: Chapter }
   | { kind: "aphorism"; half: "left" | "right"; aphorism: Aphorism }
   | { kind: "motto"; chapter: Chapter; text: { en: string; zh: string }; keySuffix?: string }
   | { kind: "about"; chunk: number }
@@ -1523,7 +1524,15 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // book, and the blank recto that faced it goes with it: the
     // whole spread is deleted. The Still Things facsimile run,
     // p. 17 alone since the p. 18 deletion, is now empty.
-    const CANVA_KEPT_PAGES = [8, 9, 12, 13, 14, 15, 16, 21, 22];
+    // Deletion (her direction, 2026-11-23): facsimile p. 13 — the
+    // two lidded jars she has since lettered "Meaningless Work
+    // Box 1 / 2" — leaves the book as a facsimile page. The work
+    // itself stands in the book exactly once, as the new
+    // Meaningless Work spread immediately behind the Still Things
+    // opener spread (see the emission below). A blank stands in
+    // p. 13's slot in the head cluster, facing p. 12, so pp. 15–16
+    // and every page behind the cluster keep their original sides.
+    const CANVA_KEPT_PAGES = [8, 9, 12, 14, 15, 16, 21, 22];
     const CANVA_FRONT_PAGES = CANVA_KEPT_PAGES.filter((p) => p < 11);
     // Her direction (2026-11-11, later the same evening): the teapot /
     // Residuals #26 pair moves four pages earlier still (「再提前4页」),
@@ -1539,7 +1548,8 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // the Still Things #14 plate (the bust with the ice-cream cone):
     // p. 14 on the verso, the plate on the recto. It is emitted in
     // the plate loop, immediately ahead of that plate, under a
-    // parity guard (see there); the cluster here is pp. 13, 15, 16.
+    // parity guard (see there); the cluster here is pp. 15, 16
+    // (p. 13 deleted 2026-11-23 — see CANVA_KEPT_PAGES above).
     const CANVA_RESIDUALS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 13 && p < 17 && p !== 14);
     const CANVA_STILLTHINGS_PAGES = CANVA_KEPT_PAGES.filter((p) => p >= 17 && p <= 20);
     // Facsimile placement updates (her direction, 2026-11-08, later the
@@ -1677,8 +1687,28 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     // here as a page — its graphic stands on the title spread itself
     // (see CANVA_STILLTHINGS_HEAD_PAGES above), so the cluster emitted
     // behind the spread is pp. 12–16.
+    // Her direction (2026-11-23): the Meaningless Work spread stands
+    // immediately behind the Still Things opener spread, ahead of
+    // the facsimile cluster — her watercolor of the two jars
+    // lettered "Meaningless Work Box 1 / 2" on the verso, Walter
+    // De Maria's 1960 score text on the recto, both on the pale
+    // ground of her composed artwork (see the "meaningless" render
+    // case and pageBackgrounds.ts). The opener spread ends on a
+    // recto, so the spread lands verso–recto with no guard blank.
     if (chapter.key === "stillthings") {
-      for (const p of CANVA_STILLTHINGS_HEAD_PAGES) specs.push({ kind: "canva", page: p });
+      specs.push({ kind: "meaningless", half: "left", chapter });
+      specs.push({ kind: "meaningless", half: "right", chapter });
+    }
+    if (chapter.key === "stillthings") {
+      for (const p of CANVA_STILLTHINGS_HEAD_PAGES) {
+        specs.push({ kind: "canva", page: p });
+        // Her direction (2026-11-23): facsimile p. 13 is deleted
+        // (see CANVA_KEPT_PAGES above). A blank stands in its slot,
+        // facing p. 12, so the pages behind it (pp. 15–16 and the
+        // whole run after the cluster) keep their original sides
+        // despite the net +1 of the addition and the deletion.
+        if (p === 12) specs.push({ kind: "blank" });
+      }
     }
     // The cover-story text stands as ONE quiet page inside Negotiated
     // Intelligence, immediately after the chapter's opener spread and
@@ -2715,6 +2745,8 @@ function pageKeyOf(spec: PageSpec): string | null {
       return `plateSpread:${spec.chapter.key}:${spec.entries[0]?.item.image_url ?? ""}:${spec.half}`;
     case "bleed":
       return `bleed:${spec.chapter.key}:${spec.half}`;
+    case "meaningless":
+      return `meaningless:${spec.half}`;
     case "about":
       return `about:${spec.chunk}`;
     case "collage":
@@ -4430,6 +4462,47 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
               </div>
             )}
           </div>
+        </Page>
+      );
+    }
+
+    case "meaningless": {
+      // The Meaningless Work spread (her direction, 2026-11-23,
+      // standing immediately behind the Still Things opener
+      // spread): the verso carries her watercolor of the two jars
+      // lettered "Meaningless Work Box 1 / 2", contained on the
+      // pale ground of her composed artwork; the recto carries
+      // Walter De Maria's March 1960 score text exactly as she set
+      // it in that artwork — the score is the artwork's inscribed
+      // text, so it stands in English in every view, like a
+      // facsimile. Only the credit line at the verso's foot is
+      // typeset, and it follows the view's language: English in
+      // the English view, Chinese in the Chinese view, the pair
+      // in the bilingual view. The two pictures are crops of her
+      // composite, unaltered apart from the crop.
+      const chapter = spec.chapter;
+      const creditEn = "Watercolor by Chun Wang, 2026; words by Walter De Maria, 1960";
+      const creditZh = "水彩：王淳，2026年；文字：沃尔特·德·玛利亚，1960年";
+      return (
+        <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-meaningless bk-meaningless-${spec.half}${bgImgCls}`}>{bgImgLayer}
+          <div className="bk-meaningless-body">
+            {spec.half === "left" ? (
+              <>
+                <img className="bk-meaningless-img bk-meaningless-painting" src="/book/stillthings/meaningless-painting.jpg" alt="Meaningless Work Box 1 and 2 — watercolor by Chun Wang" />
+                <div className="bk-meaningless-credit">
+                  {ctx.capLang === "zh" ? creditZh : ctx.capLang === "en" ? creditEn : (
+                    <>
+                      <span>{creditEn}</span>
+                      <span>{creditZh}</span>
+                    </>
+                  )}
+                </div>
+              </>
+            ) : (
+              <img className="bk-meaningless-img bk-meaningless-text-img" src="/book/stillthings/meaningless-text.jpg" alt="Boxes for Meaningless Work — Walter De Maria, March 1960" />
+            )}
+          </div>
+          <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
         </Page>
       );
     }

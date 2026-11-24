@@ -110,6 +110,11 @@ export function rgbToHex(r: number, g: number, b: number): string {
  */
 export const PAGE_BACKGROUNDS: Record<string, PageBgValue> = {
   "contents": "white",
+  // The Meaningless Work spread (her direction, 2026-11-23): both
+  // pages stand on the pale ground of her composed artwork itself,
+  // sampled from the composite at #d6d7d2.
+  "meaningless:left": "#d6d7d2",
+  "meaningless:right": "#d6d7d2",
   "plate:/remains/01/main.jpg": "black",
   // Remains No. 1 as a full-bleed spread (her direction, 2026-11-11):
   // both halves stand on black, so the fit picture's slack on the
