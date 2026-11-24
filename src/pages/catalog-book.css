@@ -3093,6 +3093,50 @@
   object-fit: contain;
 }
 
+/* ── The Meaningless Work spread (2026-11-23) ──────────────────────
+   Two pages on the pale ground of the artist's composed artwork
+   (#d6d7d2, set in pageBackgrounds.ts): her jars watercolor
+   contained on the verso, De Maria's score text on the recto.
+   Both pictures are crops of her composite, so their own pale
+   ground blends into the page ground. The credit stands at the
+   foot of the verso in the small grey sans of her composite. */
+.bk-meaningless-body {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+.bk-meaningless-img {
+  object-fit: contain;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.bk-meaningless-painting {
+  width: 88%;
+}
+
+.bk-meaningless-text-img {
+  width: 84%;
+}
+
+.bk-meaningless-credit {
+  position: absolute;
+  left: 0;
+  bottom: 0.1in;
+  color: #8a8a8a;
+  font-size: 8.5pt;
+  line-height: 1.35;
+}
+
+.bk-meaningless-credit span {
+  display: block;
+}
+
 /* ── Essay section heads: the book's serif ─────────────────────────── */
 /* Her direction (2026-11-06): the handwritten face on the English
    essay-head titles reads strangely — unify them in the book's text
