@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import ProductCard from "./ProductCard";
-import { useProducts, getArtboxPrintCount } from "@/hooks/useProducts";
+import { useProducts, getArtboxPrintCount, getPrintSizes } from "@/hooks/useProducts";
+import { withInches } from "@/lib/dimensions";
 import { getProductCategories, getProductCategoriesZh, getProductCollections, getProductCollectionsZh } from "@/lib/products";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -32,6 +33,7 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedCategory, setSelectedCategory] = useState(() => lockedCategory ?? searchParams.get("category") ?? "ALL");
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const { data: products, isLoading, error } = useProducts(true);
   const firstMatchedCardRef = useRef<HTMLDivElement | null>(null);
@@ -66,6 +68,12 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
     if (fromUrl !== selectedCategory) setSelectedCategory(fromUrl);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
+  // The print-size filter belongs to the Fine Art Prints view; leaving that
+  // view (sidebar click or URL change) clears it.
+  useEffect(() => {
+    setSelectedSize(null);
+  }, [selectedCategory]);
+
   const normalizedSearchQuery = searchQuery?.trim() || "";
   const hasActiveSearch = normalizedSearchQuery.length > 0;
 
@@ -125,6 +133,19 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
   const categoryLabel = (cat: string) => tagLabel(cat, getProductCategories, getProductCategoriesZh, tagCount(cat, getProductCategories));
   const collectionLabel = (col: string) => tagLabel(col, getProductCollections, getProductCollectionsZh, tagCount(col, getProductCollections));
 
+  // Print-size filter options for the Fine Art Prints view, generated from
+  // the sizes those products actually sell at (smallest first, with counts).
+  const fineArtProducts = (visibleProducts ?? []).filter(p => getProductCategories(p).includes("Fine Art Prints"));
+  const sizeCounts = new Map<string, number>();
+  for (const p of fineArtProducts) {
+    for (const s of getPrintSizes(p)) sizeCounts.set(s, (sizeCounts.get(s) ?? 0) + 1);
+  }
+  const sizeArea = (key: string) => {
+    const [w, h] = key.split("×").map(v => parseInt(v, 10));
+    return (w || 0) * (h || 0);
+  };
+  const sizeOptions = [...sizeCounts.entries()].sort((a, b) => sizeArea(a[0]) - sizeArea(b[0]));
+
   const buildProductSearchText = (product: Record<string, unknown>) => {
     return Object.values(product)
       .filter((value) => typeof value === "string" || typeof value === "number")
@@ -136,7 +157,8 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
     const categoryMatch = selectedCategory === "ALL" || getProductCategories(product).includes(selectedCategory) || getProductCollections(product).includes(selectedCategory);
     const searchText = buildProductSearchText(product as Record<string, unknown>);
     const searchMatch = !normalizedSearchQuery || searchText.includes(normalizedSearchQuery.toLowerCase());
-    return categoryMatch && searchMatch;
+    const sizeMatch = !selectedSize || getPrintSizes(product).includes(selectedSize);
+    return categoryMatch && searchMatch && sizeMatch;
   });
 
   const sortedFilteredProducts = useMemo(
@@ -241,6 +263,37 @@ const ProductGrid = ({ searchQuery, onSearchChange, onMatchCountChange, matchedC
                     </button>
                   ))}
                 </nav>
+
+                {selectedCategory === "Fine Art Prints" && sizeOptions.length > 0 && (
+                  <nav className="flex flex-col items-start gap-3">
+                    <p className="font-helvetica text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
+                      {t.productGrid.sizeHeading}
+                    </p>
+                    <button
+                      onClick={() => setSelectedSize(null)}
+                      className={`category-label text-sm pb-1 border-b lg:border-b-0 lg:border-l lg:pl-3 transition-colors ${
+                        selectedSize === null
+                          ? "border-foreground text-foreground"
+                          : "border-transparent text-muted-foreground hover:border-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {t.productGrid.sizeAll} <span className="font-helvetica">({fineArtProducts.length})</span>
+                    </button>
+                    {sizeOptions.map(([size, count]) => (
+                      <button
+                        key={size}
+                        onClick={() => setSelectedSize(size === selectedSize ? null : size)}
+                        className={`category-label text-sm pb-1 border-b lg:border-b-0 lg:border-l lg:pl-3 transition-colors ${
+                          selectedSize === size
+                            ? "border-foreground text-foreground"
+                            : "border-transparent text-muted-foreground hover:border-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {zh ? withInches(`${size} 厘米`, "zh") : withInches(`${size} cm`, "en")} <span className="font-helvetica">({count})</span>
+                      </button>
+                    ))}
+                  </nav>
+                )}
 
                 {collections.length > 0 && (
                   <nav className="flex flex-col items-start gap-3">
