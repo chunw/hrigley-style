@@ -15,6 +15,17 @@ const buildDescription = (desc: string | undefined | null, printInfo: string) =>
 };
 
 const DIMENSION_RE = /\d+\s*[×x]\s*\d+\s*(cm|厘米)/;
+
+// Print sizes (cm, "W × H") an item can be bought at, derived from the same
+// labels the detail pages sell by. Composed catalog items carry printSizes
+// explicitly; shop products fall back to the first size in their dimensions.
+const PRINT_SIZE_RE = /(\d+)\s*×\s*(\d+)\s*cm/;
+const sizeFromText = (text: string | undefined | null): string[] => {
+  const m = text?.match(PRINT_SIZE_RE);
+  return m ? [`${m[1]} × ${m[2]}`] : [];
+};
+export const getPrintSizes = (product: { printSizes?: string[]; dimensions?: string }): string[] =>
+  product.printSizes ?? sizeFromText(product.dimensions);
 // Grid cards for multi-option works (her rule, 2026-11-20): state the
 // options plainly — original first, then the print — with no prices and
 // no dimensions in the card description.
@@ -49,6 +60,7 @@ function buildCatalogProducts(showAll: boolean) {
         description: twoPrints ? buildDescription(p.description, TWO_PRINTS_EN) : buildDescription(p.description, printInfo),
         description_zh: twoPrints ? buildDescription(p.descriptionZh, TWO_PRINTS_ZH) : buildDescription(p.descriptionZh, printInfoZh),
         price: p.printPrice ?? DEFAULT_PRINT_PRICE,
+        printSizes: ["23 × 30", ...(p.printPrice12x18 ? ["30 × 46"] : [])],
         priceLabel: p.printPrice && p.printPrice12x18 ? `$${p.printPrice} / $${p.printPrice12x18}` : undefined,
         currency: "USD",
         image_url: `/photography/${paddedId}/main.jpg`,
@@ -75,6 +87,7 @@ function buildCatalogProducts(showAll: boolean) {
       description: buildDescription(w.description, '10 × 15 cm print on matte fine art paper'),
       description_zh: buildDescription(w.descriptionZh, "10 × 15 厘米哑光艺术微喷"),
       price: w.price ?? 4,
+      printSizes: ["10 × 15"],
       currency: "USD",
       image_url: `/remains/${paddedId}/main.jpg`,
       secondImageUrl: `/remains/${paddedId}/1.jpg`,
@@ -100,6 +113,7 @@ function buildCatalogProducts(showAll: boolean) {
       description: buildDescription(w.description, (w.priceLabel?.match(/\$/g) ?? []).length === 2 ? TWO_PRINTS_EN : '10 × 15 cm print on matte fine art paper'),
       description_zh: buildDescription(w.descriptionZh, (w.priceLabel?.match(/\$/g) ?? []).length === 2 ? TWO_PRINTS_ZH : "10 × 15 厘米哑光艺术微喷"),
       price: w.price ?? 4,
+      printSizes: (w.priceLabel?.match(/\$/g) ?? []).length === 2 ? ["10 × 15", "23 × 30"] : ["10 × 15"],
       priceLabel: w.priceLabel,
       currency: "USD",
       image_url: `/21spirit/${paddedId}/main.jpg`,
@@ -123,6 +137,13 @@ function buildCatalogProducts(showAll: boolean) {
       const isMultiOption = Boolean(w.multiOptionsPaylink) || (w.priceLabel?.match(/\$/g) ?? []).length === 2;
       const multiSegEn = w.framedDimensions ? MULTI_FRAMED_EN : MULTI_ORIGINAL_EN;
       const multiSegZh = w.framedDimensions ? MULTI_FRAMED_ZH : MULTI_ORIGINAL_ZH;
+      // The print size this work sells at, mirroring WatercolorDetail's
+      // option labels: multi-option works use their print option label
+      // (default 23 × 30), single-option works their printInfo (default by price).
+      const printLabelEn = isMultiOption
+        ? (w.printOptionLabel ?? '23 × 30 cm fine art print')
+        : (w.printInfo ?? (((w.price ?? w.printPrice ?? DEFAULT_PRINT_PRICE) === 4) ? '10 × 15 cm fine art print' : '23 × 30 cm fine art print'));
+      const printSizes = sizeFromText(printLabelEn);
       const baseCategory = w.series === "III" ? "Cards" : "Fine Art Prints";
       const baseCategoryZh = w.series === "III" ? "卡片" : "版画 · 限量版号";
       return {
@@ -133,6 +154,7 @@ function buildCatalogProducts(showAll: boolean) {
         description: isMultiOption ? buildMultiDescription(w.description, multiSegEn) : buildDescription(w.description, printInfo),
         description_zh: isMultiOption ? buildMultiDescription(w.descriptionZh, multiSegZh) : buildDescription(w.descriptionZh, printInfoZh),
         price: w.price ?? w.printPrice ?? DEFAULT_PRINT_PRICE,
+        printSizes,
         priceLabel: w.priceLabel,
         currency: "USD",
         image_url: `/watercolors/${paddedId}/main.jpg`,

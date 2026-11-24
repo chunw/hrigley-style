@@ -68,6 +68,8 @@ export const translations = {
       filters: "Filters",
       categoryHeading: "Category",
       collectionsHeading: "Collections",
+      sizeHeading: "Print Size",
+      sizeAll: "All Sizes",
     },
     productDetails: {
       loading: "Loading...",
@@ -279,6 +281,8 @@ export const translations = {
       filters: "筛选",
       categoryHeading: "分类",
       collectionsHeading: "系列",
+      sizeHeading: "印品尺寸",
+      sizeAll: "全部尺寸",
     },
     productDetails: {
       loading: "加载中……",
