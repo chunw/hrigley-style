@@ -187,11 +187,11 @@ const PhotographyCatalog = () => {
               {photographyWorks.length} {t.photographyCatalog.works}
             </p>
             {(lang === "zh" ? catalogMeta.descriptionZh : catalogMeta.description) && (
-              <div className="mt-3 max-w-prose space-y-3">
+              <div className="mt-8 space-y-6 rounded-[1.25rem] bg-black p-7 font-helvetica text-[clamp(1.55rem,3.2vw,2.75rem)] font-bold leading-[1.04] tracking-[-0.01em] text-white ring-1 ring-white/20 md:p-12">
                 {(lang === "zh" ? catalogMeta.descriptionZh : catalogMeta.description)
                   .split("\n\n")
                   .map((para, i) => (
-                    <p key={i} className="description-html text-sm text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: para }} />
+                    <p key={i} className="description-html" dangerouslySetInnerHTML={{ __html: para }} />
                   ))}
               </div>
             )}
