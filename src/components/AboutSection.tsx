@@ -11,7 +11,7 @@ const AboutSection = () => {
         <img
           src={deliveryGif}
           alt=""
-          className="block w-full max-w-[720px] h-auto mb-10"
+          className="block w-full max-w-[720px] h-auto mx-auto mb-10"
         />
         {lang !== "zh" && (
           <>

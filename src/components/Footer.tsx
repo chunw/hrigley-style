@@ -1,13 +1,57 @@
 import { useState } from "react";
-import { ArrowUpRight, X } from "lucide-react";
+import { Instagram, Linkedin, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { INSTAGRAM_URL } from "@/lib/constants";
 
 const LINKEDIN_URL = "https://www.linkedin.com/company/107686784/";
 
+// Footer styled after doublestandard.nyc (her call, 2026-11-24): always a
+// pure-black block with white type — big italic serif lowercase group
+// headings, small uppercase wide-tracked links, social icons top-right, a
+// centered copyright line, and a giant lowercase wordmark filling the full
+// width at the very bottom. Content is unchanged from the previous footer.
 const Footer = () => {
   const { t, lang } = useLanguage();
+  const zh = lang === "zh";
   const [showEmail, setShowEmail] = useState(false);
+  const [subscribeEmail, setSubscribeEmail] = useState("");
+  const [subscribeState, setSubscribeState] = useState<"idle" | "sending" | "done" | "error">("idle");
+
+  // Static site: subscriptions post to FormSubmit's AJAX endpoint, which
+  // forwards each signup to the studio inbox as an email. The address owner
+  // activates the endpoint once via a confirmation email from FormSubmit.
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const email = subscribeEmail.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setSubscribeState("error");
+      return;
+    }
+    setSubscribeState("sending");
+    try {
+      const res = await fetch("https://formsubmit.co/ajax/chunwang.me@gmail.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          email,
+          _subject: "New studio friend subscription",
+          _template: "table",
+          _captcha: "false",
+        }),
+      });
+      const data = await res.json().catch(() => null);
+      // FormSubmit delivered the signup to the inbox in testing even when its
+      // AJAX response did not come back as clean success JSON, so only an
+      // explicit success:"false" (or a network failure) counts as an error.
+      if (data && String(data.success) === "false") {
+        setSubscribeState("error");
+      } else {
+        setSubscribeState("done");
+      }
+    } catch {
+      setSubscribeState("error");
+    }
+  };
 
   const exploreLinks = [
     { href: "/#products", label: t.footer.navShop },
@@ -16,31 +60,24 @@ const Footer = () => {
     { href: "/cart", label: t.footer.navCart },
   ];
 
-  const contactLinks = [
-    { href: INSTAGRAM_URL, label: t.footer.instagramLabel, external: true },
-    { href: LINKEDIN_URL, label: t.footer.linkedinLabel, external: true },
-  ];
+  const headingClass =
+    "font-serif italic lowercase leading-none tracking-[-0.04em] text-[38px]";
+  const linkClass =
+    "text-[11px] uppercase leading-[1.4] tracking-[0.14em] text-white underline-offset-[3px] transition-opacity hover:underline";
 
   return (
-    <footer className="border-t border-border bg-background text-foreground">
-      <div className="mx-auto max-w-[1600px] px-4 sm:px-5 lg:px-7">
-        <div className="grid gap-10 py-12 md:grid-cols-[1.5fr_1fr_1fr]">
-          <div>
-            <p className="max-w-xs text-sm leading-relaxed text-foreground/70">
-              {t.footer.locationShipping}
-            </p>          </div>
-
-          <nav aria-label="Footer">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/60">
-              {t.footer.exploreTitle}
-            </div>
-            <ul className="mt-4 space-y-2.5 text-sm">
+    <footer className="bg-black text-white">
+      <div className="mx-auto max-w-[1400px] px-5 pb-[42px] pt-[52px] sm:px-10">
+        <div className="grid gap-10 lg:grid-cols-[1fr_1fr_1.4fr_0.7fr] lg:gap-8">
+          <nav
+            aria-label="Footer"
+            className="border-t border-white pt-5 lg:border-t-0 lg:pt-0"
+          >
+            <div className={headingClass}>{t.footer.exploreTitle}</div>
+            <ul className="mt-5 flex flex-col gap-3">
               {exploreLinks.map(({ href, label }) => (
                 <li key={href}>
-                  <a
-                    href={href}
-                    className="text-foreground/75 underline-offset-4 transition-colors hover:text-foreground hover:underline"
-                  >
+                  <a href={href} className={linkClass}>
                     {label}
                   </a>
                 </li>
@@ -48,40 +85,99 @@ const Footer = () => {
             </ul>
           </nav>
 
-          <div>
-            <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/60">
-              {t.footer.contactTitle}
-            </div>
-            <ul className="mt-4 space-y-2.5 text-sm">
+          <div className="border-t border-white pt-5 lg:border-t-0 lg:pt-0">
+            <div className={headingClass}>{t.footer.contactTitle}</div>
+            <ul className="mt-5 flex flex-col gap-3">
               <li>
-                <button
-                  type="button"
-                  onClick={() => setShowEmail(true)}
-                  className="text-foreground/75 underline-offset-4 transition-colors hover:text-foreground hover:underline"
-                >
+                <button type="button" onClick={() => setShowEmail(true)} className={linkClass}>
                   {t.footer.emailLabel}
                 </button>
               </li>
-              {contactLinks.map(({ href, label, external }) => (
-                <li key={label}>
-                  <a
-                    href={href}
-                    {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
-                    className="group inline-flex items-center gap-1 text-foreground/75 underline-offset-4 transition-colors hover:text-foreground hover:underline"
-                  >
-                    {label}
-                    {external && (
-                      <ArrowUpRight className="h-3.5 w-3.5 opacity-0 transition-opacity group-hover:opacity-60" />
-                    )}
-                  </a>
-                </li>
-              ))}
             </ul>
           </div>
-        </div>
 
-        <div className="flex flex-col gap-2 border-t border-border py-5 text-[11px] uppercase tracking-[0.18em] text-foreground/60 sm:flex-row sm:items-center sm:justify-between">
-          <div>© Chun Wang Studio 2026 · {t.footer.copyright}</div>
+          <div className="border-t border-white pt-5 lg:border-t-0 lg:pt-0">
+            <p className="max-w-[380px] font-serif text-[28px] italic leading-[1.15] tracking-[-0.03em]">
+              {t.footer.locationShipping}
+            </p>
+          </div>
+
+          <div className="flex items-start gap-4 border-t border-white pt-5 lg:justify-end lg:border-t-0 lg:pt-1">
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={t.footer.instagramLabel}
+              className="text-white transition-opacity hover:opacity-70"
+            >
+              <Instagram className="h-[26px] w-[26px]" />
+            </a>
+            <a
+              href={LINKEDIN_URL}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={t.footer.linkedinLabel}
+              className="text-white transition-opacity hover:opacity-70"
+            >
+              <Linkedin className="h-[26px] w-[26px]" />
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-[1400px] px-5 pb-4 sm:px-10">
+        <div className="max-w-2xl border-t border-white pt-10 lg:border-t-0 lg:pt-2">
+          <div className="gloria-title text-5xl leading-none text-white sm:text-6xl">
+            {t.footer.subscribeTitle}
+          </div>
+          <p className="mt-5 text-xs uppercase leading-relaxed tracking-[0.22em] text-white/60">
+            {t.footer.subscribeText}
+          </p>
+          {subscribeState === "done" ? (
+            <p className="mt-8 border-b border-white pb-3 text-base text-white">
+              {t.footer.subscribeSuccess}
+            </p>
+          ) : (
+            <form onSubmit={handleSubscribe} noValidate>
+              <div className="mt-8 flex items-baseline gap-4 border-b border-white pb-3">
+                <input
+                  type="email"
+                  value={subscribeEmail}
+                  onChange={(e) => {
+                    setSubscribeEmail(e.target.value);
+                    if (subscribeState === "error") setSubscribeState("idle");
+                  }}
+                  placeholder={t.footer.subscribePlaceholder}
+                  aria-label={t.footer.subscribePlaceholder}
+                  className="min-w-0 flex-1 bg-transparent text-base text-white placeholder:text-white/50 focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  disabled={subscribeState === "sending"}
+                  className="shrink-0 font-serif text-lg normal-case italic tracking-normal text-primary transition-opacity hover:opacity-80 disabled:opacity-50"
+                >
+                  {t.footer.subscribeJoin}
+                </button>
+              </div>
+              {subscribeState === "error" && (
+                <p className="mt-3 text-sm text-white/70">{t.footer.subscribeError}</p>
+              )}
+            </form>
+          )}
+        </div>
+      </div>
+
+      <div className="px-5 pt-5 pb-14 text-center text-[11px] uppercase tracking-[0.18em] text-white/50">
+        © Chun Wang Studio 2026 · {t.footer.copyright}
+      </div>
+
+      <div className="overflow-hidden px-2.5 pb-2.5" aria-hidden="true">
+        <div
+          className={`whitespace-nowrap text-center font-extrabold lowercase leading-[0.8] tracking-[-0.04em] ${
+            zh ? "text-[19vw]" : "text-[10.5vw]"
+          }`}
+        >
+          {zh ? "王淳工作室" : "chun wang studio"}
         </div>
       </div>
 
@@ -91,18 +187,18 @@ const Footer = () => {
           onClick={() => setShowEmail(false)}
         >
           <div
-            className="relative border border-border bg-background px-8 py-6 shadow-xl"
+            className="relative border border-white/40 bg-black px-8 py-6 text-white shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
               aria-label="Close"
               onClick={() => setShowEmail(false)}
-              className="absolute right-3 top-3 text-foreground/60 transition-colors hover:text-foreground"
+              className="absolute right-3 top-3 text-white/60 transition-colors hover:text-white"
             >
               <X className="h-4 w-4" />
             </button>
-            <p className="text-base text-foreground">{t.footer.emailPopup}</p>
+            <p className="text-base">{t.footer.emailPopup}</p>
           </div>
         </div>
       )}

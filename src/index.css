@@ -207,10 +207,11 @@ All colors MUST be HSL.
     text-transform: uppercase;
   }
 
-  /* Site navigation bar links */
+  /* Site navigation bar links — Aileron in the same extra-bold weight as the
+     footer wordmark she pointed at (her call, 2026-11-24). */
   .fangsong-nav {
     font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 400;
+    font-weight: 800;
     letter-spacing: 0.06em;
   }
 
@@ -242,10 +243,16 @@ All colors MUST be HSL.
     text-transform: none;
   }
 
-  /* Product titles (cards, cart line items, detail-page headings), Zhuque Fangsong for English
-     like .shop-title, but rendered in the title's own mixed case rather than forced uppercase. */
+  /* Product titles (cards, cart line items, detail-page headings): the same serif
+     italic as the footer's "designed & shipped" statement (her call, 2026-11-24 —
+     that statement is Tailwind's font-serif stack, ui-serif/Georgia, italic).
+     Latin takes ui-serif/Georgia, Chinese falls through to Zhuque Fangsong.
+     Rendered in the title's own mixed case rather than forced uppercase.
+     Book captions are unaffected: catalog-book.css overrides .product-title
+     inside .bk-root with the caption register. */
   .product-title {
-    font-family: 'Zhuque Fangsong (technical preview)', 'Aileron', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: ui-serif, Georgia, 'Zhuque Fangsong (technical preview)', Cambria, 'Times New Roman', Times, serif;
+    font-style: italic;
     text-transform: none;
   }
 
