@@ -11,7 +11,8 @@ const LINKEDIN_URL = "https://www.linkedin.com/company/107686784/";
 // centered copyright line, and a giant lowercase wordmark filling the full
 // width at the very bottom. Content is unchanged from the previous footer.
 const Footer = () => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const zh = lang === "zh";
   const [showEmail, setShowEmail] = useState(false);
   const [subscribeEmail, setSubscribeEmail] = useState("");
   const [subscribeState, setSubscribeState] = useState<"idle" | "sending" | "done" | "error">("idle");
@@ -153,7 +154,7 @@ const Footer = () => {
                 <button
                   type="submit"
                   disabled={subscribeState === "sending"}
-                  className="shrink-0 font-semibold uppercase tracking-[0.14em] text-primary transition-opacity hover:opacity-80 disabled:opacity-50"
+                  className="shrink-0 font-serif text-lg normal-case italic tracking-normal text-primary transition-opacity hover:opacity-80 disabled:opacity-50"
                 >
                   {t.footer.subscribeJoin}
                 </button>
@@ -168,6 +169,16 @@ const Footer = () => {
 
       <div className="px-5 pt-5 pb-14 text-center text-[11px] uppercase tracking-[0.18em] text-white/50">
         © Chun Wang Studio 2026 · {t.footer.copyright}
+      </div>
+
+      <div className="overflow-hidden px-2.5 pb-2.5" aria-hidden="true">
+        <div
+          className={`whitespace-nowrap text-center font-extrabold lowercase leading-[0.8] tracking-[-0.04em] ${
+            zh ? "text-[19vw]" : "text-[10.5vw]"
+          }`}
+        >
+          {zh ? "王淳工作室" : "chun wang studio"}
+        </div>
       </div>
 
       {showEmail && (
