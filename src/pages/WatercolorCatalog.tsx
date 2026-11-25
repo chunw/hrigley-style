@@ -19,8 +19,8 @@ const WorkCard = ({ work }: { work: Watercolor }) => {
   return (
     <article>
       <div className="flex justify-between items-center mb-2">
-        <span className="font-mono text-xs">P{padded}</span>
-        <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+        <span className="text-xs">P{padded}</span>
+        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
           {series ? `${lang === "zh" ? series.chineseName : series.englishName}` : `Series ${work.series}`}
         </span>
       </div>
@@ -38,7 +38,7 @@ const WorkCard = ({ work }: { work: Watercolor }) => {
         {...hoverHandlers}
       >
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/40">
+          <span className="text-[10px] uppercase tracking-widest text-muted-foreground/40">
             {t.watercolorCatalog.uploadImage}
           </span>
         </div>
@@ -120,10 +120,10 @@ const WatercolorCatalog = () => {
             <h1 className="shop-title mt-3 text-4xl text-muted-foreground">
             </h1>
             <p className="small-title mt-3 text-4xl ">{t.watercolorCatalog.subtitle}</p>
-            <p className="font-mono text-xs text-muted-foreground/60 mt-1">
+            <p className="text-xs text-muted-foreground/60 mt-1">
               {lang === "zh" ? catalogMeta.mediumZh : catalogMeta.medium}
             </p>
-            <p className="font-mono text-xs text-muted-foreground/60 mt-1">
+            <p className="text-xs text-muted-foreground/60 mt-1">
               {watercolors.length} {t.watercolorCatalog.works}
             </p>
             {(lang === "zh" ? catalogMeta.descriptionHtmlZh : catalogMeta.descriptionHtml) ? (
@@ -153,7 +153,7 @@ const WatercolorCatalog = () => {
                   <span className="text-2xl leading-none">{lang === "zh" ? s.chineseName : s.englishName}</span>
                   <span className="text-lg leading-none text-muted-foreground">{lang === "zh" ? s.englishName : s.chineseName}</span>
                 </div>
-                <p className="font-mono text-xs mt-2 text-muted-foreground">{count} {t.watercolorCatalog.works}</p>
+                <p className="text-xs mt-2 text-muted-foreground">{count} {t.watercolorCatalog.works}</p>
                 {s.description && (
                   <p
                     className="description-html text-sm text-muted-foreground mt-2"

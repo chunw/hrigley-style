@@ -181,7 +181,7 @@ const ProductCard = ({ id, name, title, title_zh, description, description_zh, p
               <p className="text-sm font-helvetica text-muted-foreground">{renderDescription(displayDescription)}</p>
             )}
             {artboxPrintCount !== undefined && artboxPrintCount > 0 && (
-              <p className="text-xs font-mono text-muted-foreground">{artboxPrintCount} {zh ? "张印刷品" : "prints included"}</p>
+              <p className="text-xs text-muted-foreground">{artboxPrintCount} {zh ? "张印刷品" : "prints included"}</p>
             )}
           </div>
 

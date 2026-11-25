@@ -86,7 +86,7 @@ const Useful = () => {
                     key={theme}
                     type="button"
                     onClick={() => handlePrint(theme)}
-                    className="w-full flex items-center gap-2 px-3 py-2 font-mono text-xs hover:bg-muted transition-colors text-foreground border-b border-border last:border-b-0"
+                    className="w-full flex items-center gap-2 px-3 py-2 text-xs hover:bg-muted transition-colors text-foreground border-b border-border last:border-b-0"
                   >
                     <span className={`inline-block w-3 h-3 border border-current ${theme === "dark" ? "bg-foreground" : ""}`} />
                     {theme === "light" ? "Light" : "Dark"}
@@ -137,7 +137,7 @@ const Useful = () => {
             className="group flex items-center justify-between hover:text-primary transition-colors"
           >
             <div>
-              <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-2">
+              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">
                 Original Works
               </p>
               <h2 className="shop-title text-4xl md:text-5xl leading-none">Visions in Watercolor</h2>

@@ -245,16 +245,22 @@ All colors MUST be HSL.
     text-transform: none;
   }
 
-  /* Product titles (cards, cart line items, detail-page headings): the navigation
-     font (her call, 2026-11-24, superseding the serif-italic pass earlier the same
-     evening) — the .fangsong-nav Aileron stack at extra-bold weight. Chinese
-     falls through to Zhuque Fangsong. Rendered in the title's own mixed case.
-     Book captions are unaffected: catalog-book.css overrides .product-title
-     inside .bk-root with the caption register. */
+  /* Product titles (cards, cart line items, detail-page headings): the "Explore"
+     heading font — Gloria Hallelujah (her call, 2026-11-24, final word in an
+     evening of font passes: the English shop uses only Gloria + Aileron).
+     Chinese falls through to Zhuque Fangsong. Book captions are unaffected:
+     catalog-book.css overrides .product-title inside .bk-root. */
   .product-title {
-    font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 800;
+    font-family: 'Gloria Hallelujah', 'Zhuque Fangsong (technical preview)', 'Comic Sans MS', cursive;
     text-transform: none;
+  }
+
+  /* Two-font rule, shop side (her call, 2026-11-24): big .shop-title headings
+     outside the book render in Aileron instead of Zhuque Fangsong's Latin.
+     Book titles keep the original stack — every book usage sits inside
+     .bk-root, and elements that also carry .gloria-title keep Gloria. */
+  .shop-title:not(.bk-root .shop-title):not(.gloria-title) {
+    font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   }
 
   /* Small titles: the footer's "Become a studio friend" hand font (her call,
@@ -306,16 +312,11 @@ All colors MUST be HSL.
     letter-spacing: 0.04em;
   }
 
-  /* Slightly Useful Object page only, product titles in Instrument Serif instead of the
-     site-wide Zhuque Fangsong, tried as a more premium-feeling display face for this page. */
-  .useful-page .product-title {
-    font-family: '"Instrument Serif"', 'Zhuque Fangsong (technical preview)', Georgia, serif;
-  }
-
-  /* Slightly Useful Object page only, product grid prices in Instrument Serif, matching
-     the product-title treatment above. */
+  /* Slightly Useful Object page: product titles use the site-wide .product-title
+     (Gloria) like everywhere else; grid prices use the Aileron body stack.
+     (Instrument Serif overrides removed 2026-11-24, two-font rule.) */
   .useful-page .product-price {
-    font-family: '"Instrument Serif"', 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 1.05rem;
     letter-spacing: 0.01em;
   }

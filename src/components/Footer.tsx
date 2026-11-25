@@ -96,7 +96,7 @@ const Footer = () => {
           </div>
 
           <div className="border-t f-border pt-5 lg:border-t-0 lg:pt-0">
-            <p className="max-w-[380px] font-serif text-[28px] italic leading-[1.15] tracking-[-0.03em]">
+            <p className="max-w-[380px] text-[28px] italic leading-[1.15] tracking-[-0.03em]">
               {t.footer.locationShipping}
             </p>
           </div>
@@ -153,7 +153,7 @@ const Footer = () => {
                 <button
                   type="submit"
                   disabled={subscribeState === "sending"}
-                  className="shrink-0 font-serif text-lg normal-case italic tracking-normal text-primary transition-opacity hover:opacity-80 disabled:opacity-50"
+                  className="shrink-0 text-lg normal-case italic tracking-normal text-primary transition-opacity hover:opacity-80 disabled:opacity-50"
                 >
                   {t.footer.subscribeJoin}
                 </button>

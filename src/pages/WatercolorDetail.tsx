@@ -208,7 +208,7 @@ const WatercolorDetail = () => {
               />
             ) : (
               <div className="aspect-[8.5/11] bg-secondary flex items-center justify-center">
-                <span className="font-mono text-xs text-muted-foreground/40 uppercase tracking-widest">
+                <span className="text-xs text-muted-foreground/40 uppercase tracking-widest">
                   No image
                 </span>
               </div>
@@ -235,7 +235,7 @@ const WatercolorDetail = () => {
           {/* Details */}
           <div className="space-y-8">
             <div>
-              <p className="font-mono text-xs tracking-widest text-muted-foreground uppercase mb-2">
+              <p className="text-xs tracking-widest text-muted-foreground uppercase mb-2">
                 {seriesData ? `${lang === "zh" ? seriesData.chineseName : seriesData.englishName}` : `${t.watercolor.seriesPrefix} ${work.series}`}
               </p>
               <h1 className="shop-title product-title text-4xl leading-none">
@@ -259,7 +259,7 @@ const WatercolorDetail = () => {
               />
             )}
 
-            <div className={`space-y-1 font-mono text-muted-foreground ${lang === "zh" ? "text-sm" : "text-xs"}`}>
+            <div className={`space-y-1 text-muted-foreground ${lang === "zh" ? "text-sm" : "text-xs"}`}>
               {(lang === "zh" ? work.mediumZh : work.medium) && <p>{lang === "zh" ? work.mediumZh : work.medium}</p>}
               <p>{work.year}</p>
             </div>

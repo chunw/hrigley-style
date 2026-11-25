@@ -64,7 +64,7 @@ const PaymentSuccess = () => {
                 {s.orderConfirmed}
               </h1>
               {orderId && (
-                <p className="text-center font-mono text-sm tracking-widest text-muted-foreground mt-2">
+                <p className="text-center text-sm tracking-widest text-muted-foreground mt-2">
                   No. {orderId.slice(-8).toUpperCase()}
                 </p>
               )}

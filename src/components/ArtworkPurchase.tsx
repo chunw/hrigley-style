@@ -76,7 +76,7 @@ const ArtworkPurchase = ({ baseId, title, imageUrl, options, soldOut }: ArtworkP
 
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <p className="sans-label text-2xl font-bold">${selected.price}</p>
-        <p className="text-xs text-muted-foreground font-mono">{t.watercolor.shippingIncluded}</p>
+        <p className="text-xs text-muted-foreground">{t.watercolor.shippingIncluded}</p>
       </div>
 
       <button

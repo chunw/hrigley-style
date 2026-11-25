@@ -82,9 +82,9 @@ const WorkCard = ({ work, uniformHeight }: { work: PhotographyWork; uniformHeigh
   return (
     <article>
       <div className="flex justify-between items-center mb-2">
-        <span className="font-mono text-xs">PH{padded}</span>
+        <span className="text-xs">PH{padded}</span>
         {series && (
-          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
             {lang === "zh" ? series.chineseName : series.englishName}
           </span>
         )}
@@ -140,7 +140,7 @@ const WorkCard = ({ work, uniformHeight }: { work: PhotographyWork; uniformHeigh
       <div className="mt-3">
         <h3 className="text-sm leading-snug product-title">{title}</h3>
         {work.year && (
-          <p className="font-mono text-xs text-muted-foreground mt-1">{work.year}</p>
+          <p className="text-xs text-muted-foreground mt-1">{work.year}</p>
         )}
       </div>
     </article>
@@ -180,10 +180,10 @@ const PhotographyCatalog = () => {
           <div>
             <h1 className="shop-title text-6xl md:text-7xl leading-none">Chun Wang</h1>
             <p className="small-title mt-3 text-4xl">{t.photographyCatalog.subtitle}</p>
-            <p className="font-mono text-xs text-muted-foreground/60 mt-1">
+            <p className="text-xs text-muted-foreground/60 mt-1">
               {lang === "zh" ? catalogMeta.mediumZh : catalogMeta.medium}
             </p>
-            <p className="font-mono text-xs text-muted-foreground/60 mt-1">
+            <p className="text-xs text-muted-foreground/60 mt-1">
               {photographyWorks.length} {t.photographyCatalog.works}
             </p>
             {(lang === "zh" ? catalogMeta.descriptionZh : catalogMeta.description) && (
@@ -199,7 +199,7 @@ const PhotographyCatalog = () => {
           <div className="flex flex-col gap-2 self-start">
             {/* <Link
               to="/photography-photobook"
-              className="flex items-center gap-2 px-4 py-2 border border-border font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 border border-border text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
             >
               <BookOpen className="h-3 w-3 shrink-0" />
               Print Photobook
@@ -208,7 +208,7 @@ const PhotographyCatalog = () => {
               href="/cargo-print.html"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 border border-border font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 border border-border text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
             >
               <Printer className="h-3 w-3 shrink-0" />
               Print Cargo
@@ -224,7 +224,7 @@ const PhotographyCatalog = () => {
               return (
                 <div key={s.id} className="py-6 px-1 md:px-6">
                   <span className="text-2xl leading-none">{lang === "zh" ? s.chineseName : s.englishName}</span>
-                  <p className="font-mono text-xs mt-2 text-muted-foreground">{count} {t.photographyCatalog.works}</p>
+                  <p className="text-xs mt-2 text-muted-foreground">{count} {t.photographyCatalog.works}</p>
                 </div>
               );
             })}
@@ -236,7 +236,7 @@ const PhotographyCatalog = () => {
           <div className="flex justify-end mb-6">
             <button
               onClick={() => setUniformHeight((v) => !v)}
-              className={`font-mono text-[10px] uppercase tracking-widest px-3 py-1.5 transition-colors ${
+              className={`text-[10px] uppercase tracking-widest px-3 py-1.5 transition-colors ${
                 uniformHeight
                   ? "text-primary bg-primary/10"
                   : "text-muted-foreground hover:text-primary"

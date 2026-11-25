@@ -241,7 +241,7 @@ const ProductDetails = () => {
             )}
 
             {artboxPrintCount > 0 && (
-              <p className="font-mono text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground">
                 {artboxPrintCount} {zh ? "张印刷品" : "prints included"}
               </p>
             )}

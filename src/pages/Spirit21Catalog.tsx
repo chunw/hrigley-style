@@ -19,7 +19,7 @@ const WorkCard = ({ work }: { work: SpiritWork }) => {
   return (
     <article>
       <div className="flex justify-between items-center mb-2">
-        <span className="font-mono text-xs">S{padded}</span>
+        <span className="text-xs">S{padded}</span>
       </div>
 
       <Link
@@ -32,7 +32,7 @@ const WorkCard = ({ work }: { work: SpiritWork }) => {
         {...hoverHandlers}
       >
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/40">
+          <span className="text-[10px] uppercase tracking-widest text-muted-foreground/40">
             {padded}
           </span>
         </div>
@@ -63,7 +63,7 @@ const WorkCard = ({ work }: { work: SpiritWork }) => {
       <div className="mt-3">
         <h3 className="text-sm leading-snug product-title">{title}</h3>
         {work.year && (
-          <p className="font-mono text-xs text-muted-foreground mt-1">{work.year}</p>
+          <p className="text-xs text-muted-foreground mt-1">{work.year}</p>
         )}
       </div>
     </article>
@@ -103,10 +103,10 @@ const Spirit21Catalog = () => {
           <div>
             <h1 className="shop-title text-6xl md:text-7xl leading-none">Chun Wang</h1>
             <p className="small-title mt-3 text-4xl">{t.spirit21Catalog.subtitle}</p>
-            <p className="font-mono text-xs text-muted-foreground/60 mt-1">
+            <p className="text-xs text-muted-foreground/60 mt-1">
               {lang === "zh" ? catalogMeta.mediumZh : catalogMeta.medium}
             </p>
-            <p className="font-mono text-xs text-muted-foreground/60 mt-1">
+            <p className="text-xs text-muted-foreground/60 mt-1">
               {spiritWorks.length} {t.spirit21Catalog.works}
             </p>
             {(lang === "zh" ? catalogMeta.descriptionZh : catalogMeta.description) && (
