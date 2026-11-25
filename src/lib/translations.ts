@@ -272,7 +272,7 @@ export const translations = {
       instagramLabel: "Instagram",
       linkedinLabel: "LinkedIn",
       artistSiteLabel: "chunwang.art",
-      subscribeTitle: "成为工作室朋友",
+      subscribeTitle: "订阅工作室动态",
       subscribeText: "新印品、工作室手记和印刷套装，第一时间先给你看。",
       subscribePlaceholder: "邮箱地址",
       subscribeJoin: "加入",
