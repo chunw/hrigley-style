@@ -70,7 +70,7 @@ const Footer = () => {
         <div className="grid gap-10 lg:grid-cols-[1fr_1fr_1.4fr_0.7fr] lg:gap-8">
           <nav
             aria-label="Footer"
-            className="border-t f-border pt-5 lg:border-t-0 lg:pt-0"
+            className="pt-5 lg:pt-0"
           >
             <div className={headingClass}>{t.footer.exploreTitle}</div>
             <ul className="mt-5 flex flex-col gap-3">
@@ -84,7 +84,7 @@ const Footer = () => {
             </ul>
           </nav>
 
-          <div className="border-t f-border pt-5 lg:border-t-0 lg:pt-0">
+          <div className="pt-5 lg:pt-0">
             <div className={headingClass}>{t.footer.contactTitle}</div>
             <ul className="mt-5 flex flex-col gap-3">
               <li>
@@ -95,13 +95,13 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className="border-t f-border pt-5 lg:border-t-0 lg:pt-0">
+          <div className="pt-5 lg:pt-0">
             <p className="max-w-[380px] text-[28px] italic leading-[1.15] tracking-[-0.03em]">
               {t.footer.locationShipping}
             </p>
           </div>
 
-          <div className="flex items-start gap-4 border-t f-border pt-5 lg:justify-end lg:border-t-0 lg:pt-1">
+          <div className="flex items-start gap-4 pt-5 lg:justify-end lg:pt-1">
             <a
               href={INSTAGRAM_URL}
               target="_blank"
@@ -125,7 +125,7 @@ const Footer = () => {
       </div>
 
       <div className="mx-auto max-w-[1400px] px-5 pb-4 sm:px-10">
-        <div className="max-w-2xl border-t f-border pt-10 lg:border-t-0 lg:pt-2">
+        <div className="max-w-2xl pt-10 lg:pt-2">
           <div className="gloria-title text-5xl leading-none sm:text-6xl">
             {t.footer.subscribeTitle}
           </div>
