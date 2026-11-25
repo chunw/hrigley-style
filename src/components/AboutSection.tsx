@@ -1,4 +1,3 @@
-import deliveryGif from "@/assets/delivery.gif";
 import { useLanguage } from "@/contexts/LanguageContext";
 import MarketsSection from "@/components/MarketsSection";
 
@@ -8,20 +7,29 @@ const AboutSection = () => {
   return (
     <section className="cargo-hero about-hero relative">
       <div className="cargo-hero-inner">
-        <img
-          src={deliveryGif}
-          alt=""
-          className="block w-full max-w-[720px] h-auto mx-auto mb-10"
-        />
         {lang !== "zh" && (
           <>
             <h1 className="shop-title about-hero-title gloria-title !text-white">{t.about.title}</h1>
           </>
         )}
 
+        {/* Row 1: studio photo + markets, two columns max (her layout call,
+            2026-11-24). The delivery GIF that used to sit above this was
+            removed the same evening. */}
         <div className="about-columns">
-          <MarketsSection />
+          <div className="flex-[0_1_560px] max-w-[560px]">
+            <img
+              src="/about/studio-1.jpg"
+              alt=""
+              className="block w-full h-auto"
+            />
+          </div>
 
+          <MarketsSection />
+        </div>
+
+        {/* Row 2: bio + note, two columns max. */}
+        <div className="about-columns mt-14">
           <aside className="about-bio-column">
             <h2 className="about-bio-heading">{t.about.artistLabel}</h2>
             <p
@@ -45,15 +53,6 @@ const AboutSection = () => {
               </a>
             </nav>
           </div>
-
-        </div>
-
-        <div className="about-studio-gallery grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-16">
-          <img
-            src="/about/studio-1.jpg"
-            alt=""
-            className="block w-full h-auto"
-          />
         </div>
       </div>
     </section>

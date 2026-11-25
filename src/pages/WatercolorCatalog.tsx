@@ -119,7 +119,7 @@ const WatercolorCatalog = () => {
             </h1>
             <h1 className="shop-title mt-3 text-4xl text-muted-foreground">
             </h1>
-            <p className="mt-3 text-4xl ">{t.watercolorCatalog.subtitle}</p>
+            <p className="small-title mt-3 text-4xl ">{t.watercolorCatalog.subtitle}</p>
             <p className="font-mono text-xs text-muted-foreground/60 mt-1">
               {lang === "zh" ? catalogMeta.mediumZh : catalogMeta.medium}
             </p>

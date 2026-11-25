@@ -78,17 +78,17 @@ const Header = () => {
                 onClick={() => setLang("en")}
                 aria-label="Switch to English"
                 aria-pressed={lang === "en"}
-                className={`transition-opacity ${controlColor} ${lang === "en" ? "underline underline-offset-4 decoration-2" : "opacity-60 hover:opacity-100"}`}
+                className={`fangsong-nav transition-opacity ${controlColor} ${lang === "en" ? "underline underline-offset-4 decoration-2" : "opacity-60 hover:opacity-100"}`}
               >
                 EN
               </button>
-              <span aria-hidden="true" className={`${controlColor} opacity-40`}>/</span>
+              <span aria-hidden="true" className={`fangsong-nav ${controlColor} opacity-40`}>/</span>
               <button
                 type="button"
                 onClick={() => setLang("zh")}
                 aria-label="切换到中文"
                 aria-pressed={lang === "zh"}
-                className={`transition-opacity ${controlColor} ${lang === "zh" ? "underline underline-offset-4 decoration-2" : "opacity-60 hover:opacity-100"}`}
+                className={`fangsong-nav transition-opacity ${controlColor} ${lang === "zh" ? "underline underline-offset-4 decoration-2" : "opacity-60 hover:opacity-100"}`}
               >
                 中文
               </button>
