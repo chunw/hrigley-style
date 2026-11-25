@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import HeroSection from "@/components/HeroSection";
+import handsBg from "@/assets/hands_clay_objects_clean_skin.jpg";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCart } from "@/contexts/CartContext";
@@ -88,6 +90,7 @@ const Cart = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+        <HeroSection bgImageSrc={handsBg} showMessageCard hideAboutLink hideDescription />
         <main className="container mx-auto px-4 py-8">
           <div className="max-w-2xl mx-auto text-center">
             <h1 className="cart-title font-bold uppercase tracking-[0.1em] leading-[0.9] text-3xl md:text-4xl mb-6">{t.cart.title}</h1>
@@ -113,7 +116,7 @@ const Cart = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
-      
+      <HeroSection bgImageSrc={handsBg} showMessageCard hideAboutLink hideDescription />
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
