@@ -60,9 +60,9 @@ const Footer = () => {
   ];
 
   const headingClass =
-    "small-title lowercase leading-none text-[26px] lg:text-[38px]";
+    "small-title lowercase leading-none text-[24px] lg:text-[38px]";
   const linkClass =
-    "text-[11px] uppercase leading-[1.4] tracking-[0.14em] underline-offset-[3px] transition-opacity hover:underline";
+    "text-[12px] uppercase leading-[1.4] tracking-[0.14em] underline-offset-[3px] transition-opacity hover:underline lg:text-[11px]";
 
   return (
     <footer className="site-footer">
@@ -96,7 +96,7 @@ const Footer = () => {
           </div>
 
           <div className="pt-5 lg:pt-0">
-            <p className="max-w-[380px] text-[20px] italic leading-[1.15] tracking-[-0.03em] lg:text-[28px]">
+            <p className="max-w-[380px] text-[24px] italic leading-[1.15] tracking-[-0.03em] lg:text-[28px]">
               {t.footer.locationShipping}
             </p>
           </div>
@@ -126,14 +126,14 @@ const Footer = () => {
 
       <div className="mx-auto max-w-[1400px] px-5 pb-4 sm:px-10">
         <div className="max-w-2xl pt-10 lg:pt-2">
-          <div className="gloria-title text-4xl leading-none sm:text-6xl">
+          <div className="gloria-title text-[24px] leading-none sm:text-6xl">
             {t.footer.subscribeTitle}
           </div>
           <p className="mt-5 f-muted text-xs uppercase leading-relaxed tracking-[0.22em]">
             {t.footer.subscribeText}
           </p>
           {subscribeState === "done" ? (
-            <p className="mt-8 border-b f-border pb-3 text-base">
+            <p className="mt-8 border-b f-border pb-3 text-xs lg:text-base">
               {t.footer.subscribeSuccess}
             </p>
           ) : (
@@ -148,18 +148,18 @@ const Footer = () => {
                   }}
                   placeholder={t.footer.subscribePlaceholder}
                   aria-label={t.footer.subscribePlaceholder}
-                  className="f-input min-w-0 flex-1 bg-transparent text-base focus:outline-none"
+                  className="f-input min-w-0 flex-1 bg-transparent text-xs focus:outline-none lg:text-base"
                 />
                 <button
                   type="submit"
                   disabled={subscribeState === "sending"}
-                  className="shrink-0 text-base normal-case italic tracking-normal text-primary transition-opacity hover:opacity-80 disabled:opacity-50 lg:text-lg"
+                  className="shrink-0 text-xs normal-case italic tracking-normal text-primary transition-opacity hover:opacity-80 disabled:opacity-50 lg:text-lg"
                 >
                   {t.footer.subscribeJoin}
                 </button>
               </div>
               {subscribeState === "error" && (
-                <p className="f-muted mt-3 text-sm">{t.footer.subscribeError}</p>
+                <p className="f-muted mt-3 text-xs lg:text-sm">{t.footer.subscribeError}</p>
               )}
             </form>
           )}
@@ -172,7 +172,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="f-faint px-5 pb-20 pt-12 text-center text-[11px] uppercase tracking-[0.18em]">
+      <div className="f-faint px-5 pb-20 pt-12 text-center text-[12px] uppercase tracking-[0.18em] lg:text-[11px]">
         © Chun Wang Studio 2026 · {t.footer.copyright}
       </div>
 
