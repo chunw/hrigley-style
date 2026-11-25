@@ -14,6 +14,41 @@ const Footer = () => {
   const { t, lang } = useLanguage();
   const zh = lang === "zh";
   const [showEmail, setShowEmail] = useState(false);
+  const [subscribeEmail, setSubscribeEmail] = useState("");
+  const [subscribeState, setSubscribeState] = useState<"idle" | "sending" | "done" | "error">("idle");
+
+  // Static site: subscriptions post to FormSubmit's AJAX endpoint, which
+  // forwards each signup to the studio inbox as an email. The address owner
+  // activates the endpoint once via a confirmation email from FormSubmit.
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const email = subscribeEmail.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setSubscribeState("error");
+      return;
+    }
+    setSubscribeState("sending");
+    try {
+      const res = await fetch("https://formsubmit.co/ajax/chunwang.me@gmail.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          email,
+          _subject: "New studio friend subscription",
+          _template: "table",
+          _captcha: "false",
+        }),
+      });
+      const data = await res.json().catch(() => null);
+      if (res.ok && data && String(data.success) === "true") {
+        setSubscribeState("done");
+      } else {
+        setSubscribeState("error");
+      }
+    } catch {
+      setSubscribeState("error");
+    }
+  };
 
   const exploreLinks = [
     { href: "/#products", label: t.footer.navShop },
@@ -84,6 +119,48 @@ const Footer = () => {
               <Linkedin className="h-[26px] w-[26px]" />
             </a>
           </div>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-[1400px] px-5 pb-4 sm:px-10">
+        <div className="max-w-2xl border-t border-white pt-10 lg:border-t-0 lg:pt-2">
+          <div className="gloria-title text-5xl leading-none text-white sm:text-6xl">
+            {t.footer.subscribeTitle}
+          </div>
+          <p className="mt-5 text-xs uppercase leading-relaxed tracking-[0.22em] text-white/60">
+            {t.footer.subscribeText}
+          </p>
+          {subscribeState === "done" ? (
+            <p className="mt-8 border-b border-white pb-3 text-base text-white">
+              {t.footer.subscribeSuccess}
+            </p>
+          ) : (
+            <form onSubmit={handleSubscribe} noValidate>
+              <div className="mt-8 flex items-baseline gap-4 border-b border-white pb-3">
+                <input
+                  type="email"
+                  value={subscribeEmail}
+                  onChange={(e) => {
+                    setSubscribeEmail(e.target.value);
+                    if (subscribeState === "error") setSubscribeState("idle");
+                  }}
+                  placeholder={t.footer.subscribePlaceholder}
+                  aria-label={t.footer.subscribePlaceholder}
+                  className="min-w-0 flex-1 bg-transparent text-base text-white placeholder:text-white/50 focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  disabled={subscribeState === "sending"}
+                  className="shrink-0 font-semibold uppercase tracking-[0.14em] text-primary transition-opacity hover:opacity-80 disabled:opacity-50"
+                >
+                  {t.footer.subscribeJoin}
+                </button>
+              </div>
+              {subscribeState === "error" && (
+                <p className="mt-3 text-sm text-white/70">{t.footer.subscribeError}</p>
+              )}
+            </form>
+          )}
         </div>
       </div>
 
