@@ -11,8 +11,7 @@ const LINKEDIN_URL = "https://www.linkedin.com/company/107686784/";
 // centered copyright line, and a giant lowercase wordmark filling the full
 // width at the very bottom. Content is unchanged from the previous footer.
 const Footer = () => {
-  const { t, lang } = useLanguage();
-  const zh = lang === "zh";
+  const { t } = useLanguage();
   const [showEmail, setShowEmail] = useState(false);
   const [subscribeEmail, setSubscribeEmail] = useState("");
   const [subscribeState, setSubscribeState] = useState<"idle" | "sending" | "done" | "error">("idle");
@@ -61,17 +60,17 @@ const Footer = () => {
   ];
 
   const headingClass =
-    "font-serif italic lowercase leading-none tracking-[-0.04em] text-[38px]";
+    "small-title lowercase leading-none text-[38px]";
   const linkClass =
-    "text-[11px] uppercase leading-[1.4] tracking-[0.14em] text-white underline-offset-[3px] transition-opacity hover:underline";
+    "text-[11px] uppercase leading-[1.4] tracking-[0.14em] underline-offset-[3px] transition-opacity hover:underline";
 
   return (
-    <footer className="bg-black text-white">
+    <footer className="site-footer">
       <div className="mx-auto max-w-[1400px] px-5 pb-[42px] pt-[52px] sm:px-10">
         <div className="grid gap-10 lg:grid-cols-[1fr_1fr_1.4fr_0.7fr] lg:gap-8">
           <nav
             aria-label="Footer"
-            className="border-t border-white pt-5 lg:border-t-0 lg:pt-0"
+            className="border-t f-border pt-5 lg:border-t-0 lg:pt-0"
           >
             <div className={headingClass}>{t.footer.exploreTitle}</div>
             <ul className="mt-5 flex flex-col gap-3">
@@ -85,7 +84,7 @@ const Footer = () => {
             </ul>
           </nav>
 
-          <div className="border-t border-white pt-5 lg:border-t-0 lg:pt-0">
+          <div className="border-t f-border pt-5 lg:border-t-0 lg:pt-0">
             <div className={headingClass}>{t.footer.contactTitle}</div>
             <ul className="mt-5 flex flex-col gap-3">
               <li>
@@ -96,19 +95,19 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className="border-t border-white pt-5 lg:border-t-0 lg:pt-0">
+          <div className="border-t f-border pt-5 lg:border-t-0 lg:pt-0">
             <p className="max-w-[380px] font-serif text-[28px] italic leading-[1.15] tracking-[-0.03em]">
               {t.footer.locationShipping}
             </p>
           </div>
 
-          <div className="flex items-start gap-4 border-t border-white pt-5 lg:justify-end lg:border-t-0 lg:pt-1">
+          <div className="flex items-start gap-4 border-t f-border pt-5 lg:justify-end lg:border-t-0 lg:pt-1">
             <a
               href={INSTAGRAM_URL}
               target="_blank"
               rel="noreferrer"
               aria-label={t.footer.instagramLabel}
-              className="text-white transition-opacity hover:opacity-70"
+              className="transition-opacity hover:opacity-70"
             >
               <Instagram className="h-[26px] w-[26px]" />
             </a>
@@ -117,7 +116,7 @@ const Footer = () => {
               target="_blank"
               rel="noreferrer"
               aria-label={t.footer.linkedinLabel}
-              className="text-white transition-opacity hover:opacity-70"
+              className="transition-opacity hover:opacity-70"
             >
               <Linkedin className="h-[26px] w-[26px]" />
             </a>
@@ -126,20 +125,20 @@ const Footer = () => {
       </div>
 
       <div className="mx-auto max-w-[1400px] px-5 pb-4 sm:px-10">
-        <div className="max-w-2xl border-t border-white pt-10 lg:border-t-0 lg:pt-2">
-          <div className="gloria-title text-5xl leading-none text-white sm:text-6xl">
+        <div className="max-w-2xl border-t f-border pt-10 lg:border-t-0 lg:pt-2">
+          <div className="gloria-title text-5xl leading-none sm:text-6xl">
             {t.footer.subscribeTitle}
           </div>
-          <p className="mt-5 text-xs uppercase leading-relaxed tracking-[0.22em] text-white/60">
+          <p className="mt-5 f-muted text-xs uppercase leading-relaxed tracking-[0.22em]">
             {t.footer.subscribeText}
           </p>
           {subscribeState === "done" ? (
-            <p className="mt-8 border-b border-white pb-3 text-base text-white">
+            <p className="mt-8 border-b f-border pb-3 text-base">
               {t.footer.subscribeSuccess}
             </p>
           ) : (
             <form onSubmit={handleSubscribe} noValidate>
-              <div className="mt-8 flex items-baseline gap-4 border-b border-white pb-3">
+              <div className="mt-8 flex items-baseline gap-4 border-b f-border pb-3">
                 <input
                   type="email"
                   value={subscribeEmail}
@@ -149,7 +148,7 @@ const Footer = () => {
                   }}
                   placeholder={t.footer.subscribePlaceholder}
                   aria-label={t.footer.subscribePlaceholder}
-                  className="min-w-0 flex-1 bg-transparent text-base text-white placeholder:text-white/50 focus:outline-none"
+                  className="f-input min-w-0 flex-1 bg-transparent text-base focus:outline-none"
                 />
                 <button
                   type="submit"
@@ -160,25 +159,21 @@ const Footer = () => {
                 </button>
               </div>
               {subscribeState === "error" && (
-                <p className="mt-3 text-sm text-white/70">{t.footer.subscribeError}</p>
+                <p className="f-muted mt-3 text-sm">{t.footer.subscribeError}</p>
               )}
             </form>
           )}
         </div>
       </div>
 
-      <div className="px-5 pt-5 pb-14 text-center text-[11px] uppercase tracking-[0.18em] text-white/50">
-        © Chun Wang Studio 2026 · {t.footer.copyright}
+      <div className="overflow-hidden px-2.5" aria-hidden="true">
+        <div className="whitespace-nowrap text-center font-extrabold lowercase leading-[0.8] tracking-[-0.04em] text-[10.5vw]">
+          chun wang studio
+        </div>
       </div>
 
-      <div className="overflow-hidden px-2.5 pb-2.5" aria-hidden="true">
-        <div
-          className={`whitespace-nowrap text-center font-extrabold lowercase leading-[0.8] tracking-[-0.04em] ${
-            zh ? "text-[19vw]" : "text-[10.5vw]"
-          }`}
-        >
-          {zh ? "王淳工作室" : "chun wang studio"}
-        </div>
+      <div className="f-faint px-5 pb-20 pt-12 text-center text-[11px] uppercase tracking-[0.18em]">
+        © Chun Wang Studio 2026 · {t.footer.copyright}
       </div>
 
       {showEmail && (

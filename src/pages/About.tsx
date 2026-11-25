@@ -4,8 +4,6 @@ import { useTheme } from "@/contexts/ThemeContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AboutSection from "@/components/AboutSection";
-import HeroSection from "@/components/HeroSection";
-import handsBg from "@/assets/hands_clay_objects_clean_skin.jpg";
 import { usePageMeta } from "@/hooks/usePageMeta";
 
 const About = () => {
@@ -28,8 +26,6 @@ const About = () => {
       <Header />
 
       <AboutSection />
-
-      <HeroSection bgImageSrc={handsBg} showMessageCard hideAboutLink hideDescription />
 
       <Footer />
     </div>

@@ -158,12 +158,14 @@ All colors MUST be HSL.
     letter-spacing: 0.05em;
   }
 
-  /* Standard button labels should render in the display Fangsong face instead of the default
-     Aileron UI sans. */
+  /* Buttons render in the body font like all other body text (her call,
+     2026-11-24: body text uses the footer copyright line's font — the Aileron
+     stack; the old Fangsong-first button rule made the header language toggle
+     render in a different font from the other nav items). */
   button,
   input[type="button"],
   input[type="submit"] {
-    font-family: 'Zhuque Fangsong (technical preview)', 'Aileron', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   }
 
   /* Titles, the one place English renders in 朱雀仿宋/Zhuque Fangsong instead of Aileron */
@@ -243,17 +245,58 @@ All colors MUST be HSL.
     text-transform: none;
   }
 
-  /* Product titles (cards, cart line items, detail-page headings): the same serif
-     italic as the footer's "designed & shipped" statement (her call, 2026-11-24 —
-     that statement is Tailwind's font-serif stack, ui-serif/Georgia, italic).
-     Latin takes ui-serif/Georgia, Chinese falls through to Zhuque Fangsong.
-     Rendered in the title's own mixed case rather than forced uppercase.
+  /* Product titles (cards, cart line items, detail-page headings): the navigation
+     font (her call, 2026-11-24, superseding the serif-italic pass earlier the same
+     evening) — the .fangsong-nav Aileron stack at extra-bold weight. Chinese
+     falls through to Zhuque Fangsong. Rendered in the title's own mixed case.
      Book captions are unaffected: catalog-book.css overrides .product-title
      inside .bk-root with the caption register. */
   .product-title {
-    font-family: ui-serif, Georgia, 'Zhuque Fangsong (technical preview)', Cambria, 'Times New Roman', Times, serif;
-    font-style: italic;
+    font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 800;
     text-transform: none;
+  }
+
+  /* Small titles: the footer's "Become a studio friend" hand font (her call,
+     2026-11-24) — Gloria Hallelujah for Latin, Zhuque Fangsong for Chinese. */
+  .small-title {
+    font-family: 'Gloria Hallelujah', 'Zhuque Fangsong (technical preview)', 'Comic Sans MS', cursive;
+  }
+
+  /* The footer follows the site theme (her call, 2026-11-24): a light block in
+     light mode, the Double Standard black block in dark mode. Inner elements
+     inherit the footer color; muted/faint/border helpers flip with the theme. */
+  .site-footer {
+    background: #ffffff;
+    color: #000000;
+  }
+  .theme-dark .site-footer {
+    background: #000000;
+    color: #ffffff;
+  }
+  .site-footer .f-muted {
+    color: rgb(0 0 0 / 0.55);
+  }
+  .theme-dark .site-footer .f-muted {
+    color: rgb(255 255 255 / 0.6);
+  }
+  .site-footer .f-faint {
+    color: rgb(0 0 0 / 0.45);
+  }
+  .theme-dark .site-footer .f-faint {
+    color: rgb(255 255 255 / 0.5);
+  }
+  .site-footer .f-border {
+    border-color: rgb(0 0 0 / 0.85);
+  }
+  .theme-dark .site-footer .f-border {
+    border-color: #ffffff;
+  }
+  .site-footer .f-input::placeholder {
+    color: rgb(0 0 0 / 0.45);
+  }
+  .theme-dark .site-footer .f-input::placeholder {
+    color: rgb(255 255 255 / 0.5);
   }
 
   /* "Order now" CTAs use the same Fangsong display treatment as the product titles. */
