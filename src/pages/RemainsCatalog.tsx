@@ -109,8 +109,8 @@ const RemainsCatalog = () => {
               {remainsWorks.length} {t.remainsCatalog.works}
             </p>
             {(lang === "zh" ? catalogMeta.descriptionZh : catalogMeta.description) && (
-              <p
-                className="description-html text-sm text-muted-foreground mt-3 max-w-prose"
+              <div
+                className="description-html mt-8 rounded-[1.25rem] bg-black p-7 font-helvetica text-[clamp(1.55rem,3.2vw,2.75rem)] font-bold leading-[1.04] tracking-[-0.01em] text-white ring-1 ring-white/20 md:p-12 [&_p]:m-0"
                 dangerouslySetInnerHTML={{ __html: (lang === "zh" ? catalogMeta.descriptionZh : catalogMeta.description) ?? "" }}
               />
             )}
