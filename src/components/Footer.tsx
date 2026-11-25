@@ -60,7 +60,7 @@ const Footer = () => {
   ];
 
   const headingClass =
-    "small-title lowercase leading-none text-[38px]";
+    "small-title lowercase leading-none text-[26px] lg:text-[38px]";
   const linkClass =
     "text-[11px] uppercase leading-[1.4] tracking-[0.14em] underline-offset-[3px] transition-opacity hover:underline";
 
@@ -96,7 +96,7 @@ const Footer = () => {
           </div>
 
           <div className="pt-5 lg:pt-0">
-            <p className="max-w-[380px] text-[28px] italic leading-[1.15] tracking-[-0.03em]">
+            <p className="max-w-[380px] text-[20px] italic leading-[1.15] tracking-[-0.03em] lg:text-[28px]">
               {t.footer.locationShipping}
             </p>
           </div>
@@ -126,7 +126,7 @@ const Footer = () => {
 
       <div className="mx-auto max-w-[1400px] px-5 pb-4 sm:px-10">
         <div className="max-w-2xl pt-10 lg:pt-2">
-          <div className="gloria-title text-5xl leading-none sm:text-6xl">
+          <div className="gloria-title text-4xl leading-none sm:text-6xl">
             {t.footer.subscribeTitle}
           </div>
           <p className="mt-5 f-muted text-xs uppercase leading-relaxed tracking-[0.22em]">
@@ -153,7 +153,7 @@ const Footer = () => {
                 <button
                   type="submit"
                   disabled={subscribeState === "sending"}
-                  className="shrink-0 text-lg normal-case italic tracking-normal text-primary transition-opacity hover:opacity-80 disabled:opacity-50"
+                  className="shrink-0 text-base normal-case italic tracking-normal text-primary transition-opacity hover:opacity-80 disabled:opacity-50 lg:text-lg"
                 >
                   {t.footer.subscribeJoin}
                 </button>
