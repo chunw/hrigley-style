@@ -1543,24 +1543,35 @@
 
 /* ── Black statement pages (proposal, 2026-11-24) ───────────────────
    The design she picked out at the Remains statement pages (book
-   pp. 24–25): a black field with rounded corners standing on the
-   paper, the statement set large and tight in the Aileron stack at
-   ExtraBold weight, white, running close to the field's edges. The
-   panel stops above the folio row, which keeps its usual place on
-   the paper below. Set on the Spirit chapter's two motto pages only
-   (see the "motto" render in CatalogBook). */
+   pp. 24–25): the statement set large and tight in the Aileron stack
+   at ExtraBold weight, white, on a black field. First set as a
+   rounded-corner panel standing on the paper; her direction the
+   same evening: no white margin, no panel — the black runs full
+   bleed, edge to edge. The padding below is the old panel's content
+   box restated against the sheet edge (panel inset 0.28in + its
+   0.46/0.48in padding; at the foot, 0.72in + 0.46in), so the text
+   stands exactly where it stood. Set on the Spirit chapter's two
+   motto pages only (see the "motto" render in CatalogBook). */
 .bk-stmt-panel {
   position: absolute;
-  top: calc(var(--bleed) + 0.28in);
-  left: calc(var(--bleed) + 0.28in);
-  right: calc(var(--bleed) + 0.28in);
-  bottom: calc(var(--bleed) + 0.72in);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: #000;
-  border-radius: 0.18in;
-  padding: 0.46in 0.48in;
+  padding: calc(var(--bleed) + 0.74in) calc(var(--bleed) + 0.76in) calc(var(--bleed) + 1.18in);
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+/* The bridge motto's folio row now stands on the black: it keeps its
+   usual place and size, set in white (the part-intro pages' light
+   folio on their dark ground is the house precedent). The front
+   copy prints no folio, as before. */
+.bk-motto-stmt .bk-folio,
+.bk-motto-stmt .bk-folio-tag {
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .bk-stmt-p {

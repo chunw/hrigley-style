@@ -4974,8 +4974,9 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       ) : tailCut > 0 ? (<>{zhText.slice(0, tailCut)}<span className="bk-nowrap-tail">{zhText.slice(tailCut)}</span></>) : zhText;
       // Proposal (2026-11-24, PR #405): the black statement-page
       // design she picked out at the Remains statement pages (book
-      // pp. 24–25) — a black field with rounded corners, the text set
-      // large and tight in Aileron ExtraBold, white — tried on the
+      // pp. 24–25) — a black field (full bleed since the follow-up
+      // on PR #406; first set as a rounded-corner panel), the text
+      // set large and tight in Aileron ExtraBold, white — tried on the
       // Spirit chapter's two motto pages, the two pages whose single
       // short statements already stand alone. Texts untouched; the NI
       // cover-story motto keeps the quiet setting. The chapter's
