@@ -663,7 +663,7 @@ export default function WallPreview() {
                   : "Hang the framed print over a sofa in a true-scale room. Drag to shift your viewpoint and judge the real size against the sofa."}
               </p>
             </div>
-            <p className="font-mono text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               {title}
               {seriesName ? ` · ${seriesName}` : ""}
               {work ? ` · ${work.year}` : ""}
@@ -693,14 +693,14 @@ export default function WallPreview() {
             </p>
             {status === "loading" && (
               <div className="absolute inset-0 flex items-center justify-center bg-black pointer-events-none">
-                <span className="font-mono text-xs uppercase tracking-widest text-white/50">
+                <span className="text-xs uppercase tracking-widest text-white/50">
                   {zh ? "加载中…" : "Loading…"}
                 </span>
               </div>
             )}
             {status === "error" && (
               <div className="absolute inset-0 flex items-center justify-center bg-black px-6">
-                <p className="font-mono text-xs text-white/70 text-center">
+                <p className="text-xs text-white/70 text-center">
                   {zh
                     ? "预览加载失败，请检查网络后刷新。"
                     : "The preview could not load. Check your connection and refresh."}
@@ -708,8 +708,8 @@ export default function WallPreview() {
               </div>
             )}
             <div className="absolute top-3 left-3 bg-black/55 text-white px-3 py-2 pointer-events-none">
-              <p className="font-mono text-[11px] uppercase tracking-widest">{title}</p>
-              <p className="font-mono text-[11px] text-white/70">
+              <p className="text-[11px] uppercase tracking-widest">{title}</p>
+              <p className="text-[11px] text-white/70">
                 {zh ? "含框" : "Framed"} {Math.round(outer.wIn * 2.54)} × {Math.round(outer.hIn * 2.54)} cm
               </p>
             </div>
@@ -723,13 +723,13 @@ export default function WallPreview() {
             </button>
             <p
               id="wall-preview-instructions"
-              className="absolute bottom-3 left-3 inline-flex items-center gap-2 bg-black/55 text-white font-mono text-[11px] px-3 py-2 pointer-events-none"
+              className="absolute bottom-3 left-3 inline-flex items-center gap-2 bg-black/55 text-white text-[11px] px-3 py-2 pointer-events-none"
             >
               <Move className="h-3.5 w-3.5" />
               {zh ? "拖动换视角 · 滚轮远近" : "Drag to look around · Scroll to move closer"}
             </p>
           </div>
-          <p className="font-mono text-[11px] text-muted-foreground mt-2">
+          <p className="text-[11px] text-muted-foreground mt-2">
             {zh
               ? `沙发宽 ${(sofaW * 2.54).toFixed(0)} 厘米，含框宽度约为沙发的 ${framedPct}%。房间墙高 2.75 米。预览图会裁切至所选尺寸，居中显示。`
               : `Sofa ${Math.round(sofaW * 2.54)} cm wide (${(sofaW * 2.54).toFixed(0)} cm); framed width is about ${framedPct}% of the sofa. Wall 2.75 m high. Artwork is centre-cropped to fill the chosen print size.`}
@@ -828,7 +828,7 @@ export default function WallPreview() {
               <h2 className="sans-label text-xs uppercase tracking-widest mb-4">
                 {zh ? "尺寸对照" : "At this size"}
               </h2>
-              <dl className="font-mono text-xs space-y-2 text-muted-foreground">
+              <dl className="text-xs space-y-2 text-muted-foreground">
                 <div className="flex justify-between gap-4">
                   <dt>{zh ? "印刷" : "Print"}</dt>
                   <dd className="text-foreground">
@@ -850,7 +850,7 @@ export default function WallPreview() {
                 <div className="h-2 bg-primary" style={{ width: `${framedPct}%` }} />
                 <div className="h-2 bg-foreground/30 w-full" />
               </div>
-              <p className="font-mono text-[11px] text-muted-foreground mt-2">
+              <p className="text-[11px] text-muted-foreground mt-2">
                 {zh ? "上：含框宽度 · 下：沙发宽度" : "Top: framed width · Bottom: sofa width"}
               </p>
               {work && (

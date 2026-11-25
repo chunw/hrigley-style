@@ -112,7 +112,7 @@ export const ZoomableImage = ({
           )}
 
           {/* Counter / hint */}
-          <p className="fixed bottom-4 left-1/2 -translate-x-1/2 font-mono text-xs text-white/25 pointer-events-none select-none">
+          <p className="fixed bottom-4 left-1/2 -translate-x-1/2 text-xs text-white/25 pointer-events-none select-none">
             {hasMultiple ? `${lightboxIndex + 1} / ${allImages.length} · ` : ""}
             click to zoom · ← → to browse · esc to close
           </p>
