@@ -4950,6 +4950,24 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const zhNode = zhRowEnd > zhRowStart && tailCut > zhRowEnd ? (
         <>{zhText.slice(0, zhRowStart)}<br />{zhText.slice(zhRowStart, zhRowEnd + zhRowEndMark.length)}<br />{zhText.slice(zhRowEnd + zhRowEndMark.length, tailCut)}<span className="bk-nowrap-tail">{zhText.slice(tailCut)}</span></>
       ) : tailCut > 0 ? (<>{zhText.slice(0, tailCut)}<span className="bk-nowrap-tail">{zhText.slice(tailCut)}</span></>) : zhText;
+      // Proposal (2026-11-24): the black statement-page design she
+      // picked out at the Remains statement pages (book pp. 24–25) —
+      // a black field with rounded corners, the text set large and
+      // tight in Aileron ExtraBold, white — tried on the Spirit
+      // chapter's two motto pages, the two pages whose single short
+      // statements already stand alone. Texts untouched; the NI
+      // cover-story motto keeps the quiet setting.
+      if (chapter.key === "spirit") {
+        return (
+          <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-motto-page bk-motto-stmt${bgImgCls}`}>{bgImgLayer}
+            <div className="bk-stmt-panel">
+              {ctx.capLang !== "zh" && <p className="bk-stmt-p">{enNode}</p>}
+              {ctx.capLang !== "en" && <p className="bk-stmt-p">{zhNode}</p>}
+            </div>
+            <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
+          </Page>
+        );
+      }
       return (
         <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-motto-page${bgImgCls}`}>{bgImgLayer}
           <div className="bk-quiet">
