@@ -1541,6 +1541,42 @@
   margin-top: 0.38in;
 }
 
+/* ── Black statement pages (proposal, 2026-11-24) ───────────────────
+   The design she picked out at the Remains statement pages (book
+   pp. 24–25): a black field with rounded corners standing on the
+   paper, the statement set large and tight in the Aileron stack at
+   ExtraBold weight, white, running close to the field's edges. The
+   panel stops above the folio row, which keeps its usual place on
+   the paper below. Set on the Spirit chapter's two motto pages only
+   (see the "motto" render in CatalogBook). */
+.bk-stmt-panel {
+  position: absolute;
+  top: calc(var(--bleed) + 0.28in);
+  left: calc(var(--bleed) + 0.28in);
+  right: calc(var(--bleed) + 0.28in);
+  bottom: calc(var(--bleed) + 0.72in);
+  background: #000;
+  border-radius: 0.18in;
+  padding: 0.46in 0.48in;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.bk-stmt-p {
+  margin: 0;
+  font-family: 'Aileron', 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', Arial, sans-serif;
+  font-weight: 800;
+  font-size: 0.44in;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+
+.bk-stmt-p + .bk-stmt-p {
+  margin-top: 0.36in;
+}
+
 /* A quiet page that carries a picture (her direction, 2026-11-18):
    the NI stills verso sets its bilingual paragraph in the quiet
    setting above the plate. The plate page composes this page, so
