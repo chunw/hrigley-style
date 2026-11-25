@@ -765,10 +765,12 @@ const CHAPTER_EPIGRAPH: Record<string, { en: string; zh: string }> = {
   // the Shoutout Atlanta interview.)
 };
 
-/** The Spirit chapter's sentence, standing alone on a quiet page right
- *  after the chapter's opener spread (the "motto" page spec in
- *  paginate()). Verbatim — it is the chapter's former opener epigraph,
- *  moved, not rewritten. */
+/** The Spirit chapter's sentence. Verbatim — it is the chapter's
+ *  former opener epigraph, moved, not rewritten. It first stood alone
+ *  on a quiet page right after the chapter's opener spread (her
+ *  direction, 2026-11-09); since 2026-11-24 it stands at the front of
+ *  the book, before the contents, in the black statement treatment
+ *  (PR #405) — see the "motto" page spec in paginate(). */
 const SPIRIT_QUIET_TEXT = {
   en: "This book is more than a retrospective. It is an argument for slowness, demanding the kind of looking that contemporary life rarely permits.",
   zh: "这本书不只是一次回顾。它为缓慢辩护，要求一种当代生活难得允许的凝视。",
@@ -1414,6 +1416,27 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
 
   specs.push({ kind: "title" });
   specs.push({ kind: "colophon" });
+  // Her direction (2026-11-24): the Spirit chapter's slowness sentence
+  // — in the black statement treatment since PR #405 — moves to the
+  // front of the book and stands here, between the colophon and the
+  // contents, as the book's opening statement. (This executes the
+  // move-before-Contents order first given on 2026-11-10 and held
+  // since; see the note at the Spirit chapter's slot below.) It lands
+  // on a recto; a blank verso follows it, so the contents spread and
+  // everything behind it shift by an even two pages and every later
+  // alignment — the held spreads included — keeps its side. The page
+  // prints no folio: the front-matter pages around it (title,
+  // colophon, contents) print none either (see the motto render).
+  const spiritChapter = chapters.find((c) => c.key === "spirit");
+  if (spiritChapter) {
+    // The page carries its own chapter key, not the Spirit chapter's:
+    // the contents and the chapter anchors find a chapter's first
+    // page by key, and the Spirit chapter must still be found at its
+    // opener, not here. The motto render recognises the page by its
+    // keySuffix instead.
+    specs.push({ kind: "motto", chapter: { ...spiritChapter, key: "front:spirit" }, text: SPIRIT_QUIET_TEXT, keySuffix: "front" });
+    specs.push({ kind: "blank" });
+  }
   // The contents is one designed spread (a map, not a list — see the
   // contents render in renderPage): always exactly two pages.
   const tocPages = 2;
@@ -1738,20 +1761,19 @@ function paginate(chapters: Chapter[], prefaceChunkCount: number, paintingChunkC
     if (chapter.key === "residuals") {
       for (const p of CANVA_FRONT_HEAD_PAGES) specs.push({ kind: "canva", page: p });
     }
-    // The Spirit chapter's sentence stands on its own quiet page,
-    // right after the opener spread, before the chapter's text and
-    // plates (her direction, 2026-11-09; the text is SPIRIT_QUIET_TEXT).
-    // NOTE 2026-11-10: two same-day orders touched this page — one
-    // ordered a page deleted that was described as carrying BOTH the
-    // machines sentence and this slowness text, and a later one ordered
-    // THIS page (slowness text alone) moved before the Contents.
-    // Source inspection shows no page carries both sentences: the
-    // machines sentence renders only on the Part 3 opener and inside
-    // the Negotiated Intelligence text. Both orders are therefore
-    // HELD, unexecuted, pending her decision on which one wins; the
-    // page stands here exactly as before.
+    // The Spirit chapter's sentence no longer stands here (her
+    // direction, 2026-11-24): the slowness page — in the black
+    // statement treatment since PR #405 — moves to the front of the
+    // book, before the contents (see the front-matter push above).
+    // This settles the two 2026-11-10 orders once held against this
+    // page: the move-before-Contents order is the one executed; the
+    // page described as carrying both the machines sentence and this
+    // text was the facsimile's p. 2, deleted separately the same week.
+    // A blank stands in the motto's slot, so the chapter's remaining
+    // pages — the bridge motto at its end included — keep their exact
+    // places and sides.
     if (chapter.key === "spirit") {
-      specs.push({ kind: "motto", chapter, text: SPIRIT_QUIET_TEXT });
+      specs.push({ kind: "blank" });
     }
     const essayCount = essayChunkCounts[chapter.key] ?? (chapter.seriesOnly ? 0 : 1);
     // Illustrated chapters with plates anchored inside the essay flow (see
@@ -4950,21 +4972,30 @@ export function InteriorPageView({ page, ctx, pages }: { page: InteriorPage; ctx
       const zhNode = zhRowEnd > zhRowStart && tailCut > zhRowEnd ? (
         <>{zhText.slice(0, zhRowStart)}<br />{zhText.slice(zhRowStart, zhRowEnd + zhRowEndMark.length)}<br />{zhText.slice(zhRowEnd + zhRowEndMark.length, tailCut)}<span className="bk-nowrap-tail">{zhText.slice(tailCut)}</span></>
       ) : tailCut > 0 ? (<>{zhText.slice(0, tailCut)}<span className="bk-nowrap-tail">{zhText.slice(tailCut)}</span></>) : zhText;
-      // Proposal (2026-11-24): the black statement-page design she
-      // picked out at the Remains statement pages (book pp. 24–25) —
-      // a black field with rounded corners, the text set large and
-      // tight in Aileron ExtraBold, white — tried on the Spirit
-      // chapter's two motto pages, the two pages whose single short
-      // statements already stand alone. Texts untouched; the NI
-      // cover-story motto keeps the quiet setting.
-      if (chapter.key === "spirit") {
+      // Proposal (2026-11-24, PR #405): the black statement-page
+      // design she picked out at the Remains statement pages (book
+      // pp. 24–25) — a black field with rounded corners, the text set
+      // large and tight in Aileron ExtraBold, white — tried on the
+      // Spirit chapter's two motto pages, the two pages whose single
+      // short statements already stand alone. Texts untouched; the NI
+      // cover-story motto keeps the quiet setting. The chapter's
+      // opening motto has since moved to the front of the book (her
+      // direction, later the same day); it keeps this treatment there.
+      if (chapter.key === "spirit" || spec.keySuffix === "front") {
+        // The copy at the front of the book (keySuffix "front", her
+        // direction 2026-11-24) prints no folio: the front-matter
+        // pages around it — title, colophon, contents — print none,
+        // and a chapter name in its footer would mislabel the book's
+        // opening statement as a chapter page. The chapter's own
+        // bridge motto keeps its folio as before.
+        const frontCopy = spec.keySuffix === "front";
         return (
           <Page id={pageId} side={side} bg={bg} ctl={ctlAll} className={`bk-motto-page bk-motto-stmt${bgImgCls}`}>{bgImgLayer}
             <div className="bk-stmt-panel">
               {ctx.capLang !== "zh" && <p className="bk-stmt-p">{enNode}</p>}
               {ctx.capLang !== "en" && <p className="bk-stmt-p">{zhNode}</p>}
             </div>
-            <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />
+            {!frontCopy && <Folio number={number} tag={`${b.title} | ${chapter.title}`} lang={ctx.capLang} tagEn={chapter.titleEn ?? chapter.title} tagZh={chapter.titleZh} />}
           </Page>
         );
       }
