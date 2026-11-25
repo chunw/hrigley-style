@@ -60,9 +60,9 @@ const Footer = () => {
   ];
 
   const headingClass =
-    "small-title lowercase leading-none text-[38px]";
+    "small-title lowercase leading-none text-[20px] lg:text-[38px]";
   const linkClass =
-    "text-[11px] uppercase leading-[1.4] tracking-[0.14em] underline-offset-[3px] transition-opacity hover:underline";
+    "text-[14px] uppercase leading-[1.4] tracking-[0.14em] underline-offset-[3px] transition-opacity hover:underline lg:text-[11px]";
 
   return (
     <footer className="site-footer">
@@ -70,7 +70,7 @@ const Footer = () => {
         <div className="grid gap-10 lg:grid-cols-[1fr_1fr_1.4fr_0.7fr] lg:gap-8">
           <nav
             aria-label="Footer"
-            className="border-t f-border pt-5 lg:border-t-0 lg:pt-0"
+            className="pt-5 lg:pt-0"
           >
             <div className={headingClass}>{t.footer.exploreTitle}</div>
             <ul className="mt-5 flex flex-col gap-3">
@@ -84,7 +84,7 @@ const Footer = () => {
             </ul>
           </nav>
 
-          <div className="border-t f-border pt-5 lg:border-t-0 lg:pt-0">
+          <div className="pt-5 lg:pt-0">
             <div className={headingClass}>{t.footer.contactTitle}</div>
             <ul className="mt-5 flex flex-col gap-3">
               <li>
@@ -95,13 +95,13 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className="border-t f-border pt-5 lg:border-t-0 lg:pt-0">
-            <p className="max-w-[380px] text-[28px] italic leading-[1.15] tracking-[-0.03em]">
+          <div className="pt-5 lg:pt-0">
+            <p className="max-w-[380px] text-[20px] italic leading-[1.15] tracking-[-0.03em] lg:text-[28px]">
               {t.footer.locationShipping}
             </p>
           </div>
 
-          <div className="flex items-start gap-4 border-t f-border pt-5 lg:justify-end lg:border-t-0 lg:pt-1">
+          <div className="flex items-start gap-4 pt-5 lg:justify-end lg:pt-1">
             <a
               href={INSTAGRAM_URL}
               target="_blank"
@@ -125,15 +125,15 @@ const Footer = () => {
       </div>
 
       <div className="mx-auto max-w-[1400px] px-5 pb-4 sm:px-10">
-        <div className="max-w-2xl border-t f-border pt-10 lg:border-t-0 lg:pt-2">
-          <div className="gloria-title text-5xl leading-none sm:text-6xl">
+        <div className="max-w-2xl pt-10 lg:pt-2">
+          <div className="gloria-title text-[20px] leading-none sm:text-6xl">
             {t.footer.subscribeTitle}
           </div>
-          <p className="mt-5 f-muted text-xs uppercase leading-relaxed tracking-[0.22em]">
+          <p className="mt-5 f-muted text-sm uppercase leading-relaxed tracking-[0.22em] lg:text-xs">
             {t.footer.subscribeText}
           </p>
           {subscribeState === "done" ? (
-            <p className="mt-8 border-b f-border pb-3 text-base">
+            <p className="mt-8 border-b f-border pb-3 text-sm lg:text-base">
               {t.footer.subscribeSuccess}
             </p>
           ) : (
@@ -148,12 +148,12 @@ const Footer = () => {
                   }}
                   placeholder={t.footer.subscribePlaceholder}
                   aria-label={t.footer.subscribePlaceholder}
-                  className="f-input min-w-0 flex-1 bg-transparent text-base focus:outline-none"
+                  className="f-input min-w-0 flex-1 bg-transparent text-sm focus:outline-none lg:text-base"
                 />
                 <button
                   type="submit"
                   disabled={subscribeState === "sending"}
-                  className="shrink-0 text-lg normal-case italic tracking-normal text-primary transition-opacity hover:opacity-80 disabled:opacity-50"
+                  className="shrink-0 text-sm normal-case italic tracking-normal text-primary transition-opacity hover:opacity-80 disabled:opacity-50 lg:text-lg"
                 >
                   {t.footer.subscribeJoin}
                 </button>
@@ -172,7 +172,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="f-faint px-5 pb-20 pt-12 text-center text-[11px] uppercase tracking-[0.18em]">
+      <div className="f-faint px-5 pb-20 pt-12 text-center text-[14px] uppercase tracking-[0.18em] lg:text-[11px]">
         © Chun Wang Studio 2026 · {t.footer.copyright}
       </div>
 
