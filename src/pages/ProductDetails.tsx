@@ -257,16 +257,6 @@ const ProductDetails = () => {
               </div>
             )}
 
-            {displayContextHtml && (
-              <div className="space-y-2">
-                <h3 className="font-helvetica text-[11px] uppercase tracking-[0.15em] text-muted-foreground">{zh ? "背景" : "Context"}</h3>
-                <div
-                  className="text-muted-foreground font-helvetica whitespace-pre-wrap product-details-html"
-                  dangerouslySetInnerHTML={{ __html: withInches(displayContextHtml, zh ? "zh" : "en") }}
-                />
-              </div>
-            )}
-
             {displayDimensions && (
               <div className="space-y-2">
                 <p className="text-muted-foreground font-helvetica">{withInches(displayDimensions, zh ? "zh" : "en")}</p>
@@ -311,6 +301,18 @@ const ProductDetails = () => {
 
           </div>
         </div>
+
+        {displayContextHtml && (
+          <section className="mt-20 border-t border-border pt-10">
+            <div className="max-w-3xl space-y-2">
+              <h3 className="font-helvetica text-[11px] uppercase tracking-[0.15em] text-muted-foreground">{zh ? "背景" : "Context"}</h3>
+              <div
+                className="text-muted-foreground font-helvetica whitespace-pre-wrap product-details-html"
+                dangerouslySetInnerHTML={{ __html: withInches(displayContextHtml, zh ? "zh" : "en") }}
+              />
+            </div>
+          </section>
+        )}
       </main>
 
       <Footer />
