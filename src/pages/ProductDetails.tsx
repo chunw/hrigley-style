@@ -111,6 +111,7 @@ const ProductDetails = () => {
   const displayCollections = zh ? getProductCollectionsZh(product) : englishCollections;
   const displayDescription = zh ? product.description_zh : product.description;
   const displayDetailedHtml = zh ? product.detailed_description_html_zh : product.detailed_description_html;
+  const displayContextHtml = zh ? (product as { context_html_zh?: string }).context_html_zh : (product as { context_html?: string }).context_html;
   const displayEditionInfo = zh ? product.edition_info_zh : product.edition_info;
   const artboxPrintCount = getArtboxPrintCount(product.id);
   const displayDimensions = zh ? (product as any).dimensions_zh : product.dimensions;
@@ -300,6 +301,18 @@ const ProductDetails = () => {
 
           </div>
         </div>
+
+        {displayContextHtml && (
+          <section className="mt-20 border-t border-border pt-10">
+            <div className="max-w-3xl space-y-2">
+              <h3 className="font-helvetica text-[11px] uppercase tracking-[0.15em] text-muted-foreground">{zh ? "源起" : "Provenance"}</h3>
+              <div
+                className="text-muted-foreground font-helvetica whitespace-pre-wrap product-details-html"
+                dangerouslySetInnerHTML={{ __html: withInches(displayContextHtml, zh ? "zh" : "en") }}
+              />
+            </div>
+          </section>
+        )}
       </main>
 
       <Footer />
