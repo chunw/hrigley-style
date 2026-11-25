@@ -96,7 +96,7 @@ const Footer = () => {
           </div>
 
           <div className="pt-5 lg:pt-0">
-            <p className="max-w-[380px] text-[20px] italic leading-[1.15] tracking-[-0.03em] lg:text-[28px]">
+            <p className="font-body max-w-[380px] text-[20px] italic leading-[1.15] tracking-[-0.03em] lg:text-[28px]">
               {t.footer.locationShipping}
             </p>
           </div>
@@ -167,7 +167,7 @@ const Footer = () => {
       </div>
 
       <div className="overflow-hidden px-2.5" aria-hidden="true">
-        <div className="whitespace-nowrap text-center font-extrabold lowercase leading-[0.8] tracking-[-0.04em] text-[10.5vw]">
+        <div className="whitespace-nowrap pb-[0.07em] text-center font-extrabold lowercase leading-[1.05] tracking-[-0.04em] text-[10.5vw]">
           chun wang studio
         </div>
       </div>

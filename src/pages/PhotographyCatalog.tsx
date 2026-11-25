@@ -178,8 +178,7 @@ const PhotographyCatalog = () => {
 
         <header className="flex flex-col md:flex-row md:items-start justify-between gap-6">
           <div>
-            <h1 className="shop-title text-6xl md:text-7xl leading-none">Chun Wang</h1>
-            <p className="small-title mt-3 text-4xl">{t.photographyCatalog.subtitle}</p>
+                        <p className="small-title mt-3 text-4xl">{t.photographyCatalog.subtitle}</p>
             <p className="text-xs text-muted-foreground/60 mt-1">
               {lang === "zh" ? catalogMeta.mediumZh : catalogMeta.medium}
             </p>

@@ -250,6 +250,10 @@ All colors MUST be HSL.
      evening of font passes: the English shop uses only Gloria + Aileron).
      Chinese falls through to Zhuque Fangsong. Book captions are unaffected:
      catalog-book.css overrides .product-title inside .bk-root. */
+  .font-body {
+    font-family: 'Aileron', 'Zhuque Fangsong (technical preview)', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
   .product-title {
     font-family: 'Gloria Hallelujah', 'Zhuque Fangsong (technical preview)', 'Comic Sans MS', cursive;
     text-transform: none;
