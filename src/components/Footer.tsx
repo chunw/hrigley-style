@@ -166,7 +166,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="px-5 text-center text-[11px] uppercase tracking-[0.18em] text-white/50">
+      <div className="px-5 pt-5 pb-14 text-center text-[11px] uppercase tracking-[0.18em] text-white/50">
         © Chun Wang Studio 2026 · {t.footer.copyright}
       </div>
 
